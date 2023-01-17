@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import 'dashboard.dart';
+import 'views/tabs.dart';
 
 class Vim extends StatelessWidget {
   const Vim({ super.key });
@@ -23,7 +23,7 @@ class Vim extends StatelessWidget {
         // is not restarted.
         primarySwatch: Colors.deepPurple,
       ),
-      home: const Dashboard(),
+      home: const Tabs(),
     );
   }
 }

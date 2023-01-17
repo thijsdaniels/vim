@@ -35,6 +35,8 @@ dependencies:
   flutter:
     sdk: flutter
   intl: ^0.17.0
+  flutter_speed_dial: ^6.2.0
+  badges: ^2.0.3
 
 dev_dependencies:
   flutter_test:

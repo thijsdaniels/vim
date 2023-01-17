@@ -12,10 +12,10 @@ class Consumption {
 
   late final Timestamp timestamp;
   final String name;
-  final int calories;
-  final int carbohydrates;
-  final int fat;
-  final int protein;
+  final num calories;
+  final num carbohydrates;
+  final num protein;
+  final num fat;
 
   Consumption({
     Timestamp? timestamp,
@@ -34,8 +34,8 @@ class Consumption {
       'name': name,
       'calories': calories,
       'carbohydrates': carbohydrates,
-      'fat': fat,
       'protein': protein,
+      'fat': fat,
     };
   }
 
@@ -54,8 +54,8 @@ class Consumption {
       name: map['name'],
       calories: map['calories'],
       carbohydrates: map['carbohydrates'],
-      fat: map['fat'],
       protein: map['protein'],
+      fat: map['fat'],
     );
   }
 

@@ -7,7 +7,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:vim/dashboard.dart';
+import 'package:vim/views/dashboard.dart';
 
 void main() {
   testWidgets('Counter increments smoke test', (WidgetTester tester) async {
