@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "416898477439",
+    "project_id": "thijsdaniels-vim",
+    "storage_bucket": "thijsdaniels-vim.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:416898477439:android:7be2943e46207290853e4a",
+        "android_client_info": {
+          "package_name": "com.thijsdaniels.vim"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "416898477439-kkq5r8kbnnvdbro6kqksuvb3lb5a7okk.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBqzXrxNwZ9F2evO_2cxl3U4ZlrVj0stZc"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "416898477439-kkq5r8kbnnvdbro6kqksuvb3lb5a7okk.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

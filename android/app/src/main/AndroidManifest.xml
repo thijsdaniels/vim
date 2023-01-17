@@ -1,7 +1,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.thijsdaniels.vim">
    <application
-        android:label="vim"
+        android:label="Vim"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher">
         <activity

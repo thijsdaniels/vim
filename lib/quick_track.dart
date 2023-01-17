@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:vim/dashboard.dart';
+
+import 'consumption.dart';
+import 'performance.dart';
 
 class QuickTrackFoodDialog extends StatefulWidget {
   const QuickTrackFoodDialog({ super.key });
@@ -11,10 +13,11 @@ class QuickTrackFoodDialog extends StatefulWidget {
 
 class _QuickTrackFoodDialog extends State<QuickTrackFoodDialog> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+  final TextEditingController _nameController = TextEditingController(text: 'Quick Track');
   final TextEditingController _caloriesController = TextEditingController();
-  final TextEditingController _carbohydratesController = TextEditingController();
-  final TextEditingController _fatController = TextEditingController();
-  final TextEditingController _proteinController = TextEditingController();
+  final TextEditingController _carbohydratesController = TextEditingController(text: '0');
+  final TextEditingController _fatController = TextEditingController(text: '0');
+  final TextEditingController _proteinController = TextEditingController(text: '0');
 
   @override
   Widget build(BuildContext context) {
@@ -25,6 +28,18 @@ class _QuickTrackFoodDialog extends State<QuickTrackFoodDialog> {
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: <Widget>[
+            TextFormField(
+              controller: _nameController,
+              decoration: const InputDecoration(
+                labelText: 'Name',
+              ),
+              validator: (value) {
+                if (value == null || value.isEmpty) {
+                  return 'Please enter a name.';
+                }
+                return null;
+              },
+            ),
             TextFormField(
               controller: _caloriesController,
               decoration: const InputDecoration(
@@ -52,6 +67,12 @@ class _QuickTrackFoodDialog extends State<QuickTrackFoodDialog> {
               inputFormatters: <TextInputFormatter>[
                 FilteringTextInputFormatter.digitsOnly
               ],
+              validator: (value) {
+                if (value == null || value.isEmpty) {
+                  return 'Please enter a number.';
+                }
+                return null;
+              },
             ),
             TextFormField(
               controller: _fatController,
@@ -63,6 +84,12 @@ class _QuickTrackFoodDialog extends State<QuickTrackFoodDialog> {
               inputFormatters: <TextInputFormatter>[
                 FilteringTextInputFormatter.digitsOnly
               ],
+              validator: (value) {
+                if (value == null || value.isEmpty) {
+                  return 'Please enter a number.';
+                }
+                return null;
+              },
             ),
             TextFormField(
               controller: _proteinController,
@@ -74,6 +101,12 @@ class _QuickTrackFoodDialog extends State<QuickTrackFoodDialog> {
               inputFormatters: <TextInputFormatter>[
                 FilteringTextInputFormatter.digitsOnly
               ],
+              validator: (value) {
+                if (value == null || value.isEmpty) {
+                  return 'Please enter a number.';
+                }
+                return null;
+              },
             ),
           ],
         ),
@@ -99,7 +132,7 @@ class _QuickTrackFoodDialog extends State<QuickTrackFoodDialog> {
               formState.save();
               Navigator.of(context).pop(
                 Consumption(
-                  name: 'Quick Track',
+                  name: _nameController.value.text,
                   calories: int.parse(_caloriesController.value.text),
                   carbohydrates: int.parse(_carbohydratesController.value.text),
                   fat: int.parse(_fatController.value.text),
@@ -123,6 +156,7 @@ class QuickTrackExerciseDialog extends StatefulWidget {
 
 class _QuickTrackExerciseDialog extends State<QuickTrackExerciseDialog> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+  final TextEditingController _nameController = TextEditingController(text: 'Quick Track');
   final TextEditingController _caloriesController = TextEditingController();
 
   @override
@@ -134,6 +168,19 @@ class _QuickTrackExerciseDialog extends State<QuickTrackExerciseDialog> {
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: <Widget>[
+            TextFormField(
+              controller: _nameController,
+              onTap: () {},
+              decoration: const InputDecoration(
+                labelText: 'Name',
+              ),
+              validator: (value) {
+                if (value == null || value.isEmpty) {
+                  return 'Please enter a name.';
+                }
+                return null;
+              },
+            ),
             TextFormField(
               controller: _caloriesController,
               decoration: const InputDecoration(
@@ -177,7 +224,7 @@ class _QuickTrackExerciseDialog extends State<QuickTrackExerciseDialog> {
 
               Navigator.of(context).pop(
                 Performance(
-                  name: 'Quick Track',
+                  name: _nameController.value.text,
                   calories: int.parse(_caloriesController.value.text),
                 ),
               );

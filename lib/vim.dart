@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:vim/dashboard.dart';
+
+import 'dashboard.dart';
 
 class Vim extends StatelessWidget {
   const Vim({ super.key });
