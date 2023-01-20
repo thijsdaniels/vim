@@ -21,7 +21,11 @@ abstract class Document {
   // factory Document.fromMap(Map<String, dynamic> map);
 
   Future<void> save() async {
-    _reference = await _collection.add(this);
+    if (_reference == null) {
+      _reference = await _collection.add(this);
+    } else {
+      await _reference!.set(this);
+    }
   }
 
   Future<void> delete() async {

@@ -1,7 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 class Performance {
-  static final CollectionReference<Performance> _collection = FirebaseFirestore.instance
+  static final CollectionReference<Performance> _collection = FirebaseFirestore
+      .instance
       .collection('performances')
       .withConverter<Performance>(
         fromFirestore: (snapshot, _) => Performance.fromSnapshot(snapshot),
@@ -10,9 +11,9 @@ class Performance {
 
   DocumentReference? _reference;
 
-  late final Timestamp timestamp;
-  final String name;
-  final int calories;
+  late Timestamp timestamp;
+  String name;
+  int calories;
 
   Performance({
     Timestamp? timestamp,
@@ -30,7 +31,9 @@ class Performance {
     };
   }
 
-  static Performance fromSnapshot(DocumentSnapshot<Map<String, dynamic>> snapshot) {
+  static Performance fromSnapshot(
+    DocumentSnapshot<Map<String, dynamic>> snapshot,
+  ) {
     Map<String, dynamic> map = snapshot.data()!;
 
     Performance performance = fromMap(map);
@@ -48,7 +51,11 @@ class Performance {
   }
 
   Future<void> save() async {
-    _reference = await _collection.add(this);
+    if (_reference == null) {
+      _reference = await _collection.add(this);
+    } else {
+      await _reference!.set(toMap());
+    }
   }
 
   Future<void> delete() async {
@@ -59,11 +66,13 @@ class Performance {
     DateTime today = DateTime(date.year, date.month, date.day);
     DateTime tomorrow = today.add(const Duration(days: 1));
 
-    QuerySnapshot<Performance> snapshot = await _collection.where(
-      'timestamp',
-      isGreaterThanOrEqualTo: Timestamp.fromDate(today),
-      isLessThan: Timestamp.fromDate(tomorrow),
-    ).get();
+    QuerySnapshot<Performance> snapshot = await _collection
+        .where(
+          'timestamp',
+          isGreaterThanOrEqualTo: Timestamp.fromDate(today),
+          isLessThan: Timestamp.fromDate(tomorrow),
+        )
+        .get();
 
     return snapshot.docs.map((doc) => doc.data()).toList();
   }

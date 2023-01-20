@@ -2,17 +2,18 @@ import 'package:badges/badges.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_speed_dial/flutter_speed_dial.dart';
 import 'package:intl/intl.dart';
-
-import '../dialogs/track_ingredient_dialog.dart';
-import '../models/consumption.dart';
-import '../models/performance.dart';
-import '../dialogs/quick_track_food_dialog.dart';
-import '../dialogs/quick_track_exercise_dialog.dart';
+import 'package:vim/models/consumption.dart';
+import 'package:vim/models/ingredient_consumption.dart';
+import 'package:vim/models/nutrition.dart';
+import 'package:vim/models/performance.dart';
+import 'package:vim/widgets/dialogs/quick_track_exercise_dialog.dart';
+import 'package:vim/widgets/dialogs/quick_track_food_dialog.dart';
+import 'package:vim/widgets/dialogs/track_ingredient_dialog.dart';
 
 enum QuickTrack { food, exercise }
 
 class Dashboard extends StatefulWidget {
-  const Dashboard({ super.key });
+  const Dashboard({super.key});
 
   @override
   State<Dashboard> createState() => _DashboardState();
@@ -27,28 +28,25 @@ class _DashboardState extends State<Dashboard> {
   Consumption get _totalConsumption {
     return _consumptions.isNotEmpty
         ? _consumptions.reduce((total, entry) => Consumption(
-      name: 'Total',
-      calories: total.calories + entry.calories,
-      carbohydrates: total.carbohydrates + entry.carbohydrates,
-      fat: total.fat + entry.fat,
-      protein: total.protein + entry.protein,
-    ))
+              name: 'Total',
+              nutrition: total.nutrition.add(entry.nutrition),
+            ))
         : Consumption(
-      name: 'Total',
-      calories: 0,
-    );
+            name: 'Total',
+            nutrition: Nutrition(calories: 0),
+          );
   }
 
   Performance get _totalPerformance {
     return _performances.isNotEmpty
         ? _performances.reduce((total, entry) => Performance(
-      name: 'Total',
-      calories: total.calories + entry.calories,
-    ))
+              name: 'Total',
+              calories: total.calories + entry.calories,
+            ))
         : Performance(
-      name: 'Total',
-      calories: 0,
-    );
+            name: 'Total',
+            calories: 0,
+          );
   }
 
   _DashboardState() {
@@ -57,10 +55,15 @@ class _DashboardState extends State<Dashboard> {
 
   void _initialize() async {
     List<Consumption> consumptions = await Consumption.forDate(_date);
+    List<IngredientConsumption> ingredientConsumptions =
+        await IngredientConsumption.forDate(_date);
     List<Performance> performances = await Performance.forDate(_date);
 
     setState(() {
-      _consumptions = consumptions;
+      _consumptions = [
+        ...consumptions,
+        ...ingredientConsumptions,
+      ];
       _performances = performances;
     });
   }
@@ -90,7 +93,10 @@ class _DashboardState extends State<Dashboard> {
           SpeedDialChild(
             label: 'Track Ingredient',
             onTap: () async {
-              Consumption? consumption = await _showTrackIngredientDialog(context);
+              Consumption? consumption = await _showTrackIngredientDialog(
+                context: context,
+              );
+
               if (consumption != null) {
                 _addConsumption(consumption);
               }
@@ -100,7 +106,10 @@ class _DashboardState extends State<Dashboard> {
           SpeedDialChild(
             label: 'Quick Track Food',
             onTap: () async {
-              Consumption? consumption = await _showQuickTrackFoodDialog(context);
+              Consumption? consumption = await _showQuickTrackFoodDialog(
+                context: context,
+              );
+
               if (consumption != null) {
                 _addConsumption(consumption);
               }
@@ -117,7 +126,10 @@ class _DashboardState extends State<Dashboard> {
           SpeedDialChild(
             label: 'Quick Track Exercise',
             onTap: () async {
-              Performance? performance = await _showQuickTrackExerciseDialog(context);
+              Performance? performance = await _showQuickTrackExerciseDialog(
+                context: context,
+              );
+
               if (performance != null) {
                 _addPerformance(performance);
               }
@@ -153,7 +165,7 @@ class _DashboardState extends State<Dashboard> {
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: <Widget>[
                             Text(
-                              '${_totalConsumption.calories.round()}',
+                              '${_totalConsumption.nutrition.calories.round()}',
                               style: Theme.of(context).textTheme.headline3,
                             ),
                             const Text('Consumed'),
@@ -184,7 +196,7 @@ class _DashboardState extends State<Dashboard> {
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: <Widget>[
                             Text(
-                              '${_totalConsumption.carbohydrates.round()}',
+                              '${_totalConsumption.nutrition.carbohydrates.round()}',
                               style: Theme.of(context).textTheme.headline4,
                             ),
                             const Text('Carbs'),
@@ -195,7 +207,7 @@ class _DashboardState extends State<Dashboard> {
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: <Widget>[
                             Text(
-                              '${_totalConsumption.fat.round()}',
+                              '${_totalConsumption.nutrition.fat.round()}',
                               style: Theme.of(context).textTheme.headline4,
                             ),
                             const Text('Fat'),
@@ -206,7 +218,7 @@ class _DashboardState extends State<Dashboard> {
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: <Widget>[
                             Text(
-                              '${_totalConsumption.protein.round()}',
+                              '${_totalConsumption.nutrition.protein.round()}',
                               style: Theme.of(context).textTheme.headline4,
                             ),
                             const Text('Protein'),
@@ -259,17 +271,61 @@ class _DashboardState extends State<Dashboard> {
                       itemBuilder: (context, index) => Card(
                         child: ListTile(
                           title: Text(_consumptions[index].name),
-                          subtitle: Text('${_consumptions[index].calories.round()} kcal'),
-                          trailing: IconButton(
-                            icon: const Icon(Icons.delete),
-                            onPressed: () {
-                              _consumptions[index].delete();
+                          subtitle: Text(
+                              '${_consumptions[index].nutrition.calories.round()} kcal'),
+                          trailing: Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              IconButton(
+                                icon: const Icon(Icons.edit),
+                                onPressed: () async {
+                                  Consumption entry = _consumptions[index];
 
-                              setState(() {
-                                _consumptions.removeAt(index);
-                                _consumptions = [..._consumptions];
-                              });
-                            },
+                                  if (entry is IngredientConsumption) {
+                                    IngredientConsumption? consumption =
+                                        await _showTrackIngredientDialog(
+                                      context: context,
+                                      ingredientConsumption: entry,
+                                    );
+
+                                    if (consumption != null) {
+                                      consumption.save();
+
+                                      setState(() {
+                                        _consumptions[index] = consumption;
+                                        _consumptions = [..._consumptions];
+                                      });
+                                    }
+                                  } else {
+                                    Consumption? consumption =
+                                        await _showQuickTrackFoodDialog(
+                                      context: context,
+                                      consumption: _consumptions[index],
+                                    );
+
+                                    if (consumption != null) {
+                                      consumption.save();
+
+                                      setState(() {
+                                        _consumptions[index] = consumption;
+                                        _consumptions = [..._consumptions];
+                                      });
+                                    }
+                                  }
+                                },
+                              ),
+                              IconButton(
+                                icon: const Icon(Icons.delete),
+                                onPressed: () {
+                                  _consumptions[index].delete();
+
+                                  setState(() {
+                                    _consumptions.removeAt(index);
+                                    _consumptions = [..._consumptions];
+                                  });
+                                },
+                              ),
+                            ],
                           ),
                         ),
                       ),
@@ -286,17 +342,42 @@ class _DashboardState extends State<Dashboard> {
                       itemBuilder: (context, index) => Card(
                         child: ListTile(
                           title: Text(_performances[index].name),
-                          subtitle: Text('${_performances[index].calories} kcal'),
-                          trailing: IconButton(
-                            icon: const Icon(Icons.delete),
-                            onPressed: () {
-                              _performances[index].delete();
+                          subtitle:
+                              Text('${_performances[index].calories} kcal'),
+                          trailing: Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              IconButton(
+                                icon: const Icon(Icons.edit),
+                                onPressed: () async {
+                                  Performance? performance =
+                                      await _showQuickTrackExerciseDialog(
+                                    context: context,
+                                    performance: _performances[index],
+                                  );
 
-                              setState(() {
-                                _performances.removeAt(index);
-                                _performances = [..._performances];
-                              });
-                            },
+                                  if (performance != null) {
+                                    performance.save();
+
+                                    setState(() {
+                                      _performances[index] = performance;
+                                      _performances = [..._performances];
+                                    });
+                                  }
+                                },
+                              ),
+                              IconButton(
+                                icon: const Icon(Icons.delete),
+                                onPressed: () {
+                                  _performances[index].delete();
+
+                                  setState(() {
+                                    _performances.removeAt(index);
+                                    _performances = [..._performances];
+                                  });
+                                },
+                              ),
+                            ],
                           ),
                         ),
                       ),
@@ -311,29 +392,44 @@ class _DashboardState extends State<Dashboard> {
     );
   }
 
-  Future<Consumption?> _showTrackIngredientDialog(BuildContext context) {
-    return showDialog<Consumption>(
+  Future<IngredientConsumption?> _showTrackIngredientDialog({
+    required BuildContext context,
+    IngredientConsumption? ingredientConsumption,
+  }) {
+    return showDialog<IngredientConsumption>(
       context: context,
       builder: (BuildContext context) {
-        return const TrackIngredientDialog();
+        return TrackIngredientDialog(
+          ingredientConsumption: ingredientConsumption,
+        );
       },
     );
   }
 
-  Future<Consumption?> _showQuickTrackFoodDialog(BuildContext context) {
+  Future<Consumption?> _showQuickTrackFoodDialog({
+    required BuildContext context,
+    Consumption? consumption,
+  }) {
     return showDialog<Consumption>(
       context: context,
       builder: (BuildContext context) {
-        return const QuickTrackFoodDialog();
+        return QuickTrackFoodDialog(
+          consumption: consumption,
+        );
       },
     );
   }
 
-  Future<Performance?> _showQuickTrackExerciseDialog(BuildContext context) {
+  Future<Performance?> _showQuickTrackExerciseDialog({
+    required BuildContext context,
+    Performance? performance,
+  }) {
     return showDialog<Performance>(
       context: context,
       builder: (BuildContext context) {
-        return const QuickTrackExerciseDialog();
+        return QuickTrackExerciseDialog(
+          performance: performance,
+        );
       },
     );
   }

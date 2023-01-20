@@ -1,9 +1,10 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-
-import 'consumption.dart';
+import 'package:vim/models/ingredient_consumption.dart';
+import 'package:vim/models/nutrition.dart';
 
 class Ingredient {
-  static final CollectionReference<Ingredient> _collection = FirebaseFirestore.instance
+  static final CollectionReference<Ingredient> _collection = FirebaseFirestore
+      .instance
       .collection('ingredients')
       .withConverter<Ingredient>(
         fromFirestore: (snapshot, _) => Ingredient.fromSnapshot(snapshot),
@@ -12,34 +13,27 @@ class Ingredient {
 
   DocumentReference? _reference;
 
-  final String name;
-  final String? brand;
-  final num calories;
-  final num carbohydrates;
-  final num protein;
-  final num fat;
+  String name;
+  String? brand;
+  Nutrition nutrition;
 
   Ingredient({
     required this.name,
     this.brand,
-    required this.calories,
-    this.carbohydrates = 0,
-    this.protein = 0,
-    this.fat = 0,
+    required this.nutrition,
   });
 
   Map<String, dynamic> toMap() {
     return {
       'name': name,
       'brand': brand,
-      'calories': calories,
-      'carbohydrates': carbohydrates,
-      'protein': protein,
-      'fat': fat,
+      'nutrition': nutrition.toMap(),
     };
   }
 
-  static Ingredient fromSnapshot(DocumentSnapshot<Map<String, dynamic>> snapshot) {
+  static Ingredient fromSnapshot(
+    DocumentSnapshot<Map<String, dynamic>> snapshot,
+  ) {
     Map<String, dynamic> map = snapshot.data()!;
 
     Ingredient consumption = fromMap(map);
@@ -52,15 +46,16 @@ class Ingredient {
     return Ingredient(
       name: map['name'],
       brand: map['brand'],
-      calories: map['calories'],
-      carbohydrates: map['carbohydrates'],
-      protein: map['protein'],
-      fat: map['fat'],
+      nutrition: Nutrition.fromMap(map['nutrition']),
     );
   }
 
   Future<void> save() async {
-    _reference = await _collection.add(this);
+    if (_reference == null) {
+      _reference = await _collection.add(this);
+    } else {
+      await _reference!.set(toMap());
+    }
   }
 
   Future<void> delete() async {
@@ -72,13 +67,10 @@ class Ingredient {
     return snapshot.docs.map((doc) => doc.data()).toList();
   }
 
-  Consumption consumption(double amount) {
-    return Consumption(
-      name: name,
-      calories: calories * 0.01 * amount,
-      carbohydrates: carbohydrates * 0.01 * amount,
-      protein: protein * 0.01 * amount,
-      fat: fat * 0.01 * amount,
+  IngredientConsumption consumption(double amount) {
+    return IngredientConsumption(
+      ingredient: this,
+      amount: amount,
     );
   }
 }

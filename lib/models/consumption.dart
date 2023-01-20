@@ -1,7 +1,9 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:vim/models/nutrition.dart';
 
 class Consumption {
-  static final CollectionReference<Consumption> _collection = FirebaseFirestore.instance
+  static final CollectionReference<Consumption> _collection = FirebaseFirestore
+      .instance
       .collection('consumptions')
       .withConverter<Consumption>(
         fromFirestore: (snapshot, _) => Consumption.fromSnapshot(snapshot),
@@ -10,20 +12,14 @@ class Consumption {
 
   DocumentReference? _reference;
 
-  late final Timestamp timestamp;
-  final String name;
-  final num calories;
-  final num carbohydrates;
-  final num protein;
-  final num fat;
+  late Timestamp timestamp;
+  String name;
+  Nutrition nutrition;
 
   Consumption({
     Timestamp? timestamp,
     required this.name,
-    required this.calories,
-    this.carbohydrates = 0,
-    this.fat = 0,
-    this.protein = 0,
+    required this.nutrition,
   }) {
     this.timestamp = timestamp ?? Timestamp.now();
   }
@@ -32,14 +28,13 @@ class Consumption {
     return {
       'timestamp': timestamp,
       'name': name,
-      'calories': calories,
-      'carbohydrates': carbohydrates,
-      'protein': protein,
-      'fat': fat,
+      'nutrition': nutrition.toMap(),
     };
   }
 
-  static Consumption fromSnapshot(DocumentSnapshot<Map<String, dynamic>> snapshot) {
+  static Consumption fromSnapshot(
+    DocumentSnapshot<Map<String, dynamic>> snapshot,
+  ) {
     Map<String, dynamic> map = snapshot.data()!;
 
     Consumption consumption = fromMap(map);
@@ -52,15 +47,16 @@ class Consumption {
     return Consumption(
       timestamp: map['timestamp'],
       name: map['name'],
-      calories: map['calories'],
-      carbohydrates: map['carbohydrates'],
-      protein: map['protein'],
-      fat: map['fat'],
+      nutrition: Nutrition.fromMap(map['nutrition']),
     );
   }
 
   Future<void> save() async {
-    _reference = await _collection.add(this);
+    if (_reference == null) {
+      _reference = await _collection.add(this);
+    } else {
+      await _reference!.set(toMap());
+    }
   }
 
   Future<void> delete() async {
@@ -71,11 +67,13 @@ class Consumption {
     DateTime today = DateTime(date.year, date.month, date.day);
     DateTime tomorrow = today.add(const Duration(days: 1));
 
-    QuerySnapshot<Consumption> snapshot = await _collection.where(
-      'timestamp',
-      isGreaterThanOrEqualTo: Timestamp.fromDate(today),
-      isLessThan: Timestamp.fromDate(tomorrow),
-    ).get();
+    QuerySnapshot<Consumption> snapshot = await _collection
+        .where(
+          'timestamp',
+          isGreaterThanOrEqualTo: Timestamp.fromDate(today),
+          isLessThan: Timestamp.fromDate(tomorrow),
+        )
+        .get();
 
     return snapshot.docs.map((doc) => doc.data()).toList();
   }

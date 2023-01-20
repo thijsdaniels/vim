@@ -66,7 +66,8 @@ class DefaultFirebaseOptions {
     messagingSenderId: '416898477439',
     projectId: 'thijsdaniels-vim',
     storageBucket: 'thijsdaniels-vim.appspot.com',
-    iosClientId: '416898477439-cgospv30j5c8aifp2keve06d42p58o2o.apps.googleusercontent.com',
+    iosClientId:
+        '416898477439-cgospv30j5c8aifp2keve06d42p58o2o.apps.googleusercontent.com',
     iosBundleId: 'com.thijsdaniels.vim',
   );
 
@@ -76,7 +77,8 @@ class DefaultFirebaseOptions {
     messagingSenderId: '416898477439',
     projectId: 'thijsdaniels-vim',
     storageBucket: 'thijsdaniels-vim.appspot.com',
-    iosClientId: '416898477439-cgospv30j5c8aifp2keve06d42p58o2o.apps.googleusercontent.com',
+    iosClientId:
+        '416898477439-cgospv30j5c8aifp2keve06d42p58o2o.apps.googleusercontent.com',
     iosBundleId: 'com.thijsdaniels.vim',
   );
 }

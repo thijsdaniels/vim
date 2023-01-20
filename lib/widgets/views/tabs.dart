@@ -1,15 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
-import 'package:vim/views/dashboard.dart';
-import 'package:vim/views/ingredients.dart';
-
-import '../models/consumption.dart';
-import '../models/performance.dart';
-import '../dialogs/quick_track_food_dialog.dart';
-import '../dialogs/quick_track_exercise_dialog.dart';
+import 'package:vim/widgets/views/dashboard.dart';
+import 'package:vim/widgets/views/ingredients.dart';
 
 class Tabs extends StatefulWidget {
-  const Tabs({ super.key });
+  const Tabs({super.key});
 
   @override
   State<Tabs> createState() => _TabsState();

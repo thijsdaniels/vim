@@ -1,30 +1,48 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:vim/models/ingredient.dart';
+import 'package:vim/models/consumption.dart';
+import 'package:vim/models/nutrition.dart';
 
-import '../models/consumption.dart';
-import '../models/performance.dart';
+class QuickTrackFoodDialog extends StatefulWidget {
+  final Consumption? consumption;
 
-class CreateIngredientDialog extends StatefulWidget {
-  const CreateIngredientDialog({ super.key });
+  const QuickTrackFoodDialog({super.key, this.consumption});
 
   @override
-  State<CreateIngredientDialog> createState() => _CreateIngredientDialogState();
+  State<QuickTrackFoodDialog> createState() => _QuickTrackFoodDialogState();
 }
 
-class _CreateIngredientDialogState extends State<CreateIngredientDialog> {
+class _QuickTrackFoodDialogState extends State<QuickTrackFoodDialog> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
-  final TextEditingController _nameController = TextEditingController();
-  final TextEditingController _brandController = TextEditingController();
+  final TextEditingController _nameController =
+      TextEditingController(text: 'Quick Track');
   final TextEditingController _caloriesController = TextEditingController();
-  final TextEditingController _carbohydratesController = TextEditingController();
-  final TextEditingController _fatController = TextEditingController();
-  final TextEditingController _proteinController = TextEditingController();
+  final TextEditingController _carbohydratesController =
+      TextEditingController(text: '0');
+  final TextEditingController _fatController = TextEditingController(text: '0');
+  final TextEditingController _proteinController =
+      TextEditingController(text: '0');
+
+  @override
+  void initState() {
+    super.initState();
+
+    if (widget.consumption != null) {
+      _nameController.text = widget.consumption!.name;
+      _caloriesController.text =
+          widget.consumption!.nutrition.calories.toString();
+      _carbohydratesController.text =
+          widget.consumption!.nutrition.carbohydrates.toString();
+      _fatController.text = widget.consumption!.nutrition.fat.toString();
+      _proteinController.text =
+          widget.consumption!.nutrition.protein.toString();
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
-      title: const Text('Create Ingredient'),
+      title: const Text('Quick Track Food'),
       content: SingleChildScrollView(
         child: Form(
           key: _formKey,
@@ -33,7 +51,6 @@ class _CreateIngredientDialogState extends State<CreateIngredientDialog> {
             children: <Widget>[
               TextFormField(
                 controller: _nameController,
-                autofocus: true,
                 decoration: const InputDecoration(
                   labelText: 'Name',
                 ),
@@ -45,19 +62,14 @@ class _CreateIngredientDialogState extends State<CreateIngredientDialog> {
                 },
               ),
               TextFormField(
-                controller: _brandController,
-                decoration: const InputDecoration(
-                  labelText: 'Brand',
-                ),
-              ),
-              TextFormField(
                 controller: _caloriesController,
+                autofocus: true,
                 decoration: const InputDecoration(
                   labelText: 'Calories',
                 ),
                 keyboardType: TextInputType.number,
                 inputFormatters: <TextInputFormatter>[
-                  FilteringTextInputFormatter.digitsOnly
+                  FilteringTextInputFormatter.allow(RegExp(r'[0-9\.]'))
                 ],
                 validator: (value) {
                   if (value == null || value.isEmpty) {
@@ -73,7 +85,7 @@ class _CreateIngredientDialogState extends State<CreateIngredientDialog> {
                 ),
                 keyboardType: TextInputType.number,
                 inputFormatters: <TextInputFormatter>[
-                  FilteringTextInputFormatter.digitsOnly
+                  FilteringTextInputFormatter.allow(RegExp(r'[0-9\.]'))
                 ],
                 validator: (value) {
                   if (value == null || value.isEmpty) {
@@ -89,7 +101,7 @@ class _CreateIngredientDialogState extends State<CreateIngredientDialog> {
                 ),
                 keyboardType: TextInputType.number,
                 inputFormatters: <TextInputFormatter>[
-                  FilteringTextInputFormatter.digitsOnly
+                  FilteringTextInputFormatter.allow(RegExp(r'[0-9\.]'))
                 ],
                 validator: (value) {
                   if (value == null || value.isEmpty) {
@@ -105,7 +117,7 @@ class _CreateIngredientDialogState extends State<CreateIngredientDialog> {
                 ),
                 keyboardType: TextInputType.number,
                 inputFormatters: <TextInputFormatter>[
-                  FilteringTextInputFormatter.digitsOnly
+                  FilteringTextInputFormatter.allow(RegExp(r'[0-9\.]'))
                 ],
                 validator: (value) {
                   if (value == null || value.isEmpty) {
@@ -135,18 +147,32 @@ class _CreateIngredientDialogState extends State<CreateIngredientDialog> {
           child: const Text('Confirm'),
           onPressed: () {
             FormState formState = _formKey.currentState!;
+
             if (formState.validate()) {
               formState.save();
-              Navigator.of(context).pop(
-                Ingredient(
-                  name: _nameController.value.text,
-                  brand: _brandController.value.text.isNotEmpty ? _brandController.value.text : null,
-                  calories: double.parse(_caloriesController.value.text),
-                  carbohydrates: double.parse(_carbohydratesController.value.text),
-                  fat: double.parse(_fatController.value.text),
-                  protein: double.parse(_proteinController.value.text),
-                ),
+
+              String name = _nameController.value.text;
+              Nutrition nutrition = Nutrition(
+                calories: double.parse(_caloriesController.value.text),
+                carbohydrates:
+                    double.parse(_carbohydratesController.value.text),
+                fat: double.parse(_fatController.value.text),
+                protein: double.parse(_proteinController.value.text),
               );
+
+              Consumption? consumption = widget.consumption;
+
+              if (consumption != null) {
+                consumption.name = name;
+                consumption.nutrition = nutrition;
+              } else {
+                consumption = Consumption(
+                  name: name,
+                  nutrition: nutrition,
+                );
+              }
+
+              Navigator.of(context).pop(consumption);
             }
           },
         ),

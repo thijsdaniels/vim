@@ -1,70 +1,60 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:vim/models/performance.dart';
 
-import '../models/consumption.dart';
-import '../models/ingredient.dart';
+class QuickTrackExerciseDialog extends StatefulWidget {
+  final Performance? performance;
 
-class TrackIngredientDialog extends StatefulWidget {
-  const TrackIngredientDialog({ super.key });
+  const QuickTrackExerciseDialog({super.key, this.performance});
 
   @override
-  State<TrackIngredientDialog> createState() => _TrackIngredientDialogState();
+  State<QuickTrackExerciseDialog> createState() =>
+      _QuickTrackExerciseDialogState();
 }
 
-class _TrackIngredientDialogState extends State<TrackIngredientDialog> {
-  List<Ingredient> _ingredients = [];
-  Ingredient? _ingredient;
-
+class _QuickTrackExerciseDialogState extends State<QuickTrackExerciseDialog> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
-  final TextEditingController _amountController = TextEditingController();
+  final TextEditingController _nameController =
+      TextEditingController(text: 'Quick Track');
+  final TextEditingController _caloriesController = TextEditingController();
 
-  _TrackIngredientDialogState() {
-    _initialize();
-  }
+  @override
+  void initState() {
+    super.initState();
 
-  void _initialize() async {
-    List<Ingredient> ingredients = await Ingredient.all();
-
-    setState(() {
-      _ingredients = ingredients;
-    });
+    if (widget.performance != null) {
+      _nameController.text = widget.performance!.name;
+      _caloriesController.text = widget.performance!.calories.toString();
+    }
   }
 
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
-      title: const Text('Track Ingredient'),
+      title: const Text('Quick Track Exercise'),
       content: SingleChildScrollView(
         child: Form(
           key: _formKey,
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: <Widget>[
-              DropdownButtonFormField<Ingredient>(
+              TextFormField(
+                controller: _nameController,
                 decoration: const InputDecoration(
-                  labelText: 'Ingredient',
+                  labelText: 'Name',
                 ),
-                items: _ingredients.map((ingredient) => DropdownMenuItem<Ingredient>(
-                  value: ingredient,
-                  child: Text(ingredient.name),
-                )).toList(),
-                value: _ingredient,
-                onChanged: (ingredient) {
-                  setState(() {
-                    _ingredient = ingredient;
-                  });
-                },
                 validator: (value) {
-                  if (value == null) {
-                    return 'Please select an ingredient.';
+                  if (value == null || value.isEmpty) {
+                    return 'Please enter a name.';
                   }
                   return null;
                 },
               ),
               TextFormField(
-                controller: _amountController,
+                controller: _caloriesController,
+                autofocus: true,
                 decoration: const InputDecoration(
-                  labelText: 'Grams',
+                  labelText: 'Calories',
                 ),
                 keyboardType: TextInputType.number,
                 inputFormatters: <TextInputFormatter>[
@@ -72,7 +62,7 @@ class _TrackIngredientDialogState extends State<TrackIngredientDialog> {
                 ],
                 validator: (value) {
                   if (value == null || value.isEmpty) {
-                    return 'Please enter an amount.';
+                    return 'Please enter a number.';
                   }
                   return null;
                 },
@@ -98,14 +88,26 @@ class _TrackIngredientDialogState extends State<TrackIngredientDialog> {
           child: const Text('Confirm'),
           onPressed: () {
             FormState formState = _formKey.currentState!;
+
             if (formState.validate()) {
               formState.save();
 
-              double amount = double.parse(_amountController.value.text);
+              String name = _nameController.value.text;
+              int calories = int.parse(_caloriesController.value.text);
 
-              Navigator.of(context).pop(
-                _ingredient?.consumption(amount),
-              );
+              Performance? performance = widget.performance;
+
+              if (performance != null) {
+                performance.name = name;
+                performance.calories = calories;
+              } else {
+                performance = Performance(
+                  name: name,
+                  calories: calories,
+                );
+              }
+
+              Navigator.of(context).pop(performance);
             }
           },
         ),
