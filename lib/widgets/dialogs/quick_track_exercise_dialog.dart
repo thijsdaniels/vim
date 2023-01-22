@@ -1,5 +1,8 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:provider/provider.dart';
+import 'package:vim/models/date_model.dart';
 import 'package:vim/models/performance.dart';
 
 class QuickTrackExerciseDialog extends StatefulWidget {
@@ -81,35 +84,38 @@ class _QuickTrackExerciseDialogState extends State<QuickTrackExerciseDialog> {
             Navigator.of(context).pop();
           },
         ),
-        TextButton(
-          style: TextButton.styleFrom(
-            textStyle: Theme.of(context).textTheme.labelLarge,
-          ),
-          child: const Text('Confirm'),
-          onPressed: () {
-            FormState formState = _formKey.currentState!;
+        Consumer<DateModel>(
+          builder: (context, dateModel, child) => TextButton(
+            style: TextButton.styleFrom(
+              textStyle: Theme.of(context).textTheme.labelLarge,
+            ),
+            child: const Text('Confirm'),
+            onPressed: () {
+              FormState formState = _formKey.currentState!;
 
-            if (formState.validate()) {
-              formState.save();
+              if (formState.validate()) {
+                formState.save();
 
-              String name = _nameController.value.text;
-              int calories = int.parse(_caloriesController.value.text);
+                String name = _nameController.value.text;
+                int calories = int.parse(_caloriesController.value.text);
 
-              Performance? performance = widget.performance;
+                Performance? performance = widget.performance;
 
-              if (performance != null) {
-                performance.name = name;
-                performance.calories = calories;
-              } else {
-                performance = Performance(
-                  name: name,
-                  calories: calories,
-                );
+                if (performance != null) {
+                  performance.name = name;
+                  performance.calories = calories;
+                } else {
+                  performance = Performance(
+                    timestamp: dateModel.timestamp,
+                    name: name,
+                    calories: calories,
+                  );
+                }
+
+                Navigator.of(context).pop(performance);
               }
-
-              Navigator.of(context).pop(performance);
-            }
-          },
+            },
+          ),
         ),
       ],
     );

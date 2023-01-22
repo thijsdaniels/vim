@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:vim/widgets/views/dashboard.dart';
-import 'package:vim/widgets/views/ingredients.dart';
+import 'package:vim/widgets/views/ingredients_view.dart';
 
 class Tabs extends StatefulWidget {
   const Tabs({super.key});
@@ -23,7 +23,7 @@ class _TabsState extends State<Tabs> {
     return Scaffold(
       body: <Widget>[
         const Dashboard(),
-        const Ingredients(),
+        const IngredientsView(),
       ][_selectedIndex],
       bottomNavigationBar: BottomNavigationBar(
         showUnselectedLabels: false,

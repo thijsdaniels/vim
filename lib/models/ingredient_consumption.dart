@@ -4,21 +4,14 @@ import 'package:vim/models/ingredient.dart';
 import 'package:vim/models/nutrition.dart';
 
 class IngredientConsumption implements Consumption {
-  static final CollectionReference<IngredientConsumption> _collection =
-      FirebaseFirestore.instance
-          .collection('ingredientConsumptions')
-          .withConverter<IngredientConsumption>(
-            fromFirestore: (snapshot, _) =>
-                IngredientConsumption.fromSnapshot(snapshot),
-            toFirestore: (consumption, _) => consumption.toMap(),
-          );
-
-  DocumentReference? _reference;
-
+  String? _id;
   @override
-  late Timestamp timestamp;
+  Timestamp timestamp;
   Ingredient ingredient;
   num amount;
+
+  @override
+  String? get id => _id;
 
   @override
   String get name => ingredient.name;
@@ -37,12 +30,10 @@ class IngredientConsumption implements Consumption {
   }
 
   IngredientConsumption({
-    Timestamp? timestamp,
+    required this.timestamp,
     required this.ingredient,
     required this.amount,
-  }) {
-    this.timestamp = timestamp ?? Timestamp.now();
-  }
+  });
 
   @override
   Map<String, dynamic> toMap() {
@@ -59,7 +50,7 @@ class IngredientConsumption implements Consumption {
     Map<String, dynamic> map = snapshot.data()!;
 
     IngredientConsumption ingredientConsumption = fromMap(map);
-    ingredientConsumption._reference = snapshot.reference;
+    ingredientConsumption._id = snapshot.id;
 
     return ingredientConsumption;
   }
@@ -70,34 +61,5 @@ class IngredientConsumption implements Consumption {
       ingredient: Ingredient.fromMap(map['ingredient']),
       amount: map['amount'],
     );
-  }
-
-  @override
-  Future<void> save() async {
-    if (_reference == null) {
-      _reference = await _collection.add(this);
-    } else {
-      await _reference!.set(toMap());
-    }
-  }
-
-  @override
-  Future<void> delete() async {
-    await _reference?.delete();
-  }
-
-  static Future<List<IngredientConsumption>> forDate(DateTime date) async {
-    DateTime today = DateTime(date.year, date.month, date.day);
-    DateTime tomorrow = today.add(const Duration(days: 1));
-
-    QuerySnapshot<IngredientConsumption> snapshot = await _collection
-        .where(
-          'timestamp',
-          isGreaterThanOrEqualTo: Timestamp.fromDate(today),
-          isLessThan: Timestamp.fromDate(tomorrow),
-        )
-        .get();
-
-    return snapshot.docs.map((doc) => doc.data()).toList();
   }
 }

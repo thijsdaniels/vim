@@ -2,10 +2,13 @@ import 'package:badges/badges.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_speed_dial/flutter_speed_dial.dart';
 import 'package:intl/intl.dart';
+import 'package:provider/provider.dart';
 import 'package:vim/models/consumption.dart';
+import 'package:vim/models/date_model.dart';
 import 'package:vim/models/ingredient_consumption.dart';
-import 'package:vim/models/nutrition.dart';
 import 'package:vim/models/performance.dart';
+import 'package:vim/services/consumptions_service.dart';
+import 'package:vim/services/performances_service.dart';
 import 'package:vim/widgets/dialogs/quick_track_exercise_dialog.dart';
 import 'package:vim/widgets/dialogs/quick_track_food_dialog.dart';
 import 'package:vim/widgets/dialogs/track_ingredient_dialog.dart';
@@ -20,70 +23,6 @@ class Dashboard extends StatefulWidget {
 }
 
 class _DashboardState extends State<Dashboard> {
-  DateTime _date = DateTime.now();
-
-  List<Consumption> _consumptions = [];
-  List<Performance> _performances = [];
-
-  Consumption get _totalConsumption {
-    return _consumptions.isNotEmpty
-        ? _consumptions.reduce((total, entry) => Consumption(
-              name: 'Total',
-              nutrition: total.nutrition.add(entry.nutrition),
-            ))
-        : Consumption(
-            name: 'Total',
-            nutrition: Nutrition(calories: 0),
-          );
-  }
-
-  Performance get _totalPerformance {
-    return _performances.isNotEmpty
-        ? _performances.reduce((total, entry) => Performance(
-              name: 'Total',
-              calories: total.calories + entry.calories,
-            ))
-        : Performance(
-            name: 'Total',
-            calories: 0,
-          );
-  }
-
-  _DashboardState() {
-    _initialize();
-  }
-
-  void _initialize() async {
-    List<Consumption> consumptions = await Consumption.forDate(_date);
-    List<IngredientConsumption> ingredientConsumptions =
-        await IngredientConsumption.forDate(_date);
-    List<Performance> performances = await Performance.forDate(_date);
-
-    setState(() {
-      _consumptions = [
-        ...consumptions,
-        ...ingredientConsumptions,
-      ];
-      _performances = performances;
-    });
-  }
-
-  void _addConsumption(Consumption consumption) {
-    setState(() {
-      _consumptions = [..._consumptions, consumption];
-    });
-
-    consumption.save();
-  }
-
-  void _addPerformance(Performance performance) {
-    setState(() {
-      _performances = [..._performances, performance];
-    });
-
-    performance.save();
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -98,7 +37,7 @@ class _DashboardState extends State<Dashboard> {
               );
 
               if (consumption != null) {
-                _addConsumption(consumption);
+                ConsumptionsService.create(consumption);
               }
             },
             child: const Icon(Icons.bakery_dining),
@@ -111,7 +50,7 @@ class _DashboardState extends State<Dashboard> {
               );
 
               if (consumption != null) {
-                _addConsumption(consumption);
+                ConsumptionsService.create(consumption);
               }
             },
             child: Badge(
@@ -131,7 +70,7 @@ class _DashboardState extends State<Dashboard> {
               );
 
               if (performance != null) {
-                _addPerformance(performance);
+                PerformancesService.create(performance);
               }
             },
             child: Badge(
@@ -155,233 +94,27 @@ class _DashboardState extends State<Dashboard> {
             padding: const EdgeInsets.all(16.0),
             child: Column(
               children: [
-                Card(
-                  child: Padding(
-                    padding: const EdgeInsets.all(32.0),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: <Widget>[
-                        Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: <Widget>[
-                            Text(
-                              '${_totalConsumption.nutrition.calories.round()}',
-                              style: Theme.of(context).textTheme.headline3,
-                            ),
-                            const Text('Consumed'),
-                          ],
-                        ),
-                        const SizedBox(width: 64),
-                        Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: <Widget>[
-                            Text(
-                              '${_totalPerformance.calories.round()}',
-                              style: Theme.of(context).textTheme.headline3,
-                            ),
-                            const Text('Burnt'),
-                          ],
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-                Card(
-                  child: Padding(
-                    padding: const EdgeInsets.all(32.0),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: <Widget>[
-                        Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: <Widget>[
-                            Text(
-                              '${_totalConsumption.nutrition.carbohydrates.round()}',
-                              style: Theme.of(context).textTheme.headline4,
-                            ),
-                            const Text('Carbs'),
-                          ],
-                        ),
-                        const SizedBox(width: 64),
-                        Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: <Widget>[
-                            Text(
-                              '${_totalConsumption.nutrition.fat.round()}',
-                              style: Theme.of(context).textTheme.headline4,
-                            ),
-                            const Text('Fat'),
-                          ],
-                        ),
-                        const SizedBox(width: 64),
-                        Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: <Widget>[
-                            Text(
-                              '${_totalConsumption.nutrition.protein.round()}',
-                              style: Theme.of(context).textTheme.headline4,
-                            ),
-                            const Text('Protein'),
-                          ],
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
+                const CaloriesCard(),
+                const MacrosCard(),
                 const SizedBox(height: 16),
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: <Widget>[
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: <Widget>[
-                        IconButton(
-                          onPressed: () {
-                            setState(() {
-                              _date = _date.subtract(const Duration(days: 1));
-                              _initialize();
-                            });
-                          },
-                          icon: const Icon(Icons.chevron_left),
-                        ),
-                        Text(
-                          DateFormat.yMMMMd('en_US').format(_date),
-                          style: Theme.of(context).textTheme.titleMedium,
-                        ),
-                        IconButton(
-                          onPressed: () {
-                            setState(() {
-                              _date = _date.add(const Duration(days: 1));
-                              _initialize();
-                            });
-                          },
-                          icon: const Icon(Icons.chevron_right),
-                        ),
-                      ],
-                    ),
+                    const DatePicker(),
                     const SizedBox(height: 32),
                     Text(
                       'Food',
                       style: Theme.of(context).textTheme.titleLarge,
                     ),
                     const SizedBox(height: 16),
-                    ListView.builder(
-                      shrinkWrap: true,
-                      itemCount: _consumptions.length,
-                      itemBuilder: (context, index) => Card(
-                        child: ListTile(
-                          title: Text(_consumptions[index].name),
-                          subtitle: Text(
-                              '${_consumptions[index].nutrition.calories.round()} kcal'),
-                          trailing: Row(
-                            mainAxisSize: MainAxisSize.min,
-                            children: [
-                              IconButton(
-                                icon: const Icon(Icons.edit),
-                                onPressed: () async {
-                                  Consumption entry = _consumptions[index];
-
-                                  if (entry is IngredientConsumption) {
-                                    IngredientConsumption? consumption =
-                                        await _showTrackIngredientDialog(
-                                      context: context,
-                                      ingredientConsumption: entry,
-                                    );
-
-                                    if (consumption != null) {
-                                      consumption.save();
-
-                                      setState(() {
-                                        _consumptions[index] = consumption;
-                                        _consumptions = [..._consumptions];
-                                      });
-                                    }
-                                  } else {
-                                    Consumption? consumption =
-                                        await _showQuickTrackFoodDialog(
-                                      context: context,
-                                      consumption: _consumptions[index],
-                                    );
-
-                                    if (consumption != null) {
-                                      consumption.save();
-
-                                      setState(() {
-                                        _consumptions[index] = consumption;
-                                        _consumptions = [..._consumptions];
-                                      });
-                                    }
-                                  }
-                                },
-                              ),
-                              IconButton(
-                                icon: const Icon(Icons.delete),
-                                onPressed: () {
-                                  _consumptions[index].delete();
-
-                                  setState(() {
-                                    _consumptions.removeAt(index);
-                                    _consumptions = [..._consumptions];
-                                  });
-                                },
-                              ),
-                            ],
-                          ),
-                        ),
-                      ),
-                    ),
+                    const ConsumptionsList(),
                     const SizedBox(height: 32),
                     Text(
                       'Exercise',
                       style: Theme.of(context).textTheme.titleLarge,
                     ),
                     const SizedBox(height: 16),
-                    ListView.builder(
-                      shrinkWrap: true,
-                      itemCount: _performances.length,
-                      itemBuilder: (context, index) => Card(
-                        child: ListTile(
-                          title: Text(_performances[index].name),
-                          subtitle:
-                              Text('${_performances[index].calories} kcal'),
-                          trailing: Row(
-                            mainAxisSize: MainAxisSize.min,
-                            children: [
-                              IconButton(
-                                icon: const Icon(Icons.edit),
-                                onPressed: () async {
-                                  Performance? performance =
-                                      await _showQuickTrackExerciseDialog(
-                                    context: context,
-                                    performance: _performances[index],
-                                  );
-
-                                  if (performance != null) {
-                                    performance.save();
-
-                                    setState(() {
-                                      _performances[index] = performance;
-                                      _performances = [..._performances];
-                                    });
-                                  }
-                                },
-                              ),
-                              IconButton(
-                                icon: const Icon(Icons.delete),
-                                onPressed: () {
-                                  _performances[index].delete();
-
-                                  setState(() {
-                                    _performances.removeAt(index);
-                                    _performances = [..._performances];
-                                  });
-                                },
-                              ),
-                            ],
-                          ),
-                        ),
-                      ),
-                    ),
+                    const PerformancesList(),
                   ],
                 ),
               ],
@@ -391,44 +124,273 @@ class _DashboardState extends State<Dashboard> {
       ),
     );
   }
+}
 
-  Future<IngredientConsumption?> _showTrackIngredientDialog({
-    required BuildContext context,
-    IngredientConsumption? ingredientConsumption,
-  }) {
-    return showDialog<IngredientConsumption>(
-      context: context,
-      builder: (BuildContext context) {
-        return TrackIngredientDialog(
-          ingredientConsumption: ingredientConsumption,
+Future<IngredientConsumption?> _showTrackIngredientDialog({
+  required BuildContext context,
+  IngredientConsumption? ingredientConsumption,
+}) {
+  return showDialog<IngredientConsumption>(
+    context: context,
+    builder: (BuildContext context) {
+      return TrackIngredientDialog(
+        ingredientConsumption: ingredientConsumption,
+      );
+    },
+  );
+}
+
+Future<Consumption?> _showQuickTrackFoodDialog({
+  required BuildContext context,
+  Consumption? consumption,
+}) {
+  return showDialog<Consumption>(
+    context: context,
+    builder: (BuildContext context) {
+      return QuickTrackFoodDialog(
+        consumption: consumption,
+      );
+    },
+  );
+}
+
+Future<Performance?> _showQuickTrackExerciseDialog({
+  required BuildContext context,
+  Performance? performance,
+}) {
+  return showDialog<Performance>(
+    context: context,
+    builder: (BuildContext context) {
+      return QuickTrackExerciseDialog(
+        performance: performance,
+      );
+    },
+  );
+}
+
+class CaloriesCard extends StatelessWidget {
+  const CaloriesCard({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    Consumptions consumptions = Provider.of<Consumptions>(context);
+    Performances performances = Provider.of<Performances>(context);
+
+    return Card(
+      child: Padding(
+        padding: const EdgeInsets.all(32.0),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: <Widget>[
+            Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: <Widget>[
+                Text(
+                  '${consumptions.nutrition.calories.round()}',
+                  style: Theme.of(context).textTheme.headline3,
+                ),
+                const Text('Consumed'),
+              ],
+            ),
+            const SizedBox(width: 64),
+            Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: <Widget>[
+                Text(
+                  '${performances.calories.round()}',
+                  style: Theme.of(context).textTheme.headline3,
+                ),
+                const Text('Burnt'),
+              ],
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class MacrosCard extends StatelessWidget {
+  const MacrosCard({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    Consumptions consumptions = Provider.of<Consumptions>(context);
+
+    return Card(
+      child: Padding(
+        padding: const EdgeInsets.all(32.0),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: <Widget>[
+            Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: <Widget>[
+                Text(
+                  '${consumptions.nutrition.carbohydrates.round()}',
+                  style: Theme.of(context).textTheme.headline4,
+                ),
+                const Text('Carbs'),
+              ],
+            ),
+            const SizedBox(width: 64),
+            Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: <Widget>[
+                Text(
+                  '${consumptions.nutrition.fat.round()}',
+                  style: Theme.of(context).textTheme.headline4,
+                ),
+                const Text('Fat'),
+              ],
+            ),
+            const SizedBox(width: 64),
+            Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: <Widget>[
+                Text(
+                  '${consumptions.nutrition.protein.round()}',
+                  style: Theme.of(context).textTheme.headline4,
+                ),
+                const Text('Protein'),
+              ],
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class DatePicker extends StatelessWidget {
+  const DatePicker({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    DateModel dateModel = Provider.of<DateModel>(context);
+
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: <Widget>[
+        IconButton(
+          onPressed: dateModel.previous,
+          icon: const Icon(Icons.chevron_left),
+        ),
+        Text(
+          DateFormat.yMMMMd('en_US').format(dateModel.date),
+          style: Theme.of(context).textTheme.titleMedium,
+        ),
+        IconButton(
+          onPressed: dateModel.next,
+          icon: const Icon(Icons.chevron_right),
+        ),
+      ],
+    );
+  }
+}
+
+class ConsumptionsList extends StatelessWidget {
+  const ConsumptionsList({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    Consumptions consumptions = Provider.of<Consumptions>(context);
+
+    return ListView.builder(
+      shrinkWrap: true,
+      itemCount: consumptions.length,
+      itemBuilder: (context, index) {
+        Consumption consumption = consumptions.get(index);
+
+        return Card(
+          child: ListTile(
+            title: Text(consumption.name),
+            subtitle: Text('${consumption.nutrition.calories.round()} kcal'),
+            trailing: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                IconButton(
+                  icon: const Icon(Icons.edit),
+                  onPressed: () async {
+                    if (consumption is IngredientConsumption) {
+                      IngredientConsumption? edited =
+                          await _showTrackIngredientDialog(
+                        context: context,
+                        ingredientConsumption: consumption,
+                      );
+
+                      if (edited != null) {
+                        ConsumptionsService.update(edited);
+                      }
+                    } else {
+                      Consumption? edited = await _showQuickTrackFoodDialog(
+                        context: context,
+                        consumption: consumption,
+                      );
+
+                      if (edited != null) {
+                        ConsumptionsService.update(edited);
+                      }
+                    }
+                  },
+                ),
+                IconButton(
+                  icon: const Icon(Icons.delete),
+                  onPressed: () {
+                    ConsumptionsService.delete(consumption);
+                  },
+                ),
+              ],
+            ),
+          ),
         );
       },
     );
   }
+}
 
-  Future<Consumption?> _showQuickTrackFoodDialog({
-    required BuildContext context,
-    Consumption? consumption,
-  }) {
-    return showDialog<Consumption>(
-      context: context,
-      builder: (BuildContext context) {
-        return QuickTrackFoodDialog(
-          consumption: consumption,
-        );
-      },
-    );
-  }
+class PerformancesList extends StatelessWidget {
+  const PerformancesList({super.key});
 
-  Future<Performance?> _showQuickTrackExerciseDialog({
-    required BuildContext context,
-    Performance? performance,
-  }) {
-    return showDialog<Performance>(
-      context: context,
-      builder: (BuildContext context) {
-        return QuickTrackExerciseDialog(
-          performance: performance,
+  @override
+  Widget build(BuildContext context) {
+    Performances performances = Provider.of<Performances>(context);
+
+    return ListView.builder(
+      shrinkWrap: true,
+      itemCount: performances.length,
+      itemBuilder: (context, index) {
+        Performance performance = performances.get(index);
+
+        return Card(
+          child: ListTile(
+            title: Text(performance.name),
+            subtitle: Text('${performance.calories} kcal'),
+            trailing: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                IconButton(
+                  icon: const Icon(Icons.edit),
+                  onPressed: () async {
+                    Performance? edited = await _showQuickTrackExerciseDialog(
+                      context: context,
+                      performance: performance,
+                    );
+
+                    if (edited != null) {
+                      PerformancesService.update(edited);
+                    }
+                  },
+                ),
+                IconButton(
+                  icon: const Icon(Icons.delete),
+                  onPressed: () {
+                    PerformancesService.delete(performance);
+                  },
+                ),
+              ],
+            ),
+          ),
         );
       },
     );

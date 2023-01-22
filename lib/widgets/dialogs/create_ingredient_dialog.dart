@@ -175,7 +175,7 @@ class _CreateIngredientDialogState extends State<CreateIngredientDialog> {
                 ingredient.brand = brand;
                 ingredient.nutrition = nutrition;
               } else {
-                Ingredient(
+                ingredient = Ingredient(
                   name: name,
                   brand: brand,
                   nutrition: nutrition,

@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:provider/provider.dart';
 import 'package:vim/models/consumption.dart';
+import 'package:vim/models/date_model.dart';
 import 'package:vim/models/nutrition.dart';
 
 class QuickTrackFoodDialog extends StatefulWidget {
@@ -140,41 +142,44 @@ class _QuickTrackFoodDialogState extends State<QuickTrackFoodDialog> {
             Navigator.of(context).pop();
           },
         ),
-        TextButton(
-          style: TextButton.styleFrom(
-            textStyle: Theme.of(context).textTheme.labelLarge,
-          ),
-          child: const Text('Confirm'),
-          onPressed: () {
-            FormState formState = _formKey.currentState!;
+        Consumer<DateModel>(
+          builder: (context, dateModel, child) => TextButton(
+            style: TextButton.styleFrom(
+              textStyle: Theme.of(context).textTheme.labelLarge,
+            ),
+            child: const Text('Confirm'),
+            onPressed: () {
+              FormState formState = _formKey.currentState!;
 
-            if (formState.validate()) {
-              formState.save();
+              if (formState.validate()) {
+                formState.save();
 
-              String name = _nameController.value.text;
-              Nutrition nutrition = Nutrition(
-                calories: double.parse(_caloriesController.value.text),
-                carbohydrates:
-                    double.parse(_carbohydratesController.value.text),
-                fat: double.parse(_fatController.value.text),
-                protein: double.parse(_proteinController.value.text),
-              );
-
-              Consumption? consumption = widget.consumption;
-
-              if (consumption != null) {
-                consumption.name = name;
-                consumption.nutrition = nutrition;
-              } else {
-                consumption = Consumption(
-                  name: name,
-                  nutrition: nutrition,
+                String name = _nameController.value.text;
+                Nutrition nutrition = Nutrition(
+                  calories: double.parse(_caloriesController.value.text),
+                  carbohydrates:
+                      double.parse(_carbohydratesController.value.text),
+                  fat: double.parse(_fatController.value.text),
+                  protein: double.parse(_proteinController.value.text),
                 );
-              }
 
-              Navigator.of(context).pop(consumption);
-            }
-          },
+                Consumption? consumption = widget.consumption;
+
+                if (consumption != null) {
+                  consumption.name = name;
+                  consumption.nutrition = nutrition;
+                } else {
+                  consumption = Consumption(
+                    timestamp: dateModel.timestamp,
+                    name: name,
+                    nutrition: nutrition,
+                  );
+                }
+
+                Navigator.of(context).pop(consumption);
+              }
+            },
+          ),
         ),
       ],
     );

@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:provider/provider.dart';
+import 'package:vim/models/date_model.dart';
 import 'package:vim/models/ingredient.dart';
 import 'package:vim/models/ingredient_consumption.dart';
+import 'package:vim/services/ingredients_service.dart';
 
 class TrackIngredientDialog extends StatefulWidget {
   final IngredientConsumption? ingredientConsumption;
@@ -13,7 +16,6 @@ class TrackIngredientDialog extends StatefulWidget {
 }
 
 class _TrackIngredientDialogState extends State<TrackIngredientDialog> {
-  List<Ingredient> _ingredients = [];
   Ingredient? _ingredient;
 
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
@@ -30,16 +32,6 @@ class _TrackIngredientDialogState extends State<TrackIngredientDialog> {
         _ingredient = widget.ingredientConsumption!.ingredient;
       });
     }
-
-    _loadIngredients();
-  }
-
-  void _loadIngredients() async {
-    List<Ingredient> ingredients = await Ingredient.all();
-
-    setState(() {
-      _ingredients = ingredients;
-    });
   }
 
   @override
@@ -55,28 +47,32 @@ class _TrackIngredientDialogState extends State<TrackIngredientDialog> {
             mainAxisSize: MainAxisSize.min,
             children: <Widget>[
               if (widget.ingredientConsumption == null)
-                DropdownButtonFormField<Ingredient>(
-                  decoration: const InputDecoration(
-                    labelText: 'Ingredient',
+                Consumer<Ingredients>(
+                  builder: (context, ingredients, child) =>
+                      DropdownButtonFormField<Ingredient>(
+                    decoration: const InputDecoration(
+                      labelText: 'Ingredient',
+                    ),
+                    items: List.generate(ingredients.length,
+                            (index) => ingredients.get(index))
+                        .map((ingredient) => DropdownMenuItem<Ingredient>(
+                              value: ingredient,
+                              child: Text(ingredient.name),
+                            ))
+                        .toList(),
+                    value: _ingredient,
+                    onChanged: (ingredient) {
+                      setState(() {
+                        _ingredient = ingredient;
+                      });
+                    },
+                    validator: (value) {
+                      if (value == null) {
+                        return 'Please select an ingredient.';
+                      }
+                      return null;
+                    },
                   ),
-                  items: _ingredients
-                      .map((ingredient) => DropdownMenuItem<Ingredient>(
-                            value: ingredient,
-                            child: Text(ingredient.name),
-                          ))
-                      .toList(),
-                  value: _ingredient,
-                  onChanged: (ingredient) {
-                    setState(() {
-                      _ingredient = ingredient;
-                    });
-                  },
-                  validator: (value) {
-                    if (value == null) {
-                      return 'Please select an ingredient.';
-                    }
-                    return null;
-                  },
                 ),
               TextFormField(
                 controller: _amountController,
@@ -108,24 +104,36 @@ class _TrackIngredientDialogState extends State<TrackIngredientDialog> {
             Navigator.of(context).pop();
           },
         ),
-        TextButton(
-          style: TextButton.styleFrom(
-            textStyle: Theme.of(context).textTheme.labelLarge,
+        Consumer<DateModel>(
+          builder: (context, dateModel, child) => TextButton(
+            style: TextButton.styleFrom(
+              textStyle: Theme.of(context).textTheme.labelLarge,
+            ),
+            child: const Text('Confirm'),
+            onPressed: () {
+              FormState formState = _formKey.currentState!;
+
+              if (formState.validate()) {
+                formState.save();
+
+                double amount = double.parse(_amountController.value.text);
+
+                IngredientConsumption? ingredientConsumption =
+                    widget.ingredientConsumption;
+
+                if (ingredientConsumption != null) {
+                  ingredientConsumption.amount = amount;
+                } else {
+                  ingredientConsumption = _ingredient?.consumption(
+                    timestamp: dateModel.timestamp,
+                    amount: amount,
+                  );
+                }
+
+                Navigator.of(context).pop(ingredientConsumption);
+              }
+            },
           ),
-          child: const Text('Confirm'),
-          onPressed: () {
-            FormState formState = _formKey.currentState!;
-
-            if (formState.validate()) {
-              formState.save();
-
-              double amount = double.parse(_amountController.value.text);
-
-              Navigator.of(context).pop(
-                _ingredient?.consumption(amount),
-              );
-            }
-          },
         ),
       ],
     );

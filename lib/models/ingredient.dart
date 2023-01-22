@@ -3,19 +3,12 @@ import 'package:vim/models/ingredient_consumption.dart';
 import 'package:vim/models/nutrition.dart';
 
 class Ingredient {
-  static final CollectionReference<Ingredient> _collection = FirebaseFirestore
-      .instance
-      .collection('ingredients')
-      .withConverter<Ingredient>(
-        fromFirestore: (snapshot, _) => Ingredient.fromSnapshot(snapshot),
-        toFirestore: (ingredient, _) => ingredient.toMap(),
-      );
-
-  DocumentReference? _reference;
-
+  String? _id;
   String name;
   String? brand;
   Nutrition nutrition;
+
+  String? get id => _id;
 
   Ingredient({
     required this.name,
@@ -37,7 +30,7 @@ class Ingredient {
     Map<String, dynamic> map = snapshot.data()!;
 
     Ingredient consumption = fromMap(map);
-    consumption._reference = snapshot.reference;
+    consumption._id = snapshot.id;
 
     return consumption;
   }
@@ -50,25 +43,12 @@ class Ingredient {
     );
   }
 
-  Future<void> save() async {
-    if (_reference == null) {
-      _reference = await _collection.add(this);
-    } else {
-      await _reference!.set(toMap());
-    }
-  }
-
-  Future<void> delete() async {
-    await _reference?.delete();
-  }
-
-  static Future<List<Ingredient>> all() async {
-    QuerySnapshot<Ingredient> snapshot = await _collection.get();
-    return snapshot.docs.map((doc) => doc.data()).toList();
-  }
-
-  IngredientConsumption consumption(double amount) {
+  IngredientConsumption consumption({
+    required Timestamp timestamp,
+    required double amount,
+  }) {
     return IngredientConsumption(
+      timestamp: timestamp,
       ingredient: this,
       amount: amount,
     );
