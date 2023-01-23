@@ -6,11 +6,11 @@ import 'package:vim/models/nutrition.dart';
 class Recipe {
   String? _id;
   String name;
-  IngredientAmounts ingredientAmounts;
+  IngredientAmountsReference ingredientAmounts;
 
   String? get id => _id;
 
-  Nutrition get nutrition {
+  Future<Nutrition> get nutrition async {
     return ingredientAmounts.nutrition;
   }
 
@@ -40,22 +40,57 @@ class Recipe {
   static Recipe fromMap(Map<String, dynamic> map) {
     return Recipe(
       name: map['name'],
-      ingredientAmounts: IngredientAmounts.fromMap(map['ingredientAmounts']),
+      ingredientAmounts:
+          IngredientAmountsReference.fromMap(map['ingredientAmounts']),
     );
   }
 
-  RecipeConsumption consumption({
+  Future<RecipeConsumption> consumption({
     required Timestamp timestamp,
     required double amount,
-  }) {
+  }) async {
     return RecipeConsumption(
       timestamp: timestamp,
-      recipe: this,
+      recipe: await resolve(),
       amount: amount,
     );
   }
 
+  Future<Nutrition> nutritionForAmount(num amount) async {
+    return ingredientAmounts.nutritionForAmount(amount);
+  }
+
+  Future<ResolvedRecipe> resolve() async {
+    return ResolvedRecipe(
+      name: name,
+      ingredientAmounts: await ingredientAmounts.resolve(),
+    );
+  }
+}
+
+class ResolvedRecipe {
+  String name;
+  IngredientAmounts ingredientAmounts;
+
+  ResolvedRecipe({required this.name, required this.ingredientAmounts});
+
+  Nutrition get nutrition => ingredientAmounts.nutrition;
+
   Nutrition nutritionForAmount(num amount) {
     return ingredientAmounts.nutritionForAmount(amount);
+  }
+
+  Map<String, dynamic> toMap() {
+    return {
+      'name': name,
+      'ingredientAmounts': ingredientAmounts.toMap(),
+    };
+  }
+
+  static ResolvedRecipe fromMap(Map<String, dynamic> map) {
+    return ResolvedRecipe(
+      name: map['name'],
+      ingredientAmounts: IngredientAmounts.fromMap(map['ingredientAmounts']),
+    );
   }
 }

@@ -332,7 +332,20 @@ class ConsumptionsList extends StatelessWidget {
         return Card(
           child: ListTile(
             title: Text(consumption.name),
-            subtitle: Text('${consumption.nutrition.calories.round()} kcal'),
+            subtitle: Text(
+              [
+                if (consumption is RecipeConsumption) ...[
+                  'Thijs Daniels',
+                  '${consumption.amount / consumption.recipe.ingredientAmounts.amount} serving${consumption.amount / consumption.recipe.ingredientAmounts.amount != 1 ? 's' : ''}',
+                ],
+                if (consumption is IngredientConsumption) ...[
+                  if (consumption.ingredient.brand != null)
+                    '${consumption.ingredient.brand}',
+                  '${consumption.amount} gram${consumption.amount != 1 ? 's' : ''}',
+                ],
+                '${consumption.nutrition.calories.round()} kcal',
+              ].join(" • "),
+            ),
             trailing: Row(
               mainAxisSize: MainAxisSize.min,
               children: [

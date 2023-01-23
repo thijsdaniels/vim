@@ -27,10 +27,6 @@ class _TrackRecipeDialogState extends State<TrackRecipeDialog> {
 
     if (widget.recipeConsumption != null) {
       _amountController.text = widget.recipeConsumption!.amount.toString();
-
-      setState(() {
-        _recipe = widget.recipeConsumption!.recipe;
-      });
     }
   }
 
@@ -111,7 +107,9 @@ class _TrackRecipeDialogState extends State<TrackRecipeDialog> {
               textStyle: Theme.of(context).textTheme.labelLarge,
             ),
             child: const Text('Confirm'),
-            onPressed: () {
+            onPressed: () async {
+              final navigator = Navigator.of(context);
+
               FormState formState = _formKey.currentState!;
 
               if (formState.validate()) {
@@ -124,13 +122,13 @@ class _TrackRecipeDialogState extends State<TrackRecipeDialog> {
                 if (recipeConsumption != null) {
                   recipeConsumption.amount = amount;
                 } else {
-                  recipeConsumption = _recipe?.consumption(
+                  recipeConsumption = await _recipe?.consumption(
                     timestamp: dateModel.timestamp,
                     amount: amount,
                   );
                 }
 
-                Navigator.of(context).pop(recipeConsumption);
+                navigator.pop(recipeConsumption);
               }
             },
           ),

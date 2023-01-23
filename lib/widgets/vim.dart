@@ -16,42 +16,37 @@ class Vim extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MultiProvider(
-      providers: [
-        StreamProvider<Ingredients>(
-          create: (context) => IngredientsService.all(),
-          initialData: Ingredients(List.empty()),
-        ),
-        StreamProvider<Recipes>(
+    return StreamProvider<Ingredients>(
+      create: (context) => IngredientsService.all(),
+      initialData: Ingredients([]),
+      child: StreamProvider<Recipes>(
           create: (context) => RecipesService.all(),
-          initialData: Recipes(List.empty()),
-        ),
-      ],
-      child: ChangeNotifierProvider(
-        create: (context) => DateModel(),
-        child: Consumer<DateModel>(
-          builder: (context, dateModel, child) => MultiProvider(
-            providers: [
-              StreamProvider.value(
-                value: ConsumptionsService.forDate(dateModel.date),
-                initialData: Consumptions(List.empty()),
+          initialData: Recipes([]),
+          child: ChangeNotifierProvider(
+            create: (context) => DateModel(),
+            child: Consumer<DateModel>(
+              builder: (context, dateModel, child) => MultiProvider(
+                providers: [
+                  StreamProvider.value(
+                    value: ConsumptionsService.forDate(dateModel.date),
+                    initialData: Consumptions([]),
+                  ),
+                  StreamProvider.value(
+                    value: PerformancesService.forDate(dateModel.date),
+                    initialData: Performances([]),
+                  ),
+                ],
+                child: MaterialApp(
+                  debugShowCheckedModeBanner: false,
+                  title: 'Vim',
+                  theme: ThemeData(
+                    primarySwatch: Colors.deepPurple,
+                  ),
+                  home: const Tabs(),
+                ),
               ),
-              StreamProvider.value(
-                value: PerformancesService.forDate(dateModel.date),
-                initialData: Performances(List.empty()),
-              ),
-            ],
-            child: MaterialApp(
-              debugShowCheckedModeBanner: false,
-              title: 'Vim',
-              theme: ThemeData(
-                primarySwatch: Colors.deepPurple,
-              ),
-              home: const Tabs(),
             ),
-          ),
-        ),
-      ),
+          )),
     );
   }
 }

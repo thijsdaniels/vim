@@ -3,12 +3,12 @@ import 'package:vim/models/ingredient_consumption.dart';
 import 'package:vim/models/nutrition.dart';
 
 class Ingredient {
-  String? _id;
+  DocumentReference? _reference;
   String name;
   String? brand;
   Nutrition nutrition;
 
-  String? get id => _id;
+  DocumentReference? get reference => _reference;
 
   Ingredient({
     required this.name,
@@ -30,7 +30,7 @@ class Ingredient {
     Map<String, dynamic> map = snapshot.data()!;
 
     Ingredient ingredient = fromMap(map);
-    ingredient._id = snapshot.id;
+    ingredient._reference = snapshot.reference;
 
     return ingredient;
   }

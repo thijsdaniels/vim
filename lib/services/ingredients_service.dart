@@ -26,17 +26,17 @@ class IngredientsService {
   }
 
   static Future<void> create(Ingredient ingredient) async {
-    assert(ingredient.id == null);
+    assert(ingredient.reference == null);
     return _collection.doc().set(ingredient);
   }
 
   static Future<void> update(Ingredient ingredient) async {
-    assert(ingredient.id != null);
-    return _collection.doc(ingredient.id).set(ingredient);
+    assert(ingredient.reference != null);
+    return _collection.doc(ingredient.reference!.id).set(ingredient);
   }
 
   static Future<void> delete(Ingredient ingredient) async {
-    assert(ingredient.id != null);
-    return _collection.doc(ingredient.id).delete();
+    assert(ingredient.reference != null);
+    return _collection.doc(ingredient.reference!.id).delete();
   }
 }
