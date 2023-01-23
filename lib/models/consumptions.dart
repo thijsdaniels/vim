@@ -14,7 +14,7 @@ class Consumptions {
         : Nutrition(calories: 0);
   }
 
-  Consumptions(this._consumptions);
+  Consumptions([this._consumptions = const []]);
 
   Consumption get(int index) {
     return _consumptions[index];

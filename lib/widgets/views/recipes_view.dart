@@ -42,8 +42,19 @@ class _RecipesViewState extends State<RecipesView> {
               return Card(
                 child: ListTile(
                   title: Text(recipe.name),
-                  subtitle: Text(
-                      '${recipe.nutrition.calories.round().toString()} kcal'),
+                  subtitle: FutureBuilder(
+                    future: recipe.nutrition,
+                    builder: (context, snapshot) {
+                      return Text(
+                        [
+                          '${recipe.ingredientAmounts.length} ingredients',
+                          '${recipe.ingredientAmounts.amount} gram${recipe.ingredientAmounts.amount != 1 ? 's' : ''}',
+                          if (snapshot.hasData)
+                            '${snapshot.data!.calories.round().toString()} kcal',
+                        ].join(" • "),
+                      );
+                    },
+                  ),
                   trailing: Row(
                     mainAxisSize: MainAxisSize.min,
                     children: [

@@ -7,7 +7,7 @@ class RecipeConsumption implements Consumption {
   String? _id;
   @override
   Timestamp timestamp;
-  Recipe recipe;
+  ResolvedRecipe recipe;
   num amount;
 
   @override
@@ -59,7 +59,7 @@ class RecipeConsumption implements Consumption {
   static RecipeConsumption fromMap(Map<String, dynamic> map) {
     return RecipeConsumption(
       timestamp: map['timestamp'],
-      recipe: Recipe.fromMap(map['recipe']),
+      recipe: ResolvedRecipe.fromMap(map['recipe']),
       amount: map['amount'],
     );
   }

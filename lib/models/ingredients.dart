@@ -5,7 +5,7 @@ class Ingredients {
 
   int get length => _ingredients.length;
 
-  Ingredients(this._ingredients);
+  Ingredients([this._ingredients = const []]);
 
   Ingredient get(int index) {
     return _ingredients[index];

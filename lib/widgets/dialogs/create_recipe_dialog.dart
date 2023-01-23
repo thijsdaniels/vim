@@ -1,7 +1,7 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
-import 'package:vim/models/ingredient.dart';
 import 'package:vim/models/ingredient_amounts.dart';
 import 'package:vim/models/ingredients.dart';
 import 'package:vim/models/recipe.dart';
@@ -16,10 +16,10 @@ class CreateRecipeDialog extends StatefulWidget {
 }
 
 class PotentialIngredientAmount {
-  Ingredient? ingredient;
+  DocumentReference? ingredientReference;
   num? amount;
 
-  PotentialIngredientAmount({this.ingredient, this.amount});
+  PotentialIngredientAmount({this.ingredientReference, this.amount});
 }
 
 class _CreateRecipeDialogState extends State<CreateRecipeDialog> {
@@ -39,7 +39,7 @@ class _CreateRecipeDialogState extends State<CreateRecipeDialog> {
           List.generate(recipe.ingredientAmounts.length, (index) {
         var ingredientAmount = recipe.ingredientAmounts.get(index);
         return PotentialIngredientAmount(
-          ingredient: ingredientAmount.ingredient,
+          ingredientReference: ingredientAmount.ingredientReference,
           amount: ingredientAmount.amount,
         );
       });
@@ -82,9 +82,10 @@ class _CreateRecipeDialogState extends State<CreateRecipeDialog> {
                     (entry) => Column(
                       children: [
                         IngredientAmountField(
-                          ingredient: entry.value.ingredient,
-                          onIngredientChanged: (ingredient) {
-                            entry.value.ingredient = ingredient;
+                          ingredientReference: entry.value.ingredientReference,
+                          onIngredientChanged: (ingredientReference) {
+                            entry.value.ingredientReference =
+                                ingredientReference;
                             setState(() {
                               _ingredientAmounts = [..._ingredientAmounts];
                             });
@@ -97,15 +98,20 @@ class _CreateRecipeDialogState extends State<CreateRecipeDialog> {
                             });
                           },
                         ),
-                        IconButton(
-                          icon: const Icon(Icons.remove),
-                          onPressed: () {
-                            _ingredientAmounts.removeAt(entry.key);
-                            setState(() {
-                              _ingredientAmounts = [..._ingredientAmounts];
-                            });
-                          },
-                        )
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.end,
+                          children: [
+                            IconButton(
+                              icon: const Icon(Icons.close),
+                              onPressed: () {
+                                _ingredientAmounts.removeAt(entry.key);
+                                setState(() {
+                                  _ingredientAmounts = [..._ingredientAmounts];
+                                });
+                              },
+                            ),
+                          ],
+                        ),
                       ],
                     ),
                   )
@@ -152,18 +158,19 @@ class _CreateRecipeDialogState extends State<CreateRecipeDialog> {
 
               Recipe? recipe = widget.recipe;
 
-              IngredientAmounts ingredientAmounts =
-                  IngredientAmounts(_ingredientAmounts
+              IngredientAmountsReference ingredientAmounts =
+                  IngredientAmountsReference(_ingredientAmounts
                       .map((ingredientAmount) {
-                        if (ingredientAmount.ingredient != null &&
+                        if (ingredientAmount.ingredientReference != null &&
                             ingredientAmount.amount != null) {
-                          return IngredientAmount(
-                            ingredient: ingredientAmount.ingredient!,
+                          return IngredientAmountReference(
+                            ingredientReference:
+                                ingredientAmount.ingredientReference!,
                             amount: ingredientAmount.amount!,
                           );
                         }
                       })
-                      .whereType<IngredientAmount>()
+                      .whereType<IngredientAmountReference>()
                       .toList());
 
               if (recipe != null) {
@@ -186,14 +193,14 @@ class _CreateRecipeDialogState extends State<CreateRecipeDialog> {
 }
 
 class IngredientAmountField extends StatefulWidget {
-  final Ingredient? ingredient;
+  final DocumentReference? ingredientReference;
   final num? amount;
-  final void Function(Ingredient?) onIngredientChanged;
+  final void Function(DocumentReference?) onIngredientChanged;
   final void Function(num) onAmountChanged;
 
   const IngredientAmountField({
     super.key,
-    this.ingredient,
+    this.ingredientReference,
     this.amount,
     required this.onIngredientChanged,
     required this.onAmountChanged,
@@ -210,18 +217,18 @@ class _IngredientAmountField extends State<IngredientAmountField> {
       children: [
         Consumer<Ingredients>(
           builder: (context, ingredients, child) =>
-              DropdownButtonFormField<Ingredient>(
+              DropdownButtonFormField<DocumentReference>(
             decoration: const InputDecoration(
               labelText: 'Ingredient',
             ),
             items: List.generate(
                     ingredients.length, (index) => ingredients.get(index))
-                .map((ingredient) => DropdownMenuItem<Ingredient>(
-                      value: ingredient,
+                .map((ingredient) => DropdownMenuItem<DocumentReference>(
+                      value: ingredient.reference,
                       child: Text(ingredient.name),
                     ))
                 .toList(),
-            value: widget.ingredient,
+            value: widget.ingredientReference,
             validator: (value) {
               if (value == null) {
                 return 'Please select an ingredient.';

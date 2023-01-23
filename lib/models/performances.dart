@@ -13,7 +13,7 @@ class Performances {
         : 0;
   }
 
-  Performances(this._performances);
+  Performances([this._performances = const []]);
 
   Performance get(int index) {
     return _performances[index];
