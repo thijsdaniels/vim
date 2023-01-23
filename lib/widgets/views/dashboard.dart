@@ -4,25 +4,24 @@ import 'package:flutter_speed_dial/flutter_speed_dial.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:vim/models/consumption.dart';
+import 'package:vim/models/consumptions.dart';
 import 'package:vim/models/date_model.dart';
 import 'package:vim/models/ingredient_consumption.dart';
 import 'package:vim/models/performance.dart';
+import 'package:vim/models/performances.dart';
+import 'package:vim/models/recipe_consumption.dart';
 import 'package:vim/services/consumptions_service.dart';
 import 'package:vim/services/performances_service.dart';
 import 'package:vim/widgets/dialogs/quick_track_exercise_dialog.dart';
 import 'package:vim/widgets/dialogs/quick_track_food_dialog.dart';
 import 'package:vim/widgets/dialogs/track_ingredient_dialog.dart';
+import 'package:vim/widgets/dialogs/track_recipe_dialog.dart';
 
 enum QuickTrack { food, exercise }
 
-class Dashboard extends StatefulWidget {
+class Dashboard extends StatelessWidget {
   const Dashboard({super.key});
 
-  @override
-  State<Dashboard> createState() => _DashboardState();
-}
-
-class _DashboardState extends State<Dashboard> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -41,6 +40,19 @@ class _DashboardState extends State<Dashboard> {
               }
             },
             child: const Icon(Icons.bakery_dining),
+          ),
+          SpeedDialChild(
+            label: 'Track Recipe',
+            onTap: () async {
+              Consumption? consumption = await _showTrackRecipeDialog(
+                context: context,
+              );
+
+              if (consumption != null) {
+                ConsumptionsService.create(consumption);
+              }
+            },
+            child: const Icon(Icons.ramen_dining),
           ),
           SpeedDialChild(
             label: 'Quick Track Food',
@@ -135,6 +147,20 @@ Future<IngredientConsumption?> _showTrackIngredientDialog({
     builder: (BuildContext context) {
       return TrackIngredientDialog(
         ingredientConsumption: ingredientConsumption,
+      );
+    },
+  );
+}
+
+Future<RecipeConsumption?> _showTrackRecipeDialog({
+  required BuildContext context,
+  RecipeConsumption? recipeConsumption,
+}) {
+  return showDialog<RecipeConsumption>(
+    context: context,
+    builder: (BuildContext context) {
+      return TrackRecipeDialog(
+        recipeConsumption: recipeConsumption,
       );
     },
   );
@@ -238,10 +264,10 @@ class MacrosCard extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
                 Text(
-                  '${consumptions.nutrition.fat.round()}',
+                  '${consumptions.nutrition.protein.round()}',
                   style: Theme.of(context).textTheme.headline4,
                 ),
-                const Text('Fat'),
+                const Text('Protein'),
               ],
             ),
             const SizedBox(width: 64),
@@ -249,10 +275,10 @@ class MacrosCard extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
                 Text(
-                  '${consumptions.nutrition.protein.round()}',
+                  '${consumptions.nutrition.fat.round()}',
                   style: Theme.of(context).textTheme.headline4,
                 ),
-                const Text('Protein'),
+                const Text('Fat'),
               ],
             ),
           ],
@@ -298,6 +324,7 @@ class ConsumptionsList extends StatelessWidget {
 
     return ListView.builder(
       shrinkWrap: true,
+      physics: const NeverScrollableScrollPhysics(),
       itemCount: consumptions.length,
       itemBuilder: (context, index) {
         Consumption consumption = consumptions.get(index);
@@ -312,7 +339,16 @@ class ConsumptionsList extends StatelessWidget {
                 IconButton(
                   icon: const Icon(Icons.edit),
                   onPressed: () async {
-                    if (consumption is IngredientConsumption) {
+                    if (consumption is RecipeConsumption) {
+                      RecipeConsumption? edited = await _showTrackRecipeDialog(
+                        context: context,
+                        recipeConsumption: consumption,
+                      );
+
+                      if (edited != null) {
+                        ConsumptionsService.update(edited);
+                      }
+                    } else if (consumption is IngredientConsumption) {
                       IngredientConsumption? edited =
                           await _showTrackIngredientDialog(
                         context: context,
@@ -358,6 +394,7 @@ class PerformancesList extends StatelessWidget {
 
     return ListView.builder(
       shrinkWrap: true,
+      physics: const NeverScrollableScrollPhysics(),
       itemCount: performances.length,
       itemBuilder: (context, index) {
         Performance performance = performances.get(index);

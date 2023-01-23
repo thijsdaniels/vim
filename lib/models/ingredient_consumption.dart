@@ -17,7 +17,7 @@ class IngredientConsumption implements Consumption {
   String get name => ingredient.name;
 
   @override
-  Nutrition get nutrition => ingredient.nutrition.multiply(0.01 * amount);
+  Nutrition get nutrition => ingredient.nutritionForAmount(amount);
 
   @override
   set name(String name) {

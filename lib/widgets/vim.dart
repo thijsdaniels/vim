@@ -1,9 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:vim/models/consumptions.dart';
 import 'package:vim/models/date_model.dart';
+import 'package:vim/models/ingredients.dart';
+import 'package:vim/models/performances.dart';
+import 'package:vim/models/recipes.dart';
 import 'package:vim/services/consumptions_service.dart';
 import 'package:vim/services/ingredients_service.dart';
 import 'package:vim/services/performances_service.dart';
+import 'package:vim/services/recipes_service.dart';
 import 'package:vim/widgets/views/tabs.dart';
 
 class Vim extends StatelessWidget {
@@ -11,9 +16,17 @@ class Vim extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return StreamProvider<Ingredients>(
-      create: (context) => IngredientsService.all(),
-      initialData: Ingredients(List.empty()),
+    return MultiProvider(
+      providers: [
+        StreamProvider<Ingredients>(
+          create: (context) => IngredientsService.all(),
+          initialData: Ingredients(List.empty()),
+        ),
+        StreamProvider<Recipes>(
+          create: (context) => RecipesService.all(),
+          initialData: Recipes(List.empty()),
+        ),
+      ],
       child: ChangeNotifierProvider(
         create: (context) => DateModel(),
         child: Consumer<DateModel>(

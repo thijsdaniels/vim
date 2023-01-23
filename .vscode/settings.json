@@ -1,3 +1,3 @@
 {
-	"conventionalCommits.scopes": ["log"]
+	"conventionalCommits.scopes": ["log", "recipes"]
 }

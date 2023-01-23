@@ -4,7 +4,7 @@ import 'package:provider/provider.dart';
 import 'package:vim/models/date_model.dart';
 import 'package:vim/models/ingredient.dart';
 import 'package:vim/models/ingredient_consumption.dart';
-import 'package:vim/services/ingredients_service.dart';
+import 'package:vim/models/ingredients.dart';
 
 class TrackIngredientDialog extends StatefulWidget {
   final IngredientConsumption? ingredientConsumption;
@@ -53,6 +53,7 @@ class _TrackIngredientDialogState extends State<TrackIngredientDialog> {
                     decoration: const InputDecoration(
                       labelText: 'Ingredient',
                     ),
+                    isExpanded: true,
                     items: List.generate(ingredients.length,
                             (index) => ingredients.get(index))
                         .map((ingredient) => DropdownMenuItem<Ingredient>(

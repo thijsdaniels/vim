@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:vim/widgets/views/dashboard.dart';
 import 'package:vim/widgets/views/ingredients_view.dart';
+import 'package:vim/widgets/views/recipes_view.dart';
 
 class Tabs extends StatefulWidget {
   const Tabs({super.key});
@@ -24,6 +25,7 @@ class _TabsState extends State<Tabs> {
       body: <Widget>[
         const Dashboard(),
         const IngredientsView(),
+        const RecipesView(),
       ][_selectedIndex],
       bottomNavigationBar: BottomNavigationBar(
         showUnselectedLabels: false,
@@ -35,6 +37,10 @@ class _TabsState extends State<Tabs> {
           BottomNavigationBarItem(
             icon: Icon(Icons.bakery_dining),
             label: 'Ingredients',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.ramen_dining),
+            label: 'Recipes',
           ),
         ],
         currentIndex: _selectedIndex,

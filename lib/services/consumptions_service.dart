@@ -1,10 +1,10 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:vim/models/consumption.dart';
+import 'package:vim/models/consumptions.dart';
+import 'package:vim/models/ingredient_consumption.dart';
+import 'package:vim/models/recipe_consumption.dart';
 
-import '../models/ingredient_consumption.dart';
-import '../models/nutrition.dart';
-
-/// @todo Filter all operations by the currently authenticated user. It might be
+/// TODO: Filter all operations by the currently authenticated user. It might be
 /// a good idea to apply this generally to the entire service:
 /// ```
 ///   instance
@@ -18,9 +18,17 @@ class ConsumptionsService {
       .instance
       .collection('consumptions')
       .withConverter<Consumption>(
-        fromFirestore: (snapshot, _) => snapshot.data()?['ingredient'] != null
-            ? IngredientConsumption.fromSnapshot(snapshot)
-            : Consumption.fromSnapshot(snapshot),
+        fromFirestore: (snapshot, _) {
+          Map<String, dynamic> data = snapshot.data()!;
+
+          if (data['recipe'] != null) {
+            return RecipeConsumption.fromSnapshot(snapshot);
+          } else if (data['ingredient'] != null) {
+            return IngredientConsumption.fromSnapshot(snapshot);
+          } else {
+            return Consumption.fromSnapshot(snapshot);
+          }
+        },
         toFirestore: (consumption, _) => consumption.toMap(),
       );
 
@@ -52,25 +60,5 @@ class ConsumptionsService {
   static Future<void> delete(Consumption consumption) async {
     assert(consumption.id != null);
     return _collection.doc(consumption.id).delete();
-  }
-}
-
-class Consumptions {
-  final List<Consumption> _consumptions;
-
-  int get length => _consumptions.length;
-
-  Nutrition get nutrition {
-    return _consumptions.isNotEmpty
-        ? _consumptions
-            .map((consumption) => consumption.nutrition)
-            .reduce((total, entry) => total.add(entry))
-        : Nutrition(calories: 0);
-  }
-
-  Consumptions(this._consumptions);
-
-  Consumption get(int index) {
-    return _consumptions[index];
   }
 }

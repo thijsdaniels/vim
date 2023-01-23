@@ -29,10 +29,10 @@ class Ingredient {
   ) {
     Map<String, dynamic> map = snapshot.data()!;
 
-    Ingredient consumption = fromMap(map);
-    consumption._id = snapshot.id;
+    Ingredient ingredient = fromMap(map);
+    ingredient._id = snapshot.id;
 
-    return consumption;
+    return ingredient;
   }
 
   static Ingredient fromMap(Map<String, dynamic> map) {
@@ -52,5 +52,9 @@ class Ingredient {
       ingredient: this,
       amount: amount,
     );
+  }
+
+  Nutrition nutritionForAmount(num amount) {
+    return nutrition.multiply(0.01 * amount);
   }
 }

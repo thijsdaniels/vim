@@ -1,7 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:vim/models/ingredient.dart';
+import 'package:vim/models/ingredients.dart';
 
-/// @todo Filter all operations by the currently authenticated user. It might be
+/// TODO: Filter all operations by the currently authenticated user. It might be
 /// a good idea to apply this generally to the entire service:
 /// ```
 ///   instance
@@ -37,17 +38,5 @@ class IngredientsService {
   static Future<void> delete(Ingredient ingredient) async {
     assert(ingredient.id != null);
     return _collection.doc(ingredient.id).delete();
-  }
-}
-
-class Ingredients {
-  final List<Ingredient> _ingredients;
-
-  int get length => _ingredients.length;
-
-  Ingredients(this._ingredients);
-
-  Ingredient get(int index) {
-    return _ingredients[index];
   }
 }
