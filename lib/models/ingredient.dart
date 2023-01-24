@@ -45,7 +45,7 @@ class Ingredient {
 
   IngredientConsumption consumption({
     required Timestamp timestamp,
-    required double amount,
+    required num amount,
   }) {
     return IngredientConsumption(
       timestamp: timestamp,

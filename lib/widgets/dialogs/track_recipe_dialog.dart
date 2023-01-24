@@ -1,10 +1,13 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
+import 'package:vim/extensions/string.dart';
+import 'package:vim/models/amount.dart';
 import 'package:vim/models/date_model.dart';
 import 'package:vim/models/recipe.dart';
 import 'package:vim/models/recipe_consumption.dart';
 import 'package:vim/models/recipes.dart';
+import 'package:vim/widgets/form_fields/number_form_field.dart';
 
 class TrackRecipeDialog extends StatefulWidget {
   final RecipeConsumption? recipeConsumption;
@@ -16,17 +19,21 @@ class TrackRecipeDialog extends StatefulWidget {
 }
 
 class _TrackRecipeDialogState extends State<TrackRecipeDialog> {
-  Recipe? _recipe;
-
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
-  final TextEditingController _amountController = TextEditingController();
+
+  Recipe? _recipe;
+  Unit? _unit = Unit.servings;
+  num? _amount = 1;
 
   @override
   void initState() {
     super.initState();
 
-    if (widget.recipeConsumption != null) {
-      _amountController.text = widget.recipeConsumption!.amount.toString();
+    RecipeConsumption? recipeConsumption = widget.recipeConsumption;
+
+    if (recipeConsumption != null) {
+      _unit = recipeConsumption.amount.unit;
+      _amount = recipeConsumption.amount.value;
     }
   }
 
@@ -52,10 +59,12 @@ class _TrackRecipeDialogState extends State<TrackRecipeDialog> {
                     ),
                     items: List.generate(
                             recipes.length, (index) => recipes.get(index))
-                        .map((recipe) => DropdownMenuItem<Recipe>(
-                              value: recipe,
-                              child: Text(recipe.name),
-                            ))
+                        .map(
+                          (recipe) => DropdownMenuItem<Recipe>(
+                            value: recipe,
+                            child: Text(recipe.name),
+                          ),
+                        )
                         .toList(),
                     value: _recipe,
                     onChanged: (recipe) {
@@ -71,17 +80,44 @@ class _TrackRecipeDialogState extends State<TrackRecipeDialog> {
                     },
                   ),
                 ),
-              TextFormField(
-                controller: _amountController,
+              DropdownButtonFormField<Unit>(
+                isExpanded: true,
                 decoration: const InputDecoration(
-                  labelText: 'Grams',
+                  labelText: 'Unit',
                 ),
-                keyboardType: TextInputType.number,
-                inputFormatters: <TextInputFormatter>[
-                  FilteringTextInputFormatter.allow(RegExp(r'[0-9\.]'))
-                ],
+                items: Unit.values
+                    .map(
+                      (unit) => DropdownMenuItem<Unit>(
+                        value: unit,
+                        child: Text(describeEnum(unit).toTitleCase()),
+                      ),
+                    )
+                    .toList(),
+                value: _unit,
+                onChanged: (unit) {
+                  setState(() {
+                    _unit = unit;
+                  });
+                },
                 validator: (value) {
-                  if (value == null || value.isEmpty) {
+                  if (value == null) {
+                    return 'Please select a unit.';
+                  }
+                  return null;
+                },
+              ),
+              NumberFormField(
+                initialValue: _amount,
+                onChanged: (amount) {
+                  setState(() {
+                    _amount = amount;
+                  });
+                },
+                decoration: const InputDecoration(
+                  labelText: 'Amount',
+                ),
+                validator: (value) {
+                  if (value == null) {
                     return 'Please enter an amount.';
                   }
                   return null;
@@ -115,16 +151,15 @@ class _TrackRecipeDialogState extends State<TrackRecipeDialog> {
               if (formState.validate()) {
                 formState.save();
 
-                double amount = double.parse(_amountController.value.text);
-
                 RecipeConsumption? recipeConsumption = widget.recipeConsumption;
 
                 if (recipeConsumption != null) {
-                  recipeConsumption.amount = amount;
+                  recipeConsumption.amount =
+                      Amount(unit: _unit!, value: _amount!);
                 } else {
                   recipeConsumption = await _recipe?.consumption(
                     timestamp: dateModel.timestamp,
-                    amount: amount,
+                    amount: Amount(unit: _unit!, value: _amount!),
                   );
                 }
 
