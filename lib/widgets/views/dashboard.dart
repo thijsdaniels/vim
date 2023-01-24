@@ -336,12 +336,12 @@ class ConsumptionsList extends StatelessWidget {
               [
                 if (consumption is RecipeConsumption) ...[
                   'Thijs Daniels',
-                  '${consumption.amount / consumption.recipe.ingredientAmounts.amount} serving${consumption.amount / consumption.recipe.ingredientAmounts.amount != 1 ? 's' : ''}',
+                  '${consumption.amount}',
                 ],
                 if (consumption is IngredientConsumption) ...[
                   if (consumption.ingredient.brand != null)
                     '${consumption.ingredient.brand}',
-                  '${consumption.amount} gram${consumption.amount != 1 ? 's' : ''}',
+                  '${consumption.amount} grams',
                 ],
                 '${consumption.nutrition.calories.round()} kcal',
               ].join(" • "),

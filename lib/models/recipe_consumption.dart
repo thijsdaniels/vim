@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:vim/models/amount.dart';
 import 'package:vim/models/consumption.dart';
 import 'package:vim/models/recipe.dart';
 import 'package:vim/models/nutrition.dart';
@@ -8,7 +9,7 @@ class RecipeConsumption implements Consumption {
   @override
   Timestamp timestamp;
   ResolvedRecipe recipe;
-  num amount;
+  Amount amount;
 
   @override
   String? get id => _id;
@@ -41,7 +42,7 @@ class RecipeConsumption implements Consumption {
     return {
       'timestamp': timestamp,
       'recipe': recipe.toMap(),
-      'amount': amount,
+      'amount': amount.toMap(),
     };
   }
 
@@ -60,7 +61,7 @@ class RecipeConsumption implements Consumption {
     return RecipeConsumption(
       timestamp: map['timestamp'],
       recipe: ResolvedRecipe.fromMap(map['recipe']),
-      amount: map['amount'],
+      amount: Amount.fromMap(map['amount']),
     );
   }
 }

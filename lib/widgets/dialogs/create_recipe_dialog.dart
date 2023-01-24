@@ -25,6 +25,7 @@ class PotentialIngredientAmount {
 class _CreateRecipeDialogState extends State<CreateRecipeDialog> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   String _name = "";
+  int _servings = 1;
   List<PotentialIngredientAmount> _ingredientAmounts = [];
 
   @override
@@ -35,6 +36,7 @@ class _CreateRecipeDialogState extends State<CreateRecipeDialog> {
 
     if (recipe != null) {
       _name = recipe.name;
+      _servings = recipe.servings;
       _ingredientAmounts =
           List.generate(recipe.ingredientAmounts.length, (index) {
         var ingredientAmount = recipe.ingredientAmounts.get(index);
@@ -71,6 +73,28 @@ class _CreateRecipeDialogState extends State<CreateRecipeDialog> {
                 onChanged: (name) {
                   setState(() {
                     _name = name;
+                  });
+                },
+              ),
+              TextFormField(
+                initialValue: _servings.toString(),
+                autofocus: true,
+                decoration: const InputDecoration(
+                  labelText: 'Servings',
+                ),
+                keyboardType: TextInputType.number,
+                inputFormatters: <TextInputFormatter>[
+                  FilteringTextInputFormatter.allow(RegExp(r'[0-9]'))
+                ],
+                validator: (value) {
+                  if (value == null || value.isEmpty) {
+                    return 'Please enter a number.';
+                  }
+                  return null;
+                },
+                onChanged: (servings) {
+                  setState(() {
+                    _servings = int.parse(servings);
                   });
                 },
               ),
@@ -175,10 +199,12 @@ class _CreateRecipeDialogState extends State<CreateRecipeDialog> {
 
               if (recipe != null) {
                 recipe.name = _name;
+                recipe.servings = _servings;
                 recipe.ingredientAmounts = ingredientAmounts;
               } else {
                 recipe = Recipe(
                   name: _name,
+                  servings: _servings,
                   ingredientAmounts: ingredientAmounts,
                 );
               }
