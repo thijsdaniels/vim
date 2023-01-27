@@ -34,8 +34,8 @@ class _QuickTrackFoodDialogState extends State<QuickTrackFoodDialog> {
       _caloriesController.text =
           widget.consumption!.nutrition.calories.toString();
       _carbohydratesController.text =
-          widget.consumption!.nutrition.carbohydrates.toString();
-      _fatController.text = widget.consumption!.nutrition.fat.toString();
+          widget.consumption!.nutrition.carbohydrates.total.toString();
+      _fatController.text = widget.consumption!.nutrition.fat.total.toString();
       _proteinController.text =
           widget.consumption!.nutrition.protein.toString();
     }
@@ -157,9 +157,9 @@ class _QuickTrackFoodDialogState extends State<QuickTrackFoodDialog> {
                 String name = _nameController.value.text;
                 Nutrition nutrition = Nutrition(
                   calories: double.parse(_caloriesController.value.text),
-                  carbohydrates:
-                      double.parse(_carbohydratesController.value.text),
-                  fat: double.parse(_fatController.value.text),
+                  carbohydrates: Carbohydrates(
+                      double.parse(_carbohydratesController.value.text)),
+                  fat: Fat(double.parse(_fatController.value.text)),
                   protein: double.parse(_proteinController.value.text),
                 );
 

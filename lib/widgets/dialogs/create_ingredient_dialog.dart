@@ -19,8 +19,12 @@ class _CreateIngredientDialogState extends State<CreateIngredientDialog> {
   final TextEditingController _caloriesController = TextEditingController();
   final TextEditingController _carbohydratesController =
       TextEditingController();
-  final TextEditingController _fatController = TextEditingController();
   final TextEditingController _proteinController = TextEditingController();
+  final TextEditingController _fatController = TextEditingController();
+  final TextEditingController _saturatesController = TextEditingController();
+  final TextEditingController _sugarsController = TextEditingController();
+  final TextEditingController _fiberController = TextEditingController();
+  final TextEditingController _saltController = TextEditingController();
 
   @override
   void initState() {
@@ -32,9 +36,15 @@ class _CreateIngredientDialogState extends State<CreateIngredientDialog> {
       _caloriesController.text =
           widget.ingredient!.nutrition.calories.toString();
       _carbohydratesController.text =
-          widget.ingredient!.nutrition.carbohydrates.toString();
-      _fatController.text = widget.ingredient!.nutrition.fat.toString();
+          widget.ingredient!.nutrition.carbohydrates.total.toString();
+      _fatController.text = widget.ingredient!.nutrition.fat.total.toString();
       _proteinController.text = widget.ingredient!.nutrition.protein.toString();
+      _saturatesController.text =
+          widget.ingredient!.nutrition.fat.saturates.toString();
+      _sugarsController.text =
+          widget.ingredient!.nutrition.carbohydrates.sugars.toString();
+      _fiberController.text = widget.ingredient!.nutrition.fiber.toString();
+      _saltController.text = widget.ingredient!.nutrition.salt.toString();
     }
   }
 
@@ -67,6 +77,7 @@ class _CreateIngredientDialogState extends State<CreateIngredientDialog> {
                   labelText: 'Brand',
                 ),
               ),
+              const SizedBox(height: 32),
               TextFormField(
                 controller: _caloriesController,
                 decoration: const InputDecoration(
@@ -100,6 +111,22 @@ class _CreateIngredientDialogState extends State<CreateIngredientDialog> {
                 },
               ),
               TextFormField(
+                controller: _proteinController,
+                decoration: const InputDecoration(
+                  labelText: 'Protein',
+                ),
+                keyboardType: TextInputType.number,
+                inputFormatters: <TextInputFormatter>[
+                  FilteringTextInputFormatter.allow(RegExp(r'[0-9\.]'))
+                ],
+                validator: (value) {
+                  if (value == null || value.isEmpty) {
+                    return 'Please enter a number.';
+                  }
+                  return null;
+                },
+              ),
+              TextFormField(
                 controller: _fatController,
                 decoration: const InputDecoration(
                   labelText: 'Fat',
@@ -115,21 +142,46 @@ class _CreateIngredientDialogState extends State<CreateIngredientDialog> {
                   return null;
                 },
               ),
+              const SizedBox(height: 32),
               TextFormField(
-                controller: _proteinController,
+                controller: _saturatesController,
                 decoration: const InputDecoration(
-                  labelText: 'Protein',
+                  labelText: 'Saturated Fat',
                 ),
                 keyboardType: TextInputType.number,
                 inputFormatters: <TextInputFormatter>[
                   FilteringTextInputFormatter.allow(RegExp(r'[0-9\.]'))
                 ],
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return 'Please enter a number.';
-                  }
-                  return null;
-                },
+              ),
+              TextFormField(
+                controller: _sugarsController,
+                decoration: const InputDecoration(
+                  labelText: 'Sugars',
+                ),
+                keyboardType: TextInputType.number,
+                inputFormatters: <TextInputFormatter>[
+                  FilteringTextInputFormatter.allow(RegExp(r'[0-9\.]'))
+                ],
+              ),
+              TextFormField(
+                controller: _fiberController,
+                decoration: const InputDecoration(
+                  labelText: 'Fiber',
+                ),
+                keyboardType: TextInputType.number,
+                inputFormatters: <TextInputFormatter>[
+                  FilteringTextInputFormatter.allow(RegExp(r'[0-9\.]'))
+                ],
+              ),
+              TextFormField(
+                controller: _saltController,
+                decoration: const InputDecoration(
+                  labelText: 'Salt',
+                ),
+                keyboardType: TextInputType.number,
+                inputFormatters: <TextInputFormatter>[
+                  FilteringTextInputFormatter.allow(RegExp(r'[0-9\.]'))
+                ],
               ),
             ],
           ),
@@ -157,15 +209,32 @@ class _CreateIngredientDialogState extends State<CreateIngredientDialog> {
               formState.save();
 
               String name = _nameController.value.text;
+
               String? brand = _brandController.value.text.isNotEmpty
                   ? _brandController.value.text
                   : null;
+
               Nutrition nutrition = Nutrition(
                 calories: double.parse(_caloriesController.value.text),
-                carbohydrates:
-                    double.parse(_carbohydratesController.value.text),
-                fat: double.parse(_fatController.value.text),
+                fat: Fat(
+                  double.parse(_fatController.value.text),
+                  saturates: _saturatesController.value.text.isNotEmpty
+                      ? double.parse(_saturatesController.value.text)
+                      : 0,
+                ),
+                carbohydrates: Carbohydrates(
+                  double.parse(_carbohydratesController.value.text),
+                  sugars: _sugarsController.value.text.isNotEmpty
+                      ? double.parse(_sugarsController.value.text)
+                      : 0,
+                ),
+                fiber: _fiberController.value.text.isNotEmpty
+                    ? double.parse(_fiberController.value.text)
+                    : 0,
                 protein: double.parse(_proteinController.value.text),
+                salt: _saltController.value.text.isNotEmpty
+                    ? double.parse(_saltController.value.text)
+                    : 0,
               );
 
               Ingredient? ingredient = widget.ingredient;

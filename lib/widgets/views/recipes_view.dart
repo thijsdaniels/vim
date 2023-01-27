@@ -16,6 +16,23 @@ class _RecipesViewState extends State<RecipesView> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        title: const Text('Recipes'),
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.sort_rounded),
+            onPressed: () {},
+          ),
+          IconButton(
+            icon: const Icon(Icons.filter_alt_rounded),
+            onPressed: () {},
+          ),
+          IconButton(
+            icon: const Icon(Icons.more_vert),
+            onPressed: () {},
+          ),
+        ],
+      ),
       floatingActionButton: FloatingActionButton(
         onPressed: () async {
           Recipe? recipe = await _showCreateRecipeDialog(
@@ -47,7 +64,6 @@ class _RecipesViewState extends State<RecipesView> {
                     builder: (context, snapshot) {
                       return Text(
                         [
-                          '${recipe.ingredientAmounts.length} ingredients',
                           '${recipe.ingredientAmounts.amount} gram${recipe.ingredientAmounts.amount != 1 ? 's' : ''}',
                           if (snapshot.hasData)
                             '${snapshot.data!.calories.round().toString()} kcal',

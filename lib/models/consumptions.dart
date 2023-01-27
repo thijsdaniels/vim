@@ -11,7 +11,7 @@ class Consumptions {
         ? _consumptions
             .map((consumption) => consumption.nutrition)
             .reduce((total, entry) => total.add(entry))
-        : Nutrition(calories: 0);
+        : const Nutrition(calories: 0);
   }
 
   Consumptions([this._consumptions = const []]);

@@ -30,6 +30,7 @@ class PerformancesService {
           isGreaterThanOrEqualTo: Timestamp.fromDate(today),
           isLessThan: Timestamp.fromDate(tomorrow),
         )
+        .orderBy('timestamp')
         .snapshots()
         .map((snapshot) =>
             Performances(snapshot.docs.map((doc) => doc.data()).toList()));

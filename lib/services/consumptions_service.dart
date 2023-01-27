@@ -42,6 +42,7 @@ class ConsumptionsService {
           isGreaterThanOrEqualTo: Timestamp.fromDate(today),
           isLessThan: Timestamp.fromDate(tomorrow),
         )
+        .orderBy('timestamp')
         .snapshots()
         .map((snapshot) =>
             Consumptions(snapshot.docs.map((doc) => doc.data()).toList()));

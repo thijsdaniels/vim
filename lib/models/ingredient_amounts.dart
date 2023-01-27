@@ -25,9 +25,10 @@ class IngredientAmounts {
     return _ingredientAmounts[index];
   }
 
-  Iterable<Map<String, dynamic>> toMap() {
+  List<Map<String, dynamic>> toMap() {
     return _ingredientAmounts
-        .map((ingredientAmount) => ingredientAmount.toMap());
+        .map((ingredientAmount) => ingredientAmount.toMap())
+        .toList();
   }
 
   static IngredientAmounts fromMap(List<dynamic> map) {

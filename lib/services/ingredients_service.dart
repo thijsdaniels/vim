@@ -21,7 +21,7 @@ class IngredientsService {
       );
 
   static Stream<Ingredients> all() {
-    return _collection.snapshots().map((snapshot) =>
+    return _collection.orderBy('name').snapshots().map((snapshot) =>
         Ingredients(snapshot.docs.map((doc) => doc.data()).toList()));
   }
 

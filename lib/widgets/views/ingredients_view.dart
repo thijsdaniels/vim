@@ -16,6 +16,23 @@ class _IngredientsViewState extends State<IngredientsView> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        title: const Text('Food'),
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.sort_rounded),
+            onPressed: () {},
+          ),
+          IconButton(
+            icon: const Icon(Icons.filter_alt_rounded),
+            onPressed: () {},
+          ),
+          IconButton(
+            icon: const Icon(Icons.more_vert),
+            onPressed: () {},
+          ),
+        ],
+      ),
       floatingActionButton: FloatingActionButton(
         onPressed: () async {
           Ingredient? ingredient = await _showCreateIngredientDialog(
@@ -42,7 +59,8 @@ class _IngredientsViewState extends State<IngredientsView> {
               return Card(
                 child: ListTile(
                   title: Text(ingredient.name),
-                  subtitle: Text(ingredient.brand ?? ""),
+                  subtitle:
+                      ingredient.brand != null ? Text(ingredient.brand!) : null,
                   trailing: Row(
                     mainAxisSize: MainAxisSize.min,
                     children: [
