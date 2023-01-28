@@ -3,7 +3,9 @@ import 'package:provider/provider.dart';
 import 'package:vim/models/ingredient.dart';
 import 'package:vim/models/ingredients.dart';
 import 'package:vim/services/ingredients_service.dart';
-import 'package:vim/widgets/dialogs/create_ingredient_dialog.dart';
+import 'package:vim/widgets/views/home/ingredients/create_ingredient_view.dart';
+import 'package:vim/widgets/atoms/subtitle.dart';
+import 'package:vim/widgets/molecules/with_confirmation_dialog.dart';
 
 class IngredientsView extends StatefulWidget {
   const IngredientsView({super.key});
@@ -34,16 +36,12 @@ class _IngredientsViewState extends State<IngredientsView> {
         ],
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: () async {
-          Ingredient? ingredient = await _showCreateIngredientDialog(
-            context: context,
+        onPressed: () {
+          Navigator.of(context).push(
+            MaterialPageRoute(
+              builder: (context) => const CreateIngredientView(),
+            ),
           );
-
-          if (ingredient != null) {
-            IngredientsService.create(ingredient);
-          }
-
-          return;
         },
         child: const Icon(Icons.add),
       ),
@@ -59,30 +57,41 @@ class _IngredientsViewState extends State<IngredientsView> {
               return Card(
                 child: ListTile(
                   title: Text(ingredient.name),
-                  subtitle:
-                      ingredient.brand != null ? Text(ingredient.brand!) : null,
+                  subtitle: (ingredient.brand != null)
+                      ? Subtitle(ingredient.brand!)
+                      : null,
                   trailing: Row(
                     mainAxisSize: MainAxisSize.min,
                     children: [
+                      if (ingredient.nutrition.isComplete())
+                        const Padding(
+                          padding: EdgeInsets.all(12),
+                          child: Icon(Icons.check_rounded),
+                        ),
                       IconButton(
-                        icon: const Icon(Icons.edit),
+                        icon: const Icon(Icons.edit_rounded),
                         onPressed: () async {
-                          Ingredient? edited =
-                              await _showCreateIngredientDialog(
-                            context: context,
-                            ingredient: ingredient,
+                          Navigator.of(context).push(
+                            MaterialPageRoute(
+                              builder: (context) => CreateIngredientView(
+                                ingredient: ingredient,
+                              ),
+                            ),
                           );
-
-                          if (edited != null) {
-                            IngredientsService.update(edited);
-                          }
                         },
                       ),
-                      IconButton(
-                        icon: const Icon(Icons.delete),
-                        onPressed: () {
-                          IngredientsService.delete(ingredient);
-                        },
+                      WithConfirmationDialog(
+                        title: ingredient.name,
+                        description:
+                            'Are you sure you want to delete this ingredient?',
+                        builder: (context, confirm) => IconButton(
+                          icon: const Icon(Icons.delete_rounded),
+                          onPressed: () async {
+                            if (await confirm()) {
+                              IngredientsService.delete(ingredient);
+                            }
+                          },
+                        ),
                       ),
                     ],
                   ),
@@ -92,20 +101,6 @@ class _IngredientsViewState extends State<IngredientsView> {
           ),
         ),
       ),
-    );
-  }
-
-  Future<Ingredient?> _showCreateIngredientDialog({
-    required BuildContext context,
-    Ingredient? ingredient,
-  }) {
-    return showDialog<Ingredient>(
-      context: context,
-      builder: (BuildContext context) {
-        return CreateIngredientDialog(
-          ingredient: ingredient,
-        );
-      },
     );
   }
 }

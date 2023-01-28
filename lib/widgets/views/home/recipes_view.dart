@@ -3,7 +3,9 @@ import 'package:provider/provider.dart';
 import 'package:vim/models/recipe.dart';
 import 'package:vim/models/recipes.dart';
 import 'package:vim/services/recipes_service.dart';
-import 'package:vim/widgets/dialogs/create_recipe_dialog.dart';
+import 'package:vim/widgets/views/home/recipes/create_recipe_view.dart';
+import 'package:vim/widgets/atoms/subtitle.dart';
+import 'package:vim/widgets/molecules/with_confirmation_dialog.dart';
 
 class RecipesView extends StatefulWidget {
   const RecipesView({super.key});
@@ -35,15 +37,11 @@ class _RecipesViewState extends State<RecipesView> {
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () async {
-          Recipe? recipe = await _showCreateRecipeDialog(
-            context: context,
+          Navigator.of(context).push(
+            MaterialPageRoute(
+              builder: (context) => const CreateRecipeView(),
+            ),
           );
-
-          if (recipe != null) {
-            RecipesService.create(recipe);
-          }
-
-          return;
         },
         child: const Icon(Icons.add),
       ),
@@ -62,11 +60,11 @@ class _RecipesViewState extends State<RecipesView> {
                   subtitle: FutureBuilder(
                     future: recipe.nutrition,
                     builder: (context, snapshot) {
-                      return Text(
+                      return Subtitle(
                         [
-                          '${recipe.ingredientAmounts.amount} gram${recipe.ingredientAmounts.amount != 1 ? 's' : ''}',
+                          '${recipe.ingredientAmounts.amount.round()} grams',
                           if (snapshot.hasData)
-                            '${snapshot.data!.calories.round().toString()} kcal',
+                            '${snapshot.data!.calories.round()} kcal',
                         ].join(" • "),
                       );
                     },
@@ -77,21 +75,26 @@ class _RecipesViewState extends State<RecipesView> {
                       IconButton(
                         icon: const Icon(Icons.edit),
                         onPressed: () async {
-                          Recipe? edited = await _showCreateRecipeDialog(
-                            context: context,
-                            recipe: recipe,
+                          Navigator.of(context).push(
+                            MaterialPageRoute(
+                              builder: (context) =>
+                                  CreateRecipeView(recipe: recipe),
+                            ),
                           );
-
-                          if (edited != null) {
-                            RecipesService.update(edited);
-                          }
                         },
                       ),
-                      IconButton(
-                        icon: const Icon(Icons.delete),
-                        onPressed: () {
-                          RecipesService.delete(recipe);
-                        },
+                      WithConfirmationDialog(
+                        title: recipe.name,
+                        description:
+                            'Are you sure you want to delete this recipe?',
+                        builder: (context, confirm) => IconButton(
+                          icon: const Icon(Icons.delete),
+                          onPressed: () async {
+                            if (await confirm()) {
+                              RecipesService.delete(recipe);
+                            }
+                          },
+                        ),
                       ),
                     ],
                   ),
@@ -101,20 +104,6 @@ class _RecipesViewState extends State<RecipesView> {
           ),
         ),
       ),
-    );
-  }
-
-  Future<Recipe?> _showCreateRecipeDialog({
-    required BuildContext context,
-    Recipe? recipe,
-  }) {
-    return showDialog<Recipe>(
-      context: context,
-      builder: (BuildContext context) {
-        return CreateRecipeDialog(
-          recipe: recipe,
-        );
-      },
     );
   }
 }

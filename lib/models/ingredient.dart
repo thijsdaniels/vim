@@ -1,8 +1,9 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:vim/models/ingredient_consumption.dart';
+import 'package:vim/models/model.dart';
 import 'package:vim/models/nutrition.dart';
 
-class Ingredient {
+class Ingredient extends Model {
   DocumentReference? _reference;
   String name;
   String? brand;
@@ -16,6 +17,7 @@ class Ingredient {
     required this.nutrition,
   });
 
+  @override
   Map<String, dynamic> toMap() {
     return {
       'name': name,

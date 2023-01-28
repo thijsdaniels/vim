@@ -1,10 +1,13 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:vim/models/collection.dart';
 import 'package:vim/models/ingredient.dart';
+import 'package:vim/models/model.dart';
 import 'package:vim/models/nutrition.dart';
 
-class IngredientAmounts {
+class IngredientAmounts extends Collection<IngredientAmount> {
   final List<IngredientAmount> _ingredientAmounts;
 
+  @override
   int get length => _ingredientAmounts.length;
 
   num get amount {
@@ -21,10 +24,12 @@ class IngredientAmounts {
 
   IngredientAmounts([this._ingredientAmounts = const []]);
 
+  @override
   IngredientAmount get(int index) {
     return _ingredientAmounts[index];
   }
 
+  @override
   List<Map<String, dynamic>> toMap() {
     return _ingredientAmounts
         .map((ingredientAmount) => ingredientAmount.toMap())
@@ -45,16 +50,13 @@ class IngredientAmounts {
         .reduce((total, nutrition) => total.add(nutrition));
   }
 
-  // Iterable<T> map<T>(T Function(IngredientAmount) toElement) {
-  //   return _ingredientAmounts.map(toElement);
-  // }
-
-  // void add(IngredientAmount ingredientAmount) {
-  //   return _ingredientAmounts.add(ingredientAmount);
-  // }
+  @override
+  Iterable<T> map<T>(T Function(IngredientAmount) toElement) {
+    return _ingredientAmounts.map(toElement);
+  }
 }
 
-class IngredientAmount {
+class IngredientAmount extends Model {
   final Ingredient ingredient;
   final num amount;
 
@@ -67,6 +69,7 @@ class IngredientAmount {
     required this.amount,
   });
 
+  @override
   Map<String, dynamic> toMap() {
     return {
       'ingredient': ingredient.toMap(),
@@ -82,9 +85,10 @@ class IngredientAmount {
   }
 }
 
-class IngredientAmountsReference {
+class IngredientAmountsReference extends Collection<IngredientAmountReference> {
   final List<IngredientAmountReference> _ingredientAmounts;
 
+  @override
   int get length => _ingredientAmounts.length;
 
   num get amount {
@@ -101,13 +105,16 @@ class IngredientAmountsReference {
 
   IngredientAmountsReference([this._ingredientAmounts = const []]);
 
+  @override
   IngredientAmountReference get(int index) {
     return _ingredientAmounts[index];
   }
 
-  Iterable<Map<String, dynamic>> toMap() {
+  @override
+  List<Map<String, dynamic>> toMap() {
     return _ingredientAmounts
-        .map((ingredientAmount) => ingredientAmount.toMap());
+        .map((ingredientAmount) => ingredientAmount.toMap())
+        .toList();
   }
 
   static IngredientAmountsReference fromMap(List<dynamic> map) {
@@ -120,20 +127,32 @@ class IngredientAmountsReference {
     double factor = amount / this.amount;
 
     return _ingredientAmounts
-        .map((ingredientAmount) async =>
-            (await ingredientAmount.nutrition).multiply(factor))
-        .reduce((total, nutrition) async => (await total).add(await nutrition));
+        .map(
+          (ingredientAmount) async =>
+              (await ingredientAmount.nutrition).multiply(factor),
+        )
+        .reduce(
+          (total, nutrition) async => (await total).add(await nutrition),
+        );
   }
 
   Future<IngredientAmounts> resolve() async {
-    var ingredientAmounts = await Future.wait(_ingredientAmounts
-        .map((ingredientAmount) async => await ingredientAmount.resolve()));
+    List<IngredientAmount> ingredientAmounts = await Future.wait(
+      _ingredientAmounts.map(
+        (ingredientAmount) async => await ingredientAmount.resolve(),
+      ),
+    );
 
     return IngredientAmounts(ingredientAmounts);
   }
+
+  @override
+  Iterable<E> map<E>(E Function(IngredientAmountReference) toElement) {
+    return _ingredientAmounts.map(toElement);
+  }
 }
 
-class IngredientAmountReference {
+class IngredientAmountReference extends Model {
   Ingredient? _ingredient;
 
   final DocumentReference ingredientReference;
@@ -159,6 +178,7 @@ class IngredientAmountReference {
     required this.amount,
   });
 
+  @override
   Map<String, dynamic> toMap() {
     return {
       /// TODO: Find a way to store the `DocumentReference` as a `reference`

@@ -2,8 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:vim/models/consumptions.dart';
 import 'package:vim/models/performances.dart';
-import 'package:vim/widgets/date_picker.dart';
+import 'package:vim/widgets/molecules/date_stepper.dart';
 import 'package:vim/widgets/vim.dart';
+
+/// TODO: Get these targets from the user's settings.
+const int targetDailyCalorieIntake = 2400;
+const int targetDailyCalorieOutput = 500;
 
 class DashboardView extends StatelessWidget {
   const DashboardView({super.key});
@@ -35,7 +39,7 @@ class DashboardView extends StatelessWidget {
         ],
         bottom: const PreferredSize(
           preferredSize: Size.fromHeight(40),
-          child: DatePicker(),
+          child: DateStepper(),
         ),
       ),
       body: SafeArea(
@@ -75,28 +79,57 @@ class CaloriesCard extends StatelessWidget {
             ),
             Padding(
               padding: const EdgeInsets.all(16.0),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.center,
+              child: Column(
                 children: <Widget>[
-                  Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: <Widget>[
-                      Text(
-                        '${consumptions.nutrition.calories.round()}',
-                        style: Theme.of(context).textTheme.displaySmall,
-                      ),
-                      const Text('Consumed'),
-                    ],
-                  ),
-                  const SizedBox(width: 64),
-                  Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: <Widget>[
-                      Text(
-                        '${performances.calories.round()}',
-                        style: Theme.of(context).textTheme.displaySmall,
-                      ),
-                      const Text('Burnt'),
+                  Table(
+                    defaultVerticalAlignment: TableCellVerticalAlignment.middle,
+                    children: [
+                      TableRow(children: [
+                        const Text('Consumed'),
+                        ClipRRect(
+                          borderRadius:
+                              const BorderRadius.all(Radius.circular(4)),
+                          child: LinearProgressIndicator(
+                            value: consumptions.nutrition.calories /
+                                (targetDailyCalorieIntake +
+                                    performances.calories),
+                            minHeight: 8,
+                          ),
+                        ),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.end,
+                          children: [
+                            Text(
+                              '${consumptions.nutrition.calories.round()}',
+                              style: Theme.of(context).textTheme.headlineSmall,
+                            ),
+                          ],
+                        )
+                      ]),
+                      TableRow(
+                        children: [
+                          const Text('Burned'),
+                          ClipRRect(
+                            borderRadius:
+                                const BorderRadius.all(Radius.circular(4)),
+                            child: LinearProgressIndicator(
+                              value: performances.calories /
+                                  targetDailyCalorieOutput,
+                              minHeight: 8,
+                            ),
+                          ),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.end,
+                            children: [
+                              Text(
+                                '${performances.calories.round()}',
+                                style:
+                                    Theme.of(context).textTheme.headlineSmall,
+                              ),
+                            ],
+                          ),
+                        ],
+                      )
                     ],
                   ),
                 ],
@@ -135,7 +168,7 @@ class MacrosCard extends StatelessWidget {
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: <Widget>[
                       Text(
-                        '${consumptions.nutrition.carbohydrates.total.round()}',
+                        '${consumptions.nutrition.carbohydrates.total?.round() ?? 0}',
                         style: Theme.of(context).textTheme.headlineMedium,
                       ),
                       const Text('Carbs'),
@@ -146,7 +179,7 @@ class MacrosCard extends StatelessWidget {
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: <Widget>[
                       Text(
-                        '${consumptions.nutrition.protein.round()}',
+                        '${consumptions.nutrition.proteins.total?.round() ?? 0}',
                         style: Theme.of(context).textTheme.headlineMedium,
                       ),
                       const Text('Protein'),
@@ -157,7 +190,7 @@ class MacrosCard extends StatelessWidget {
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: <Widget>[
                       Text(
-                        '${consumptions.nutrition.fat.total.round()}',
+                        '${consumptions.nutrition.fats.total?.round() ?? 0}',
                         style: Theme.of(context).textTheme.headlineMedium,
                       ),
                       const Text('Fat'),

@@ -1,7 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:vim/models/model.dart';
 import 'package:vim/models/nutrition.dart';
 
-class Consumption {
+class Consumption extends Model {
   String? _id;
   Timestamp timestamp;
   String name;
@@ -15,6 +16,7 @@ class Consumption {
     required this.nutrition,
   });
 
+  @override
   Map<String, dynamic> toMap() {
     return {
       'timestamp': timestamp,

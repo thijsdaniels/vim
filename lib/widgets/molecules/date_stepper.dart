@@ -3,8 +3,8 @@ import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:vim/models/date_model.dart';
 
-class DatePicker extends StatelessWidget {
-  const DatePicker({super.key});
+class DateStepper extends StatelessWidget {
+  const DateStepper({super.key});
 
   @override
   Widget build(BuildContext context) {

@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:vim/models/model.dart';
 
-class Performance {
+class Performance extends Model {
   String? _id;
   Timestamp timestamp;
   String name;
@@ -14,6 +15,7 @@ class Performance {
     required this.calories,
   });
 
+  @override
   Map<String, dynamic> toMap() {
     return {
       'timestamp': timestamp,

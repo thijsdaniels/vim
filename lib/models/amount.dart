@@ -34,4 +34,12 @@ class Amount {
       value: map['value'],
     );
   }
+
+  factory Amount.grams({required num value}) {
+    return Amount(unit: Unit.grams, value: value);
+  }
+
+  factory Amount.servings({required num value}) {
+    return Amount(unit: Unit.servings, value: value);
+  }
 }

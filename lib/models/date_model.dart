@@ -1,19 +1,20 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/foundation.dart';
+import 'package:vim/extensions/date_time.dart';
 
 class DateModel extends ChangeNotifier {
-  DateTime _date = getToday();
+  DateTime _date = DateTime.now().toDate();
 
   DateTime get date => _date;
   Timestamp get timestamp => Timestamp.fromDate(date);
 
-  void set(DateTime date) {
-    _date = date;
+  void set(DateTime dateTime) {
+    _date = dateTime.toDate();
     notifyListeners();
   }
 
   void today() {
-    set(getToday());
+    set(DateTime.now());
   }
 
   void subtract(int days) {
@@ -31,9 +32,4 @@ class DateModel extends ChangeNotifier {
   void next() {
     add(1);
   }
-}
-
-DateTime getToday() {
-  DateTime now = DateTime.now();
-  return DateTime(now.year, now.month, now.day);
 }

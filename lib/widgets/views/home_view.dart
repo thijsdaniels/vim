@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:vim/widgets/views/dashboard_view.dart';
-import 'package:vim/widgets/views/ingredients_view.dart';
-import 'package:vim/widgets/views/log_view.dart';
-import 'package:vim/widgets/views/recipes_view.dart';
+import 'package:vim/widgets/views/home/dashboard_view.dart';
+import 'package:vim/widgets/views/home/ingredients_view.dart';
+import 'package:vim/widgets/views/home/log_view.dart';
+import 'package:vim/widgets/views/home/recipes_view.dart';
 
 class HomeView extends StatefulWidget {
   const HomeView({super.key});

@@ -8,11 +8,13 @@ import 'package:vim/models/performances.dart';
 import 'package:vim/models/recipe_consumption.dart';
 import 'package:vim/services/consumptions_service.dart';
 import 'package:vim/services/performances_service.dart';
-import 'package:vim/widgets/date_picker.dart';
-import 'package:vim/widgets/dialogs/quick_track_exercise_dialog.dart';
-import 'package:vim/widgets/dialogs/quick_track_food_dialog.dart';
-import 'package:vim/widgets/dialogs/track_ingredient_dialog.dart';
-import 'package:vim/widgets/dialogs/track_recipe_dialog.dart';
+import 'package:vim/widgets/molecules/date_stepper.dart';
+import 'package:vim/widgets/views/home/log/create_performance_view.dart';
+import 'package:vim/widgets/views/home/log/create_consumption_view.dart';
+import 'package:vim/widgets/views/home/log/create_ingredient_consumption_view.dart';
+import 'package:vim/widgets/views/home/log/create_recipe_consumption_view.dart';
+import 'package:vim/widgets/atoms/subtitle.dart';
+import 'package:vim/widgets/molecules/with_confirmation_dialog.dart';
 
 class LogView extends StatelessWidget {
   const LogView({super.key});
@@ -30,7 +32,7 @@ class LogView extends StatelessWidget {
         ],
         bottom: const PreferredSize(
           preferredSize: Size.fromHeight(40),
-          child: DatePicker(),
+          child: DateStepper(),
         ),
       ),
       body: SafeArea(
@@ -52,16 +54,37 @@ class LogView extends StatelessWidget {
                         Row(
                           children: [
                             IconButton(
-                              onPressed: () => _trackIngredient(context),
                               icon: const Icon(Icons.dinner_dining),
+                              onPressed: () {
+                                Navigator.of(context).push(
+                                  MaterialPageRoute(
+                                    builder: (context) =>
+                                        const CreateIngredientConsumptionView(),
+                                  ),
+                                );
+                              },
                             ),
                             IconButton(
-                              onPressed: () => _trackRecipe(context),
                               icon: const Icon(Icons.book),
+                              onPressed: () {
+                                Navigator.of(context).push(
+                                  MaterialPageRoute(
+                                    builder: (context) =>
+                                        const CreateRecipeConsumptionView(),
+                                  ),
+                                );
+                              },
                             ),
                             IconButton(
-                              onPressed: () => _quickTrackFood(context),
                               icon: const Icon(Icons.flash_on_rounded),
+                              onPressed: () {
+                                Navigator.of(context).push(
+                                  MaterialPageRoute(
+                                    builder: (context) =>
+                                        const CreateConsumptionView(),
+                                  ),
+                                );
+                              },
                             ),
                           ],
                         ),
@@ -78,8 +101,15 @@ class LogView extends StatelessWidget {
                           style: Theme.of(context).textTheme.titleMedium,
                         ),
                         IconButton(
-                          onPressed: () => _quickTrackExercise(context),
                           icon: const Icon(Icons.flash_on_rounded),
+                          onPressed: () {
+                            Navigator.of(context).push(
+                              MaterialPageRoute(
+                                builder: (context) =>
+                                    const CreatePerformanceView(),
+                              ),
+                            );
+                          },
                         ),
                       ],
                     ),
@@ -94,94 +124,6 @@ class LogView extends StatelessWidget {
       ),
     );
   }
-
-  Future<void> _trackIngredient(BuildContext context) async {
-    Consumption? consumption = await _showTrackIngredientDialog(context);
-
-    if (consumption != null) {
-      ConsumptionsService.create(consumption);
-    }
-  }
-
-  Future<void> _trackRecipe(BuildContext context) async {
-    Consumption? consumption = await _showTrackRecipeDialog(context);
-
-    if (consumption != null) {
-      ConsumptionsService.create(consumption);
-    }
-  }
-
-  Future<void> _quickTrackFood(BuildContext context) async {
-    Consumption? consumption = await _showQuickTrackFoodDialog(context);
-
-    if (consumption != null) {
-      ConsumptionsService.create(consumption);
-    }
-  }
-
-  Future<void> _quickTrackExercise(BuildContext context) async {
-    Performance? performance = await _showQuickTrackExerciseDialog(context);
-
-    if (performance != null) {
-      PerformancesService.create(performance);
-    }
-  }
-}
-
-Future<IngredientConsumption?> _showTrackIngredientDialog(
-  BuildContext context, {
-  IngredientConsumption? ingredientConsumption,
-}) {
-  return showDialog<IngredientConsumption>(
-    context: context,
-    builder: (BuildContext context) {
-      return TrackIngredientDialog(
-        ingredientConsumption: ingredientConsumption,
-      );
-    },
-  );
-}
-
-Future<RecipeConsumption?> _showTrackRecipeDialog(
-  BuildContext context, {
-  RecipeConsumption? recipeConsumption,
-}) {
-  return showDialog<RecipeConsumption>(
-    context: context,
-    builder: (BuildContext context) {
-      return TrackRecipeDialog(
-        recipeConsumption: recipeConsumption,
-      );
-    },
-  );
-}
-
-Future<Consumption?> _showQuickTrackFoodDialog(
-  BuildContext context, {
-  Consumption? consumption,
-}) {
-  return showDialog<Consumption>(
-    context: context,
-    builder: (BuildContext context) {
-      return QuickTrackFoodDialog(
-        consumption: consumption,
-      );
-    },
-  );
-}
-
-Future<Performance?> _showQuickTrackExerciseDialog(
-  BuildContext context, {
-  Performance? performance,
-}) {
-  return showDialog<Performance>(
-    context: context,
-    builder: (BuildContext context) {
-      return QuickTrackExerciseDialog(
-        performance: performance,
-      );
-    },
-  );
 }
 
 class ConsumptionsList extends StatelessWidget {
@@ -216,13 +158,14 @@ class ConsumptionsList extends StatelessWidget {
         return Card(
           child: ListTile(
             title: Text(consumption.name),
-            subtitle: Text(
+            subtitle: Subtitle(
+              // TODO: Try to change this into Chip widgets.
               [
                 if (consumption is RecipeConsumption) ...[
                   '${consumption.amount}',
                 ],
                 if (consumption is IngredientConsumption) ...[
-                  '${consumption.amount} grams',
+                  '${consumption.amount.round()} grams',
                 ],
                 '${consumption.nutrition.calories.round()} calories',
               ].join(" • "),
@@ -234,41 +177,44 @@ class ConsumptionsList extends StatelessWidget {
                   icon: const Icon(Icons.edit),
                   onPressed: () async {
                     if (consumption is RecipeConsumption) {
-                      RecipeConsumption? edited = await _showTrackRecipeDialog(
-                        context,
-                        recipeConsumption: consumption,
+                      Navigator.of(context).push(
+                        MaterialPageRoute(
+                          builder: (context) => CreateRecipeConsumptionView(
+                            recipeConsumption: consumption,
+                          ),
+                        ),
                       );
-
-                      if (edited != null) {
-                        ConsumptionsService.update(edited);
-                      }
                     } else if (consumption is IngredientConsumption) {
-                      IngredientConsumption? edited =
-                          await _showTrackIngredientDialog(
-                        context,
-                        ingredientConsumption: consumption,
+                      Navigator.of(context).push(
+                        MaterialPageRoute(
+                          builder: (context) => CreateIngredientConsumptionView(
+                            ingredientConsumption: consumption,
+                          ),
+                        ),
                       );
-
-                      if (edited != null) {
-                        ConsumptionsService.update(edited);
-                      }
                     } else {
-                      Consumption? edited = await _showQuickTrackFoodDialog(
-                        context,
-                        consumption: consumption,
+                      Navigator.of(context).push(
+                        MaterialPageRoute(
+                          builder: (context) => CreateConsumptionView(
+                            consumption: consumption,
+                          ),
+                        ),
                       );
-
-                      if (edited != null) {
-                        ConsumptionsService.update(edited);
-                      }
                     }
                   },
                 ),
-                IconButton(
-                  icon: const Icon(Icons.delete),
-                  onPressed: () {
-                    ConsumptionsService.delete(consumption);
-                  },
+                WithConfirmationDialog(
+                  title: consumption.name,
+                  description:
+                      'Are you sure you want to delete this consumption?',
+                  builder: (context, confirm) => IconButton(
+                    icon: const Icon(Icons.delete),
+                    onPressed: () async {
+                      if (await confirm()) {
+                        ConsumptionsService.delete(consumption);
+                      }
+                    },
+                  ),
                 ),
               ],
             ),
@@ -311,28 +257,34 @@ class PerformancesList extends StatelessWidget {
         return Card(
           child: ListTile(
             title: Text(performance.name),
-            subtitle: Text('${performance.calories} kcal'),
+            subtitle: Subtitle('${performance.calories} kcal'),
             trailing: Row(
               mainAxisSize: MainAxisSize.min,
               children: [
                 IconButton(
                   icon: const Icon(Icons.edit),
                   onPressed: () async {
-                    Performance? edited = await _showQuickTrackExerciseDialog(
-                      context,
-                      performance: performance,
+                    Navigator.of(context).push(
+                      MaterialPageRoute(
+                        builder: (context) => CreatePerformanceView(
+                          performance: performance,
+                        ),
+                      ),
                     );
-
-                    if (edited != null) {
-                      PerformancesService.update(edited);
-                    }
                   },
                 ),
-                IconButton(
-                  icon: const Icon(Icons.delete),
-                  onPressed: () {
-                    PerformancesService.delete(performance);
-                  },
+                WithConfirmationDialog(
+                  title: performance.name,
+                  description:
+                      'Are you sure you want to delete this performance?',
+                  builder: (context, confirm) => IconButton(
+                    icon: const Icon(Icons.delete),
+                    onPressed: () async {
+                      if (await confirm()) {
+                        PerformancesService.delete(performance);
+                      }
+                    },
+                  ),
                 ),
               ],
             ),

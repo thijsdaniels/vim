@@ -1,8 +1,10 @@
+import 'package:vim/models/collection.dart';
 import 'package:vim/models/performance.dart';
 
-class Performances {
+class Performances extends Collection<Performance> {
   final List<Performance> _performances;
 
+  @override
   int get length => _performances.length;
 
   int get calories {
@@ -15,7 +17,18 @@ class Performances {
 
   Performances([this._performances = const []]);
 
+  @override
+  List<Map<String, dynamic>> toMap() {
+    return _performances.map((performance) => performance.toMap()).toList();
+  }
+
+  @override
   Performance get(int index) {
     return _performances[index];
+  }
+
+  @override
+  Iterable<E> map<E>(E Function(Performance) toElement) {
+    return _performances.map(toElement);
   }
 }

@@ -1,10 +1,11 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:vim/models/amount.dart';
 import 'package:vim/models/ingredient_amounts.dart';
+import 'package:vim/models/model.dart';
 import 'package:vim/models/recipe_consumption.dart';
 import 'package:vim/models/nutrition.dart';
 
-class Recipe {
+class Recipe extends Model {
   String? _id;
   String name;
   int servings;
@@ -22,6 +23,7 @@ class Recipe {
     required this.ingredientAmounts,
   });
 
+  @override
   Map<String, dynamic> toMap() {
     return {
       'name': name,
@@ -80,7 +82,7 @@ class Recipe {
   }
 }
 
-class ResolvedRecipe {
+class ResolvedRecipe extends Model {
   String name;
   int servings;
   IngredientAmounts ingredientAmounts;
@@ -103,6 +105,7 @@ class ResolvedRecipe {
     }
   }
 
+  @override
   Map<String, dynamic> toMap() {
     return {
       'name': name,
