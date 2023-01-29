@@ -95,6 +95,14 @@ class Carbohydrates extends NutrientGroup<Carbohydrates> {
     this.fibers,
   }) : assert((sugars ?? 0) <= (total ?? 0));
 
+  static calories(double grams) {
+    return grams * 4;
+  }
+
+  static grams(double calories) {
+    return calories / 4;
+  }
+
   @override
   Map<String, dynamic> toMap() {
     return {
@@ -145,6 +153,14 @@ class Fats extends NutrientGroup<Fats> {
     this.saturates,
   }) : assert((saturates ?? 0) <= (total ?? 0));
 
+  static calories(double grams) {
+    return grams * 9;
+  }
+
+  static grams(double calories) {
+    return calories / 9;
+  }
+
   @override
   Map<String, dynamic> toMap() {
     return {
@@ -186,6 +202,14 @@ class Proteins extends NutrientGroup<Proteins> {
   final num? total;
 
   const Proteins(this.total);
+
+  static calories(double grams) {
+    return grams * 4;
+  }
+
+  static grams(double calories) {
+    return calories / 4;
+  }
 
   @override
   Map<String, dynamic> toMap() {

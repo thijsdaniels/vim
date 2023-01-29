@@ -165,9 +165,14 @@ class ConsumptionsList extends StatelessWidget {
                   '${consumption.amount}',
                 ],
                 if (consumption is IngredientConsumption) ...[
-                  '${consumption.amount.round()} grams',
+                  '${consumption.amount.round()}g',
                 ],
-                '${consumption.nutrition.calories.round()} calories',
+                '${consumption.nutrition.calories.round()} cal',
+                [
+                  '${consumption.nutrition.carbohydrates.total?.round() ?? 0}',
+                  '${consumption.nutrition.proteins.total?.round() ?? 0}',
+                  '${consumption.nutrition.fats.total?.round() ?? 0}',
+                ].join("/")
               ].join(" • "),
             ),
             trailing: Row(

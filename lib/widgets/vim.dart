@@ -24,6 +24,7 @@ class Vim extends StatelessWidget {
           theme: ThemeData(
             useMaterial3: true,
             brightness: Brightness.light,
+            fontFamily: 'GoogleSans',
             inputDecorationTheme: const InputDecorationTheme(
               border: OutlineInputBorder(),
             ),
@@ -31,6 +32,7 @@ class Vim extends StatelessWidget {
           darkTheme: ThemeData(
             useMaterial3: true,
             brightness: Brightness.dark,
+            fontFamily: 'GoogleSans',
             inputDecorationTheme: const InputDecorationTheme(
               border: OutlineInputBorder(),
             ),
