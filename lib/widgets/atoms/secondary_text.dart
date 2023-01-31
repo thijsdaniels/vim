@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 
-class Subtitle extends StatelessWidget {
+class SecondaryText extends StatelessWidget {
   final String text;
-  const Subtitle(this.text, {super.key});
+  const SecondaryText(this.text, {super.key});
 
   @override
   Widget build(BuildContext context) {

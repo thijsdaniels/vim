@@ -13,7 +13,7 @@ import 'package:vim/widgets/views/home/log/create_performance_view.dart';
 import 'package:vim/widgets/views/home/log/create_consumption_view.dart';
 import 'package:vim/widgets/views/home/log/create_ingredient_consumption_view.dart';
 import 'package:vim/widgets/views/home/log/create_recipe_consumption_view.dart';
-import 'package:vim/widgets/atoms/subtitle.dart';
+import 'package:vim/widgets/atoms/secondary_text.dart';
 import 'package:vim/widgets/molecules/with_confirmation_dialog.dart';
 
 class LogView extends StatelessWidget {
@@ -158,7 +158,7 @@ class ConsumptionsList extends StatelessWidget {
         return Card(
           child: ListTile(
             title: Text(consumption.name),
-            subtitle: Subtitle(
+            subtitle: SecondaryText(
               // TODO: Try to change this into Chip widgets.
               [
                 if (consumption is RecipeConsumption) ...[
@@ -262,7 +262,7 @@ class PerformancesList extends StatelessWidget {
         return Card(
           child: ListTile(
             title: Text(performance.name),
-            subtitle: Subtitle('${performance.calories} kcal'),
+            subtitle: SecondaryText('${performance.calories} kcal'),
             trailing: Row(
               mainAxisSize: MainAxisSize.min,
               children: [

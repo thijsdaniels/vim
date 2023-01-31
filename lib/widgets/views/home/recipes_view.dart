@@ -4,7 +4,7 @@ import 'package:vim/models/recipe.dart';
 import 'package:vim/models/recipes.dart';
 import 'package:vim/services/recipes_service.dart';
 import 'package:vim/widgets/views/home/recipes/create_recipe_view.dart';
-import 'package:vim/widgets/atoms/subtitle.dart';
+import 'package:vim/widgets/atoms/secondary_text.dart';
 import 'package:vim/widgets/molecules/with_confirmation_dialog.dart';
 
 class RecipesView extends StatefulWidget {
@@ -60,7 +60,7 @@ class _RecipesViewState extends State<RecipesView> {
                   subtitle: FutureBuilder(
                     future: recipe.nutrition,
                     builder: (context, snapshot) {
-                      return Subtitle(
+                      return SecondaryText(
                         [
                           '${recipe.ingredientAmounts.amount.round()} grams',
                           if (snapshot.hasData)

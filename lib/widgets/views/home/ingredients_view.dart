@@ -2,10 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:vim/models/ingredient.dart';
 import 'package:vim/models/ingredients.dart';
-import 'package:vim/services/ingredients_service.dart';
 import 'package:vim/widgets/views/home/ingredients/create_ingredient_view.dart';
-import 'package:vim/widgets/atoms/subtitle.dart';
-import 'package:vim/widgets/molecules/with_confirmation_dialog.dart';
+import 'package:vim/widgets/atoms/secondary_text.dart';
+import 'package:vim/widgets/views/home/ingredients/ingredient_view.dart';
 
 class IngredientsView extends StatefulWidget {
   const IngredientsView({super.key});
@@ -56,9 +55,17 @@ class _IngredientsViewState extends State<IngredientsView> {
 
               return Card(
                 child: ListTile(
+                  onTap: () {
+                    Navigator.of(context).push(
+                      MaterialPageRoute(
+                        builder: (context) =>
+                            IngredientView(ingredient: ingredient),
+                      ),
+                    );
+                  },
                   title: Text(ingredient.name),
                   subtitle: (ingredient.brand != null)
-                      ? Subtitle(ingredient.brand!)
+                      ? SecondaryText(ingredient.brand!)
                       : null,
                   trailing: Row(
                     mainAxisSize: MainAxisSize.min,
@@ -68,31 +75,6 @@ class _IngredientsViewState extends State<IngredientsView> {
                           padding: EdgeInsets.all(12),
                           child: Icon(Icons.check_rounded),
                         ),
-                      IconButton(
-                        icon: const Icon(Icons.edit_rounded),
-                        onPressed: () async {
-                          Navigator.of(context).push(
-                            MaterialPageRoute(
-                              builder: (context) => CreateIngredientView(
-                                ingredient: ingredient,
-                              ),
-                            ),
-                          );
-                        },
-                      ),
-                      WithConfirmationDialog(
-                        title: ingredient.name,
-                        description:
-                            'Are you sure you want to delete this ingredient?',
-                        builder: (context, confirm) => IconButton(
-                          icon: const Icon(Icons.delete_rounded),
-                          onPressed: () async {
-                            if (await confirm()) {
-                              IngredientsService.delete(ingredient);
-                            }
-                          },
-                        ),
-                      ),
                     ],
                   ),
                 ),
