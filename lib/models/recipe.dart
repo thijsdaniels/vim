@@ -8,7 +8,7 @@ import 'package:vim/models/nutrition.dart';
 class Recipe extends Model {
   String? _id;
   String name;
-  int servings;
+  num servings;
   IngredientAmountsReference ingredientAmounts;
 
   String? get id => _id;
@@ -84,7 +84,7 @@ class Recipe extends Model {
 
 class ResolvedRecipe extends Model {
   String name;
-  int servings;
+  num servings;
   IngredientAmounts ingredientAmounts;
 
   ResolvedRecipe({

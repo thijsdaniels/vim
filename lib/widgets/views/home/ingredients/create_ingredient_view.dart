@@ -111,6 +111,7 @@ class _CreateIngredientViewState extends State<CreateIngredientView> {
                           decoration: const InputDecoration(
                             labelText: 'Name',
                           ),
+                          textInputAction: TextInputAction.next,
                           validator: (value) {
                             if (value == null || value.isEmpty) {
                               return 'Please enter a name.';
@@ -125,6 +126,7 @@ class _CreateIngredientViewState extends State<CreateIngredientView> {
                           decoration: const InputDecoration(
                             labelText: 'Brand',
                           ),
+                          textInputAction: TextInputAction.next,
                         ),
                         const SizedBox(height: 16),
                         TextFormField(
@@ -138,6 +140,7 @@ class _CreateIngredientViewState extends State<CreateIngredientView> {
                             FilteringTextInputFormatter.allow(
                                 RegExp(r'[0-9\.]'))
                           ],
+                          textInputAction: TextInputAction.next,
                         ),
                       ],
                     ),

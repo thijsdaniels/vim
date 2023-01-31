@@ -5,6 +5,7 @@ import 'package:vim/models/ingredient_amounts.dart';
 import 'package:vim/models/recipe.dart';
 import 'package:vim/services/recipes_service.dart';
 import 'package:vim/widgets/atoms/ingredient_reference_dropdown_menu.dart';
+import 'package:vim/widgets/atoms/number_form_field.dart';
 
 class CreateRecipeView extends StatefulWidget {
   final Recipe? recipe;
@@ -25,7 +26,7 @@ class PotentialIngredientAmount {
 class _CreateRecipeViewState extends State<CreateRecipeView> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   String _name = "";
-  int _servings = 1;
+  num? _servings = 1;
   List<PotentialIngredientAmount> _ingredientAmounts = [];
 
   @override
@@ -83,14 +84,14 @@ class _CreateRecipeViewState extends State<CreateRecipeView> {
 
                 if (recipe != null) {
                   recipe.name = _name;
-                  recipe.servings = _servings;
+                  recipe.servings = _servings!;
                   recipe.ingredientAmounts = ingredientAmounts;
 
                   RecipesService.update(recipe);
                 } else {
                   recipe = Recipe(
                     name: _name,
-                    servings: _servings,
+                    servings: _servings!,
                     ingredientAmounts: ingredientAmounts,
                   );
 
@@ -123,6 +124,7 @@ class _CreateRecipeViewState extends State<CreateRecipeView> {
                           decoration: const InputDecoration(
                             labelText: 'Name',
                           ),
+                          textInputAction: TextInputAction.next,
                           validator: (value) {
                             if (value == null || value.isEmpty) {
                               return 'Please enter a name.';
@@ -136,25 +138,22 @@ class _CreateRecipeViewState extends State<CreateRecipeView> {
                           },
                         ),
                         const SizedBox(height: 16),
-                        TextFormField(
-                          initialValue: _servings.toString(),
+                        NumberFormField(
+                          initialValue: _servings,
                           autofocus: true,
                           decoration: const InputDecoration(
                             labelText: 'Servings',
                           ),
-                          keyboardType: TextInputType.number,
-                          inputFormatters: <TextInputFormatter>[
-                            FilteringTextInputFormatter.allow(RegExp(r'[0-9]'))
-                          ],
+                          textInputAction: TextInputAction.next,
                           validator: (value) {
-                            if (value == null || value.isEmpty) {
+                            if (value == null) {
                               return 'Please enter a number.';
                             }
                             return null;
                           },
                           onChanged: (servings) {
                             setState(() {
-                              _servings = int.parse(servings);
+                              _servings = servings;
                             });
                           },
                         ),
@@ -245,7 +244,7 @@ class IngredientAmountField extends StatefulWidget {
   final DocumentReference? ingredientReference;
   final num? amount;
   final void Function(DocumentReference?) onIngredientSelected;
-  final void Function(double) onAmountChanged;
+  final void Function(num?) onAmountChanged;
 
   const IngredientAmountField({
     super.key,
@@ -269,23 +268,19 @@ class _IngredientAmountField extends State<IngredientAmountField> {
           onSelected: widget.onIngredientSelected,
         ),
         const SizedBox(height: 16),
-        TextFormField(
-          initialValue: widget.amount?.toString() ?? "",
+        NumberFormField(
+          initialValue: widget.amount,
           decoration: const InputDecoration(
             labelText: 'Grams',
           ),
-          keyboardType: TextInputType.number,
-          inputFormatters: <TextInputFormatter>[
-            FilteringTextInputFormatter.allow(RegExp(r'[0-9\.]'))
-          ],
+          textInputAction: TextInputAction.done,
           validator: (value) {
-            if (value == null || value.isEmpty) {
+            if (value == null) {
               return 'Please enter an amount.';
             }
             return null;
           },
-          onChanged: (String amount) =>
-              widget.onAmountChanged(double.parse(amount)),
+          onChanged: (amount) => widget.onAmountChanged(amount),
         ),
       ],
     );

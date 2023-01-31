@@ -93,6 +93,7 @@ class _CreatePerformanceViewState extends State<CreatePerformanceView> {
                       decoration: const InputDecoration(
                         labelText: 'Name',
                       ),
+                      textInputAction: TextInputAction.next,
                       validator: (value) {
                         if (value == null || value.isEmpty) {
                           return 'Please enter a name.';
@@ -107,6 +108,7 @@ class _CreatePerformanceViewState extends State<CreatePerformanceView> {
                       decoration: const InputDecoration(
                         labelText: 'Calories',
                       ),
+                      textInputAction: TextInputAction.done,
                       keyboardType: TextInputType.number,
                       inputFormatters: <TextInputFormatter>[
                         FilteringTextInputFormatter.digitsOnly

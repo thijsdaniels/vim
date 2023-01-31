@@ -133,6 +133,7 @@ class _CreateRecipeConsumptionViewState
                         decoration: const InputDecoration(
                           labelText: 'Amount',
                         ),
+                        textInputAction: TextInputAction.done,
                         validator: (value) {
                           if (value == null) {
                             return 'Please enter an amount.';

@@ -24,6 +24,7 @@ class NutritionFormFields extends StatelessWidget {
           decoration: const InputDecoration(
             labelText: 'Calories',
           ),
+          textInputAction: TextInputAction.next,
           keyboardType: TextInputType.number,
           inputFormatters: <TextInputFormatter>[
             FilteringTextInputFormatter.allow(RegExp(r'[0-9\.]'))
@@ -41,6 +42,7 @@ class NutritionFormFields extends StatelessWidget {
           decoration: const InputDecoration(
             labelText: 'Fat',
           ),
+          textInputAction: TextInputAction.next,
           keyboardType: TextInputType.number,
           inputFormatters: <TextInputFormatter>[
             FilteringTextInputFormatter.allow(RegExp(r'[0-9\.]'))
@@ -58,6 +60,7 @@ class NutritionFormFields extends StatelessWidget {
           decoration: const InputDecoration(
             labelText: 'Saturated Fat',
           ),
+          textInputAction: TextInputAction.next,
           keyboardType: TextInputType.number,
           inputFormatters: <TextInputFormatter>[
             FilteringTextInputFormatter.allow(RegExp(r'[0-9\.]'))
@@ -69,6 +72,7 @@ class NutritionFormFields extends StatelessWidget {
           decoration: const InputDecoration(
             labelText: 'Carbs',
           ),
+          textInputAction: TextInputAction.next,
           keyboardType: TextInputType.number,
           inputFormatters: <TextInputFormatter>[
             FilteringTextInputFormatter.allow(RegExp(r'[0-9\.]'))
@@ -86,6 +90,7 @@ class NutritionFormFields extends StatelessWidget {
           decoration: const InputDecoration(
             labelText: 'Sugars',
           ),
+          textInputAction: TextInputAction.next,
           keyboardType: TextInputType.number,
           inputFormatters: <TextInputFormatter>[
             FilteringTextInputFormatter.allow(RegExp(r'[0-9\.]'))
@@ -97,6 +102,7 @@ class NutritionFormFields extends StatelessWidget {
           decoration: const InputDecoration(
             labelText: 'Fiber',
           ),
+          textInputAction: TextInputAction.next,
           keyboardType: TextInputType.number,
           inputFormatters: <TextInputFormatter>[
             FilteringTextInputFormatter.allow(RegExp(r'[0-9\.]'))
@@ -108,6 +114,7 @@ class NutritionFormFields extends StatelessWidget {
           decoration: const InputDecoration(
             labelText: 'Protein',
           ),
+          textInputAction: TextInputAction.next,
           keyboardType: TextInputType.number,
           inputFormatters: <TextInputFormatter>[
             FilteringTextInputFormatter.allow(RegExp(r'[0-9\.]'))
@@ -125,6 +132,7 @@ class NutritionFormFields extends StatelessWidget {
           decoration: const InputDecoration(
             labelText: 'Salt',
           ),
+          textInputAction: TextInputAction.done,
           keyboardType: TextInputType.number,
           inputFormatters: <TextInputFormatter>[
             FilteringTextInputFormatter.allow(RegExp(r'[0-9\.]'))

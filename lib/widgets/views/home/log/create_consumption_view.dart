@@ -97,6 +97,7 @@ class _CreateConsumptionViewState extends State<CreateConsumptionView> {
                       decoration: const InputDecoration(
                         labelText: 'Name',
                       ),
+                      textInputAction: TextInputAction.next,
                       validator: (value) {
                         if (value == null || value.isEmpty) {
                           return 'Please enter a name.';
