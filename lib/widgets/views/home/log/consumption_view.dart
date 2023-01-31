@@ -1,6 +1,6 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:vim/extensions/double.dart';
+import 'package:vim/extensions/num.dart';
 import 'package:vim/models/consumption.dart';
 import 'package:vim/models/ingredient_consumption.dart';
 import 'package:vim/models/recipe_consumption.dart';
@@ -116,9 +116,11 @@ class _ConsumptionViewState extends State<ConsumptionView> {
                             const SizedBox(width: 32),
                             Row(
                               children: [
-                                Text(consumption.amount.toString()),
+                                Text(consumption.amount.value.toString()),
                                 const SizedBox(width: 4),
-                                const SecondaryText('g'),
+                                SecondaryText(
+                                  describeEnum(consumption.amount.unit),
+                                ),
                               ],
                             ),
                           ],

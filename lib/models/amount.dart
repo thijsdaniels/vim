@@ -7,7 +7,7 @@ enum Unit {
 
 class Amount {
   final Unit unit;
-  final double value;
+  final num value;
 
   Amount({
     required this.unit,
@@ -35,11 +35,11 @@ class Amount {
     );
   }
 
-  factory Amount.grams({required double value}) {
+  factory Amount.grams(num value) {
     return Amount(unit: Unit.grams, value: value);
   }
 
-  factory Amount.servings({required double value}) {
+  factory Amount.servings(num value) {
     return Amount(unit: Unit.servings, value: value);
   }
 }

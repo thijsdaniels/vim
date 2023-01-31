@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:vim/models/amount.dart';
 import 'package:vim/models/collection.dart';
 import 'package:vim/models/ingredient.dart';
 import 'package:vim/models/model.dart';
@@ -10,7 +11,7 @@ class IngredientAmounts extends Collection<IngredientAmount> {
   @override
   int get length => _ingredientAmounts.length;
 
-  double get amount {
+  num get amount {
     return _ingredientAmounts
         .map((ingredientAmount) => ingredientAmount.amount)
         .reduce((total, amount) => total + amount);
@@ -42,8 +43,8 @@ class IngredientAmounts extends Collection<IngredientAmount> {
     );
   }
 
-  Nutrition nutritionForAmount(double amount) {
-    double factor = amount / this.amount;
+  Nutrition nutritionForAmount(num amount) {
+    num factor = amount / this.amount;
 
     return _ingredientAmounts
         .map((ingredientAmount) => ingredientAmount.nutrition.multiply(factor))
@@ -58,10 +59,10 @@ class IngredientAmounts extends Collection<IngredientAmount> {
 
 class IngredientAmount extends Model {
   final Ingredient ingredient;
-  final double amount;
+  final num amount; // TODO: Turn into an instance of Amount.
 
   Nutrition get nutrition {
-    return ingredient.nutritionForAmount(amount);
+    return ingredient.nutritionForAmount(Amount.grams(amount));
   }
 
   IngredientAmount({
@@ -91,7 +92,7 @@ class IngredientAmountsReference extends Collection<IngredientAmountReference> {
   @override
   int get length => _ingredientAmounts.length;
 
-  double get amount {
+  num get amount {
     return _ingredientAmounts
         .map((ingredientAmount) => ingredientAmount.amount)
         .reduce((total, amount) => total + amount);
@@ -123,8 +124,8 @@ class IngredientAmountsReference extends Collection<IngredientAmountReference> {
     );
   }
 
-  Future<Nutrition> nutritionForAmount(double amount) async {
-    double factor = amount / this.amount;
+  Future<Nutrition> nutritionForAmount(num amount) async {
+    num factor = amount / this.amount;
 
     return _ingredientAmounts
         .map(
@@ -156,7 +157,7 @@ class IngredientAmountReference extends Model {
   Ingredient? _ingredient;
 
   final DocumentReference ingredientReference;
-  final double amount;
+  final num amount;
 
   Future<Ingredient> get ingredient async {
     _ingredient ??= (await ingredientReference
@@ -170,7 +171,7 @@ class IngredientAmountReference extends Model {
   }
 
   Future<Nutrition> get nutrition async {
-    return (await ingredient).nutritionForAmount(amount);
+    return (await ingredient).nutritionForAmount(Amount.grams(amount));
   }
 
   IngredientAmountReference({

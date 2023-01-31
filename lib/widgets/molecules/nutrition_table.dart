@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:vim/extensions/double.dart';
+import 'package:vim/extensions/num.dart';
 import 'package:vim/models/nutrition.dart';
 import 'package:vim/widgets/atoms/secondary_text.dart';
 
@@ -61,7 +61,7 @@ class NutritionTable extends StatelessWidget {
 
 class NutritionRow extends TableRow {
   final String label;
-  final double? amount;
+  final num? amount;
   final BuildContext context;
   final String unit;
 

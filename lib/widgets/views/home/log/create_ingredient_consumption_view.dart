@@ -1,13 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 import 'package:vim/models/amount.dart';
 import 'package:vim/models/date_model.dart';
 import 'package:vim/models/ingredient.dart';
 import 'package:vim/models/ingredient_consumption.dart';
-import 'package:vim/models/ingredients.dart';
 import 'package:vim/services/consumptions_service.dart';
 import 'package:vim/widgets/atoms/ingredient_dropdown_menu.dart';
+import 'package:vim/widgets/atoms/number_form_field.dart';
 import 'package:vim/widgets/atoms/unit_dropdown_menu.dart';
 
 class CreateIngredientConsumptionView extends StatefulWidget {
@@ -23,17 +22,21 @@ class CreateIngredientConsumptionView extends StatefulWidget {
 
 class _CreateIngredientConsumptionViewState
     extends State<CreateIngredientConsumptionView> {
-  Ingredient? _ingredient;
-
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
-  final TextEditingController _amountController = TextEditingController();
+
+  Ingredient? _ingredient;
+  num? _amount;
+  Unit? _unit = Unit.grams;
 
   @override
   void initState() {
     super.initState();
 
-    if (widget.ingredientConsumption != null) {
-      _amountController.text = widget.ingredientConsumption!.amount.toString();
+    IngredientConsumption? ingredientConsumption = widget.ingredientConsumption;
+
+    if (ingredientConsumption != null) {
+      _amount = ingredientConsumption.amount.value;
+      _unit = ingredientConsumption.amount.unit;
     }
   }
 
@@ -56,18 +59,23 @@ class _CreateIngredientConsumptionViewState
                 if (formState.validate()) {
                   formState.save();
 
-                  double amount = double.parse(_amountController.value.text);
-
                   IngredientConsumption? ingredientConsumption =
                       widget.ingredientConsumption;
 
                   if (ingredientConsumption != null) {
-                    ingredientConsumption.amount = amount;
+                    ingredientConsumption.amount = Amount(
+                      value: _amount!,
+                      unit: _unit!,
+                    );
+
                     ConsumptionsService.update(ingredientConsumption);
                   } else {
                     ingredientConsumption = _ingredient?.consumption(
                       timestamp: dateModel.timestamp,
-                      amount: amount,
+                      amount: Amount(
+                        value: _amount!,
+                        unit: _unit!,
+                      ),
                     );
 
                     if (ingredientConsumption != null) {
@@ -99,6 +107,9 @@ class _CreateIngredientConsumptionViewState
                         onSelected: (Ingredient? ingredient) {
                           setState(() {
                             _ingredient = ingredient;
+                            if (ingredient?.serving == null) {
+                              _unit = Unit.grams;
+                            }
                           });
                         },
                       ),
@@ -107,24 +118,27 @@ class _CreateIngredientConsumptionViewState
                       children: [
                         Expanded(
                           child: UnitDropdownMenu(
-                            onSelected: (unit) {
-                              // TODO
+                            value: _unit,
+                            items: [
+                              Unit.grams,
+                              if (_ingredient?.serving != null) Unit.servings,
+                            ],
+                            onChanged: (unit) {
+                              _unit = unit;
                             },
                           ),
                         ),
                         Expanded(
-                          child: TextFormField(
-                            controller: _amountController,
+                          child: NumberFormField(
+                            initialValue: _amount,
+                            onChanged: (amount) => setState(() {
+                              _amount = amount;
+                            }),
                             decoration: const InputDecoration(
                               labelText: 'Amount',
                             ),
-                            keyboardType: TextInputType.number,
-                            inputFormatters: <TextInputFormatter>[
-                              FilteringTextInputFormatter.allow(
-                                  RegExp(r'[0-9\.]'))
-                            ],
                             validator: (value) {
-                              if (value == null || value.isEmpty) {
+                              if (value == null) {
                                 return 'Please enter an amount.';
                               }
                               return null;

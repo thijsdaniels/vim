@@ -1,7 +1,7 @@
 import 'dart:math';
 
-extension RoundExtension on double {
-  double decimals(double precision) {
+extension RoundExtension on num {
+  num decimals(num precision) {
     num factor = pow(10, precision);
 
     return (this * factor).round() / factor;

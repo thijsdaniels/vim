@@ -166,7 +166,7 @@ class ConsumptionsList extends StatelessWidget {
                   '${consumption.amount}',
                 ],
                 if (consumption is IngredientConsumption) ...[
-                  '${consumption.amount.round()}g',
+                  '${consumption.amount}',
                 ],
                 '${consumption.nutrition.calories.round()} cal',
                 [

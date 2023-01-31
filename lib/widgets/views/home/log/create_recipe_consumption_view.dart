@@ -1,12 +1,9 @@
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:vim/extensions/string.dart';
 import 'package:vim/models/amount.dart';
 import 'package:vim/models/date_model.dart';
 import 'package:vim/models/recipe.dart';
 import 'package:vim/models/recipe_consumption.dart';
-import 'package:vim/models/recipes.dart';
 import 'package:vim/services/consumptions_service.dart';
 import 'package:vim/widgets/atoms/number_form_field.dart';
 import 'package:vim/widgets/atoms/recipe_dropdown_menu.dart';
@@ -28,7 +25,7 @@ class _CreateRecipeConsumptionViewState
 
   Recipe? _recipe;
   Unit? _unit = Unit.servings;
-  double? _amount = 1;
+  num? _amount = 1;
 
   @override
   void initState() {
@@ -67,14 +64,19 @@ class _CreateRecipeConsumptionViewState
                       widget.recipeConsumption;
 
                   if (recipeConsumption != null) {
-                    recipeConsumption.amount =
-                        Amount(unit: _unit!, value: _amount!);
+                    recipeConsumption.amount = Amount(
+                      unit: _unit!,
+                      value: _amount!,
+                    );
 
                     ConsumptionsService.update(recipeConsumption);
                   } else {
                     recipeConsumption = await _recipe?.consumption(
                       timestamp: dateModel.timestamp,
-                      amount: Amount(unit: _unit!, value: _amount!),
+                      amount: Amount(
+                        unit: _unit!,
+                        value: _amount!,
+                      ),
                     );
 
                     if (recipeConsumption != null) {
@@ -111,8 +113,8 @@ class _CreateRecipeConsumptionViewState
                   children: [
                     Expanded(
                       child: UnitDropdownMenu(
-                        initialSelection: Unit.servings,
-                        onSelected: (unit) {
+                        value: _unit,
+                        onChanged: (unit) {
                           setState(() {
                             _unit = unit;
                           });

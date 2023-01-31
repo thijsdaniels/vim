@@ -83,6 +83,21 @@ class _IngredientViewState extends State<IngredientView> {
                               : const SecondaryText('--'),
                         ],
                       ),
+                      TableRow(
+                        children: [
+                          const SecondaryText('Serving'),
+                          const SizedBox(width: 32),
+                          widget.ingredient.serving != null
+                              ? Row(
+                                  children: [
+                                    Text(widget.ingredient.serving.toString()),
+                                    const SizedBox(width: 4),
+                                    const SecondaryText('g'),
+                                  ],
+                                )
+                              : const SecondaryText('--'),
+                        ],
+                      ),
                     ],
                   ),
                 ),

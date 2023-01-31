@@ -1,7 +1,5 @@
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:vim/extensions/double.dart';
-import 'package:vim/models/recipe.dart';
+import 'package:vim/extensions/num.dart';
 import 'package:vim/models/recipe.dart';
 import 'package:vim/services/recipes_service.dart';
 import 'package:vim/widgets/atoms/secondary_text.dart';

@@ -1,9 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:provider/provider.dart';
 import 'package:vim/models/ingredient_amounts.dart';
-import 'package:vim/models/ingredients.dart';
 import 'package:vim/models/recipe.dart';
 import 'package:vim/services/recipes_service.dart';
 import 'package:vim/widgets/atoms/ingredient_reference_dropdown_menu.dart';
@@ -19,7 +17,7 @@ class CreateRecipeView extends StatefulWidget {
 
 class PotentialIngredientAmount {
   DocumentReference? ingredientReference;
-  double? amount;
+  num? amount;
 
   PotentialIngredientAmount({this.ingredientReference, this.amount});
 }
@@ -245,7 +243,7 @@ class _CreateRecipeViewState extends State<CreateRecipeView> {
 
 class IngredientAmountField extends StatefulWidget {
   final DocumentReference? ingredientReference;
-  final double? amount;
+  final num? amount;
   final void Function(DocumentReference?) onIngredientSelected;
   final void Function(double) onAmountChanged;
 

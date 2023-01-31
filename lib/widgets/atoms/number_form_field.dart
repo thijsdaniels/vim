@@ -5,7 +5,7 @@ class NumberFormField extends TextFormField {
   NumberFormField({
     super.key,
     super.controller,
-    double? initialValue,
+    num? initialValue,
     super.focusNode,
     super.decoration,
     // super.keyboardType,
@@ -31,12 +31,12 @@ class NumberFormField extends TextFormField {
     super.minLines,
     super.expands,
     super.maxLength,
-    void Function(double?)? onChanged,
+    void Function(num?)? onChanged,
     super.onTap,
     super.onEditingComplete,
-    void Function(double?)? onFieldSubmitted,
-    void Function(double?)? onSaved,
-    String? Function(double?)? validator,
+    void Function(num?)? onFieldSubmitted,
+    void Function(num?)? onSaved,
+    String? Function(num?)? validator,
     // super.inputFormatters,
     super.enabled,
     super.cursorWidth,
@@ -58,21 +58,19 @@ class NumberFormField extends TextFormField {
   }) : super(
           initialValue: initialValue?.toString(),
           onChanged: (value) => onChanged != null
-              ? onChanged(value.isNotEmpty ? double.parse(value) : null)
+              ? onChanged(value.isNotEmpty ? num.parse(value) : null)
               : null,
           onFieldSubmitted: onFieldSubmitted != null
-              ? (value) => onFieldSubmitted(
-                  value.isNotEmpty ? double.parse(value) : null)
+              ? (value) =>
+                  onFieldSubmitted(value.isNotEmpty ? num.parse(value) : null)
               : null,
           onSaved: onSaved != null
-              ? (value) => onSaved(value != null && value.isNotEmpty
-                  ? double.parse(value)
-                  : null)
+              ? (value) => onSaved(
+                  value != null && value.isNotEmpty ? num.parse(value) : null)
               : null,
           validator: validator != null
-              ? (value) => validator(value != null && value.isNotEmpty
-                  ? double.parse(value)
-                  : null)
+              ? (value) => validator(
+                  value != null && value.isNotEmpty ? num.parse(value) : null)
               : null,
           keyboardType: TextInputType.number,
           inputFormatters: <TextInputFormatter>[

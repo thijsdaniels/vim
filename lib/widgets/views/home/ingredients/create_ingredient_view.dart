@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:vim/models/ingredient.dart';
 import 'package:vim/models/nutrition.dart';
 import 'package:vim/services/ingredients_service.dart';
@@ -17,6 +18,7 @@ class _CreateIngredientViewState extends State<CreateIngredientView> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   final TextEditingController _nameController = TextEditingController();
   final TextEditingController _brandController = TextEditingController();
+  final TextEditingController _servingController = TextEditingController();
   final NutritionEditingController _nutritionController =
       NutritionEditingController();
 
@@ -29,6 +31,7 @@ class _CreateIngredientViewState extends State<CreateIngredientView> {
     if (ingredient != null) {
       _nameController.text = ingredient.name;
       _brandController.text = ingredient.brand ?? "";
+      _servingController.text = ingredient.serving?.toString() ?? "";
       _nutritionController.nutrition = ingredient.nutrition;
     }
   }
@@ -57,6 +60,10 @@ class _CreateIngredientViewState extends State<CreateIngredientView> {
                     ? _brandController.value.text
                     : null;
 
+                num? serving = _servingController.value.text.isNotEmpty
+                    ? num.parse(_servingController.value.text)
+                    : null;
+
                 Nutrition nutrition = _nutritionController.nutrition;
 
                 Ingredient? ingredient = widget.ingredient;
@@ -64,6 +71,7 @@ class _CreateIngredientViewState extends State<CreateIngredientView> {
                 if (ingredient != null) {
                   ingredient.name = name;
                   ingredient.brand = brand;
+                  ingredient.serving = serving;
                   ingredient.nutrition = nutrition;
 
                   IngredientsService.update(ingredient);
@@ -71,6 +79,7 @@ class _CreateIngredientViewState extends State<CreateIngredientView> {
                   ingredient = Ingredient(
                     name: name,
                     brand: brand,
+                    serving: serving,
                     nutrition: nutrition,
                   );
 
@@ -116,6 +125,19 @@ class _CreateIngredientViewState extends State<CreateIngredientView> {
                           decoration: const InputDecoration(
                             labelText: 'Brand',
                           ),
+                        ),
+                        const SizedBox(height: 16),
+                        TextFormField(
+                          controller: _servingController,
+                          decoration: const InputDecoration(
+                            labelText: 'Serving',
+                            hintText: 'Grams',
+                          ),
+                          keyboardType: TextInputType.number,
+                          inputFormatters: <TextInputFormatter>[
+                            FilteringTextInputFormatter.allow(
+                                RegExp(r'[0-9\.]'))
+                          ],
                         ),
                       ],
                     ),

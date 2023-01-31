@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:vim/models/amount.dart';
 import 'package:vim/models/ingredient_consumption.dart';
 import 'package:vim/models/model.dart';
 import 'package:vim/models/nutrition.dart';
@@ -7,6 +8,7 @@ class Ingredient extends Model {
   DocumentReference? _reference;
   String name;
   String? brand;
+  num? serving;
   Nutrition nutrition;
 
   DocumentReference? get reference => _reference;
@@ -14,6 +16,7 @@ class Ingredient extends Model {
   Ingredient({
     required this.name,
     this.brand,
+    this.serving,
     required this.nutrition,
   });
 
@@ -22,6 +25,7 @@ class Ingredient extends Model {
     return {
       'name': name,
       'brand': brand,
+      'serving': serving,
       'nutrition': nutrition.toMap(),
     };
   }
@@ -41,13 +45,14 @@ class Ingredient extends Model {
     return Ingredient(
       name: map['name'],
       brand: map['brand'],
+      serving: map['serving'],
       nutrition: Nutrition.fromMap(map['nutrition']),
     );
   }
 
   IngredientConsumption consumption({
     required Timestamp timestamp,
-    required double amount,
+    required Amount amount,
   }) {
     return IngredientConsumption(
       timestamp: timestamp,
@@ -56,7 +61,19 @@ class Ingredient extends Model {
     );
   }
 
-  Nutrition nutritionForAmount(double amount) {
-    return nutrition.multiply(0.01 * amount);
+  Nutrition nutritionForAmount(Amount amount) {
+    return nutrition.multiply(0.01 * _weightForAmount(amount));
+  }
+
+  num _weightForAmount(Amount amount) {
+    switch (amount.unit) {
+      case Unit.grams:
+        return amount.value;
+      case Unit.servings:
+        if (serving == null) {
+          throw Exception('Serving size for ingredient "$name" unknown.');
+        }
+        return amount.value * serving!;
+    }
   }
 }
