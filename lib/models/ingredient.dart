@@ -47,7 +47,7 @@ class Ingredient extends Model {
 
   IngredientConsumption consumption({
     required Timestamp timestamp,
-    required num amount,
+    required double amount,
   }) {
     return IngredientConsumption(
       timestamp: timestamp,
@@ -56,7 +56,7 @@ class Ingredient extends Model {
     );
   }
 
-  Nutrition nutritionForAmount(num amount) {
+  Nutrition nutritionForAmount(double amount) {
     return nutrition.multiply(0.01 * amount);
   }
 }

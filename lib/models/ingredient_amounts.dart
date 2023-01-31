@@ -10,7 +10,7 @@ class IngredientAmounts extends Collection<IngredientAmount> {
   @override
   int get length => _ingredientAmounts.length;
 
-  num get amount {
+  double get amount {
     return _ingredientAmounts
         .map((ingredientAmount) => ingredientAmount.amount)
         .reduce((total, amount) => total + amount);
@@ -42,7 +42,7 @@ class IngredientAmounts extends Collection<IngredientAmount> {
     );
   }
 
-  Nutrition nutritionForAmount(num amount) {
+  Nutrition nutritionForAmount(double amount) {
     double factor = amount / this.amount;
 
     return _ingredientAmounts
@@ -58,7 +58,7 @@ class IngredientAmounts extends Collection<IngredientAmount> {
 
 class IngredientAmount extends Model {
   final Ingredient ingredient;
-  final num amount;
+  final double amount;
 
   Nutrition get nutrition {
     return ingredient.nutritionForAmount(amount);
@@ -91,7 +91,7 @@ class IngredientAmountsReference extends Collection<IngredientAmountReference> {
   @override
   int get length => _ingredientAmounts.length;
 
-  num get amount {
+  double get amount {
     return _ingredientAmounts
         .map((ingredientAmount) => ingredientAmount.amount)
         .reduce((total, amount) => total + amount);
@@ -123,7 +123,7 @@ class IngredientAmountsReference extends Collection<IngredientAmountReference> {
     );
   }
 
-  Future<Nutrition> nutritionForAmount(num amount) async {
+  Future<Nutrition> nutritionForAmount(double amount) async {
     double factor = amount / this.amount;
 
     return _ingredientAmounts
@@ -156,7 +156,7 @@ class IngredientAmountReference extends Model {
   Ingredient? _ingredient;
 
   final DocumentReference ingredientReference;
-  final num amount;
+  final double amount;
 
   Future<Ingredient> get ingredient async {
     _ingredient ??= (await ingredientReference

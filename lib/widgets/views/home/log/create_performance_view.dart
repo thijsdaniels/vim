@@ -89,6 +89,7 @@ class _CreatePerformanceViewState extends State<CreatePerformanceView> {
                   children: <Widget>[
                     TextFormField(
                       controller: _nameController,
+                      textCapitalization: TextCapitalization.words,
                       decoration: const InputDecoration(
                         labelText: 'Name',
                       ),

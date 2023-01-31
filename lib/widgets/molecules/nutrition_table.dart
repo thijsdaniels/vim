@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:vim/extensions/double.dart';
 import 'package:vim/models/nutrition.dart';
 import 'package:vim/widgets/atoms/secondary_text.dart';
 
@@ -60,7 +61,7 @@ class NutritionTable extends StatelessWidget {
 
 class NutritionRow extends TableRow {
   final String label;
-  final num? amount;
+  final double? amount;
   final BuildContext context;
   final String unit;
 
@@ -85,7 +86,7 @@ class NutritionRow extends TableRow {
         children: [
           if (amount == null) const SecondaryText('--'),
           if (amount != null) ...[
-            Text(amount.toString()),
+            Text(amount!.decimals(2).toString()),
             const SizedBox(width: 4),
             SecondaryText(unit),
           ],

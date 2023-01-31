@@ -6,6 +6,7 @@ import 'package:vim/services/recipes_service.dart';
 import 'package:vim/widgets/views/home/recipes/create_recipe_view.dart';
 import 'package:vim/widgets/atoms/secondary_text.dart';
 import 'package:vim/widgets/molecules/with_confirmation_dialog.dart';
+import 'package:vim/widgets/views/home/recipes/recipe_view.dart';
 
 class RecipesView extends StatefulWidget {
   const RecipesView({super.key});
@@ -69,35 +70,13 @@ class _RecipesViewState extends State<RecipesView> {
                       );
                     },
                   ),
-                  trailing: Row(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      IconButton(
-                        icon: const Icon(Icons.edit),
-                        onPressed: () async {
-                          Navigator.of(context).push(
-                            MaterialPageRoute(
-                              builder: (context) =>
-                                  CreateRecipeView(recipe: recipe),
-                            ),
-                          );
-                        },
+                  onTap: () {
+                    Navigator.of(context).push(
+                      MaterialPageRoute(
+                        builder: (context) => RecipeView(recipe: recipe),
                       ),
-                      WithConfirmationDialog(
-                        title: recipe.name,
-                        description:
-                            'Are you sure you want to delete this recipe?',
-                        builder: (context, confirm) => IconButton(
-                          icon: const Icon(Icons.delete),
-                          onPressed: () async {
-                            if (await confirm()) {
-                              RecipesService.delete(recipe);
-                            }
-                          },
-                        ),
-                      ),
-                    ],
-                  ),
+                    );
+                  },
                 ),
               );
             },

@@ -28,7 +28,7 @@ class _CreateRecipeConsumptionViewState
 
   Recipe? _recipe;
   Unit? _unit = Unit.servings;
-  num? _amount = 1;
+  double? _amount = 1;
 
   @override
   void initState() {
@@ -111,6 +111,7 @@ class _CreateRecipeConsumptionViewState
                   children: [
                     Expanded(
                       child: UnitDropdownMenu(
+                        initialSelection: Unit.servings,
                         onSelected: (unit) {
                           setState(() {
                             _unit = unit;

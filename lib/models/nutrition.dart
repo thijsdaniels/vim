@@ -2,15 +2,15 @@ import 'package:vim/models/model.dart';
 
 abstract class NutrientGroup<T extends NutrientGroup<T>> extends Model {
   T add(T addition);
-  T multiply(num factor);
+  T multiply(double factor);
 
   const NutrientGroup();
 
-  num? _addNutrient(num? a, num? b) {
+  double? _addNutrient(double? a, double? b) {
     return a != null || b != null ? (a ?? 0) + (b ?? 0) : null;
   }
 
-  num? _multiplyNutrient(num? value, num factor) {
+  double? _multiplyNutrient(double? value, double factor) {
     return value != null ? (value * factor) : null;
   }
 
@@ -18,7 +18,7 @@ abstract class NutrientGroup<T extends NutrientGroup<T>> extends Model {
 }
 
 class Nutrition extends NutrientGroup<Nutrition> {
-  final num calories;
+  final double calories;
   final Carbohydrates carbohydrates;
   final Proteins proteins;
   final Fats fats;
@@ -65,7 +65,7 @@ class Nutrition extends NutrientGroup<Nutrition> {
   }
 
   @override
-  Nutrition multiply(num factor) {
+  Nutrition multiply(double factor) {
     return Nutrition(
       calories: calories * factor,
       carbohydrates: carbohydrates.multiply(factor),
@@ -85,9 +85,9 @@ class Nutrition extends NutrientGroup<Nutrition> {
 }
 
 class Carbohydrates extends NutrientGroup<Carbohydrates> {
-  final num? total;
-  final num? sugars;
-  final num? fibers;
+  final double? total;
+  final double? sugars;
+  final double? fibers;
 
   const Carbohydrates(
     this.total, {
@@ -130,7 +130,7 @@ class Carbohydrates extends NutrientGroup<Carbohydrates> {
   }
 
   @override
-  Carbohydrates multiply(num factor) {
+  Carbohydrates multiply(double factor) {
     return Carbohydrates(
       _multiplyNutrient(total, factor),
       sugars: _multiplyNutrient(sugars, factor),
@@ -145,8 +145,8 @@ class Carbohydrates extends NutrientGroup<Carbohydrates> {
 }
 
 class Fats extends NutrientGroup<Fats> {
-  final num? total;
-  final num? saturates;
+  final double? total;
+  final double? saturates;
 
   const Fats(
     this.total, {
@@ -185,7 +185,7 @@ class Fats extends NutrientGroup<Fats> {
   }
 
   @override
-  Fats multiply(num factor) {
+  Fats multiply(double factor) {
     return Fats(
       _multiplyNutrient(total, factor),
       saturates: _multiplyNutrient(saturates, factor),
@@ -199,7 +199,7 @@ class Fats extends NutrientGroup<Fats> {
 }
 
 class Proteins extends NutrientGroup<Proteins> {
-  final num? total;
+  final double? total;
 
   const Proteins(this.total);
 
@@ -232,7 +232,7 @@ class Proteins extends NutrientGroup<Proteins> {
   }
 
   @override
-  Proteins multiply(num factor) {
+  Proteins multiply(double factor) {
     return Proteins(
       _multiplyNutrient(total, factor),
     );
@@ -245,9 +245,9 @@ class Proteins extends NutrientGroup<Proteins> {
 }
 
 class Minerals extends NutrientGroup<Minerals> {
-  final num? salt;
+  final double? salt;
 
-  num? sodium() => Minerals.saltToSodium(salt);
+  double? sodium() => Minerals.saltToSodium(salt);
 
   const Minerals({
     this.salt,
@@ -266,8 +266,8 @@ class Minerals extends NutrientGroup<Minerals> {
     );
   }
 
-  static saltToSodium(num? grams) => grams != null ? grams * 0.4 : null;
-  static sodiumToSalt(num? grams) => grams != null ? grams * 2.5 : null;
+  static saltToSodium(double? grams) => grams != null ? grams * 0.4 : null;
+  static sodiumToSalt(double? grams) => grams != null ? grams * 2.5 : null;
 
   @override
   Minerals add(Minerals addition) {
@@ -277,7 +277,7 @@ class Minerals extends NutrientGroup<Minerals> {
   }
 
   @override
-  Minerals multiply(num factor) {
+  Minerals multiply(double factor) {
     return Minerals(
       salt: _multiplyNutrient(salt, factor),
     );

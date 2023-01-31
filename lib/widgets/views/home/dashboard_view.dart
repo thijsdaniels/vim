@@ -15,12 +15,12 @@ Settings settings = Settings(
   length: 176,
   muscle: 81.0,
   fat: 14.8,
-  neat: 548, // an educated guess
+  neat: 320, // a rough estimate
   surplus: 0.1,
   exercise: 400,
-  carbohydrates: 0.52,
-  proteins: 0.21,
-  fats: 0.27,
+  carbohydrates: 0.45,
+  proteins: 0.25,
+  fats: 0.3,
 );
 
 class DashboardView extends StatelessWidget {

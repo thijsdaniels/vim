@@ -96,8 +96,9 @@ class _CreateIngredientViewState extends State<CreateIngredientView> {
                     child: Column(
                       children: [
                         TextFormField(
-                          controller: _nameController,
                           autofocus: true,
+                          controller: _nameController,
+                          textCapitalization: TextCapitalization.words,
                           decoration: const InputDecoration(
                             labelText: 'Name',
                           ),
@@ -111,6 +112,7 @@ class _CreateIngredientViewState extends State<CreateIngredientView> {
                         const SizedBox(height: 16),
                         TextFormField(
                           controller: _brandController,
+                          textCapitalization: TextCapitalization.words,
                           decoration: const InputDecoration(
                             labelText: 'Brand',
                           ),

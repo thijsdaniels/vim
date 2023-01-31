@@ -93,6 +93,7 @@ class _CreateConsumptionViewState extends State<CreateConsumptionView> {
                     padding: const EdgeInsets.all(16.0),
                     child: TextFormField(
                       controller: _nameController,
+                      textCapitalization: TextCapitalization.words,
                       decoration: const InputDecoration(
                         labelText: 'Name',
                       ),

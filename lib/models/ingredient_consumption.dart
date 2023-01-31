@@ -8,7 +8,7 @@ class IngredientConsumption implements Consumption {
   @override
   Timestamp timestamp;
   Ingredient ingredient;
-  num amount; // TODO: Turn into an instance of Amount.
+  double amount; // TODO: Turn into an instance of Amount.
 
   @override
   String? get id => _id;

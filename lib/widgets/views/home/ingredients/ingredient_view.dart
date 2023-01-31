@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:vim/models/ingredient.dart';
-import 'package:vim/models/nutrition.dart';
 import 'package:vim/services/ingredients_service.dart';
 import 'package:vim/widgets/atoms/secondary_text.dart';
 import 'package:vim/widgets/molecules/nutrition_table.dart';

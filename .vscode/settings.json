@@ -1,3 +1,9 @@
 {
-	"conventionalCommits.scopes": ["log", "recipes", "theme", "dashboard"]
+	"conventionalCommits.scopes": [
+		"log",
+		"recipes",
+		"theme",
+		"dashboard",
+		"ingredients"
+	]
 }

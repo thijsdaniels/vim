@@ -32,19 +32,23 @@ class _HomeViewState extends State<HomeView> {
       bottomNavigationBar: NavigationBar(
         destinations: const [
           NavigationDestination(
-            icon: Icon(Icons.dashboard),
+            icon: Icon(Icons.dashboard_outlined),
+            selectedIcon: Icon(Icons.dashboard),
             label: 'Dashboard',
           ),
           NavigationDestination(
-            icon: Icon(Icons.receipt),
+            icon: Icon(Icons.receipt_outlined),
+            selectedIcon: Icon(Icons.receipt),
             label: 'Log',
           ),
           NavigationDestination(
-            icon: Icon(Icons.dinner_dining),
+            icon: Icon(Icons.lunch_dining_outlined),
+            selectedIcon: Icon(Icons.lunch_dining_rounded),
             label: 'Food',
           ),
           NavigationDestination(
-            icon: Icon(Icons.book),
+            icon: Icon(Icons.book_outlined),
+            selectedIcon: Icon(Icons.book_rounded),
             label: 'Recipes',
           ),
         ],

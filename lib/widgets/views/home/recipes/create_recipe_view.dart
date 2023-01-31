@@ -19,7 +19,7 @@ class CreateRecipeView extends StatefulWidget {
 
 class PotentialIngredientAmount {
   DocumentReference? ingredientReference;
-  num? amount;
+  double? amount;
 
   PotentialIngredientAmount({this.ingredientReference, this.amount});
 }
@@ -119,8 +119,9 @@ class _CreateRecipeViewState extends State<CreateRecipeView> {
                     child: Column(
                       children: [
                         TextFormField(
-                          initialValue: _name,
                           autofocus: true,
+                          initialValue: _name,
+                          textCapitalization: TextCapitalization.words,
                           decoration: const InputDecoration(
                             labelText: 'Name',
                           ),
@@ -244,9 +245,9 @@ class _CreateRecipeViewState extends State<CreateRecipeView> {
 
 class IngredientAmountField extends StatefulWidget {
   final DocumentReference? ingredientReference;
-  final num? amount;
+  final double? amount;
   final void Function(DocumentReference?) onIngredientSelected;
-  final void Function(num) onAmountChanged;
+  final void Function(double) onAmountChanged;
 
   const IngredientAmountField({
     super.key,
@@ -286,7 +287,7 @@ class _IngredientAmountField extends State<IngredientAmountField> {
             return null;
           },
           onChanged: (String amount) =>
-              widget.onAmountChanged(num.parse(amount)),
+              widget.onAmountChanged(double.parse(amount)),
         ),
       ],
     );
