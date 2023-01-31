@@ -98,74 +98,17 @@ class CaloriesCard extends StatelessWidget {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceAround,
                 children: [
-                  Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: <Widget>[
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.end,
-                        crossAxisAlignment: CrossAxisAlignment.baseline,
-                        textBaseline: TextBaseline.alphabetic,
-                        children: [
-                          Text(
-                            '${consumptions.nutrition.calories.round()}',
-                            style: Theme.of(context).textTheme.headlineSmall,
-                          ),
-                          Text(
-                            ' / ${adjustedIntake.round()}',
-                            style: Theme.of(context).textTheme.bodySmall,
-                          ),
-                        ],
-                      ),
-                      const SizedBox(height: 4),
-                      SizedBox(
-                        width: 128,
-                        child: ClipRRect(
-                          borderRadius:
-                              const BorderRadius.all(Radius.circular(3)),
-                          child: LinearProgressIndicator(
-                            value: consumptions.nutrition.calories /
-                                adjustedIntake,
-                            minHeight: 6,
-                          ),
-                        ),
-                      ),
-                      const SizedBox(height: 4),
-                      const Text('Consumed'),
-                    ],
+                  TargetProgress(
+                    title: 'Consumed',
+                    progress: consumptions.nutrition.calories,
+                    target: adjustedIntake,
+                    barSize: TargetProgressBarSize.large,
                   ),
-                  Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: <Widget>[
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.end,
-                        crossAxisAlignment: CrossAxisAlignment.baseline,
-                        textBaseline: TextBaseline.alphabetic,
-                        children: [
-                          Text(
-                            '${performances.calories.round()}',
-                            style: Theme.of(context).textTheme.headlineSmall,
-                          ),
-                          Text(
-                            ' / ${settings.exercise.round()}',
-                            style: Theme.of(context).textTheme.bodySmall,
-                          ),
-                        ],
-                      ),
-                      const SizedBox(height: 4),
-                      SizedBox(
-                        width: 128,
-                        child: ClipRRect(
-                          borderRadius:
-                              const BorderRadius.all(Radius.circular(3)),
-                          child: LinearProgressIndicator(
-                            value: performances.calories / settings.exercise,
-                            minHeight: 6,
-                          ),
-                        ),
-                      ),
-                      const SizedBox(height: 4),
-                      const Text('Burned'),
-                    ],
+                  TargetProgress(
+                    title: 'Burned',
+                    progress: performances.calories,
+                    target: settings.exercise,
+                    barSize: TargetProgressBarSize.large,
                   ),
                 ],
               ),
@@ -202,112 +145,22 @@ class MacrosCard extends StatelessWidget {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceAround,
                 children: [
-                  Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: <Widget>[
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.end,
-                        crossAxisAlignment: CrossAxisAlignment.baseline,
-                        textBaseline: TextBaseline.alphabetic,
-                        children: [
-                          Text(
-                            '${consumptions.nutrition.carbohydrates.total?.round() ?? 0}',
-                            style: Theme.of(context).textTheme.headlineSmall,
-                          ),
-                          Text(
-                            ' / ${Carbohydrates.grams(adjustedIntake * settings.carbohydrates).round()}',
-                            style: Theme.of(context).textTheme.bodySmall,
-                          ),
-                        ],
-                      ),
-                      const SizedBox(height: 4),
-                      SizedBox(
-                        width: 80,
-                        child: ClipRRect(
-                          borderRadius:
-                              const BorderRadius.all(Radius.circular(2)),
-                          child: LinearProgressIndicator(
-                            value: (consumptions
-                                        .nutrition.carbohydrates.total ??
-                                    0) /
-                                Carbohydrates.grams(
-                                    adjustedIntake * settings.carbohydrates),
-                          ),
-                        ),
-                      ),
-                      const SizedBox(height: 4),
-                      const Text('Carbs'),
-                    ],
+                  TargetProgress(
+                    title: 'Carbs',
+                    progress: consumptions.nutrition.carbohydrates.total ?? 0,
+                    target: Carbohydrates.grams(
+                      adjustedIntake * settings.carbohydrates,
+                    ),
                   ),
-                  Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: <Widget>[
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.end,
-                        crossAxisAlignment: CrossAxisAlignment.baseline,
-                        textBaseline: TextBaseline.alphabetic,
-                        children: [
-                          Text(
-                            '${consumptions.nutrition.proteins.total?.round() ?? 0}',
-                            style: Theme.of(context).textTheme.headlineSmall,
-                          ),
-                          Text(
-                            ' / ${Proteins.grams(adjustedIntake * settings.proteins).round()}',
-                            style: Theme.of(context).textTheme.bodySmall,
-                          ),
-                        ],
-                      ),
-                      const SizedBox(height: 4),
-                      SizedBox(
-                        width: 80,
-                        child: ClipRRect(
-                          borderRadius:
-                              const BorderRadius.all(Radius.circular(2)),
-                          child: LinearProgressIndicator(
-                            value:
-                                (consumptions.nutrition.proteins.total ?? 0) /
-                                    Proteins.grams(
-                                        adjustedIntake * settings.proteins),
-                          ),
-                        ),
-                      ),
-                      const SizedBox(height: 4),
-                      const Text('Protein'),
-                    ],
+                  TargetProgress(
+                    title: 'Protein',
+                    progress: consumptions.nutrition.proteins.total ?? 0,
+                    target: Proteins.grams(adjustedIntake * settings.proteins),
                   ),
-                  Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: <Widget>[
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.end,
-                        crossAxisAlignment: CrossAxisAlignment.baseline,
-                        textBaseline: TextBaseline.alphabetic,
-                        children: [
-                          Text(
-                            '${consumptions.nutrition.fats.total?.round() ?? 0}',
-                            style: Theme.of(context).textTheme.headlineSmall,
-                          ),
-                          Text(
-                            ' / ${Fats.grams(adjustedIntake * settings.fats).round()}',
-                            style: Theme.of(context).textTheme.bodySmall,
-                          ),
-                        ],
-                      ),
-                      const SizedBox(height: 4),
-                      SizedBox(
-                        width: 80,
-                        child: ClipRRect(
-                          borderRadius:
-                              const BorderRadius.all(Radius.circular(2)),
-                          child: LinearProgressIndicator(
-                            value: (consumptions.nutrition.fats.total ?? 0) /
-                                Fats.grams(adjustedIntake * settings.fats),
-                          ),
-                        ),
-                      ),
-                      const SizedBox(height: 4),
-                      const Text('Fat'),
-                    ],
+                  TargetProgress(
+                    title: 'Fat',
+                    progress: consumptions.nutrition.fats.total ?? 0,
+                    target: Fats.grams(adjustedIntake * settings.fats),
                   ),
                 ],
               ),
@@ -315,6 +168,65 @@ class MacrosCard extends StatelessWidget {
           ],
         ),
       ),
+    );
+  }
+}
+
+enum TargetProgressBarSize {
+  small,
+  large,
+}
+
+class TargetProgress extends StatelessWidget {
+  const TargetProgress({
+    super.key,
+    required this.title,
+    required this.target,
+    required this.progress,
+    this.barSize = TargetProgressBarSize.small,
+  });
+
+  final String title;
+  final num target;
+  final num progress;
+  final TargetProgressBarSize barSize;
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: <Widget>[
+        Row(
+          mainAxisAlignment: MainAxisAlignment.end,
+          crossAxisAlignment: CrossAxisAlignment.baseline,
+          textBaseline: TextBaseline.alphabetic,
+          children: [
+            Text(
+              progress.round().toString(),
+              style: Theme.of(context).textTheme.headlineSmall,
+            ),
+            Text(
+              ' / ${target.round().toString()}',
+              style: Theme.of(context).textTheme.bodySmall,
+            ),
+          ],
+        ),
+        const SizedBox(height: 4),
+        SizedBox(
+          width: barSize == TargetProgressBarSize.small ? 80 : 128,
+          child: ClipRRect(
+            borderRadius: BorderRadius.all(
+              Radius.circular(barSize == TargetProgressBarSize.small ? 2 : 3),
+            ),
+            child: LinearProgressIndicator(
+              value: progress / target,
+              minHeight: barSize == TargetProgressBarSize.small ? 4 : 6,
+            ),
+          ),
+        ),
+        const SizedBox(height: 4),
+        Text(title),
+      ],
     );
   }
 }

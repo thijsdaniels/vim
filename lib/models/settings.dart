@@ -14,7 +14,7 @@ class Settings {
   final double? fat;
   final double neat;
   final double surplus;
-  final double exercise;
+  final int exercise;
   final double carbohydrates;
   final double proteins;
   final double fats;
