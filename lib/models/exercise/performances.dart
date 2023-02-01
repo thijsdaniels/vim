@@ -1,5 +1,5 @@
 import 'package:vim/models/collection.dart';
-import 'package:vim/models/performance.dart';
+import 'package:vim/models/exercise/performance.dart';
 
 class Performances extends Collection<Performance> {
   final List<Performance> _performances;

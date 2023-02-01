@@ -1,9 +1,9 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:vim/extensions/num.dart';
-import 'package:vim/models/consumption.dart';
-import 'package:vim/models/ingredient_consumption.dart';
-import 'package:vim/models/recipe_consumption.dart';
+import 'package:vim/models/food/consumption.dart';
+import 'package:vim/models/food/ingredient_consumption.dart';
+import 'package:vim/models/food/recipe_consumption.dart';
 import 'package:vim/services/consumptions_service.dart';
 import 'package:vim/widgets/atoms/secondary_text.dart';
 import 'package:vim/widgets/molecules/nutrition_table.dart';

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:vim/models/nutrition.dart';
+import 'package:vim/models/food/nutrition.dart';
 
 class NutritionFormFields extends StatelessWidget {
   final NutritionEditingController controller;

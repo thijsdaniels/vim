@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:vim/models/ingredient.dart';
-import 'package:vim/models/nutrition.dart';
+import 'package:vim/models/food/ingredient.dart';
+import 'package:vim/models/food/nutrition.dart';
 import 'package:vim/services/ingredients_service.dart';
 import 'package:vim/widgets/molecules/nutrition_form_fields.dart';
 

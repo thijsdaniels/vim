@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:vim/models/consumption.dart';
+import 'package:vim/models/food/consumption.dart';
 import 'package:vim/models/date_model.dart';
-import 'package:vim/models/nutrition.dart';
+import 'package:vim/models/food/nutrition.dart';
 import 'package:vim/services/consumptions_service.dart';
 import 'package:vim/widgets/molecules/nutrition_form_fields.dart';
 

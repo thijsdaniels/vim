@@ -1,21 +1,21 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:vim/models/consumption.dart';
-import 'package:vim/models/consumptions.dart';
-import 'package:vim/models/ingredient_consumption.dart';
-import 'package:vim/models/performance.dart';
-import 'package:vim/models/performances.dart';
-import 'package:vim/models/recipe_consumption.dart';
+import 'package:vim/models/exercise/performance.dart';
+import 'package:vim/models/exercise/performances.dart';
+import 'package:vim/models/food/consumption.dart';
+import 'package:vim/models/food/consumptions.dart';
+import 'package:vim/models/food/ingredient_consumption.dart';
+import 'package:vim/models/food/recipe_consumption.dart';
 import 'package:vim/services/consumptions_service.dart';
 import 'package:vim/services/performances_service.dart';
+import 'package:vim/widgets/atoms/secondary_text.dart';
 import 'package:vim/widgets/molecules/date_stepper.dart';
+import 'package:vim/widgets/molecules/with_confirmation_dialog.dart';
 import 'package:vim/widgets/views/home/log/consumption_view.dart';
-import 'package:vim/widgets/views/home/log/create_performance_view.dart';
 import 'package:vim/widgets/views/home/log/create_consumption_view.dart';
 import 'package:vim/widgets/views/home/log/create_ingredient_consumption_view.dart';
+import 'package:vim/widgets/views/home/log/create_performance_view.dart';
 import 'package:vim/widgets/views/home/log/create_recipe_consumption_view.dart';
-import 'package:vim/widgets/atoms/secondary_text.dart';
-import 'package:vim/widgets/molecules/with_confirmation_dialog.dart';
 
 class LogView extends StatelessWidget {
   const LogView({super.key});

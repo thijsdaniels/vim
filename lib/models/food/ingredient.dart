@@ -1,8 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:vim/models/amount.dart';
-import 'package:vim/models/ingredient_consumption.dart';
+import 'package:vim/models/food/amount.dart';
+import 'package:vim/models/food/ingredient_consumption.dart';
+import 'package:vim/models/food/nutrition.dart';
 import 'package:vim/models/model.dart';
-import 'package:vim/models/nutrition.dart';
 
 class Ingredient extends Model {
   DocumentReference? _reference;

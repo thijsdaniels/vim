@@ -1,9 +1,9 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:vim/models/amount.dart';
+import 'package:vim/models/food/amount.dart';
 import 'package:vim/models/collection.dart';
-import 'package:vim/models/ingredient.dart';
+import 'package:vim/models/food/ingredient.dart';
+import 'package:vim/models/food/nutrition.dart';
 import 'package:vim/models/model.dart';
-import 'package:vim/models/nutrition.dart';
 
 class IngredientAmounts extends Collection<IngredientAmount> {
   final List<IngredientAmount> _ingredientAmounts;

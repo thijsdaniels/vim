@@ -1,4 +1,4 @@
-import 'package:vim/models/performances.dart';
+import 'package:vim/models/exercise/performances.dart';
 
 enum Gender {
   male,

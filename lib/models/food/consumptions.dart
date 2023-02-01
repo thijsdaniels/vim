@@ -1,6 +1,6 @@
 import 'package:vim/models/collection.dart';
-import 'package:vim/models/consumption.dart';
-import 'package:vim/models/nutrition.dart';
+import 'package:vim/models/food/consumption.dart';
+import 'package:vim/models/food/nutrition.dart';
 
 class Consumptions extends Collection<Consumption> {
   final List<Consumption> _consumptions;

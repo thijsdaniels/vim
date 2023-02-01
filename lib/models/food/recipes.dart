@@ -1,5 +1,5 @@
 import 'package:vim/models/collection.dart';
-import 'package:vim/models/recipe.dart';
+import 'package:vim/models/food/recipe.dart';
 
 class Recipes extends Collection<Recipe> {
   final List<Recipe> _recipes;

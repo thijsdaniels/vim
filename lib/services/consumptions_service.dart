@@ -1,8 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:vim/models/consumption.dart';
-import 'package:vim/models/consumptions.dart';
-import 'package:vim/models/ingredient_consumption.dart';
-import 'package:vim/models/recipe_consumption.dart';
+import 'package:vim/models/food/consumption.dart';
+import 'package:vim/models/food/consumptions.dart';
+import 'package:vim/models/food/ingredient_consumption.dart';
+import 'package:vim/models/food/recipe_consumption.dart';
 
 /// TODO: Filter all operations by the currently authenticated user. It might be
 /// a good idea to apply this generally to the entire service:

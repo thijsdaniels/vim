@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:vim/models/consumptions.dart';
-import 'package:vim/models/nutrition.dart';
-import 'package:vim/models/performances.dart';
+import 'package:vim/models/exercise/performances.dart';
+import 'package:vim/models/food/consumptions.dart';
+import 'package:vim/models/food/nutrition.dart';
 import 'package:vim/models/settings.dart';
 import 'package:vim/widgets/molecules/date_stepper.dart';
 import 'package:vim/widgets/vim.dart';

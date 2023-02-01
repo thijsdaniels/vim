@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:vim/extensions/num.dart';
-import 'package:vim/models/nutrition.dart';
+import 'package:vim/models/food/nutrition.dart';
 import 'package:vim/widgets/atoms/secondary_text.dart';
 
 class NutritionTable extends StatelessWidget {

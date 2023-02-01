@@ -1,9 +1,9 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:vim/models/amount.dart';
-import 'package:vim/models/ingredient_amounts.dart';
+import 'package:vim/models/food/amount.dart';
+import 'package:vim/models/food/ingredient_amounts.dart';
+import 'package:vim/models/food/nutrition.dart';
+import 'package:vim/models/food/recipe_consumption.dart';
 import 'package:vim/models/model.dart';
-import 'package:vim/models/recipe_consumption.dart';
-import 'package:vim/models/nutrition.dart';
 
 class Recipe extends Model {
   String? _id;

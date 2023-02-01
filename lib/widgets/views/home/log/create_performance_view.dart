@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 import 'package:vim/models/date_model.dart';
-import 'package:vim/models/performance.dart';
+import 'package:vim/models/exercise/performance.dart';
 import 'package:vim/services/performances_service.dart';
 
 class CreatePerformanceView extends StatefulWidget {

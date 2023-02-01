@@ -1,8 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:vim/models/amount.dart';
-import 'package:vim/models/consumption.dart';
-import 'package:vim/models/ingredient.dart';
-import 'package:vim/models/nutrition.dart';
+import 'package:vim/models/food/amount.dart';
+import 'package:vim/models/food/consumption.dart';
+import 'package:vim/models/food/ingredient.dart';
+import 'package:vim/models/food/nutrition.dart';
 
 class IngredientConsumption implements Consumption {
   String? _id;

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:vim/extensions/string.dart';
-import 'package:vim/models/amount.dart';
+import 'package:vim/models/food/amount.dart';
 
 class UnitDropdownMenu extends StatelessWidget {
   final Unit? value;

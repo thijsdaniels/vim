@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:vim/models/amount.dart';
+import 'package:vim/models/food/amount.dart';
 import 'package:vim/models/date_model.dart';
-import 'package:vim/models/ingredient.dart';
-import 'package:vim/models/ingredient_consumption.dart';
+import 'package:vim/models/food/ingredient.dart';
+import 'package:vim/models/food/ingredient_consumption.dart';
 import 'package:vim/services/consumptions_service.dart';
 import 'package:vim/widgets/atoms/ingredient_dropdown_menu.dart';
 import 'package:vim/widgets/atoms/number_form_field.dart';

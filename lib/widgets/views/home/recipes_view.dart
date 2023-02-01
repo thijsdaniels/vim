@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:vim/models/recipe.dart';
-import 'package:vim/models/recipes.dart';
+import 'package:vim/models/food/recipe.dart';
+import 'package:vim/models/food/recipes.dart';
 import 'package:vim/widgets/views/home/recipes/create_recipe_view.dart';
 import 'package:vim/widgets/atoms/secondary_text.dart';
 import 'package:vim/widgets/views/home/recipes/recipe_view.dart';
