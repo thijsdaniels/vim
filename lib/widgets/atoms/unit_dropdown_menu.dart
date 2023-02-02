@@ -7,6 +7,7 @@ class UnitDropdownMenu extends StatelessWidget {
   final List<Unit> items;
   final void Function(Unit? unit)? onChanged;
   final String label;
+  final String? Function(Unit?)? validator;
 
   const UnitDropdownMenu({
     super.key,
@@ -14,6 +15,7 @@ class UnitDropdownMenu extends StatelessWidget {
     this.items = Unit.values,
     this.value = Unit.grams,
     this.label = 'Unit',
+    this.validator,
   });
 
   @override
@@ -34,6 +36,7 @@ class UnitDropdownMenu extends StatelessWidget {
           )
           .toList(),
       onChanged: onChanged,
+      validator: validator,
     );
   }
 }

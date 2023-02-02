@@ -5,6 +5,7 @@ import 'package:vim/models/date_model.dart';
 import 'package:vim/models/food/nutrition.dart';
 import 'package:vim/services/consumptions_service.dart';
 import 'package:vim/widgets/molecules/nutrition_form_fields.dart';
+import 'package:vim/widgets/molecules/simple_card.dart';
 
 class CreateConsumptionView extends StatefulWidget {
   final Consumption? consumption;
@@ -88,33 +89,29 @@ class _CreateConsumptionViewState extends State<CreateConsumptionView> {
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: <Widget>[
-                Card(
-                  child: Padding(
-                    padding: const EdgeInsets.all(16.0),
-                    child: TextFormField(
-                      controller: _nameController,
-                      textCapitalization: TextCapitalization.words,
-                      decoration: const InputDecoration(
-                        labelText: 'Name',
-                      ),
-                      textInputAction: TextInputAction.next,
-                      validator: (value) {
-                        if (value == null || value.isEmpty) {
-                          return 'Please enter a name.';
-                        }
-                        return null;
-                      },
+                SimpleCard(
+                  title: 'Details',
+                  child: TextFormField(
+                    controller: _nameController,
+                    textCapitalization: TextCapitalization.words,
+                    decoration: const InputDecoration(
+                      labelText: 'Name',
                     ),
+                    textInputAction: TextInputAction.next,
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return 'Please enter a name.';
+                      }
+                      return null;
+                    },
                   ),
                 ),
                 const SizedBox(height: 32),
-                Card(
-                  child: Padding(
-                    padding: const EdgeInsets.all(16.0),
-                    child: NutritionFormFields(
-                      controller: _nutritionController,
-                      autofocus: true,
-                    ),
+                SimpleCard(
+                  title: 'Nutrition',
+                  child: NutritionFormFields(
+                    controller: _nutritionController,
+                    autofocus: true,
                   ),
                 ),
               ],

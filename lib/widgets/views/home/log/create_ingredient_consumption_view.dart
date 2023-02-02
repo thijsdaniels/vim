@@ -8,6 +8,7 @@ import 'package:vim/services/consumptions_service.dart';
 import 'package:vim/widgets/atoms/ingredient_dropdown_menu.dart';
 import 'package:vim/widgets/atoms/number_form_field.dart';
 import 'package:vim/widgets/atoms/unit_dropdown_menu.dart';
+import 'package:vim/widgets/molecules/simple_card.dart';
 
 class CreateIngredientConsumptionView extends StatefulWidget {
   final IngredientConsumption? ingredientConsumption;
@@ -35,6 +36,7 @@ class _CreateIngredientConsumptionViewState
     IngredientConsumption? ingredientConsumption = widget.ingredientConsumption;
 
     if (ingredientConsumption != null) {
+      _ingredient = ingredientConsumption.ingredient;
       _amount = ingredientConsumption.amount.value;
       _unit = ingredientConsumption.amount.unit;
     }
@@ -95,61 +97,63 @@ class _CreateIngredientConsumptionViewState
           padding: const EdgeInsets.all(16.0),
           child: Form(
             key: _formKey,
-            child: Card(
-              child: Padding(
-                padding: const EdgeInsets.all(16.0),
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    if (widget.ingredientConsumption == null)
-                      IngredientDropdownMenu(
-                        initialSelection: _ingredient,
-                        onSelected: (Ingredient? ingredient) {
-                          setState(() {
-                            _ingredient = ingredient;
-                            if (ingredient?.serving == null) {
-                              _unit = Unit.grams;
-                            }
-                          });
-                        },
-                      ),
-                    const SizedBox(height: 16),
-                    Row(
-                      children: [
-                        Expanded(
-                          child: UnitDropdownMenu(
-                            value: _unit,
-                            items: [
-                              Unit.grams,
-                              if (_ingredient?.serving != null) Unit.servings,
-                            ],
-                            onChanged: (unit) {
-                              _unit = unit;
-                            },
-                          ),
-                        ),
-                        Expanded(
-                          child: NumberFormField(
-                            initialValue: _amount,
-                            onChanged: (amount) => setState(() {
-                              _amount = amount;
-                            }),
-                            decoration: const InputDecoration(
-                              labelText: 'Amount',
-                            ),
-                            textInputAction: TextInputAction.done,
-                            validator: (value) {
-                              if (value == null) {
-                                return 'Please enter an amount.';
-                              }
-                              return null;
-                            },
-                          ),
-                        ),
-                      ],
+            child: SimpleCard(
+              title: 'Details',
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  if (widget.ingredientConsumption == null)
+                    IngredientDropdownMenu(
+                      initialSelection: _ingredient,
+                      onSelected: (Ingredient? ingredient) {
+                        setState(() {
+                          _ingredient = ingredient;
+                          if (ingredient?.serving == null) {
+                            _unit = Unit.grams;
+                          }
+                        });
+                      },
                     ),
-                  ],
-                ),
+                  const SizedBox(height: 16),
+                  Row(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Expanded(
+                        child: UnitDropdownMenu(
+                          value: _unit,
+                          onChanged: (unit) {
+                            _unit = unit;
+                          },
+                          validator: (unit) {
+                            if (unit == Unit.servings &&
+                                _ingredient?.serving == null) {
+                              return "Serving size not defined.";
+                            }
+                          },
+                        ),
+                      ),
+                      const SizedBox(width: 16),
+                      Expanded(
+                        child: NumberFormField(
+                          initialValue: _amount,
+                          onChanged: (amount) => setState(() {
+                            _amount = amount;
+                          }),
+                          decoration: const InputDecoration(
+                            labelText: 'Amount',
+                          ),
+                          textInputAction: TextInputAction.done,
+                          validator: (value) {
+                            if (value == null) {
+                              return 'Please enter an amount.';
+                            }
+                            return null;
+                          },
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
               ),
             ),
           ),

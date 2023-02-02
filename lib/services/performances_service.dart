@@ -37,17 +37,17 @@ class PerformancesService {
   }
 
   static Future<void> create(Performance performance) async {
-    assert(performance.id == null);
+    assert(performance.reference == null);
     return _collection.doc().set(performance);
   }
 
   static Future<void> update(Performance performance) async {
-    assert(performance.id != null);
-    return _collection.doc(performance.id).set(performance);
+    assert(performance.reference != null);
+    return performance.reference!.set(performance);
   }
 
   static Future<void> delete(Performance performance) async {
-    assert(performance.id != null);
-    return _collection.doc(performance.id).delete();
+    assert(performance.reference != null);
+    return performance.reference!.delete();
   }
 }

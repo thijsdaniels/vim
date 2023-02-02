@@ -184,17 +184,53 @@ class ConsumptionsList extends StatelessWidget {
                 ),
               );
             },
-            trailing: WithConfirmationDialog(
-              title: consumption.name,
-              description: 'Are you sure you want to delete this consumption?',
-              builder: (context, confirm) => IconButton(
-                icon: const Icon(Icons.delete_rounded),
-                onPressed: () async {
-                  if (await confirm()) {
-                    ConsumptionsService.delete(consumption);
-                  }
-                },
-              ),
+            trailing: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                IconButton(
+                  icon: const Icon(Icons.edit),
+                  onPressed: () async {
+                    if (consumption is RecipeConsumption) {
+                      Navigator.of(context).push(
+                        MaterialPageRoute(
+                          builder: (context) => CreateRecipeConsumptionView(
+                            recipeConsumption: consumption,
+                          ),
+                        ),
+                      );
+                    } else if (consumption is IngredientConsumption) {
+                      Navigator.of(context).push(
+                        MaterialPageRoute(
+                          builder: (context) => CreateIngredientConsumptionView(
+                            ingredientConsumption: consumption,
+                          ),
+                        ),
+                      );
+                    } else {
+                      Navigator.of(context).push(
+                        MaterialPageRoute(
+                          builder: (context) => CreateConsumptionView(
+                            consumption: consumption,
+                          ),
+                        ),
+                      );
+                    }
+                  },
+                ),
+                WithConfirmationDialog(
+                  title: consumption.name,
+                  description:
+                      'Are you sure you want to delete this consumption?',
+                  builder: (context, confirm) => IconButton(
+                    icon: const Icon(Icons.delete_rounded),
+                    onPressed: () async {
+                      if (await confirm()) {
+                        ConsumptionsService.delete(consumption);
+                      }
+                    },
+                  ),
+                ),
+              ],
             ),
           ),
         );

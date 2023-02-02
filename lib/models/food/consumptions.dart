@@ -3,33 +3,24 @@ import 'package:vim/models/food/consumption.dart';
 import 'package:vim/models/food/nutrition.dart';
 
 class Consumptions extends Collection<Consumption> {
-  final List<Consumption> _consumptions;
+  Consumptions(super.entries);
 
-  @override
-  int get length => _consumptions.length;
+  /// TODO: Implement the `fromMap` if I ever need it. Keep in mind that it
+  /// needs to instantiate either `Consumption`, `IngredientConsumption` or
+  /// `RecipeConsumption` depending on the data, and that this logic is already
+  /// defined in the `ConsumptionsService` so it would be good to avoid
+  /// repetition.
+  // static Consumptions fromMap(Map<String, dynamic> map) {
+  //   return Consumptions(
+  //     map['consumptions'].map((map) => Consumption.fromMap(map)),
+  //   );
+  // }
 
   Nutrition get nutrition {
-    return _consumptions.isNotEmpty
-        ? _consumptions
+    return entries.isNotEmpty
+        ? entries
             .map((consumption) => consumption.nutrition)
             .reduce((total, entry) => total.add(entry))
         : const Nutrition(calories: 0);
-  }
-
-  Consumptions([this._consumptions = const []]);
-
-  @override
-  Consumption get(int index) {
-    return _consumptions[index];
-  }
-
-  @override
-  Iterable<E> map<E>(E Function(Consumption) toElement) {
-    return _consumptions.map(toElement);
-  }
-
-  @override
-  List<Map<String, dynamic>> toMap() {
-    return _consumptions.map((consumption) => consumption.toMap()).toList();
   }
 }

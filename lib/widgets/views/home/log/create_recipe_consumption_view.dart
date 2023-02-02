@@ -8,6 +8,7 @@ import 'package:vim/services/consumptions_service.dart';
 import 'package:vim/widgets/atoms/number_form_field.dart';
 import 'package:vim/widgets/atoms/recipe_dropdown_menu.dart';
 import 'package:vim/widgets/atoms/unit_dropdown_menu.dart';
+import 'package:vim/widgets/molecules/simple_card.dart';
 
 class CreateRecipeConsumptionView extends StatefulWidget {
   final RecipeConsumption? recipeConsumption;
@@ -96,55 +97,58 @@ class _CreateRecipeConsumptionViewState
           padding: const EdgeInsets.all(16.0),
           child: Form(
             key: _formKey,
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: <Widget>[
-                if (widget.recipeConsumption == null)
-                  RecipeDropdownMenu(
-                    initialSelection: _recipe,
-                    onSelected: (recipe) {
-                      setState(() {
-                        _recipe = recipe;
-                      });
-                    },
-                  ),
-                const SizedBox(height: 16),
-                Row(
-                  children: [
-                    Expanded(
-                      child: UnitDropdownMenu(
-                        value: _unit,
-                        onChanged: (unit) {
-                          setState(() {
-                            _unit = unit;
-                          });
-                        },
-                      ),
+            child: SimpleCard(
+              title: 'Details',
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: <Widget>[
+                  if (widget.recipeConsumption == null)
+                    RecipeDropdownMenu(
+                      initialSelection: _recipe,
+                      onSelected: (recipe) {
+                        setState(() {
+                          _recipe = recipe;
+                        });
+                      },
                     ),
-                    const SizedBox(width: 16),
-                    Expanded(
-                      child: NumberFormField(
-                        initialValue: _amount,
-                        onChanged: (amount) {
-                          setState(() {
-                            _amount = amount;
-                          });
-                        },
-                        decoration: const InputDecoration(
-                          labelText: 'Amount',
+                  const SizedBox(height: 16),
+                  Row(
+                    children: [
+                      Expanded(
+                        child: UnitDropdownMenu(
+                          value: _unit,
+                          onChanged: (unit) {
+                            setState(() {
+                              _unit = unit;
+                            });
+                          },
                         ),
-                        textInputAction: TextInputAction.done,
-                        validator: (value) {
-                          if (value == null) {
-                            return 'Please enter an amount.';
-                          }
-                          return null;
-                        },
                       ),
-                    ),
-                  ],
-                )
-              ],
+                      const SizedBox(width: 16),
+                      Expanded(
+                        child: NumberFormField(
+                          initialValue: _amount,
+                          onChanged: (amount) {
+                            setState(() {
+                              _amount = amount;
+                            });
+                          },
+                          decoration: const InputDecoration(
+                            labelText: 'Amount',
+                          ),
+                          textInputAction: TextInputAction.done,
+                          validator: (value) {
+                            if (value == null) {
+                              return 'Please enter an amount.';
+                            }
+                            return null;
+                          },
+                        ),
+                      ),
+                    ],
+                  )
+                ],
+              ),
             ),
           ),
         ),

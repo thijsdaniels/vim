@@ -18,7 +18,7 @@ class _IngredientsViewState extends State<IngredientsView> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Food'),
+        title: const Text('Foods'),
         actions: [
           IconButton(
             icon: const Icon(Icons.sort_rounded),
@@ -64,18 +64,19 @@ class _IngredientsViewState extends State<IngredientsView> {
                     );
                   },
                   title: Text(ingredient.name),
-                  subtitle: (ingredient.brand != null)
-                      ? SecondaryText(ingredient.brand!)
-                      : null,
-                  trailing: Row(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      if (ingredient.nutrition.isComplete())
-                        const Padding(
-                          padding: EdgeInsets.all(12),
-                          child: Icon(Icons.check_rounded),
-                        ),
-                    ],
+                  subtitle: SecondaryText(
+                    // TODO: Try to change this into Chip widgets.
+                    [
+                      if (ingredient.brand != null) ...[
+                        '${ingredient.brand}',
+                      ],
+                      '${ingredient.nutrition.calories.round()} cal',
+                      [
+                        '${ingredient.nutrition.carbohydrates.total?.round() ?? 0}',
+                        '${ingredient.nutrition.proteins.total?.round() ?? 0}',
+                        '${ingredient.nutrition.fats.total?.round() ?? 0}',
+                      ].join("/")
+                    ].join(" • "),
                   ),
                 ),
               );

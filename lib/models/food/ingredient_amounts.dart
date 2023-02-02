@@ -182,17 +182,14 @@ class IngredientAmountReference extends Model {
   @override
   Map<String, dynamic> toMap() {
     return {
-      /// TODO: Find a way to store the `DocumentReference` as a `reference`
-      /// type field. Right now I'm just storing it as a `string` field, but a
-      /// `reference` field would be more correct.
-      'ingredient': ingredientReference.path,
+      'ingredient': ingredientReference,
       'amount': amount,
     };
   }
 
   static IngredientAmountReference fromMap(Map<String, dynamic> map) {
     return IngredientAmountReference(
-      ingredientReference: FirebaseFirestore.instance.doc(map['ingredient']),
+      ingredientReference: map['ingredient'],
       amount: map['amount'],
     );
   }

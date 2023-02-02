@@ -4,6 +4,7 @@ import 'package:provider/provider.dart';
 import 'package:vim/models/date_model.dart';
 import 'package:vim/models/exercise/performance.dart';
 import 'package:vim/services/performances_service.dart';
+import 'package:vim/widgets/molecules/simple_card.dart';
 
 class CreatePerformanceView extends StatefulWidget {
   final Performance? performance;
@@ -81,47 +82,45 @@ class _CreatePerformanceViewState extends State<CreatePerformanceView> {
           padding: const EdgeInsets.all(16.0),
           child: Form(
             key: _formKey,
-            child: Card(
-              child: Padding(
-                padding: const EdgeInsets.all(16.0),
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: <Widget>[
-                    TextFormField(
-                      controller: _nameController,
-                      textCapitalization: TextCapitalization.words,
-                      decoration: const InputDecoration(
-                        labelText: 'Name',
-                      ),
-                      textInputAction: TextInputAction.next,
-                      validator: (value) {
-                        if (value == null || value.isEmpty) {
-                          return 'Please enter a name.';
-                        }
-                        return null;
-                      },
+            child: SimpleCard(
+              title: 'Details',
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: <Widget>[
+                  TextFormField(
+                    controller: _nameController,
+                    textCapitalization: TextCapitalization.words,
+                    decoration: const InputDecoration(
+                      labelText: 'Name',
                     ),
-                    const SizedBox(height: 16),
-                    TextFormField(
-                      controller: _caloriesController,
-                      autofocus: true,
-                      decoration: const InputDecoration(
-                        labelText: 'Calories',
-                      ),
-                      textInputAction: TextInputAction.done,
-                      keyboardType: TextInputType.number,
-                      inputFormatters: <TextInputFormatter>[
-                        FilteringTextInputFormatter.digitsOnly
-                      ],
-                      validator: (value) {
-                        if (value == null || value.isEmpty) {
-                          return 'Please enter a number.';
-                        }
-                        return null;
-                      },
+                    textInputAction: TextInputAction.next,
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return 'Please enter a name.';
+                      }
+                      return null;
+                    },
+                  ),
+                  const SizedBox(height: 16),
+                  TextFormField(
+                    controller: _caloriesController,
+                    autofocus: true,
+                    decoration: const InputDecoration(
+                      labelText: 'Calories',
                     ),
-                  ],
-                ),
+                    textInputAction: TextInputAction.done,
+                    keyboardType: TextInputType.number,
+                    inputFormatters: <TextInputFormatter>[
+                      FilteringTextInputFormatter.digitsOnly
+                    ],
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return 'Please enter a number.';
+                      }
+                      return null;
+                    },
+                  ),
+                ],
               ),
             ),
           ),

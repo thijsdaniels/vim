@@ -2,12 +2,13 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:vim/models/model.dart';
 
 class Performance extends Model {
-  String? _id;
+  DocumentReference? _reference;
+
   Timestamp timestamp;
   String name;
-  int calories;
+  num calories;
 
-  String? get id => _id;
+  DocumentReference? get reference => _reference;
 
   Performance({
     required this.timestamp,
@@ -30,7 +31,7 @@ class Performance extends Model {
     Map<String, dynamic> map = snapshot.data()!;
 
     Performance performance = fromMap(map);
-    performance._id = snapshot.id;
+    performance._reference = snapshot.reference;
 
     return performance;
   }

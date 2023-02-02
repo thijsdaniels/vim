@@ -4,6 +4,7 @@ import 'package:vim/models/food/ingredient.dart';
 import 'package:vim/models/food/nutrition.dart';
 import 'package:vim/services/ingredients_service.dart';
 import 'package:vim/widgets/molecules/nutrition_form_fields.dart';
+import 'package:vim/widgets/molecules/simple_card.dart';
 
 class CreateIngredientView extends StatefulWidget {
   final Ingredient? ingredient;
@@ -99,60 +100,55 @@ class _CreateIngredientViewState extends State<CreateIngredientView> {
             key: _formKey,
             child: Column(
               children: [
-                Card(
-                  child: Padding(
-                    padding: const EdgeInsets.all(16.0),
-                    child: Column(
-                      children: [
-                        TextFormField(
-                          autofocus: true,
-                          controller: _nameController,
-                          textCapitalization: TextCapitalization.words,
-                          decoration: const InputDecoration(
-                            labelText: 'Name',
-                          ),
-                          textInputAction: TextInputAction.next,
-                          validator: (value) {
-                            if (value == null || value.isEmpty) {
-                              return 'Please enter a name.';
-                            }
-                            return null;
-                          },
+                SimpleCard(
+                  title: 'Details',
+                  child: Column(
+                    children: [
+                      TextFormField(
+                        autofocus: true,
+                        controller: _nameController,
+                        textCapitalization: TextCapitalization.words,
+                        decoration: const InputDecoration(
+                          labelText: 'Name',
                         ),
-                        const SizedBox(height: 16),
-                        TextFormField(
-                          controller: _brandController,
-                          textCapitalization: TextCapitalization.words,
-                          decoration: const InputDecoration(
-                            labelText: 'Brand',
-                          ),
-                          textInputAction: TextInputAction.next,
+                        textInputAction: TextInputAction.next,
+                        validator: (value) {
+                          if (value == null || value.isEmpty) {
+                            return 'Please enter a name.';
+                          }
+                          return null;
+                        },
+                      ),
+                      const SizedBox(height: 16),
+                      TextFormField(
+                        controller: _brandController,
+                        textCapitalization: TextCapitalization.words,
+                        decoration: const InputDecoration(
+                          labelText: 'Brand',
                         ),
-                        const SizedBox(height: 16),
-                        TextFormField(
-                          controller: _servingController,
-                          decoration: const InputDecoration(
-                            labelText: 'Serving',
-                            hintText: 'Grams',
-                          ),
-                          keyboardType: TextInputType.number,
-                          inputFormatters: <TextInputFormatter>[
-                            FilteringTextInputFormatter.allow(
-                                RegExp(r'[0-9\.]'))
-                          ],
-                          textInputAction: TextInputAction.next,
+                        textInputAction: TextInputAction.next,
+                      ),
+                      const SizedBox(height: 16),
+                      TextFormField(
+                        controller: _servingController,
+                        decoration: const InputDecoration(
+                          labelText: 'Serving',
+                          hintText: 'Grams',
                         ),
-                      ],
-                    ),
+                        keyboardType: TextInputType.number,
+                        inputFormatters: <TextInputFormatter>[
+                          FilteringTextInputFormatter.allow(RegExp(r'[0-9\.]'))
+                        ],
+                        textInputAction: TextInputAction.next,
+                      ),
+                    ],
                   ),
                 ),
                 const SizedBox(height: 32),
-                Card(
-                  child: Padding(
-                    padding: const EdgeInsets.all(16.0),
-                    child: NutritionFormFields(
-                      controller: _nutritionController,
-                    ),
+                SimpleCard(
+                  title: 'Nutrition',
+                  child: NutritionFormFields(
+                    controller: _nutritionController,
                   ),
                 ),
               ],
