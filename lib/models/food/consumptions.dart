@@ -20,7 +20,7 @@ class Consumptions extends Collection<Consumption> {
     return entries.isNotEmpty
         ? entries
             .map((consumption) => consumption.nutrition)
-            .reduce((total, entry) => total.add(entry))
+            .reduce((total, entry) => total + entry)
         : const Nutrition(calories: 0);
   }
 }

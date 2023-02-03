@@ -20,7 +20,7 @@ class IngredientAmounts extends Collection<IngredientAmount> {
   Nutrition get nutrition {
     return _ingredientAmounts
         .map((ingredientAmount) => ingredientAmount.nutrition)
-        .reduce((total, entry) => total.add(entry));
+        .reduce((total, entry) => total + entry);
   }
 
   IngredientAmounts([this._ingredientAmounts = const []]);
@@ -47,8 +47,8 @@ class IngredientAmounts extends Collection<IngredientAmount> {
     num factor = amount / this.amount;
 
     return _ingredientAmounts
-        .map((ingredientAmount) => ingredientAmount.nutrition.multiply(factor))
-        .reduce((total, nutrition) => total.add(nutrition));
+        .map((ingredientAmount) => ingredientAmount.nutrition * factor)
+        .reduce((total, nutrition) => total + nutrition);
   }
 
   @override
@@ -101,7 +101,7 @@ class IngredientAmountsReference extends Collection<IngredientAmountReference> {
   Future<Nutrition> get nutrition async {
     return _ingredientAmounts
         .map((ingredientAmount) => ingredientAmount.nutrition)
-        .reduce((total, entry) async => (await total).add(await entry));
+        .reduce((total, entry) async => await total + await entry);
   }
 
   IngredientAmountsReference([this._ingredientAmounts = const []]);
@@ -129,11 +129,10 @@ class IngredientAmountsReference extends Collection<IngredientAmountReference> {
 
     return _ingredientAmounts
         .map(
-          (ingredientAmount) async =>
-              (await ingredientAmount.nutrition).multiply(factor),
+          (ingredientAmount) async => await ingredientAmount.nutrition * factor,
         )
         .reduce(
-          (total, nutrition) async => (await total).add(await nutrition),
+          (total, nutrition) async => await total + await nutrition,
         );
   }
 

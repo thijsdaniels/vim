@@ -1,8 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:vim/models/exercise/exercise.dart';
 
-const double caloriesPerJoule = 4.1868;
-
 class ResistanceExercise extends Exercise {
   DocumentReference? _reference;
 
@@ -12,21 +10,20 @@ class ResistanceExercise extends Exercise {
   @override
   DocumentReference? get reference => _reference;
 
-  num get joules => duration.inSeconds * watts;
+  /// The average energy efficiency of our muscles. Studies show that the body
+  /// spends about 4 joules for every joule of output. The rest is lost as heat.
+  static const num efficiency = 0.24;
 
-  /// TODO: This calculation seems to be incorrect, because it says that a
-  /// performance of 10 minutes at 90 watts is only 13 kcal and this should be
-  /// closer to 73 kcal.
+  Energy get energy => Energy.watts(watts, duration);
+
   @override
-  num get calories => joules / 4184;
+  num get calories => energy.kiloCalories / ResistanceExercise.efficiency;
 
   ResistanceExercise({
     required super.name,
     required this.duration,
     required this.watts,
-  }) : super(
-          calories: 0,
-        );
+  }) : super(calories: 0);
 
   static ResistanceExercise fromSnapshot(
     DocumentSnapshot<Map<String, dynamic>> snapshot,
@@ -54,5 +51,51 @@ class ResistanceExercise extends Exercise {
       'duration': duration.inSeconds,
       'watts': watts,
     };
+  }
+}
+
+/// TODO: Move this class to a separate file.
+class Energy {
+  static double caloriesPerJoule = 0.238902957619;
+  static double joulesPerCalorie = 1 / caloriesPerJoule;
+
+  num _joules;
+
+  num get joules => _joules;
+  num get calories => joules * caloriesPerJoule;
+  num get kiloCalories => calories / 1000;
+
+  Energy(this._joules);
+
+  factory Energy.joules(num joules) {
+    return Energy(joules);
+  }
+
+  factory Energy.calories(num calories) {
+    return Energy.joules(calories * joulesPerCalorie);
+  }
+
+  factory Energy.kiloCalories(num kiloCalories) {
+    return Energy.calories(kiloCalories * 1000);
+  }
+
+  factory Energy.watts(num watts, Duration duration) {
+    return Energy.joules(watts * duration.inSeconds);
+  }
+
+  Energy operator +(Energy other) {
+    return Energy(joules + other.joules);
+  }
+
+  Energy operator -(Energy other) {
+    return Energy(joules - other.joules);
+  }
+
+  Energy operator *(num factor) {
+    return Energy(joules * factor);
+  }
+
+  Energy operator /(num factor) {
+    return Energy(joules / factor);
   }
 }

@@ -62,7 +62,7 @@ class Ingredient extends Model {
   }
 
   Nutrition nutritionForAmount(Amount amount) {
-    return nutrition.multiply(0.01 * _weightForAmount(amount));
+    return nutrition * 0.01 * _weightForAmount(amount);
   }
 
   num _weightForAmount(Amount amount) {
