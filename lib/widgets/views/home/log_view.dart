@@ -13,6 +13,7 @@ import 'package:vim/widgets/molecules/date_stepper.dart';
 import 'package:vim/widgets/molecules/with_confirmation_dialog.dart';
 import 'package:vim/widgets/views/home/log/consumption_view.dart';
 import 'package:vim/widgets/views/home/log/create_consumption_view.dart';
+import 'package:vim/widgets/views/home/log/create_exercise_performance_view.dart';
 import 'package:vim/widgets/views/home/log/create_ingredient_consumption_view.dart';
 import 'package:vim/widgets/views/home/log/create_performance_view.dart';
 import 'package:vim/widgets/views/home/log/create_recipe_consumption_view.dart';
@@ -101,16 +102,31 @@ class LogView extends StatelessWidget {
                           'Exercise',
                           style: Theme.of(context).textTheme.titleMedium,
                         ),
-                        IconButton(
-                          icon: const Icon(Icons.flash_on_rounded),
-                          onPressed: () {
-                            Navigator.of(context).push(
-                              MaterialPageRoute(
-                                builder: (context) =>
-                                    const CreatePerformanceView(),
-                              ),
-                            );
-                          },
+                        Row(
+                          children: [
+                            IconButton(
+                              icon: const Icon(Icons.fitness_center),
+                              onPressed: () {
+                                Navigator.of(context).push(
+                                  MaterialPageRoute(
+                                    builder: (context) =>
+                                        const CreateExercisePerformanceView(),
+                                  ),
+                                );
+                              },
+                            ),
+                            IconButton(
+                              icon: const Icon(Icons.flash_on_rounded),
+                              onPressed: () {
+                                Navigator.of(context).push(
+                                  MaterialPageRoute(
+                                    builder: (context) =>
+                                        const CreatePerformanceView(),
+                                  ),
+                                );
+                              },
+                            ),
+                          ],
                         ),
                       ],
                     ),
@@ -271,7 +287,7 @@ class PerformancesList extends StatelessWidget {
         return Card(
           child: ListTile(
             title: Text(performance.name),
-            subtitle: SecondaryText('${performance.calories} kcal'),
+            subtitle: SecondaryText('${performance.calories.round()} kcal'),
             trailing: Row(
               mainAxisSize: MainAxisSize.min,
               children: [

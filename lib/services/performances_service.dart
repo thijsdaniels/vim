@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:vim/models/exercise/exercise_performance.dart';
 import 'package:vim/models/exercise/performance.dart';
 import 'package:vim/models/exercise/performances.dart';
 
@@ -16,7 +17,15 @@ class PerformancesService {
       .instance
       .collection('performances')
       .withConverter<Performance>(
-        fromFirestore: (snapshot, _) => Performance.fromSnapshot(snapshot),
+        fromFirestore: (snapshot, _) {
+          Map<String, dynamic> data = snapshot.data()!;
+
+          if (data['exercise'] != null) {
+            return ExercisePerformance.fromSnapshot(snapshot);
+          } else {
+            return Performance.fromSnapshot(snapshot);
+          }
+        },
         toFirestore: (performance, _) => performance.toMap(),
       );
 

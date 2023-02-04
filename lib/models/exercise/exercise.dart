@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:vim/models/exercise/exercise_performance.dart';
 import 'package:vim/models/model.dart';
 
 class Exercise extends Model {
@@ -38,5 +39,12 @@ class Exercise extends Model {
       'name': name,
       'calories': calories,
     };
+  }
+
+  ExercisePerformance performance({required Timestamp timestamp}) {
+    return ExercisePerformance(
+      timestamp: timestamp,
+      exercise: this,
+    );
   }
 }
