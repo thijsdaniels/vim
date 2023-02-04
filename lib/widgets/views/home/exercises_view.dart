@@ -1,13 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:vim/extensions/string.dart';
 import 'package:vim/models/exercise/exercise.dart';
 import 'package:vim/models/exercise/exercises.dart';
-import 'package:vim/models/exercise/resistance_exercise.dart';
-import 'package:vim/models/exercise/weights_exercise.dart';
 import 'package:vim/widgets/atoms/secondary_text.dart';
 import 'package:vim/widgets/views/home/exercises/create_exercise_view.dart';
-import 'package:vim/widgets/views/home/exercises/create_resistance_exercise_view.dart';
-import 'package:vim/widgets/views/home/exercises/create_weights_exercise_view.dart';
 import 'package:vim/widgets/views/home/exercises/exercise_view.dart';
 
 class ExercisesView extends StatefulWidget {
@@ -42,31 +39,6 @@ class _ExercisesViewState extends State<ExercisesView> {
         mainAxisAlignment: MainAxisAlignment.end,
         children: [
           FloatingActionButton(
-            heroTag: 'weightsExerciseFab',
-            onPressed: () {
-              Navigator.of(context).push(
-                MaterialPageRoute(
-                  builder: (context) => const CreateWeightsExerciseView(),
-                ),
-              );
-            },
-            child: const Icon(Icons.fitness_center),
-          ),
-          const SizedBox(width: 8),
-          FloatingActionButton(
-            heroTag: 'resistanceExerciseFab',
-            onPressed: () {
-              Navigator.of(context).push(
-                MaterialPageRoute(
-                  builder: (context) => const CreateResistanceExerciseView(),
-                ),
-              );
-            },
-            child: const Icon(Icons.directions_bike),
-          ),
-          const SizedBox(width: 8),
-          FloatingActionButton(
-            heroTag: 'exerciseFab',
             onPressed: () {
               Navigator.of(context).push(
                 MaterialPageRoute(
@@ -97,23 +69,7 @@ class _ExercisesViewState extends State<ExercisesView> {
                     );
                   },
                   title: Text(exercise.name),
-                  subtitle: SecondaryText(
-                    // TODO: Try to change this into Chip widgets.
-                    [
-                      '${exercise.calories.round()} cal',
-                      if (exercise is WeightsExercise) ...[
-                        [
-                          '${exercise.sets}',
-                          '${exercise.repetitions}',
-                        ].join("×"),
-                        '${exercise.weight} kg',
-                      ],
-                      if (exercise is ResistanceExercise) ...[
-                        '${exercise.duration.inMinutes} m',
-                        '${exercise.watts} watts',
-                      ],
-                    ].join(" • "),
-                  ),
+                  subtitle: SecondaryText(exercise.type.name.toTitleCase()),
                 ),
               );
             },

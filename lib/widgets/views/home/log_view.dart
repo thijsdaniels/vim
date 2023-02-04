@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:vim/models/exercise/exercise_performance.dart';
 import 'package:vim/models/exercise/performance.dart';
 import 'package:vim/models/exercise/performances.dart';
+import 'package:vim/models/exercise/resistance_exercise_performance.dart';
+import 'package:vim/models/exercise/weights_exercise_performance.dart';
 import 'package:vim/models/food/consumption.dart';
 import 'package:vim/models/food/consumptions.dart';
 import 'package:vim/models/food/ingredient_consumption.dart';
@@ -287,7 +290,23 @@ class PerformancesList extends StatelessWidget {
         return Card(
           child: ListTile(
             title: Text(performance.name),
-            subtitle: SecondaryText('${performance.calories.round()} kcal'),
+            subtitle: SecondaryText(
+              // TODO: Try to change this into Chip widgets.
+              [
+                '${performance.calories.round()} cal',
+                if (performance is WeightsExercisePerformance) ...[
+                  [
+                    '${performance.sets}',
+                    '${performance.repetitions}',
+                  ].join("×"),
+                  '${performance.weight} kg',
+                ],
+                if (performance is ResistanceExercisePerformance) ...[
+                  '${performance.duration.inMinutes} m',
+                  '${performance.watts} watts',
+                ],
+              ].join(" • "),
+            ),
             trailing: Row(
               mainAxisSize: MainAxisSize.min,
               children: [
@@ -295,11 +314,17 @@ class PerformancesList extends StatelessWidget {
                   icon: const Icon(Icons.edit),
                   onPressed: () async {
                     Navigator.of(context).push(
-                      MaterialPageRoute(
-                        builder: (context) => CreatePerformanceView(
-                          performance: performance,
-                        ),
-                      ),
+                      MaterialPageRoute(builder: (context) {
+                        if (performance is ExercisePerformance) {
+                          return CreateExercisePerformanceView(
+                            exercisePerformance: performance,
+                          );
+                        } else {
+                          return CreatePerformanceView(
+                            performance: performance,
+                          );
+                        }
+                      }),
                     );
                   },
                 ),

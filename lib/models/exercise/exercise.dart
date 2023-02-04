@@ -1,18 +1,23 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:vim/models/exercise/exercise_performance.dart';
 import 'package:vim/models/model.dart';
+
+enum ExerciseType {
+  manual,
+  resistance,
+  weights,
+}
 
 class Exercise extends Model {
   DocumentReference? _reference;
 
+  ExerciseType type;
   String name;
-  num calories;
 
   DocumentReference? get reference => _reference;
 
   Exercise({
+    required this.type,
     required this.name,
-    required this.calories,
   });
 
   static Exercise fromSnapshot(
@@ -28,23 +33,16 @@ class Exercise extends Model {
 
   static Exercise fromMap(Map<String, dynamic> map) {
     return Exercise(
+      type: ExerciseType.values.byName(map['type']),
       name: map['name'],
-      calories: map['calories'],
     );
   }
 
   @override
   Map<String, dynamic> toMap() {
     return {
+      'type': type.name,
       'name': name,
-      'calories': calories,
     };
-  }
-
-  ExercisePerformance performance({required Timestamp timestamp}) {
-    return ExercisePerformance(
-      timestamp: timestamp,
-      exercise: this,
-    );
   }
 }

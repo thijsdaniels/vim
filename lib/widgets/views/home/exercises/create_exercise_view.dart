@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
+import 'package:vim/extensions/string.dart';
 import 'package:vim/models/exercise/exercise.dart';
 import 'package:vim/services/exercises_service.dart';
-import 'package:vim/widgets/atoms/number_form_field.dart';
 import 'package:vim/widgets/molecules/simple_card.dart';
 
 class CreateExerciseView extends StatefulWidget {
@@ -18,7 +17,7 @@ class _CreateExerciseViewState extends State<CreateExerciseView> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
   String? _name;
-  num? _calories;
+  ExerciseType? _type;
 
   @override
   void initState() {
@@ -28,7 +27,7 @@ class _CreateExerciseViewState extends State<CreateExerciseView> {
 
     if (exercise != null) {
       _name = exercise.name;
-      _calories = exercise.calories;
+      _type = exercise.type;
     }
   }
 
@@ -54,16 +53,14 @@ class _CreateExerciseViewState extends State<CreateExerciseView> {
 
                 if (exercise != null) {
                   exercise.name = _name!;
-                  exercise.calories = _calories!;
+                  exercise.type = _type!;
 
                   ExercisesService.update(exercise);
                 } else {
-                  exercise = Exercise(
+                  ExercisesService.create(Exercise(
                     name: _name!,
-                    calories: _calories!,
-                  );
-
-                  ExercisesService.create(exercise);
+                    type: _type!,
+                  ));
                 }
 
                 Navigator.of(context).pop(exercise);
@@ -101,25 +98,28 @@ class _CreateExerciseViewState extends State<CreateExerciseView> {
                           return null;
                         },
                       ),
-                    ],
-                  ),
-                ),
-                SimpleCard(
-                  title: 'Effort',
-                  child: Column(
-                    children: [
-                      NumberFormField(
-                        initialValue: _calories,
-                        onChanged: (calories) => setState(() {
-                          _calories = calories;
-                        }),
+                      const SizedBox(height: 16),
+                      DropdownButtonFormField<ExerciseType>(
                         decoration: const InputDecoration(
-                          labelText: 'Calories',
+                          label: Text('Type'),
                         ),
-                        textInputAction: TextInputAction.done,
+                        value: _type,
+                        items: ExerciseType.values
+                            .map(
+                              (type) => DropdownMenuItem<ExerciseType>(
+                                value: type,
+                                child: Text(
+                                  type.name.toTitleCase(),
+                                ),
+                              ),
+                            )
+                            .toList(),
+                        onChanged: (type) => setState(() {
+                          _type = type;
+                        }),
                         validator: (value) {
                           if (value == null) {
-                            return 'Please enter an amount.';
+                            return 'Please choose a type.';
                           }
                           return null;
                         },

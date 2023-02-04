@@ -1,8 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:vim/models/exercise/exercise.dart';
 import 'package:vim/models/exercise/exercises.dart';
-import 'package:vim/models/exercise/resistance_exercise.dart';
-import 'package:vim/models/exercise/weights_exercise.dart';
 
 /// TODO: Filter all operations by the currently authenticated user. It might be
 /// a good idea to apply this generally to the entire service:
@@ -18,17 +16,7 @@ class ExercisesService {
       .instance
       .collection('exercises')
       .withConverter<Exercise>(
-        fromFirestore: (snapshot, _) {
-          Map<String, dynamic> data = snapshot.data()!;
-
-          if (data['sets'] != null) {
-            return WeightsExercise.fromSnapshot(snapshot);
-          } else if (data['duration'] != null) {
-            return ResistanceExercise.fromSnapshot(snapshot);
-          } else {
-            return Exercise.fromSnapshot(snapshot);
-          }
-        },
+        fromFirestore: (snapshot, _) => Exercise.fromSnapshot(snapshot),
         toFirestore: (exercise, _) => exercise.toMap(),
       );
 

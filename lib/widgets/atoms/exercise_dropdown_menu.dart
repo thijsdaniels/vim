@@ -7,12 +7,14 @@ class ExerciseDropdownMenu extends StatelessWidget {
   final Exercise? initialSelection;
   final TextEditingController? controller;
   final void Function(Exercise? exercise)? onSelected;
+  final bool enabled;
 
   const ExerciseDropdownMenu({
     super.key,
     this.initialSelection,
     this.controller,
     this.onSelected,
+    this.enabled = true,
   });
 
   @override
@@ -32,6 +34,7 @@ class ExerciseDropdownMenu extends StatelessWidget {
             );
           }).toList(),
           onSelected: onSelected,
+          enabled: enabled,
         );
       },
     );
