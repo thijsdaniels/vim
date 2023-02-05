@@ -37,7 +37,7 @@ class IngredientAmounts extends Collection<IngredientAmount> {
         .toList();
   }
 
-  static IngredientAmounts fromMap(List<dynamic> map) {
+  static IngredientAmounts fromMap(Iterable<dynamic> map) {
     return IngredientAmounts(
       map.map((map) => IngredientAmount.fromMap(map)).toList(),
     );
@@ -118,7 +118,7 @@ class IngredientAmountsReference extends Collection<IngredientAmountReference> {
         .toList();
   }
 
-  static IngredientAmountsReference fromMap(List<dynamic> map) {
+  static IngredientAmountsReference fromMap(Iterable<dynamic> map) {
     return IngredientAmountsReference(
       map.map((map) => IngredientAmountReference.fromMap(map)).toList(),
     );

@@ -1,13 +1,13 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:vim/models/exercise/exercise.dart';
 import 'package:vim/models/exercise/exercise_performance.dart';
+import 'package:vim/models/exercise/set.dart';
+import 'package:vim/models/exercise/sets.dart';
 
 class WeightsExercisePerformance extends ExercisePerformance {
   DocumentReference? _reference;
 
-  num sets;
-  num repetitions;
-  num weight;
+  Sets sets = Sets();
 
   @override
   DocumentReference? get reference => _reference;
@@ -15,14 +15,14 @@ class WeightsExercisePerformance extends ExercisePerformance {
   @override
   String get name => exercise.name;
 
+  @override
+  num get calories => sets.calories;
+
   WeightsExercisePerformance({
     required super.timestamp,
     required super.exercise,
-    required super.calories,
     required this.sets,
-    required this.repetitions,
-    required this.weight,
-  });
+  }) : super(calories: 0);
 
   static WeightsExercisePerformance fromSnapshot(
     DocumentSnapshot<Map<String, dynamic>> snapshot,
@@ -39,10 +39,17 @@ class WeightsExercisePerformance extends ExercisePerformance {
     return WeightsExercisePerformance(
       timestamp: map['timestamp'],
       exercise: Exercise.fromMap(map['exercise']),
-      calories: map['calories'],
-      sets: map['sets'],
-      repetitions: map['repetitions'],
-      weight: map['weight'],
+      sets: map['sets'] is! num
+          ? Sets.fromMap(map['sets'])
+          : Sets(
+              List.filled(
+                map['sets'],
+                Set(
+                  repetitions: map['repetitions'],
+                  weight: map['weight'],
+                ),
+              ),
+            ),
     );
   }
 
@@ -51,10 +58,7 @@ class WeightsExercisePerformance extends ExercisePerformance {
     return {
       'timestamp': timestamp,
       'exercise': exercise.toMap(),
-      'calories': calories,
-      'sets': sets,
-      'repetitions': repetitions,
-      'weight': weight,
+      'sets': sets.toMap(),
     };
   }
 }

@@ -2,7 +2,7 @@ import 'package:vim/models/collection.dart';
 import 'package:vim/models/exercise/performance.dart';
 
 class Performances extends Collection<Performance> {
-  Performances(super.entries);
+  Performances([super.entries = const []]);
 
   num get calories {
     return entries.isNotEmpty
@@ -17,9 +17,9 @@ class Performances extends Collection<Performance> {
   /// `RoutinePerformance` depending on the data, and that this logic is already
   /// defined in the `PerformancesService` so it would be good to avoid
   /// repetition.
-  // static Performances fromMap(Map<String, dynamic> map) {
+  // static Performances fromMap(Iterable<Map<String, dynamic>> map) {
   //   return Performances(
-  //     map['performances'].map((map) => Performance.fromMap(map)),
+  //     map.map((map) => Performance.fromMap(map)).toList(),
   //   );
   // }
 }

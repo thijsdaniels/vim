@@ -295,15 +295,18 @@ class PerformancesList extends StatelessWidget {
               [
                 '${performance.calories.round()} cal',
                 if (performance is WeightsExercisePerformance) ...[
-                  [
-                    '${performance.sets}',
-                    '${performance.repetitions}',
-                  ].join("×"),
-                  '${performance.weight} kg',
+                  '${(performance.sets.map(
+                        (set) => set.weight,
+                      ).reduce((sum, weight) => sum + weight) / performance.sets.length)} kg',
+                  performance.sets
+                      .map(
+                        (set) => '${set.repetitions}',
+                      )
+                      .join("/"),
                 ],
                 if (performance is ResistanceExercisePerformance) ...[
-                  '${performance.duration.inMinutes} m',
                   '${performance.watts} watts',
+                  '${performance.duration.inMinutes} m',
                 ],
               ].join(" • "),
             ),

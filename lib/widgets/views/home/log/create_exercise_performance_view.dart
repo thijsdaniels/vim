@@ -5,6 +5,7 @@ import 'package:vim/models/date_model.dart';
 import 'package:vim/models/exercise/exercise.dart';
 import 'package:vim/models/exercise/exercise_performance.dart';
 import 'package:vim/models/exercise/resistance_exercise_performance.dart';
+import 'package:vim/models/exercise/sets.dart';
 import 'package:vim/models/exercise/weights_exercise_performance.dart';
 import 'package:vim/services/performances_service.dart';
 import 'package:vim/widgets/atoms/exercise_dropdown_menu.dart';
@@ -30,9 +31,9 @@ class _CreateExercisePerformanceViewState
 
   Exercise? _exercise;
   num? _calories;
-  num? _sets;
-  num? _repetitions;
-  num? _weight;
+  List<Map<String, dynamic>> _sets = [
+    {'repetitions': null, 'weight': null},
+  ];
   int? _minutes;
   num? _watts;
 
@@ -47,9 +48,7 @@ class _CreateExercisePerformanceViewState
       _calories = exercisePerformance.calories;
 
       if (exercisePerformance is WeightsExercisePerformance) {
-        _sets = exercisePerformance.sets;
-        _repetitions = exercisePerformance.repetitions;
-        _weight = exercisePerformance.weight;
+        _sets = exercisePerformance.sets.toMap();
       }
 
       if (exercisePerformance is ResistanceExercisePerformance) {
@@ -105,10 +104,7 @@ class _CreateExercisePerformanceViewState
                         exercisePerformance = WeightsExercisePerformance(
                           timestamp: dateModel.timestamp,
                           exercise: _exercise!,
-                          calories: _calories!,
-                          sets: _sets!,
-                          repetitions: _repetitions!,
-                          weight: _weight!,
+                          sets: Sets.fromMap(_sets),
                         );
                         break;
                     }
@@ -135,10 +131,7 @@ class _CreateExercisePerformanceViewState
                         exercisePerformance = WeightsExercisePerformance(
                           timestamp: dateModel.timestamp,
                           exercise: _exercise!,
-                          calories: _calories!,
-                          sets: _sets!,
-                          repetitions: _repetitions!,
-                          weight: _weight!,
+                          sets: Sets.fromMap(_sets),
                         );
                         break;
                     }
@@ -248,77 +241,89 @@ class _CreateExercisePerformanceViewState
                   ),
                 if (_exercise?.type == ExerciseType.weights)
                   SimpleCard(
-                    title: 'Effort',
+                    title: 'Sets',
                     child: Column(
-                      mainAxisSize: MainAxisSize.min,
+                      crossAxisAlignment: CrossAxisAlignment.end,
                       children: [
-                        NumberFormField(
-                          initialValue: _calories,
-                          onChanged: (calories) => setState(() {
-                            _calories = calories;
-                          }),
-                          decoration: const InputDecoration(
-                            labelText: 'Calories',
-                          ),
-                          textInputAction: TextInputAction.done,
-                          validator: (value) {
-                            if (value == null) {
-                              return 'Please enter an amount.';
-                            }
-                            return null;
+                        ..._sets.asMap().entries.map(
+                          (entry) {
+                            return Card(
+                              elevation: 4,
+                              child: Padding(
+                                padding: const EdgeInsets.all(16.0),
+                                child: Row(
+                                  children: [
+                                    Expanded(
+                                      child: NumberFormField(
+                                        initialValue:
+                                            entry.value['repetitions'],
+                                        onChanged: (repetitions) =>
+                                            setState(() {
+                                          entry.value['repetitions'] =
+                                              repetitions;
+                                        }),
+                                        decoration: const InputDecoration(
+                                          labelText: 'Repetitions',
+                                        ),
+                                        textInputAction: TextInputAction.next,
+                                        validator: (value) {
+                                          if (value == null) {
+                                            return 'Please enter an amount.';
+                                          }
+                                          return null;
+                                        },
+                                      ),
+                                    ),
+                                    const SizedBox(width: 16),
+                                    Expanded(
+                                      child: NumberFormField(
+                                        initialValue: entry.value['weight'],
+                                        onChanged: (weight) => setState(() {
+                                          entry.value['weight'] = weight;
+                                        }),
+                                        decoration: const InputDecoration(
+                                          labelText: 'Weight',
+                                          hintText: 'Kilograms',
+                                        ),
+                                        textInputAction: TextInputAction.next,
+                                        validator: (value) {
+                                          if (value == null) {
+                                            return 'Please enter an amount.';
+                                          }
+                                          return null;
+                                        },
+                                      ),
+                                    ),
+                                    const SizedBox(width: 16),
+                                    IconButton(
+                                      icon: const Icon(Icons.clear),
+                                      onPressed: _sets.length > 1
+                                          ? () {
+                                              setState(() {
+                                                _sets.removeAt(entry.key);
+                                              });
+                                            }
+                                          : null,
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            );
                           },
                         ),
-                        const SizedBox(height: 16),
-                        NumberFormField(
-                          initialValue: _sets,
-                          onChanged: (sets) => setState(() {
-                            _sets = sets;
-                          }),
-                          decoration: const InputDecoration(
-                            labelText: 'Sets',
+                        Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: TextButton(
+                            child: const Text('Add Set'),
+                            onPressed: () {
+                              setState(() {
+                                _sets.add({
+                                  'repetitions': _sets.last['repetitions'],
+                                  'weight': _sets.last['weight'],
+                                });
+                              });
+                            },
                           ),
-                          textInputAction: TextInputAction.next,
-                          validator: (value) {
-                            if (value == null) {
-                              return 'Please enter an amount.';
-                            }
-                            return null;
-                          },
-                        ),
-                        const SizedBox(height: 16),
-                        NumberFormField(
-                          initialValue: _repetitions,
-                          onChanged: (repetitions) => setState(() {
-                            _repetitions = repetitions;
-                          }),
-                          decoration: const InputDecoration(
-                            labelText: 'Repetitions',
-                          ),
-                          textInputAction: TextInputAction.next,
-                          validator: (value) {
-                            if (value == null) {
-                              return 'Please enter an amount.';
-                            }
-                            return null;
-                          },
-                        ),
-                        const SizedBox(height: 16),
-                        NumberFormField(
-                          initialValue: _weight,
-                          onChanged: (weight) => setState(() {
-                            _weight = weight;
-                          }),
-                          decoration: const InputDecoration(
-                            labelText: 'Weight',
-                            hintText: 'Kilograms',
-                          ),
-                          textInputAction: TextInputAction.next,
-                          validator: (value) {
-                            if (value == null) {
-                              return 'Please enter an amount.';
-                            }
-                            return null;
-                          },
                         ),
                       ],
                     ),

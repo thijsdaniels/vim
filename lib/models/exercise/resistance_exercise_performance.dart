@@ -17,7 +17,11 @@ class ResistanceExercisePerformance extends ExercisePerformance {
 
   /// The average energy efficiency of our muscles. Studies show that the body
   /// spends about 4 joules for every joule of output. The rest is lost as heat.
-  static const num efficiency = 0.24;
+  /// TechnoGym apparently disagrees with those studies, as their app reports
+  /// calories corresponding to an efficiency of only 15.3 percent. I will use
+  /// their approximation for now, since I have been using their app so far, but
+  /// I will likely switch when I've read a bit more about the subject.
+  static const num efficiency = 0.153; // 0.24;
 
   Energy get energy => Energy.watts(watts, duration);
 
