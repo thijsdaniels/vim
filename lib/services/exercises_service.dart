@@ -20,6 +20,10 @@ class ExercisesService {
         toFirestore: (exercise, _) => exercise.toMap(),
       );
 
+  static Stream<Exercise?> get(String id) {
+    return _collection.doc(id).snapshots().map((snapshot) => snapshot.data());
+  }
+
   static Stream<Exercises> all() {
     return _collection.orderBy('name').snapshots().map((snapshot) =>
         Exercises(snapshot.docs.map((doc) => doc.data()).toList()));

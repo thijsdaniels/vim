@@ -1,8 +1,8 @@
 import 'package:vim/models/collection.dart';
 import 'package:vim/models/exercise/set.dart';
 
-class Sets extends Collection<Set> {
-  Sets([super.entries = const []]);
+class Sets extends MutableCollection<Set> {
+  const Sets([super.entries = const []]);
 
   static Sets fromMap(Iterable<dynamic> map) {
     return Sets(
@@ -13,4 +13,12 @@ class Sets extends Collection<Set> {
   num get calories => entries
       .map((set) => set.calories)
       .reduce((total, calories) => total + calories);
+
+  num get repetitions => entries
+      .map((set) => set.repetitions ?? 0)
+      .reduce((total, repetitions) => total + repetitions);
+
+  num get weight => entries
+      .map((set) => set.weight ?? 0)
+      .reduce((total, weight) => total + weight);
 }

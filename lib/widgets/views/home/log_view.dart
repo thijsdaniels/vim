@@ -4,6 +4,7 @@ import 'package:vim/models/exercise/exercise_performance.dart';
 import 'package:vim/models/exercise/performance.dart';
 import 'package:vim/models/exercise/performances.dart';
 import 'package:vim/models/exercise/resistance_exercise_performance.dart';
+import 'package:vim/models/exercise/routine_performance.dart';
 import 'package:vim/models/exercise/weights_exercise_performance.dart';
 import 'package:vim/models/food/consumption.dart';
 import 'package:vim/models/food/consumptions.dart';
@@ -20,6 +21,7 @@ import 'package:vim/widgets/views/home/log/create_exercise_performance_view.dart
 import 'package:vim/widgets/views/home/log/create_ingredient_consumption_view.dart';
 import 'package:vim/widgets/views/home/log/create_performance_view.dart';
 import 'package:vim/widgets/views/home/log/create_recipe_consumption_view.dart';
+import 'package:vim/widgets/views/home/log/create_routine_performance_view.dart';
 
 class LogView extends StatelessWidget {
   const LogView({super.key});
@@ -114,6 +116,17 @@ class LogView extends StatelessWidget {
                                   MaterialPageRoute(
                                     builder: (context) =>
                                         const CreateExercisePerformanceView(),
+                                  ),
+                                );
+                              },
+                            ),
+                            IconButton(
+                              icon: const Icon(Icons.assignment),
+                              onPressed: () {
+                                Navigator.of(context).push(
+                                  MaterialPageRoute(
+                                    builder: (context) =>
+                                        const CreateRoutinePerformanceView(),
                                   ),
                                 );
                               },
@@ -295,9 +308,7 @@ class PerformancesList extends StatelessWidget {
               [
                 '${performance.calories.round()} cal',
                 if (performance is WeightsExercisePerformance) ...[
-                  '${(performance.sets.map(
-                        (set) => set.weight,
-                      ).reduce((sum, weight) => sum + weight) / performance.sets.length)} kg',
+                  '${(performance.sets.weight / performance.sets.length)} kg',
                   performance.sets
                       .map(
                         (set) => '${set.repetitions}',
@@ -321,6 +332,10 @@ class PerformancesList extends StatelessWidget {
                         if (performance is ExercisePerformance) {
                           return CreateExercisePerformanceView(
                             exercisePerformance: performance,
+                          );
+                        } else if (performance is RoutinePerformance) {
+                          return CreateRoutinePerformanceView(
+                            routinePerformance: performance,
                           );
                         } else {
                           return CreatePerformanceView(

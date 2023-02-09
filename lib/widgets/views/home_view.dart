@@ -4,6 +4,7 @@ import 'package:vim/widgets/views/home/exercises_view.dart';
 import 'package:vim/widgets/views/home/ingredients_view.dart';
 import 'package:vim/widgets/views/home/log_view.dart';
 import 'package:vim/widgets/views/home/recipes_view.dart';
+import 'package:vim/widgets/views/home/routines_view.dart';
 
 class HomeView extends StatefulWidget {
   const HomeView({super.key});
@@ -30,6 +31,7 @@ class _HomeViewState extends State<HomeView> {
         const IngredientsView(),
         const RecipesView(),
         const ExercisesView(),
+        const RoutinesView(),
       ][_selectedIndex],
       bottomNavigationBar: NavigationBar(
         destinations: const [
@@ -57,6 +59,11 @@ class _HomeViewState extends State<HomeView> {
             icon: Icon(Icons.fitness_center_outlined),
             selectedIcon: Icon(Icons.fitness_center),
             label: 'Exercises',
+          ),
+          NavigationDestination(
+            icon: Icon(Icons.assignment_outlined),
+            selectedIcon: Icon(Icons.assignment),
+            label: 'Routines',
           ),
         ],
         selectedIndex: _selectedIndex,

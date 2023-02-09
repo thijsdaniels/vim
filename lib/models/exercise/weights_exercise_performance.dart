@@ -7,7 +7,7 @@ import 'package:vim/models/exercise/sets.dart';
 class WeightsExercisePerformance extends ExercisePerformance {
   DocumentReference? _reference;
 
-  Sets sets = Sets();
+  Sets sets = const Sets();
 
   @override
   DocumentReference? get reference => _reference;

@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 import 'package:vim/models/date_model.dart';
 import 'package:vim/models/exercise/exercises.dart';
 import 'package:vim/models/exercise/performances.dart';
+import 'package:vim/models/exercise/routines.dart';
 import 'package:vim/models/food/consumptions.dart';
 import 'package:vim/models/food/ingredients.dart';
 import 'package:vim/models/food/recipes.dart';
@@ -11,6 +12,7 @@ import 'package:vim/services/exercises_service.dart';
 import 'package:vim/services/ingredients_service.dart';
 import 'package:vim/services/performances_service.dart';
 import 'package:vim/services/recipes_service.dart';
+import 'package:vim/services/routines_service.dart';
 import 'package:vim/widgets/views/home_view.dart';
 
 class Vim extends StatelessWidget {
@@ -78,6 +80,10 @@ class Providers extends StatelessWidget {
         StreamProvider<Exercises>(
           create: (context) => ExercisesService.all(),
           initialData: Exercises([]),
+        ),
+        StreamProvider<Routines>(
+          create: (context) => RoutinesService.all(),
+          initialData: Routines([]),
         ),
         ChangeNotifierProvider(
           create: (context) => DateModel(),

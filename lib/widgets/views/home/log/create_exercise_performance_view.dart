@@ -6,6 +6,7 @@ import 'package:vim/models/exercise/exercise.dart';
 import 'package:vim/models/exercise/exercise_performance.dart';
 import 'package:vim/models/exercise/resistance_exercise_performance.dart';
 import 'package:vim/models/exercise/sets.dart';
+import 'package:vim/models/exercise/set.dart';
 import 'package:vim/models/exercise/weights_exercise_performance.dart';
 import 'package:vim/services/performances_service.dart';
 import 'package:vim/widgets/atoms/exercise_dropdown_menu.dart';
@@ -31,9 +32,7 @@ class _CreateExercisePerformanceViewState
 
   Exercise? _exercise;
   num? _calories;
-  List<Map<String, dynamic>> _sets = [
-    {'repetitions': null, 'weight': null},
-  ];
+  Sets _sets = Sets([Set()]);
   int? _minutes;
   num? _watts;
 
@@ -48,7 +47,7 @@ class _CreateExercisePerformanceViewState
       _calories = exercisePerformance.calories;
 
       if (exercisePerformance is WeightsExercisePerformance) {
-        _sets = exercisePerformance.sets.toMap();
+        _sets = exercisePerformance.sets;
       }
 
       if (exercisePerformance is ResistanceExercisePerformance) {
@@ -104,7 +103,7 @@ class _CreateExercisePerformanceViewState
                         exercisePerformance = WeightsExercisePerformance(
                           timestamp: dateModel.timestamp,
                           exercise: _exercise!,
-                          sets: Sets.fromMap(_sets),
+                          sets: _sets,
                         );
                         break;
                     }
@@ -131,7 +130,7 @@ class _CreateExercisePerformanceViewState
                         exercisePerformance = WeightsExercisePerformance(
                           timestamp: dateModel.timestamp,
                           exercise: _exercise!,
-                          sets: Sets.fromMap(_sets),
+                          sets: _sets,
                         );
                         break;
                     }
@@ -242,90 +241,9 @@ class _CreateExercisePerformanceViewState
                 if (_exercise?.type == ExerciseType.weights)
                   SimpleCard(
                     title: 'Sets',
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.end,
-                      children: [
-                        ..._sets.asMap().entries.map(
-                          (entry) {
-                            return Card(
-                              elevation: 4,
-                              child: Padding(
-                                padding: const EdgeInsets.all(16.0),
-                                child: Row(
-                                  children: [
-                                    Expanded(
-                                      child: NumberFormField(
-                                        initialValue:
-                                            entry.value['repetitions'],
-                                        onChanged: (repetitions) =>
-                                            setState(() {
-                                          entry.value['repetitions'] =
-                                              repetitions;
-                                        }),
-                                        decoration: const InputDecoration(
-                                          labelText: 'Repetitions',
-                                        ),
-                                        textInputAction: TextInputAction.next,
-                                        validator: (value) {
-                                          if (value == null) {
-                                            return 'Please enter an amount.';
-                                          }
-                                          return null;
-                                        },
-                                      ),
-                                    ),
-                                    const SizedBox(width: 16),
-                                    Expanded(
-                                      child: NumberFormField(
-                                        initialValue: entry.value['weight'],
-                                        onChanged: (weight) => setState(() {
-                                          entry.value['weight'] = weight;
-                                        }),
-                                        decoration: const InputDecoration(
-                                          labelText: 'Weight',
-                                          hintText: 'Kilograms',
-                                        ),
-                                        textInputAction: TextInputAction.next,
-                                        validator: (value) {
-                                          if (value == null) {
-                                            return 'Please enter an amount.';
-                                          }
-                                          return null;
-                                        },
-                                      ),
-                                    ),
-                                    const SizedBox(width: 16),
-                                    IconButton(
-                                      icon: const Icon(Icons.clear),
-                                      onPressed: _sets.length > 1
-                                          ? () {
-                                              setState(() {
-                                                _sets.removeAt(entry.key);
-                                              });
-                                            }
-                                          : null,
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            );
-                          },
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: TextButton(
-                            child: const Text('Add Set'),
-                            onPressed: () {
-                              setState(() {
-                                _sets.add({
-                                  'repetitions': _sets.last['repetitions'],
-                                  'weight': _sets.last['weight'],
-                                });
-                              });
-                            },
-                          ),
-                        ),
-                      ],
+                    child: SetsFields(
+                      sets: _sets,
+                      elevation: 4,
                     ),
                   ),
               ],
@@ -333,6 +251,110 @@ class _CreateExercisePerformanceViewState
           ),
         ),
       ),
+    );
+  }
+}
+
+class SetsFields extends StatefulWidget {
+  final Sets sets;
+  final double elevation;
+
+  const SetsFields({
+    super.key,
+    required this.sets,
+    this.elevation = 1,
+  });
+
+  @override
+  State<SetsFields> createState() => _SetsFieldsState();
+}
+
+class _SetsFieldsState extends State<SetsFields> {
+  @override
+  Widget build(BuildContext context) {
+    var sets = widget.sets;
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.end,
+      children: [
+        ...sets.asMap().entries.map(
+          (entry) {
+            return Card(
+              elevation: widget.elevation,
+              child: Padding(
+                padding: const EdgeInsets.all(16.0),
+                child: Row(
+                  children: [
+                    Expanded(
+                      child: NumberFormField(
+                        initialValue: entry.value.repetitions,
+                        onChanged: (repetitions) => setState(() {
+                          entry.value.repetitions = repetitions;
+                        }),
+                        decoration: const InputDecoration(
+                          labelText: 'Repetitions',
+                        ),
+                        textInputAction: TextInputAction.next,
+                        validator: (value) {
+                          if (value == null) {
+                            return 'Please enter an amount.';
+                          }
+                          return null;
+                        },
+                      ),
+                    ),
+                    const SizedBox(width: 16),
+                    Expanded(
+                      child: NumberFormField(
+                        initialValue: entry.value.weight,
+                        onChanged: (weight) => setState(() {
+                          entry.value.weight = weight;
+                        }),
+                        decoration: const InputDecoration(
+                          labelText: 'Weight',
+                          hintText: 'Kilograms',
+                        ),
+                        textInputAction: TextInputAction.next,
+                        validator: (value) {
+                          if (value == null) {
+                            return 'Please enter an amount.';
+                          }
+                          return null;
+                        },
+                      ),
+                    ),
+                    const SizedBox(width: 16),
+                    IconButton(
+                      icon: const Icon(Icons.clear),
+                      onPressed: sets.length > 1
+                          ? () {
+                              setState(() {
+                                sets.removeAt(entry.key);
+                              });
+                            }
+                          : null,
+                    ),
+                  ],
+                ),
+              ),
+            );
+          },
+        ),
+        Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: TextButton(
+            child: const Text('Add Set'),
+            onPressed: () {
+              setState(() {
+                sets.add(Set(
+                  repetitions: sets.last.repetitions,
+                  weight: sets.last.weight,
+                ));
+              });
+            },
+          ),
+        ),
+      ],
     );
   }
 }

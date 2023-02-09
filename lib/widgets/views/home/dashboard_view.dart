@@ -15,7 +15,7 @@ Settings settings = Settings(
   length: 176,
   muscle: 81.0,
   fat: 14.8,
-  neat: 320, // a rough estimate
+  neat: 420, // a rough estimate
   surplus: 0.1,
   exercise: 400,
   carbohydrates: 0.45,

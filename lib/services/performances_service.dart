@@ -4,6 +4,7 @@ import 'package:vim/models/exercise/exercise_performance.dart';
 import 'package:vim/models/exercise/performance.dart';
 import 'package:vim/models/exercise/performances.dart';
 import 'package:vim/models/exercise/resistance_exercise_performance.dart';
+import 'package:vim/models/exercise/routine_performance.dart';
 import 'package:vim/models/exercise/weights_exercise_performance.dart';
 
 /// TODO: Filter all operations by the currently authenticated user. It might be
@@ -32,6 +33,8 @@ class PerformancesService {
               case ExerciseType.weights:
                 return WeightsExercisePerformance.fromSnapshot(snapshot);
             }
+          } else if (data['routine'] != null) {
+            return RoutinePerformance.fromSnapshot(snapshot);
           } else {
             return Performance.fromSnapshot(snapshot);
           }
