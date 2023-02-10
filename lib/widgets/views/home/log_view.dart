@@ -22,6 +22,7 @@ import 'package:vim/widgets/views/home/log/create_ingredient_consumption_view.da
 import 'package:vim/widgets/views/home/log/create_performance_view.dart';
 import 'package:vim/widgets/views/home/log/create_recipe_consumption_view.dart';
 import 'package:vim/widgets/views/home/log/create_routine_performance_view.dart';
+import 'package:vim/widgets/views/home/log/performance_view.dart';
 
 class LogView extends StatelessWidget {
   const LogView({super.key});
@@ -321,6 +322,14 @@ class PerformancesList extends StatelessWidget {
                 ],
               ].join(" • "),
             ),
+            onTap: () {
+              Navigator.of(context).push(
+                MaterialPageRoute(
+                  builder: (context) =>
+                      PerformanceView(performance: performance),
+                ),
+              );
+            },
             trailing: Row(
               mainAxisSize: MainAxisSize.min,
               children: [

@@ -48,17 +48,15 @@ class _CreateRoutinePerformanceViewState
                       widget.routinePerformance;
 
                   if (routinePerformance != null) {
-                    // TODO: Update routine attributes.
+                    routinePerformance.routine = await _routine!.resolve();
 
                     PerformancesService.update(routinePerformance);
                   } else {
-                    routinePerformance = await _routine?.performance(
+                    routinePerformance = await _routine!.performance(
                       timestamp: dateModel.timestamp,
                     );
 
-                    if (routinePerformance != null) {
-                      PerformancesService.create(routinePerformance);
-                    }
+                    PerformancesService.create(routinePerformance);
                   }
 
                   navigator.pop(routinePerformance);

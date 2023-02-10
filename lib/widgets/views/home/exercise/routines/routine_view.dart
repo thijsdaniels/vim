@@ -123,8 +123,8 @@ class _RoutineViewState extends State<RoutineView> {
                                     '${entry.value.calories!.round()} cal',
                                   if (snapshot.data?.type ==
                                       ExerciseType.weights) ...[
-                                    '${(entry.value.sets.weight / entry.value.sets.length)} kg',
-                                    entry.value.sets
+                                    '${(entry.value.sets!.weight / entry.value.sets!.length)} kg',
+                                    entry.value.sets!
                                         .map(
                                           (set) => '${set.repetitions}',
                                         )

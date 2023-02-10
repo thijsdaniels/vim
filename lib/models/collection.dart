@@ -31,6 +31,10 @@ class Collection<M extends Model> {
     return entries.map(toElement);
   }
 
+  Iterable<M> where(bool Function(M) test) {
+    return entries.where(test);
+  }
+
   Map<int, M> asMap() {
     return entries.asMap();
   }

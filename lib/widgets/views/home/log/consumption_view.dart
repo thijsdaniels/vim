@@ -1,6 +1,7 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:vim/extensions/num.dart';
+import 'package:vim/models/food/amount.dart';
 import 'package:vim/models/food/consumption.dart';
 import 'package:vim/models/food/ingredient_consumption.dart';
 import 'package:vim/models/food/recipe_consumption.dart';
@@ -112,15 +113,38 @@ class _ConsumptionViewState extends State<ConsumptionView> {
                         ),
                         TableRow(
                           children: [
+                            const SecondaryText('Brand'),
+                            const SizedBox(width: 32),
+                            consumption.ingredient.brand != null
+                                ? Text(consumption.ingredient.brand!)
+                                : const SecondaryText('--'),
+                          ],
+                        ),
+                        TableRow(
+                          children: [
                             const SecondaryText('Amount'),
                             const SizedBox(width: 32),
-                            Row(
+                            Column(
                               children: [
-                                Text(consumption.amount.value.toString()),
-                                const SizedBox(width: 4),
-                                SecondaryText(
-                                  describeEnum(consumption.amount.unit),
+                                Row(
+                                  children: [
+                                    Text(consumption.amount.value.toString()),
+                                    const SizedBox(width: 4),
+                                    SecondaryText(
+                                      describeEnum(consumption.amount.unit),
+                                    ),
+                                  ],
                                 ),
+                                if (consumption.amount.unit == Unit.servings)
+                                  Row(
+                                    children: [
+                                      Text((consumption.amount.value *
+                                              consumption.ingredient.serving!)
+                                          .toString()),
+                                      const SizedBox(width: 4),
+                                      const SecondaryText('grams'),
+                                    ],
+                                  ),
                               ],
                             ),
                           ],
@@ -138,13 +162,29 @@ class _ConsumptionViewState extends State<ConsumptionView> {
                           children: [
                             const SecondaryText('Amount'),
                             const SizedBox(width: 32),
-                            Row(
+                            Column(
                               children: [
-                                Text(consumption.amount.value.toString()),
-                                const SizedBox(width: 4),
-                                SecondaryText(
-                                  describeEnum(consumption.amount.unit),
+                                Row(
+                                  children: [
+                                    Text(consumption.amount.value.toString()),
+                                    const SizedBox(width: 4),
+                                    SecondaryText(
+                                      describeEnum(consumption.amount.unit),
+                                    ),
+                                  ],
                                 ),
+                                if (consumption.amount.unit == Unit.servings)
+                                  Row(
+                                    children: [
+                                      Text((consumption.amount.value *
+                                              consumption.recipe
+                                                  .ingredientAmounts.amount /
+                                              consumption.recipe.servings)
+                                          .toString()),
+                                      const SizedBox(width: 4),
+                                      const SecondaryText('grams'),
+                                    ],
+                                  ),
                               ],
                             ),
                           ],

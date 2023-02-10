@@ -21,8 +21,8 @@ class CreateRoutineView extends StatefulWidget {
 class _CreateRoutineViewState extends State<CreateRoutineView> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   String _name = "";
-  PlannedExercises _plan = PlannedExercises([
-    PlannedExercise(
+  PlannedPerformances _plan = PlannedPerformances([
+    PlannedPerformance(
       sets: Sets([
         Set(repetitions: null, weight: null),
       ]),
@@ -62,13 +62,13 @@ class _CreateRoutineViewState extends State<CreateRoutineView> {
 
                 if (routine != null) {
                   routine.name = _name;
-                  routine.plan = _plan;
+                  routine.plan = _plan.trim();
 
                   RoutinesService.update(routine);
                 } else {
                   routine = Routine(
                     name: _name,
-                    plan: _plan,
+                    plan: _plan.trim(),
                   );
 
                   RoutinesService.create(routine);
@@ -212,7 +212,8 @@ class _CreateRoutineViewState extends State<CreateRoutineView> {
                                               },
                                               onChanged: (minutes) {
                                                 setState(() {
-                                                  entry.value.minutes = minutes;
+                                                  entry.value.minutes =
+                                                      minutes?.toInt();
                                                 });
                                               },
                                             ),
@@ -245,7 +246,7 @@ class _CreateRoutineViewState extends State<CreateRoutineView> {
                                           children: [
                                             const SizedBox(height: 16),
                                             SetsFields(
-                                              sets: entry.value.sets,
+                                              sets: entry.value.sets!,
                                               elevation: 8,
                                             ),
                                           ],
@@ -264,7 +265,7 @@ class _CreateRoutineViewState extends State<CreateRoutineView> {
                           child: const Text('Add Exercise'),
                           onPressed: () {
                             setState(() {
-                              _plan.add(PlannedExercise(
+                              _plan.add(PlannedPerformance(
                                 sets: Sets([
                                   Set(repetitions: null, weight: null),
                                 ]),

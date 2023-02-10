@@ -10,7 +10,7 @@ class Routine extends Model {
   String? _id;
 
   String name;
-  PlannedExercises plan;
+  PlannedPerformances plan;
 
   String? get id => _id;
 
@@ -43,7 +43,7 @@ class Routine extends Model {
   static Routine fromMap(Map<String, dynamic> map) {
     return Routine(
       name: map['name'],
-      plan: PlannedExercises.fromMap(map['plan']),
+      plan: PlannedPerformances.fromMap(map['plan']),
     );
   }
 
@@ -60,12 +60,13 @@ class Routine extends Model {
   Future<ResolvedRoutine> resolve() async {
     return ResolvedRoutine(
       name: name,
+      plan: await plan.resolve(),
     );
   }
 }
 
-class PlannedExercises extends MutableCollection<PlannedExercise> {
-  PlannedExercises([super.entries = const []]);
+class PlannedPerformances extends MutableCollection<PlannedPerformance> {
+  PlannedPerformances([super.entries = const []]);
 
   Future<num> get calories async {
     if (entries.isEmpty) {
@@ -86,9 +87,30 @@ class PlannedExercises extends MutableCollection<PlannedExercise> {
     }).reduce((total, calories) async => (await total) + (await calories));
   }
 
-  static PlannedExercises fromMap(Iterable<dynamic> map) {
-    return PlannedExercises(
-      map.map((map) => PlannedExercise.fromMap(map)).toList(),
+  static PlannedPerformances fromMap(Iterable<dynamic> map) {
+    return PlannedPerformances(
+      map.map((map) => PlannedPerformance.fromMap(map)).toList(),
+    );
+  }
+
+  /// TODO: This function is only needed because during the routine creation
+  /// an empty Set is appended for the sake of filling in the form fields. I
+  /// should find a better way, because this is starting to get really messy.
+  PlannedPerformances trim() {
+    return PlannedPerformances(
+      entries.map((entry) {
+        var sets = entry.sets
+            ?.where((set) => set.repetitions != null && set.weight != null)
+            .toList();
+        entry.sets = sets != null && sets.isNotEmpty ? Sets(sets) : null;
+        return entry;
+      }).toList(),
+    );
+  }
+
+  Future<ResolvedPlannedPerformances> resolve() async {
+    return ResolvedPlannedPerformances(
+      (await Future.wait(entries.map((entry) => entry.resolve()))).toList(),
     );
   }
 }
@@ -104,13 +126,13 @@ class PlannedExercises extends MutableCollection<PlannedExercise> {
 /// I want to do that anyway, so that you can both edit an exercise without
 /// affecting earlier performances, as well as update a performance to the values
 /// of the current version of the exercise.
-class PlannedExercise extends Model {
+class PlannedPerformance extends Model {
   DocumentReference? exerciseReference;
 
   num? calories;
-  num? minutes; // TODO: Turn this into a `Duration`.
+  int? minutes; // TODO: Turn this into a `Duration`.
   num? watts;
-  Sets sets;
+  Sets? sets;
 
   Future<Exercise?> get exercise async {
     return exerciseReference != null
@@ -118,12 +140,12 @@ class PlannedExercise extends Model {
         : null;
   }
 
-  PlannedExercise({
+  PlannedPerformance({
     this.exerciseReference,
     this.calories,
     this.minutes,
     this.watts,
-    this.sets = const Sets(),
+    this.sets,
   });
 
   @override
@@ -133,40 +155,131 @@ class PlannedExercise extends Model {
       if (calories != null) 'calories': calories,
       if (minutes != null) 'minutes': minutes,
       if (watts != null) 'watts': watts,
-      if (sets.isNotEmpty) 'sets': sets.toMap(),
+      if (sets != null && sets!.isNotEmpty) 'sets': sets!.toMap(),
     };
   }
 
-  static PlannedExercise fromMap(Map<String, dynamic> map) {
-    return PlannedExercise(
+  static PlannedPerformance fromMap(Map<String, dynamic> map) {
+    return PlannedPerformance(
       exerciseReference: map['exercise'],
       calories: map['calories'],
       minutes: map['minutes'],
       watts: map['watts'],
-      sets: Sets.fromMap(map['sets']),
+      sets: map['sets'] ? Sets.fromMap(map['sets']) : null,
+    );
+  }
+
+  Future<ResolvedPlannedPerformance> resolve() async {
+    return ResolvedPlannedPerformance(
+      exercise: await exercise,
+      calories: calories,
+      minutes: minutes,
+      watts: watts,
+      sets: sets,
     );
   }
 }
 
 class ResolvedRoutine extends Model {
   String name;
+  ResolvedPlannedPerformances plan;
 
-  num get calories => 0; // TODO: Get calories from exercise list.
+  num get calories => plan.calories;
 
   ResolvedRoutine({
     required this.name,
+    required this.plan,
   });
 
   @override
   Map<String, dynamic> toMap() {
     return {
       'name': name,
+      'plan': plan.toMap(),
     };
   }
 
   static ResolvedRoutine fromMap(Map<String, dynamic> map) {
     return ResolvedRoutine(
       name: map['name'],
+      plan: ResolvedPlannedPerformances.fromMap(map['plan']),
+    );
+  }
+}
+
+class ResolvedPlannedPerformances
+    extends MutableCollection<ResolvedPlannedPerformance> {
+  ResolvedPlannedPerformances([super.entries = const []]);
+
+  num get calories {
+    if (entries.isEmpty) {
+      return 0;
+    }
+
+    return entries.map((performance) {
+      var exercise = performance.exercise;
+
+      switch (exercise?.type) {
+        case ExerciseType.manual:
+          return performance.calories ?? 0;
+        case ExerciseType.resistance:
+        case ExerciseType.weights:
+
+          /// TODO: Calculate the calories. Instead of moving the calculations
+          /// to the `Exercise` class, I should just use the `Performance`
+          /// classes instead of the `PlannedPerformance` classes (or make the
+          /// `PlannedPerformance` inherit from `Performance`. Or maybe I should
+          /// make the `Routine` keep the `PlannedPerformance`, but make the
+          /// `RoutinePerformance` containe List<ExercisePerformance>. That
+          /// might actually make the most sense.
+          return 0;
+        default:
+          throw Exception('Missing exercise');
+      }
+    }).reduce((total, calories) => total + calories);
+  }
+
+  static ResolvedPlannedPerformances fromMap(Iterable<dynamic> map) {
+    return ResolvedPlannedPerformances(
+      map.map((map) => ResolvedPlannedPerformance.fromMap(map)).toList(),
+    );
+  }
+}
+
+class ResolvedPlannedPerformance extends Model {
+  Exercise? exercise;
+
+  num? calories;
+  int? minutes; // TODO: Turn this into a `Duration`.
+  num? watts;
+  Sets? sets;
+
+  ResolvedPlannedPerformance({
+    this.exercise,
+    this.calories,
+    this.minutes,
+    this.watts,
+    this.sets,
+  });
+
+  @override
+  Map<String, dynamic> toMap() {
+    return {
+      'exercise': exercise?.toMap(),
+      if (calories != null) 'calories': calories,
+      if (minutes != null) 'minutes': minutes,
+      if (watts != null) 'watts': watts,
+      if (sets != null && sets!.isNotEmpty) 'sets': sets!.toMap(),
+    };
+  }
+
+  static ResolvedPlannedPerformance fromMap(Map<String, dynamic> map) {
+    return ResolvedPlannedPerformance(
+      exercise: Exercise.fromMap(map['exercise']),
+      calories: map['calories'],
+      minutes: map['minutes'],
+      watts: map['watts'],
+      sets: map['sets'] != null ? Sets.fromMap(map['sets']) : null,
     );
   }
 }
