@@ -1,13 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:vim/extensions/num.dart';
 import 'package:vim/models/exercise/exercise.dart';
 import 'package:vim/models/exercise/routine.dart';
 import 'package:vim/services/routines_service.dart';
 import 'package:vim/widgets/atoms/secondary_text.dart';
-import 'package:vim/widgets/molecules/nutrition_table.dart';
 import 'package:vim/widgets/molecules/simple_card.dart';
 import 'package:vim/widgets/molecules/with_confirmation_dialog.dart';
-import 'package:vim/widgets/views/home/routines/create_routine_view.dart';
+import 'package:vim/widgets/views/home/exercise/routines/create_routine_view.dart';
 
 class RoutineView extends StatefulWidget {
   final Routine routine;

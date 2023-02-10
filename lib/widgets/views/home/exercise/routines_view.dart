@@ -3,8 +3,8 @@ import 'package:provider/provider.dart';
 import 'package:vim/models/exercise/routine.dart';
 import 'package:vim/models/exercise/routines.dart';
 import 'package:vim/widgets/atoms/secondary_text.dart';
-import 'package:vim/widgets/views/home/routines/create_routine_view.dart';
-import 'package:vim/widgets/views/home/routines/routine_view.dart';
+import 'package:vim/widgets/views/home/exercise/routines/create_routine_view.dart';
+import 'package:vim/widgets/views/home/exercise/routines/routine_view.dart';
 
 class RoutinesView extends StatefulWidget {
   const RoutinesView({super.key});
@@ -17,23 +17,6 @@ class _RoutinesViewState extends State<RoutinesView> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Routines'),
-        actions: [
-          IconButton(
-            icon: const Icon(Icons.sort_rounded),
-            onPressed: () {},
-          ),
-          IconButton(
-            icon: const Icon(Icons.filter_alt_rounded),
-            onPressed: () {},
-          ),
-          IconButton(
-            icon: const Icon(Icons.more_vert),
-            onPressed: () {},
-          ),
-        ],
-      ),
       floatingActionButton: FloatingActionButton(
         onPressed: () async {
           Navigator.of(context).push(

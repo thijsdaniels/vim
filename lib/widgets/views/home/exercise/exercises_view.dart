@@ -4,8 +4,8 @@ import 'package:vim/extensions/string.dart';
 import 'package:vim/models/exercise/exercise.dart';
 import 'package:vim/models/exercise/exercises.dart';
 import 'package:vim/widgets/atoms/secondary_text.dart';
-import 'package:vim/widgets/views/home/exercises/create_exercise_view.dart';
-import 'package:vim/widgets/views/home/exercises/exercise_view.dart';
+import 'package:vim/widgets/views/home/exercise/exercises/create_exercise_view.dart';
+import 'package:vim/widgets/views/home/exercise/exercises/exercise_view.dart';
 
 class ExercisesView extends StatefulWidget {
   const ExercisesView({super.key});
@@ -18,23 +18,6 @@ class _ExercisesViewState extends State<ExercisesView> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Exercises'),
-        actions: [
-          IconButton(
-            icon: const Icon(Icons.sort_rounded),
-            onPressed: () {},
-          ),
-          IconButton(
-            icon: const Icon(Icons.filter_alt_rounded),
-            onPressed: () {},
-          ),
-          IconButton(
-            icon: const Icon(Icons.more_vert),
-            onPressed: () {},
-          ),
-        ],
-      ),
       floatingActionButton: Row(
         mainAxisAlignment: MainAxisAlignment.end,
         children: [

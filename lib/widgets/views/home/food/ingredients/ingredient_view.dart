@@ -5,7 +5,7 @@ import 'package:vim/widgets/atoms/secondary_text.dart';
 import 'package:vim/widgets/molecules/nutrition_table.dart';
 import 'package:vim/widgets/molecules/simple_card.dart';
 import 'package:vim/widgets/molecules/with_confirmation_dialog.dart';
-import 'package:vim/widgets/views/home/ingredients/create_ingredient_view.dart';
+import 'package:vim/widgets/views/home/food/ingredients/create_ingredient_view.dart';
 
 class IngredientView extends StatefulWidget {
   final Ingredient ingredient;

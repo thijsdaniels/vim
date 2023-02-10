@@ -5,7 +5,7 @@ import 'package:vim/services/exercises_service.dart';
 import 'package:vim/widgets/atoms/secondary_text.dart';
 import 'package:vim/widgets/molecules/simple_card.dart';
 import 'package:vim/widgets/molecules/with_confirmation_dialog.dart';
-import 'package:vim/widgets/views/home/exercises/create_exercise_view.dart';
+import 'package:vim/widgets/views/home/exercise/exercises/create_exercise_view.dart';
 
 class ExerciseView extends StatefulWidget {
   final Exercise exercise;

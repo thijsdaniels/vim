@@ -1,10 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:vim/widgets/views/home/dashboard_view.dart';
-import 'package:vim/widgets/views/home/exercises_view.dart';
-import 'package:vim/widgets/views/home/ingredients_view.dart';
+import 'package:vim/widgets/views/home/exercise_view.dart';
+import 'package:vim/widgets/views/home/food_view.dart';
 import 'package:vim/widgets/views/home/log_view.dart';
-import 'package:vim/widgets/views/home/recipes_view.dart';
-import 'package:vim/widgets/views/home/routines_view.dart';
 
 class HomeView extends StatefulWidget {
   const HomeView({super.key});
@@ -28,10 +26,8 @@ class _HomeViewState extends State<HomeView> {
       body: <Widget>[
         const DashboardView(),
         const LogView(),
-        const IngredientsView(),
-        const RecipesView(),
-        const ExercisesView(),
-        const RoutinesView(),
+        const FoodView(),
+        const ExerciseView(),
       ][_selectedIndex],
       bottomNavigationBar: NavigationBar(
         destinations: const [
@@ -48,22 +44,12 @@ class _HomeViewState extends State<HomeView> {
           NavigationDestination(
             icon: Icon(Icons.lunch_dining_outlined),
             selectedIcon: Icon(Icons.lunch_dining_rounded),
-            label: 'Foods',
-          ),
-          NavigationDestination(
-            icon: Icon(Icons.book_outlined),
-            selectedIcon: Icon(Icons.book),
-            label: 'Recipes',
+            label: 'Food',
           ),
           NavigationDestination(
             icon: Icon(Icons.fitness_center_outlined),
             selectedIcon: Icon(Icons.fitness_center),
-            label: 'Exercises',
-          ),
-          NavigationDestination(
-            icon: Icon(Icons.assignment_outlined),
-            selectedIcon: Icon(Icons.assignment),
-            label: 'Routines',
+            label: 'Exercise',
           ),
         ],
         selectedIndex: _selectedIndex,

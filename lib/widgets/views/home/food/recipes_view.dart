@@ -2,9 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:vim/models/food/recipe.dart';
 import 'package:vim/models/food/recipes.dart';
-import 'package:vim/widgets/views/home/recipes/create_recipe_view.dart';
 import 'package:vim/widgets/atoms/secondary_text.dart';
-import 'package:vim/widgets/views/home/recipes/recipe_view.dart';
+import 'package:vim/widgets/views/home/food/recipes/create_recipe_view.dart';
+import 'package:vim/widgets/views/home/food/recipes/recipe_view.dart';
 
 class RecipesView extends StatefulWidget {
   const RecipesView({super.key});
@@ -17,23 +17,6 @@ class _RecipesViewState extends State<RecipesView> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Recipes'),
-        actions: [
-          IconButton(
-            icon: const Icon(Icons.sort_rounded),
-            onPressed: () {},
-          ),
-          IconButton(
-            icon: const Icon(Icons.filter_alt_rounded),
-            onPressed: () {},
-          ),
-          IconButton(
-            icon: const Icon(Icons.more_vert),
-            onPressed: () {},
-          ),
-        ],
-      ),
       floatingActionButton: FloatingActionButton(
         onPressed: () async {
           Navigator.of(context).push(
