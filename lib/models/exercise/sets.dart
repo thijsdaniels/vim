@@ -4,9 +4,9 @@ import 'package:vim/models/exercise/set.dart';
 class Sets extends MutableCollection<Set> {
   const Sets([super.entries = const []]);
 
-  static Sets fromMap(Iterable<dynamic> map) {
+  static Sets fromMap(Iterable<dynamic> list) {
     return Sets(
-      map.map((map) => Set.fromMap(map)).toList(),
+      list.map((map) => Set.fromMap(map)).toList(),
     );
   }
 

@@ -44,6 +44,7 @@ class _RoutinesViewState extends State<RoutinesView> {
                     builder: (context, snapshot) {
                       return SecondaryText(
                         [
+                          '${routine.plan.length} exercises',
                           if (snapshot.hasData)
                             '${snapshot.data!.round()} kcal',
                         ].join(" • "),

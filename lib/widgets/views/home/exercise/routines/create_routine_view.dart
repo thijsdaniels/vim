@@ -20,7 +20,15 @@ class CreateRoutineView extends StatefulWidget {
 
 class _CreateRoutineViewState extends State<CreateRoutineView> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
-  String _name = "";
+
+  /// TODO: Represent the input with a `RoutineInput _input` and create the
+  /// `Routine` using `Routine.fromInput(_input)` or `_input.toRoutine()`, or
+  /// just use a `Map<String, dynamic> _input = {'name': '', plan: []}` and
+  /// create the routine using `Routine.fromMap(_input)`. The latter of course
+  /// isn't as type-safe, so it will be more prone to errors when I change the
+  /// `Routine` class in the future. (Dart's upcoming pattern matching feature
+  /// should make this more sustainable.)
+  String _name = '';
   PlannedPerformances _plan = PlannedPerformances([
     PlannedPerformance(
       sets: Sets([

@@ -95,6 +95,13 @@ class _RoutineViewState extends State<RoutineView> {
                         ),
                       ],
                     ),
+                    TableRow(
+                      children: [
+                        const SecondaryText('Exercises'),
+                        const SizedBox(width: 32),
+                        Text(routine.plan.length.toString()),
+                      ],
+                    ),
                   ],
                 ),
               ),

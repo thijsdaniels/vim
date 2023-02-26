@@ -80,9 +80,9 @@ class PlannedPerformances extends MutableCollection<PlannedPerformance> {
         case ExerciseType.manual:
           return plannedExercise.calories ?? 0;
         case ExerciseType.resistance:
-          return -1; // TODO: Calculate calories.
+          return 0; // TODO: Calculate calories.
         case ExerciseType.weights:
-          return -1; // TODO: Calculate calories.
+          return 0; // TODO: Calculate calories.
       }
     }).reduce((total, calories) async => (await total) + (await calories));
   }
@@ -117,15 +117,15 @@ class PlannedPerformances extends MutableCollection<PlannedPerformance> {
 
 /// TODO: This is kind of a duplicate of the various `ExercisePerformance`
 /// models, with the main difference being that the properties are all optional
-/// so that it can be used for form input state. It would of course be much nicer
-/// to use the existing `Performance` models for this instead.
+/// so that it can be used for form input state. It would of course be much
+/// better to use the existing `ExercisePerformance` models for this instead.
 ///
 /// This will work very well as soon as I make those models able to store both a
 /// reference to an exercise, _as well_ as a resolved exercise.
 ///
 /// I want to do that anyway, so that you can both edit an exercise without
-/// affecting earlier performances, as well as update a performance to the values
-/// of the current version of the exercise.
+/// affecting earlier performances, as well as update a performance to the
+/// values of the current version of the exercise.
 class PlannedPerformance extends Model {
   DocumentReference? exerciseReference;
 
@@ -165,7 +165,7 @@ class PlannedPerformance extends Model {
       calories: map['calories'],
       minutes: map['minutes'],
       watts: map['watts'],
-      sets: map['sets'] ? Sets.fromMap(map['sets']) : null,
+      sets: map['sets'] != null ? Sets.fromMap(map['sets']) : null,
     );
   }
 
@@ -230,7 +230,7 @@ class ResolvedPlannedPerformances
           /// classes instead of the `PlannedPerformance` classes (or make the
           /// `PlannedPerformance` inherit from `Performance`. Or maybe I should
           /// make the `Routine` keep the `PlannedPerformance`, but make the
-          /// `RoutinePerformance` containe List<ExercisePerformance>. That
+          /// `RoutinePerformance` contain a `List<ExercisePerformance>`. That
           /// might actually make the most sense.
           return 0;
         default:
