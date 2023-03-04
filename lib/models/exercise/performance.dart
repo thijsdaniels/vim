@@ -1,4 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:vim/models/exercise/exercise_performance.dart';
+import 'package:vim/models/exercise/routine_performance.dart';
 import 'package:vim/models/model.dart';
 
 class Performance extends Model {
@@ -37,10 +39,16 @@ class Performance extends Model {
   }
 
   static Performance fromMap(Map<String, dynamic> map) {
-    return Performance(
-      timestamp: map['timestamp'],
-      name: map['name'],
-      calories: map['calories'],
-    );
+    if (map['exercise'] != null) {
+      return ExercisePerformance.fromMap(map);
+    } else if (map['routine'] != null) {
+      return RoutinePerformance.fromMap(map);
+    } else {
+      return Performance(
+        timestamp: map['timestamp'],
+        name: map['name'],
+        calories: map['calories'],
+      );
+    }
   }
 }

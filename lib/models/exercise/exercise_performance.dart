@@ -1,6 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:vim/models/exercise/exercise.dart';
 import 'package:vim/models/exercise/performance.dart';
+import 'package:vim/models/exercise/resistance_exercise_performance.dart';
+import 'package:vim/models/exercise/weights_exercise_performance.dart';
 
 class ExercisePerformance extends Performance {
   DocumentReference? _reference;
@@ -36,11 +38,18 @@ class ExercisePerformance extends Performance {
   }
 
   static ExercisePerformance fromMap(Map<String, dynamic> map) {
-    return ExercisePerformance(
-      timestamp: map['timestamp'],
-      exercise: Exercise.fromMap(map['exercise']),
-      calories: map['calories'],
-    );
+    switch (ExerciseType.values.byName(map['exercise']['type'])) {
+      case ExerciseType.weights:
+        return WeightsExercisePerformance.fromMap(map);
+      case ExerciseType.resistance:
+        return ResistanceExercisePerformance.fromMap(map);
+      case ExerciseType.manual:
+        return ExercisePerformance(
+          timestamp: map['timestamp'],
+          exercise: Exercise.fromMap(map['exercise']),
+          calories: map['calories'],
+        );
+    }
   }
 
   @override
