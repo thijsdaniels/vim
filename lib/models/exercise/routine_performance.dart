@@ -5,7 +5,7 @@ import 'package:vim/models/exercise/routine.dart';
 class RoutinePerformance extends Performance {
   DocumentReference? _reference;
 
-  ResolvedRoutine routine;
+  Routine routine;
 
   @override
   DocumentReference? get reference => _reference;
@@ -45,7 +45,7 @@ class RoutinePerformance extends Performance {
   static RoutinePerformance fromMap(Map<String, dynamic> map) {
     return RoutinePerformance(
       timestamp: map['timestamp'],
-      routine: ResolvedRoutine.fromMap(map['routine']),
+      routine: Routine.fromMap(map['routine']),
     );
   }
 
