@@ -28,7 +28,9 @@ class IngredientDropdownMenu extends StatelessWidget {
           dropdownMenuEntries: ingredients.map((ingredient) {
             return DropdownMenuEntry(
               value: ingredient,
-              label: ingredient.name,
+              label: ingredient.brand == null
+                  ? ingredient.name
+                  : '${ingredient.name} (${ingredient.brand})',
             );
           }).toList(),
           onSelected: onSelected,

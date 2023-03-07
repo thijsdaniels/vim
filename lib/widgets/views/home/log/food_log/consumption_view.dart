@@ -10,9 +10,9 @@ import 'package:vim/widgets/atoms/secondary_text.dart';
 import 'package:vim/widgets/molecules/nutrition_table.dart';
 import 'package:vim/widgets/molecules/simple_card.dart';
 import 'package:vim/widgets/molecules/with_confirmation_dialog.dart';
-import 'package:vim/widgets/views/home/log/create_consumption_view.dart';
-import 'package:vim/widgets/views/home/log/create_ingredient_consumption_view.dart';
-import 'package:vim/widgets/views/home/log/create_recipe_consumption_view.dart';
+import 'package:vim/widgets/views/home/log/food_log/create_ingredient_consumption_view.dart';
+import 'package:vim/widgets/views/home/log/food_log/create_quick_track_consumption_view.dart';
+import 'package:vim/widgets/views/home/log/food_log/create_recipe_consumption_view.dart';
 
 class ConsumptionView extends StatefulWidget {
   final Consumption consumption;
@@ -57,7 +57,7 @@ class _ConsumptionViewState extends State<ConsumptionView> {
               } else {
                 Navigator.of(context).push(
                   MaterialPageRoute(
-                    builder: (context) => CreateConsumptionView(
+                    builder: (context) => CreateQuickTrackConsumptionView(
                       consumption: consumption,
                     ),
                   ),

@@ -36,7 +36,7 @@ class _CreateRoutinePerformanceViewState
           Consumer<DateModel>(
             builder: (context, dateModel, child) => IconButton(
               icon: const Icon(Icons.check),
-              onPressed: () async {
+              onPressed: () {
                 final navigator = Navigator.of(context);
 
                 FormState formState = _formKey.currentState!;
@@ -48,15 +48,11 @@ class _CreateRoutinePerformanceViewState
                       widget.routinePerformance;
 
                   if (routinePerformance != null) {
-                    routinePerformance.routine = await _routine!.resolve();
-
-                    PerformancesService.update(routinePerformance);
+                    routinePerformance.routine = _routine!;
                   } else {
-                    routinePerformance = await _routine!.performance(
+                    routinePerformance = _routine!.performance(
                       timestamp: dateModel.timestamp,
                     );
-
-                    PerformancesService.create(routinePerformance);
                   }
 
                   navigator.pop(routinePerformance);

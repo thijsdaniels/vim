@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:vim/models/date_model.dart';
 import 'package:vim/models/exercise/exercises.dart';
+import 'package:vim/models/exercise/performance.dart';
 import 'package:vim/models/exercise/performances.dart';
 import 'package:vim/models/exercise/routines.dart';
 import 'package:vim/models/food/consumptions.dart';
@@ -101,7 +102,7 @@ class Providers extends StatelessWidget {
             ),
             StreamProvider.value(
               value: PerformancesService.forDate(dateModel.date),
-              initialData: Performances([]),
+              initialData: Performances(<Performance>[]),
             ),
           ],
           child: child,

@@ -6,7 +6,7 @@ import 'package:vim/models/model.dart';
 class Performance extends Model {
   DocumentReference? _reference;
 
-  Timestamp timestamp;
+  Timestamp? timestamp;
   String name;
   num calories;
 
@@ -39,16 +39,10 @@ class Performance extends Model {
   }
 
   static Performance fromMap(Map<String, dynamic> map) {
-    if (map['exercise'] != null) {
-      return ExercisePerformance.fromMap(map);
-    } else if (map['routine'] != null) {
-      return RoutinePerformance.fromMap(map);
-    } else {
-      return Performance(
-        timestamp: map['timestamp'],
-        name: map['name'],
-        calories: map['calories'],
-      );
-    }
+    return Performance(
+      timestamp: map['timestamp'],
+      name: map['name'],
+      calories: map['calories'],
+    );
   }
 }

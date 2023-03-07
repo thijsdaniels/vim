@@ -38,18 +38,11 @@ class ExercisePerformance extends Performance {
   }
 
   static ExercisePerformance fromMap(Map<String, dynamic> map) {
-    switch (ExerciseType.values.byName(map['exercise']['type'])) {
-      case ExerciseType.weights:
-        return WeightsExercisePerformance.fromMap(map);
-      case ExerciseType.resistance:
-        return ResistanceExercisePerformance.fromMap(map);
-      case ExerciseType.manual:
-        return ExercisePerformance(
-          timestamp: map['timestamp'],
-          exercise: Exercise.fromMap(map['exercise']),
-          calories: map['calories'],
-        );
-    }
+    return ExercisePerformance(
+      timestamp: map['timestamp'],
+      exercise: Exercise.fromMap(map['exercise']),
+      calories: map['calories'],
+    );
   }
 
   @override

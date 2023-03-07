@@ -39,17 +39,11 @@ class _RoutinesViewState extends State<RoutinesView> {
               return Card(
                 child: ListTile(
                   title: Text(routine.name),
-                  subtitle: FutureBuilder(
-                    future: routine.calories,
-                    builder: (context, snapshot) {
-                      return SecondaryText(
-                        [
-                          '${routine.plan.length} exercises',
-                          if (snapshot.hasData)
-                            '${snapshot.data!.round()} kcal',
-                        ].join(" • "),
-                      );
-                    },
+                  subtitle: SecondaryText(
+                    [
+                      '${routine.performances.length} exercises',
+                      '${routine.calories.round()} kcal',
+                    ].join(" • "),
                   ),
                   onTap: () {
                     Navigator.of(context).push(

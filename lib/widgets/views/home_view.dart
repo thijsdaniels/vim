@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:vim/widgets/views/home/dashboard_view.dart';
 import 'package:vim/widgets/views/home/exercise_view.dart';
 import 'package:vim/widgets/views/home/food_view.dart';
 import 'package:vim/widgets/views/home/log_view.dart';
@@ -23,19 +22,13 @@ class _HomeViewState extends State<HomeView> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: <Widget>[
-        const DashboardView(),
+      body: [
         const LogView(),
         const FoodView(),
         const ExerciseView(),
       ][_selectedIndex],
       bottomNavigationBar: NavigationBar(
         destinations: const [
-          NavigationDestination(
-            icon: Icon(Icons.dashboard_outlined),
-            selectedIcon: Icon(Icons.dashboard),
-            label: 'Dashboard',
-          ),
           NavigationDestination(
             icon: Icon(Icons.receipt_outlined),
             selectedIcon: Icon(Icons.receipt),
@@ -44,12 +37,12 @@ class _HomeViewState extends State<HomeView> {
           NavigationDestination(
             icon: Icon(Icons.lunch_dining_outlined),
             selectedIcon: Icon(Icons.lunch_dining_rounded),
-            label: 'Food',
+            label: 'Foods',
           ),
           NavigationDestination(
             icon: Icon(Icons.fitness_center_outlined),
             selectedIcon: Icon(Icons.fitness_center),
-            label: 'Exercise',
+            label: 'Exercises',
           ),
         ],
         selectedIndex: _selectedIndex,

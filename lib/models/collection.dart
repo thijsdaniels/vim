@@ -51,7 +51,11 @@ class MutableCollection<M extends Model> extends Collection<M> {
     entries.remove(entry);
   }
 
-  void removeAt(int index) {
-    entries.removeAt(index);
+  M removeAt(int index) {
+    return entries.removeAt(index);
+  }
+
+  void move(int from, int to) {
+    entries.insert(to, removeAt(from));
   }
 }

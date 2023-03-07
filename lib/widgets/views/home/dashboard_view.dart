@@ -15,7 +15,7 @@ Settings settings = Settings(
   length: 176,
   muscle: 81.0,
   fat: 14.8,
-  neat: 420, // a rough estimate
+  neat: 600, // a rough estimate
   surplus: 0.1,
   exercise: 400,
   carbohydrates: 0.45,
@@ -28,44 +28,15 @@ class DashboardView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('Dashboard'),
-        actions: [
-          Consumer<ThemeModel>(
-            builder: (context, themeModel, _) => IconButton(
-              icon: Icon(
-                themeModel.mode == ThemeMode.dark
-                    ? Icons.light_mode
-                    : Icons.dark_mode,
-              ),
-              onPressed: () {
-                themeModel.mode = themeModel.mode == ThemeMode.dark
-                    ? ThemeMode.light
-                    : ThemeMode.dark;
-              },
-            ),
-          ),
-          IconButton(
-            icon: const Icon(Icons.more_vert),
-            onPressed: () {},
-          ),
-        ],
-        bottom: const PreferredSize(
-          preferredSize: Size.fromHeight(40),
-          child: DateStepper(),
-        ),
-      ),
-      body: SafeArea(
-        child: SingleChildScrollView(
-          child: Padding(
-            padding: const EdgeInsets.all(16.0),
-            child: Column(
-              children: const [
-                CaloriesCard(),
-                MacrosCard(),
-              ],
-            ),
+    return SafeArea(
+      child: SingleChildScrollView(
+        child: Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: Column(
+            children: const [
+              CaloriesCard(),
+              MacrosCard(),
+            ],
           ),
         ),
       ),

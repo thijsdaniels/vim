@@ -4,10 +4,12 @@ class SimpleCard extends StatelessWidget {
   const SimpleCard({
     super.key,
     this.title,
+    this.actions,
     required this.child,
   });
 
   final String? title;
+  final Widget? actions;
   final Widget child;
 
   @override
@@ -21,12 +23,19 @@ class SimpleCard extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                if (title != null)
-                  Text(
-                    title!,
-                    style: Theme.of(context).textTheme.titleMedium,
-                  ),
-                const SizedBox(height: 16),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    if (title != null)
+                      Text(
+                        title!,
+                        style: Theme.of(context).textTheme.titleMedium,
+                      ),
+                    if (actions != null) actions!,
+                  ],
+                ),
+                if (title != null || actions != null)
+                  const SizedBox(height: 16),
                 child,
               ],
             ),

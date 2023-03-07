@@ -40,13 +40,13 @@ class Routine extends Model {
   static Routine fromMap(Map<String, dynamic> map) {
     return Routine(
       name: map['name'],
-      performances: Performances.fromMap(map['plan']),
+      performances: Performances.fromMap(map['performances']),
     );
   }
 
-  Future<RoutinePerformance> performance({
+  RoutinePerformance performance({
     required Timestamp timestamp,
-  }) async {
+  }) {
     return RoutinePerformance(
       timestamp: timestamp,
       routine: this,
