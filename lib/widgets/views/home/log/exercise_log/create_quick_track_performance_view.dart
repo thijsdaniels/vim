@@ -3,19 +3,20 @@ import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 import 'package:vim/models/date_model.dart';
 import 'package:vim/models/exercise/performance.dart';
-import 'package:vim/services/performances_service.dart';
 import 'package:vim/widgets/molecules/simple_card.dart';
 
-class CreatePerformanceView extends StatefulWidget {
+class CreateQuickTrackPerformanceView extends StatefulWidget {
   final Performance? performance;
 
-  const CreatePerformanceView({super.key, this.performance});
+  const CreateQuickTrackPerformanceView({super.key, this.performance});
 
   @override
-  State<CreatePerformanceView> createState() => _CreatePerformanceViewState();
+  State<CreateQuickTrackPerformanceView> createState() =>
+      _CreateQuickTrackPerformanceViewState();
 }
 
-class _CreatePerformanceViewState extends State<CreatePerformanceView> {
+class _CreateQuickTrackPerformanceViewState
+    extends State<CreateQuickTrackPerformanceView> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   final TextEditingController _nameController =
       TextEditingController(text: 'Quick Track');
@@ -58,16 +59,12 @@ class _CreatePerformanceViewState extends State<CreatePerformanceView> {
                   if (performance != null) {
                     performance.name = name;
                     performance.calories = calories;
-
-                    PerformancesService.update(performance);
                   } else {
                     performance = Performance(
                       timestamp: dateModel.timestamp,
                       name: name,
                       calories: calories,
                     );
-
-                    PerformancesService.create(performance);
                   }
 
                   Navigator.of(context).pop(performance);

@@ -7,16 +7,18 @@ import 'package:vim/services/consumptions_service.dart';
 import 'package:vim/widgets/molecules/nutrition_form_fields.dart';
 import 'package:vim/widgets/molecules/simple_card.dart';
 
-class CreateConsumptionView extends StatefulWidget {
+class CreateQuickTrackConsumptionView extends StatefulWidget {
   final Consumption? consumption;
 
-  const CreateConsumptionView({super.key, this.consumption});
+  const CreateQuickTrackConsumptionView({super.key, this.consumption});
 
   @override
-  State<CreateConsumptionView> createState() => _CreateConsumptionViewState();
+  State<CreateQuickTrackConsumptionView> createState() =>
+      _CreateQuickTrackConsumptionViewState();
 }
 
-class _CreateConsumptionViewState extends State<CreateConsumptionView> {
+class _CreateQuickTrackConsumptionViewState
+    extends State<CreateQuickTrackConsumptionView> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   final TextEditingController _nameController =
       TextEditingController(text: 'Quick Track');

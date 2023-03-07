@@ -6,11 +6,10 @@ import 'package:vim/models/exercise/exercise.dart';
 import 'package:vim/models/exercise/exercise_performance.dart';
 import 'package:vim/models/exercise/resistance_exercise_performance.dart';
 import 'package:vim/models/exercise/sets.dart';
-import 'package:vim/models/exercise/set.dart';
 import 'package:vim/models/exercise/weights_exercise_performance.dart';
-import 'package:vim/services/performances_service.dart';
 import 'package:vim/widgets/atoms/exercise_dropdown_menu.dart';
 import 'package:vim/widgets/atoms/number_form_field.dart';
+import 'package:vim/widgets/atoms/sets_form_field.dart';
 import 'package:vim/widgets/molecules/simple_card.dart';
 
 class CreateExercisePerformanceView extends StatefulWidget {
@@ -32,7 +31,7 @@ class _CreateExercisePerformanceViewState
 
   Exercise? _exercise;
   num? _calories;
-  Sets _sets = Sets([Set()]);
+  List<Map<String, dynamic>> _sets = [{}];
   int? _minutes;
   num? _watts;
 
@@ -47,7 +46,7 @@ class _CreateExercisePerformanceViewState
       _calories = exercisePerformance.calories;
 
       if (exercisePerformance is WeightsExercisePerformance) {
-        _sets = exercisePerformance.sets;
+        _sets = exercisePerformance.sets.toMap();
       }
 
       if (exercisePerformance is ResistanceExercisePerformance) {
@@ -80,35 +79,22 @@ class _CreateExercisePerformanceViewState
                       widget.exercisePerformance;
 
                   if (exercisePerformance != null) {
-                    DocumentReference reference =
-                        exercisePerformance.reference!;
-
-                    switch (_exercise!.type) {
-                      case ExerciseType.manual:
-                        exercisePerformance = ExercisePerformance(
-                          timestamp: dateModel.timestamp,
-                          exercise: _exercise!,
-                          calories: _calories!,
-                        );
-                        break;
-                      case ExerciseType.resistance:
-                        exercisePerformance = ResistanceExercisePerformance(
-                          timestamp: dateModel.timestamp,
-                          exercise: _exercise!,
-                          duration: Duration(minutes: _minutes!),
-                          watts: _watts!,
-                        );
-                        break;
-                      case ExerciseType.weights:
-                        exercisePerformance = WeightsExercisePerformance(
-                          timestamp: dateModel.timestamp,
-                          exercise: _exercise!,
-                          sets: _sets,
-                        );
-                        break;
+                    if (exercisePerformance is ResistanceExercisePerformance) {
+                      exercisePerformance.timestamp = dateModel.timestamp;
+                      exercisePerformance.exercise = _exercise!;
+                      exercisePerformance.duration =
+                          Duration(minutes: _minutes!);
+                      exercisePerformance.watts = _watts!;
+                    } else if (exercisePerformance
+                        is WeightsExercisePerformance) {
+                      exercisePerformance.timestamp = dateModel.timestamp;
+                      exercisePerformance.exercise = _exercise!;
+                      exercisePerformance.sets = Sets.fromMap(_sets);
+                    } else {
+                      exercisePerformance.timestamp = dateModel.timestamp;
+                      exercisePerformance.exercise = _exercise!;
+                      exercisePerformance.calories = _calories!;
                     }
-
-                    reference.set(exercisePerformance.toMap());
                   } else {
                     switch (_exercise!.type) {
                       case ExerciseType.manual:
@@ -130,15 +116,13 @@ class _CreateExercisePerformanceViewState
                         exercisePerformance = WeightsExercisePerformance(
                           timestamp: dateModel.timestamp,
                           exercise: _exercise!,
-                          sets: _sets,
+                          sets: Sets.fromMap(_sets),
                         );
                         break;
                     }
-
-                    PerformancesService.create(exercisePerformance);
                   }
 
-                  Navigator.of(context).pop();
+                  Navigator.of(context).pop(exercisePerformance);
                 }
               },
             ),
@@ -241,7 +225,7 @@ class _CreateExercisePerformanceViewState
                 if (_exercise?.type == ExerciseType.weights)
                   SimpleCard(
                     title: 'Sets',
-                    child: SetsFields(
+                    child: SetsFormFields(
                       sets: _sets,
                       elevation: 4,
                     ),
@@ -251,110 +235,6 @@ class _CreateExercisePerformanceViewState
           ),
         ),
       ),
-    );
-  }
-}
-
-class SetsFields extends StatefulWidget {
-  final Sets sets;
-  final double elevation;
-
-  const SetsFields({
-    super.key,
-    required this.sets,
-    this.elevation = 1,
-  });
-
-  @override
-  State<SetsFields> createState() => _SetsFieldsState();
-}
-
-class _SetsFieldsState extends State<SetsFields> {
-  @override
-  Widget build(BuildContext context) {
-    var sets = widget.sets;
-
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.end,
-      children: [
-        ...sets.asMap().entries.map(
-          (entry) {
-            return Card(
-              elevation: widget.elevation,
-              child: Padding(
-                padding: const EdgeInsets.all(16.0),
-                child: Row(
-                  children: [
-                    Expanded(
-                      child: NumberFormField(
-                        initialValue: entry.value.repetitions,
-                        onChanged: (repetitions) => setState(() {
-                          entry.value.repetitions = repetitions;
-                        }),
-                        decoration: const InputDecoration(
-                          labelText: 'Repetitions',
-                        ),
-                        textInputAction: TextInputAction.next,
-                        validator: (value) {
-                          if (value == null) {
-                            return 'Please enter an amount.';
-                          }
-                          return null;
-                        },
-                      ),
-                    ),
-                    const SizedBox(width: 16),
-                    Expanded(
-                      child: NumberFormField(
-                        initialValue: entry.value.weight,
-                        onChanged: (weight) => setState(() {
-                          entry.value.weight = weight;
-                        }),
-                        decoration: const InputDecoration(
-                          labelText: 'Weight',
-                          hintText: 'Kilograms',
-                        ),
-                        textInputAction: TextInputAction.next,
-                        validator: (value) {
-                          if (value == null) {
-                            return 'Please enter an amount.';
-                          }
-                          return null;
-                        },
-                      ),
-                    ),
-                    const SizedBox(width: 16),
-                    IconButton(
-                      icon: const Icon(Icons.clear),
-                      onPressed: sets.length > 1
-                          ? () {
-                              setState(() {
-                                sets.removeAt(entry.key);
-                              });
-                            }
-                          : null,
-                    ),
-                  ],
-                ),
-              ),
-            );
-          },
-        ),
-        Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: TextButton(
-            child: const Text('Add Set'),
-            onPressed: () {
-              setState(() {
-                sets.add(Set(
-                  repetitions: sets.last.repetitions,
-                  weight: sets.last.weight,
-                ));
-              });
-            },
-          ),
-        ),
-      ],
     );
   }
 }

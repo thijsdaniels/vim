@@ -4,11 +4,12 @@ import 'package:vim/models/exercise/performance.dart';
 import 'package:vim/models/exercise/routine_performance.dart';
 import 'package:vim/services/performances_service.dart';
 import 'package:vim/widgets/atoms/secondary_text.dart';
+import 'package:vim/widgets/molecules/exercise_performances_list.dart';
 import 'package:vim/widgets/molecules/simple_card.dart';
 import 'package:vim/widgets/molecules/with_confirmation_dialog.dart';
-import 'package:vim/widgets/views/home/log/create_exercise_performance_view.dart';
-import 'package:vim/widgets/views/home/log/create_performance_view.dart';
-import 'package:vim/widgets/views/home/log/create_routine_performance_view.dart';
+import 'package:vim/widgets/views/home/log/exercise_log/create_exercise_performance_view.dart';
+import 'package:vim/widgets/views/home/log/exercise_log/create_quick_track_performance_view.dart';
+import 'package:vim/widgets/views/home/log/exercise_log/create_routine_performance_view.dart';
 
 class PerformanceView extends StatefulWidget {
   final Performance performance;
@@ -53,7 +54,7 @@ class _PerformanceViewState extends State<PerformanceView> {
               } else {
                 Navigator.of(context).push(
                   MaterialPageRoute(
-                    builder: (context) => CreatePerformanceView(
+                    builder: (context) => CreateQuickTrackPerformanceView(
                       performance: performance,
                     ),
                   ),
@@ -123,26 +124,14 @@ class _PerformanceViewState extends State<PerformanceView> {
               ),
               if (performance is RoutinePerformance)
                 SimpleCard(
-                  title: 'Exercises',
-                  child: Center(
-                    child: Table(
-                      defaultColumnWidth: const IntrinsicColumnWidth(),
-                      children: performance.routine.plan
-                          .map(
-                            (performance) => TableRow(
-                              children: [
-                                Row(
-                                  mainAxisAlignment: MainAxisAlignment.end,
-                                  children: [
-                                    Text(performance.exercise?.name ??
-                                        'Missing'), // TODO Make sure the exercise _can't_ be missing.
-                                  ],
-                                ),
-                              ],
-                            ),
-                          )
-                          .toList(),
-                    ),
+                  title: 'Performances',
+                  child: ExercisePerformancesList(
+                    performances: performance.routine.performances,
+                    onChanged: (performances) {
+                      print(performance);
+                      print(performance.routine.performances);
+                      PerformancesService.update(performance);
+                    },
                   ),
                 ),
             ],

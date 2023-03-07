@@ -1,7 +1,12 @@
 import 'package:vim/models/collection.dart';
+import 'package:vim/models/exercise/exercise.dart';
+import 'package:vim/models/exercise/exercise_performance.dart';
 import 'package:vim/models/exercise/performance.dart';
+import 'package:vim/models/exercise/resistance_exercise_performance.dart';
+import 'package:vim/models/exercise/routine_performance.dart';
+import 'package:vim/models/exercise/weights_exercise_performance.dart';
 
-class Performances extends Collection<Performance> {
+class Performances extends MutableCollection<Performance> {
   Performances([super.entries = const []]);
 
   num get calories {
@@ -17,9 +22,24 @@ class Performances extends Collection<Performance> {
   // `RoutinePerformance` depending on the data, and that this logic is already
   // defined in the `PerformancesService` so it would be good to avoid
   // repetition.
-  static Performances fromMap(Iterable<Map<String, dynamic>> list) {
+  factory Performances.fromMap(List<dynamic> list) {
     return Performances(
-      list.map((map) => Performance.fromMap(map)).toList(),
+      list.map((map) {
+        if (map['exercise'] != null) {
+          switch (ExerciseType.values.byName(map['exercise']['type'])) {
+            case ExerciseType.manual:
+              return ExercisePerformance.fromMap(map);
+            case ExerciseType.resistance:
+              return ResistanceExercisePerformance.fromMap(map);
+            case ExerciseType.weights:
+              return WeightsExercisePerformance.fromMap(map);
+          }
+        } else if (map['routine'] != null) {
+          return RoutinePerformance.fromMap(map);
+        } else {
+          return Performance.fromMap(map);
+        }
+      }).toList(),
     );
   }
 }
