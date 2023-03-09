@@ -1,24 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:vim/widgets/molecules/date_stepper.dart';
-import 'package:vim/widgets/views/home/dashboard_view.dart';
-import 'package:vim/widgets/views/home/log/exercise_log_view.dart';
-import 'package:vim/widgets/views/home/log/food_log_view.dart';
+import 'package:vim/widgets/views/home/log/log_consumptions_view.dart';
+import 'package:vim/widgets/views/home/log/log_performances_view.dart';
+import 'package:vim/widgets/views/home/log/log_progress_view.dart';
 
-class LogView extends StatefulWidget {
+class LogView extends StatelessWidget {
   const LogView({super.key});
-
-  @override
-  State<LogView> createState() => _LogViewState();
-}
-
-class _LogViewState extends State<LogView> {
-  int _selectedIndex = 0;
-
-  void _onTap(int index) {
-    setState(() {
-      _selectedIndex = index;
-    });
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -27,34 +14,26 @@ class _LogViewState extends State<LogView> {
       child: Scaffold(
         appBar: AppBar(
           title: const Text('Log'),
-          bottom: TabBar(
-            tabs: const [
-              Tab(
-                icon: Icon(Icons.dashboard),
-                text: 'Overview',
-              ),
-              Tab(
-                icon: Icon(Icons.lunch_dining),
-                text: 'Food',
-              ),
-              Tab(
-                icon: Icon(Icons.fitness_center),
-                text: 'Exercise',
-              ),
+          actions: const [
+            Padding(
+              padding: EdgeInsets.all(8.0),
+              child: DateStepper(),
+            ),
+          ],
+          bottom: const TabBar(
+            tabs: [
+              Tab(text: 'Status'),
+              Tab(text: 'Consumptions'),
+              Tab(text: 'Performances'),
             ],
-            onTap: _onTap,
           ),
         ),
-        body: [
-          const DashboardView(),
-          const FoodLogView(),
-          const ExerciseLogView(),
-        ][_selectedIndex],
-        bottomNavigationBar: DecoratedBox(
-          decoration: BoxDecoration(
-            color: Theme.of(context).colorScheme.surfaceVariant,
-          ),
-          child: const DateStepper(),
+        body: const TabBarView(
+          children: [
+            LogProgressView(),
+            LogConsumptionsView(),
+            LogPerformancesView(),
+          ],
         ),
       ),
     );

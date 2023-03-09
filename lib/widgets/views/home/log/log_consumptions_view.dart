@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:vim/widgets/molecules/consumptions_list.dart';
 import 'package:vim/widgets/views/home/log/food_log/create_consumption_view.dart';
 
-class FoodLogView extends StatelessWidget {
-  const FoodLogView({super.key});
+class LogConsumptionsView extends StatelessWidget {
+  const LogConsumptionsView({super.key});
 
   @override
   Widget build(BuildContext context) {

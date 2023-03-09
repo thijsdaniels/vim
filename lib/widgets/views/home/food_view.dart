@@ -2,21 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:vim/widgets/views/home/food/ingredients_view.dart';
 import 'package:vim/widgets/views/home/food/recipes_view.dart';
 
-class FoodView extends StatefulWidget {
+class FoodView extends StatelessWidget {
   const FoodView({super.key});
-
-  @override
-  State<FoodView> createState() => _FoodViewState();
-}
-
-class _FoodViewState extends State<FoodView> {
-  int _selectedIndex = 0;
-
-  void _onTap(int index) {
-    setState(() {
-      _selectedIndex = index;
-    });
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -25,24 +12,19 @@ class _FoodViewState extends State<FoodView> {
       child: Scaffold(
         appBar: AppBar(
           title: const Text('Food'),
-          bottom: TabBar(
-            tabs: const [
-              Tab(
-                icon: Icon(Icons.lunch_dining),
-                text: 'Products',
-              ),
-              Tab(
-                icon: Icon(Icons.book),
-                text: 'Recipes',
-              ),
+          bottom: const TabBar(
+            tabs: [
+              Tab(text: 'Products'),
+              Tab(text: 'Recipes'),
             ],
-            onTap: _onTap,
           ),
         ),
-        body: [
-          const IngredientsView(),
-          const RecipesView(),
-        ][_selectedIndex],
+        body: const TabBarView(
+          children: [
+            IngredientsView(),
+            RecipesView(),
+          ],
+        ),
       ),
     );
   }

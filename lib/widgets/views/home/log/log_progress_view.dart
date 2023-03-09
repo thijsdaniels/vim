@@ -5,6 +5,8 @@ import 'package:vim/models/food/consumptions.dart';
 import 'package:vim/models/food/nutrition.dart';
 import 'package:vim/models/settings.dart';
 import 'package:vim/widgets/molecules/date_stepper.dart';
+import 'package:vim/widgets/molecules/nutrition_table.dart';
+import 'package:vim/widgets/molecules/simple_card.dart';
 import 'package:vim/widgets/vim.dart';
 
 /// TODO: Move these to the user's account.
@@ -23,8 +25,8 @@ Settings settings = Settings(
   fats: 0.3,
 );
 
-class DashboardView extends StatelessWidget {
-  const DashboardView({super.key});
+class LogProgressView extends StatelessWidget {
+  const LogProgressView({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -36,6 +38,7 @@ class DashboardView extends StatelessWidget {
             children: const [
               CaloriesCard(),
               MacrosCard(),
+              NutritionCard(),
             ],
           ),
         ),
@@ -54,38 +57,24 @@ class CaloriesCard extends StatelessWidget {
 
     double adjustedIntake = settings.adjustedIntake(performances);
 
-    return Card(
-      child: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              'Calories',
-              style: Theme.of(context).textTheme.titleMedium,
-            ),
-            Padding(
-              padding: const EdgeInsets.all(16.0),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceAround,
-                children: [
-                  TargetProgress(
-                    title: 'Consumed',
-                    progress: consumptions.nutrition.calories,
-                    target: adjustedIntake,
-                    barSize: TargetProgressBarSize.large,
-                  ),
-                  TargetProgress(
-                    title: 'Burned',
-                    progress: performances.calories,
-                    target: settings.exercise,
-                    barSize: TargetProgressBarSize.large,
-                  ),
-                ],
-              ),
-            ),
-          ],
-        ),
+    return SimpleCard(
+      title: 'Calories',
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceAround,
+        children: [
+          TargetProgress(
+            title: 'Consumed',
+            progress: consumptions.nutrition.calories,
+            target: adjustedIntake,
+            barSize: TargetProgressBarSize.large,
+          ),
+          TargetProgress(
+            title: 'Burned',
+            progress: performances.calories,
+            target: settings.exercise,
+            barSize: TargetProgressBarSize.large,
+          ),
+        ],
       ),
     );
   }
@@ -101,42 +90,46 @@ class MacrosCard extends StatelessWidget {
 
     double adjustedIntake = settings.adjustedIntake(performances);
 
-    return Card(
-      child: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              'Macros',
-              style: Theme.of(context).textTheme.titleMedium,
+    return SimpleCard(
+      title: 'Macros',
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceAround,
+        children: [
+          TargetProgress(
+            title: 'Carbs',
+            progress: consumptions.nutrition.carbohydrates.total ?? 0,
+            target: Carbohydrates.grams(
+              adjustedIntake * settings.carbohydrates,
             ),
-            Padding(
-              padding: const EdgeInsets.all(16.0),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceAround,
-                children: [
-                  TargetProgress(
-                    title: 'Carbs',
-                    progress: consumptions.nutrition.carbohydrates.total ?? 0,
-                    target: Carbohydrates.grams(
-                      adjustedIntake * settings.carbohydrates,
-                    ),
-                  ),
-                  TargetProgress(
-                    title: 'Protein',
-                    progress: consumptions.nutrition.proteins.total ?? 0,
-                    target: Proteins.grams(adjustedIntake * settings.proteins),
-                  ),
-                  TargetProgress(
-                    title: 'Fat',
-                    progress: consumptions.nutrition.fats.total ?? 0,
-                    target: Fats.grams(adjustedIntake * settings.fats),
-                  ),
-                ],
-              ),
-            ),
-          ],
+          ),
+          TargetProgress(
+            title: 'Protein',
+            progress: consumptions.nutrition.proteins.total ?? 0,
+            target: Proteins.grams(adjustedIntake * settings.proteins),
+          ),
+          TargetProgress(
+            title: 'Fat',
+            progress: consumptions.nutrition.fats.total ?? 0,
+            target: Fats.grams(adjustedIntake * settings.fats),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class NutritionCard extends StatelessWidget {
+  const NutritionCard({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    Consumptions consumptions = Provider.of<Consumptions>(context);
+
+    return SimpleCard(
+      title: 'Nutrition',
+      child: Center(
+        child: NutritionTable(
+          nutrition: consumptions.nutrition,
         ),
       ),
     );

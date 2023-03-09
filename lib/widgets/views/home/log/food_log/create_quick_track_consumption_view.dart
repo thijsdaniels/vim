@@ -45,7 +45,7 @@ class _CreateQuickTrackConsumptionViewState
       appBar: AppBar(
         title: consumption != null
             ? Text(consumption.name)
-            : const Text('Quick Track Food'),
+            : const Text('Quick Consume'),
         actions: [
           Consumer<DateModel>(
             builder: (context, dateModel, _) => IconButton(

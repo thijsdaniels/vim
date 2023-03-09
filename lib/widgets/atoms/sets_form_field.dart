@@ -33,12 +33,13 @@ class _SetsFormFieldsState extends State<SetsFormFields> {
                   children: [
                     Expanded(
                       child: NumberFormField(
-                        initialValue: entry.value['repetitions'],
-                        onChanged: (repetitions) => setState(() {
-                          entry.value['repetitions'] = repetitions;
+                        initialValue: entry.value['weight'],
+                        onChanged: (weight) => setState(() {
+                          entry.value['weight'] = weight;
                         }),
                         decoration: const InputDecoration(
-                          labelText: 'Repetitions',
+                          labelText: 'Weight',
+                          hintText: 'Kilograms',
                         ),
                         textInputAction: TextInputAction.next,
                         validator: (value) {
@@ -52,13 +53,12 @@ class _SetsFormFieldsState extends State<SetsFormFields> {
                     const SizedBox(width: 16),
                     Expanded(
                       child: NumberFormField(
-                        initialValue: entry.value['weight'],
-                        onChanged: (weight) => setState(() {
-                          entry.value['weight'] = weight;
+                        initialValue: entry.value['repetitions'],
+                        onChanged: (repetitions) => setState(() {
+                          entry.value['repetitions'] = repetitions;
                         }),
                         decoration: const InputDecoration(
-                          labelText: 'Weight',
-                          hintText: 'Kilograms',
+                          labelText: 'Repetitions',
                         ),
                         textInputAction: TextInputAction.next,
                         validator: (value) {
