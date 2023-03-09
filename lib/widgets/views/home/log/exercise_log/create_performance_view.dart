@@ -24,25 +24,13 @@ class _CreatePerformanceViewState extends State<CreatePerformanceView> {
     return DefaultTabController(
       length: 3,
       child: Scaffold(
-        appBar: AppBar(
-          title: const Text('Track Exercise'),
-          bottom: TabBar(
-            tabs: const [
-              Tab(
-                icon: Icon(Icons.fitness_center),
-                text: 'Exercise',
-              ),
-              Tab(
-                icon: Icon(Icons.assignment),
-                text: 'Routine',
-              ),
-              Tab(
-                icon: Icon(Icons.flash_on_rounded),
-                text: 'Quick Track',
-              ),
-            ],
-            onTap: _onTap,
-          ),
+        bottomNavigationBar: TabBar(
+          tabs: const [
+            Tab(text: 'Exercise'),
+            Tab(text: 'Routine'),
+            Tab(text: 'Quick Track'),
+          ],
+          onTap: _onTap,
         ),
         body: [
           const CreateExercisePerformanceView(),

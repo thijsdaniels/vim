@@ -37,12 +37,12 @@ class _HomeViewState extends State<HomeView> {
           NavigationDestination(
             icon: Icon(Icons.lunch_dining_outlined),
             selectedIcon: Icon(Icons.lunch_dining_rounded),
-            label: 'Foods',
+            label: 'Food',
           ),
           NavigationDestination(
             icon: Icon(Icons.fitness_center_outlined),
             selectedIcon: Icon(Icons.fitness_center),
-            label: 'Exercises',
+            label: 'Exercise',
           ),
         ],
         selectedIndex: _selectedIndex,

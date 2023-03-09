@@ -24,25 +24,13 @@ class _CreateConsumptionViewState extends State<CreateConsumptionView> {
     return DefaultTabController(
       length: 3,
       child: Scaffold(
-        appBar: AppBar(
-          title: const Text('Track Food'),
-          bottom: TabBar(
-            tabs: const [
-              Tab(
-                icon: Icon(Icons.dinner_dining),
-                text: 'Ingredient',
-              ),
-              Tab(
-                icon: Icon(Icons.book),
-                text: 'Recipe',
-              ),
-              Tab(
-                icon: Icon(Icons.flash_on_rounded),
-                text: 'Quick Track',
-              ),
-            ],
-            onTap: _onTap,
-          ),
+        bottomNavigationBar: TabBar(
+          tabs: const [
+            Tab(text: 'Ingredient'),
+            Tab(text: 'Recipe'),
+            Tab(text: 'Quick Track'),
+          ],
+          onTap: _onTap,
         ),
         body: [
           const CreateIngredientConsumptionView(),

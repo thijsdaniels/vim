@@ -50,7 +50,7 @@ class _CreateIngredientConsumptionViewState
       appBar: AppBar(
         title: ingredientConsumption != null
             ? Text(ingredientConsumption.name)
-            : const Text('Track Ingredient'),
+            : const Text('Consume Ingredient'),
         actions: [
           Consumer<DateModel>(
             builder: (context, dateModel, _) => IconButton(

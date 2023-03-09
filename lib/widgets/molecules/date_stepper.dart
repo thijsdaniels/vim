@@ -13,6 +13,11 @@ class DateStepper extends StatelessWidget {
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
       children: <Widget>[
+        Text(
+          DateFormat.yMMMMd('en_US').format(dateModel.date),
+          style: Theme.of(context).textTheme.titleMedium,
+        ),
+        const SizedBox(width: 32),
         IconButton(
           onPressed: dateModel.previous,
           icon: const Icon(Icons.chevron_left),
@@ -25,11 +30,6 @@ class DateStepper extends StatelessWidget {
         IconButton(
           onPressed: dateModel.next,
           icon: const Icon(Icons.chevron_right),
-        ),
-        const SizedBox(width: 16),
-        Text(
-          DateFormat.yMMMMd('en_US').format(dateModel.date),
-          style: Theme.of(context).textTheme.titleMedium,
         ),
       ],
     );

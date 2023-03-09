@@ -31,7 +31,7 @@ class _CreateRoutinePerformanceViewState
       appBar: AppBar(
         title: routinePerformance != null
             ? Text(routinePerformance.name)
-            : const Text('Track Routine'),
+            : const Text('Perform Routine'),
         actions: [
           Consumer<DateModel>(
             builder: (context, dateModel, child) => IconButton(

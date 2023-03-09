@@ -63,7 +63,7 @@ class _CreateExercisePerformanceViewState
     return Scaffold(
       appBar: AppBar(
         title: exercisePerformance == null
-            ? const Text('Track Exercise')
+            ? const Text('Perform Exercise')
             : Text(exercisePerformance.name),
         actions: [
           Consumer<DateModel>(

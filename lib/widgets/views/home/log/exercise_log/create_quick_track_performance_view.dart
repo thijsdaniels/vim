@@ -40,7 +40,7 @@ class _CreateQuickTrackPerformanceViewState
       appBar: AppBar(
         title: performance != null
             ? Text(performance.name)
-            : const Text('Quick Track Exercise'),
+            : const Text('Quick Perform'),
         actions: [
           Consumer<DateModel>(
             builder: (context, dateModel, child) => IconButton(
