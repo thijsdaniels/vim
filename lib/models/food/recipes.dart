@@ -2,7 +2,7 @@ import 'package:vim/models/collection.dart';
 import 'package:vim/models/food/recipe.dart';
 
 class Recipes extends Collection<Recipe> {
-  Recipes([super.entries = const []]);
+  const Recipes([super.entries = const []]);
 
   static Recipes fromMap(Iterable<Map<String, dynamic>> map) {
     return Recipes(

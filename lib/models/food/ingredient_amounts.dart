@@ -51,6 +51,14 @@ class IngredientAmounts extends Collection<IngredientAmount> {
         .reduce((total, nutrition) => total + nutrition);
   }
 
+  IngredientAmounts forAmount(num amount) {
+    num factor = amount / this.amount;
+
+    return IngredientAmounts(_ingredientAmounts
+        .map((ingredientAmount) => ingredientAmount * factor)
+        .toList());
+  }
+
   @override
   Iterable<T> map<T>(T Function(IngredientAmount) toElement) {
     return _ingredientAmounts.map(toElement);
@@ -83,6 +91,10 @@ class IngredientAmount extends Model {
       ingredient: Ingredient.fromMap(map['ingredient']),
       amount: map['amount'],
     );
+  }
+
+  IngredientAmount operator *(num factor) {
+    return IngredientAmount(ingredient: ingredient, amount: amount * factor);
   }
 }
 

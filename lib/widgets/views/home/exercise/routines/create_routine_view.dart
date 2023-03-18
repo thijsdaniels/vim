@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:vim/models/exercise/performances.dart';
 import 'package:vim/models/exercise/routine.dart';
 import 'package:vim/services/routines_service.dart';
 import 'package:vim/widgets/molecules/simple_card.dart';
@@ -55,7 +54,7 @@ class _CreateRoutineViewState extends State<CreateRoutineView> {
                 } else {
                   routine = Routine(
                     name: _name,
-                    performances: Performances(),
+                    exerciseReferences: [],
                   );
 
                   RoutinesService.create(routine);

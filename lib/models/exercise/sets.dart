@@ -15,43 +15,10 @@ class Sets extends Collection<Set> {
       .reduce((total, calories) => total + calories);
 
   num get repetitions => entries
-      .map((set) => set.repetitions ?? 0)
+      .map((set) => set.repetitions)
       .reduce((total, repetitions) => total + repetitions);
 
   num get weight => entries
-      .map((set) => set.weight ?? 0)
+      .map((set) => set.weight)
       .reduce((total, weight) => total + weight);
 }
-
-// class SetsInput extends MutableCollection<SetInput> {
-//   const SetsInput([super.entries = const []]);
-
-//   toModel() {
-//     return Sets(
-//       entries
-//           .where(
-//             (input) => input.weight != null && input.repetitions != null,
-//           )
-//           .map(
-//             (input) => Set(
-//               weight: input.weight!,
-//               repetitions: input.repetitions!,
-//             ),
-//           )
-//           .toList(),
-//     );
-//   }
-
-//   static fromModel(Sets model) {
-//     return SetsInput(
-//       model.entries
-//           .map(
-//             (set) => SetInput(
-//               repetitions: set.repetitions,
-//               weight: set.weight,
-//             ),
-//           )
-//           .toList(),
-//     );
-//   }
-// }

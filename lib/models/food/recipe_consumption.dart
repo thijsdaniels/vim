@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:vim/models/food/amount.dart';
 import 'package:vim/models/food/consumption.dart';
+import 'package:vim/models/food/ingredient_amounts.dart';
 import 'package:vim/models/food/recipe.dart';
 import 'package:vim/models/food/nutrition.dart';
 
@@ -19,6 +20,9 @@ class RecipeConsumption implements Consumption {
 
   @override
   Nutrition get nutrition => recipe.nutritionForAmount(amount);
+
+  IngredientAmounts get ingredientAmounts =>
+      recipe.ingredientAmountsForAmount(amount);
 
   @override
   set name(String name) {

@@ -1,6 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:vim/models/exercise/routine.dart';
-import 'package:vim/models/exercise/routines.dart';
 
 /// TODO: Filter all operations by the currently authenticated user. It might be
 /// a good idea to apply this generally to the entire service:
@@ -18,9 +17,14 @@ class RoutinesService {
             toFirestore: (routine, _) => routine.toMap(),
           );
 
-  static Stream<Routines> all() {
-    return _collection.orderBy('name').snapshots().map((snapshot) =>
-        Routines(snapshot.docs.map((doc) => doc.data()).toList()));
+  static Stream<Iterable<Routine>> all() {
+    return _collection.orderBy('name').snapshots().map(
+          (snapshot) => snapshot.docs.map((doc) => doc.data()),
+        );
+  }
+
+  static Stream<Routine?> get(String id) {
+    return _collection.doc(id).snapshots().map((snapshot) => snapshot.data());
   }
 
   static Future<void> create(Routine routine) async {

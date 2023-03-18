@@ -47,7 +47,7 @@ class _ExerciseViewState extends State<ExerciseView> {
               icon: const Icon(Icons.delete_rounded),
               onPressed: () async {
                 if (await confirm()) {
-                  ExercisesService.delete(exercise);
+                  ExercisesService.instance.delete(exercise);
 
                   if (mounted) {
                     Navigator.of(context).pop();

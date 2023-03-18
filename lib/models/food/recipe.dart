@@ -96,12 +96,16 @@ class ResolvedRecipe extends Model {
   Nutrition get nutrition => ingredientAmounts.nutrition;
 
   Nutrition nutritionForAmount(Amount amount) {
+    return ingredientAmountsForAmount(amount).nutrition;
+  }
+
+  IngredientAmounts ingredientAmountsForAmount(Amount amount) {
     switch (amount.unit) {
       case Unit.grams:
-        return ingredientAmounts.nutritionForAmount(amount.value);
+        return ingredientAmounts.forAmount(amount.value);
       case Unit.servings:
         return ingredientAmounts
-            .nutritionForAmount(amount.value * ingredientAmounts.amount);
+            .forAmount((amount.value / servings) * ingredientAmounts.amount);
     }
   }
 

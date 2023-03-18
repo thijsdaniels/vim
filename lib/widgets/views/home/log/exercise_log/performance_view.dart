@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:vim/models/exercise/exercise_performance.dart';
 import 'package:vim/models/exercise/performance.dart';
+import 'package:vim/models/exercise/resistance_exercise_performance.dart';
 import 'package:vim/models/exercise/routine_performance.dart';
+import 'package:vim/models/exercise/weights_exercise_performance.dart';
 import 'package:vim/services/performances_service.dart';
 import 'package:vim/widgets/atoms/secondary_text.dart';
 import 'package:vim/widgets/molecules/exercise_performances_list.dart';
@@ -118,22 +120,75 @@ class _PerformanceViewState extends State<PerformanceView> {
                           ],
                         ),
                       ],
+                      TableRow(
+                        children: [
+                          const SecondaryText('Calories'),
+                          const SizedBox(width: 32),
+                          Text('${performance.calories.round()} cal'),
+                        ],
+                      ),
                     ],
                   ),
                 ),
               ),
+              if (performance is ResistanceExercisePerformance)
+                SimpleCard(
+                  title: 'Performance',
+                  child: Center(
+                    child: Table(
+                      defaultColumnWidth: const IntrinsicColumnWidth(),
+                      children: [
+                        TableRow(
+                          children: [
+                            const SecondaryText('Duration'),
+                            const SizedBox(width: 32),
+                            Text('${performance.duration.inMinutes} m'),
+                          ],
+                        ),
+                        TableRow(
+                          children: [
+                            const SecondaryText('Power'),
+                            const SizedBox(width: 32),
+                            Text('${performance.watts} watts'),
+                          ],
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              if (performance is WeightsExercisePerformance)
+                SimpleCard(
+                  title: 'Performance',
+                  child: Column(
+                    children: performance.sets
+                        .map(
+                          (set) => Card(
+                            elevation: 4,
+                            child: ListTile(
+                              title:
+                                  Text('${set.repetitions} x ${set.weight} kg'),
+                            ),
+                          ),
+                        )
+                        .toList(),
+                  ),
+                ),
               if (performance is RoutinePerformance)
                 SimpleCard(
                   title: 'Performances',
                   child: ExercisePerformancesList(
-                    performances: performance.routine.performances,
-                    onChanged: (performances) {
-                      print(performance);
-                      print(performance.routine.performances);
+                    exerciseReferences: performance.routine.exerciseReferences,
+                    performances: performance.performances,
+                    onExercisesChanged: (exercises) {
+                      // performance.routine.exercises = exercises;
+                      // PerformancesService.update(performance);
+                    },
+                    onPerformancesChanged: (performances) {
+                      performance.performances = performances;
                       PerformancesService.update(performance);
                     },
                   ),
-                ),
+                )
             ],
           ),
         ),

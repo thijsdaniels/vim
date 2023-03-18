@@ -1,6 +1,4 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:vim/models/exercise/exercise_performance.dart';
-import 'package:vim/models/exercise/routine_performance.dart';
 import 'package:vim/models/model.dart';
 
 class Performance extends Model {

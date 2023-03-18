@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:vim/extensions/string.dart';
+import 'package:vim/models/collection.dart';
 import 'package:vim/models/exercise/exercise.dart';
-import 'package:vim/models/exercise/exercises.dart';
 import 'package:vim/widgets/atoms/secondary_text.dart';
 import 'package:vim/widgets/views/home/exercise/exercises/create_exercise_view.dart';
 import 'package:vim/widgets/views/home/exercise/exercises/exercise_view.dart';
@@ -34,7 +34,7 @@ class _ExercisesViewState extends State<ExercisesView> {
         ],
       ),
       body: SafeArea(
-        child: Consumer<Exercises>(
+        child: Consumer<Collection<Exercise>>(
           builder: (context, exercises, child) => ListView.builder(
             padding: const EdgeInsets.all(16),
             shrinkWrap: true,

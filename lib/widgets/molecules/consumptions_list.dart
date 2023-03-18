@@ -4,13 +4,8 @@ import 'package:vim/models/food/consumption.dart';
 import 'package:vim/models/food/consumptions.dart';
 import 'package:vim/models/food/ingredient_consumption.dart';
 import 'package:vim/models/food/recipe_consumption.dart';
-import 'package:vim/services/consumptions_service.dart';
 import 'package:vim/widgets/atoms/secondary_text.dart';
-import 'package:vim/widgets/molecules/with_confirmation_dialog.dart';
 import 'package:vim/widgets/views/home/log/food_log/consumption_view.dart';
-import 'package:vim/widgets/views/home/log/food_log/create_consumption_view.dart';
-import 'package:vim/widgets/views/home/log/food_log/create_ingredient_consumption_view.dart';
-import 'package:vim/widgets/views/home/log/food_log/create_recipe_consumption_view.dart';
 
 // TODO: Receive `consumptions` as a parameter instead of taking them from
 // context, so that this widget can also be used with a particular set of

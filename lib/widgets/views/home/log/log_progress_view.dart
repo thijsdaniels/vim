@@ -4,10 +4,8 @@ import 'package:vim/models/exercise/performances.dart';
 import 'package:vim/models/food/consumptions.dart';
 import 'package:vim/models/food/nutrition.dart';
 import 'package:vim/models/settings.dart';
-import 'package:vim/widgets/molecules/date_stepper.dart';
 import 'package:vim/widgets/molecules/nutrition_table.dart';
 import 'package:vim/widgets/molecules/simple_card.dart';
-import 'package:vim/widgets/vim.dart';
 
 /// TODO: Move these to the user's account.
 Settings settings = Settings(
@@ -103,12 +101,12 @@ class MacrosCard extends StatelessWidget {
             ),
           ),
           TargetProgress(
-            title: 'Protein',
+            title: 'Proteins',
             progress: consumptions.nutrition.proteins.total ?? 0,
             target: Proteins.grams(adjustedIntake * settings.proteins),
           ),
           TargetProgress(
-            title: 'Fat',
+            title: 'Fats',
             progress: consumptions.nutrition.fats.total ?? 0,
             target: Fats.grams(adjustedIntake * settings.fats),
           ),
@@ -159,7 +157,7 @@ class TargetProgress extends StatelessWidget {
   Widget build(BuildContext context) {
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,
-      children: <Widget>[
+      children: [
         Row(
           mainAxisAlignment: MainAxisAlignment.end,
           crossAxisAlignment: CrossAxisAlignment.baseline,
@@ -167,7 +165,9 @@ class TargetProgress extends StatelessWidget {
           children: [
             Text(
               progress.round().toString(),
-              style: Theme.of(context).textTheme.headlineSmall,
+              style: Theme.of(context).textTheme.headlineSmall!.copyWith(
+                    color: Theme.of(context).colorScheme.primary,
+                  ),
             ),
             Text(
               ' / ${target.round().toString()}',
@@ -175,20 +175,21 @@ class TargetProgress extends StatelessWidget {
             ),
           ],
         ),
-        const SizedBox(height: 4),
+        const SizedBox(height: 6),
         SizedBox(
           width: barSize == TargetProgressBarSize.small ? 80 : 128,
           child: ClipRRect(
             borderRadius: BorderRadius.all(
-              Radius.circular(barSize == TargetProgressBarSize.small ? 2 : 3),
+              Radius.circular(barSize == TargetProgressBarSize.small ? 3 : 4),
             ),
             child: LinearProgressIndicator(
               value: progress / target,
-              minHeight: barSize == TargetProgressBarSize.small ? 4 : 6,
+              minHeight: barSize == TargetProgressBarSize.small ? 6 : 8,
+              color: Theme.of(context).colorScheme.inversePrimary,
             ),
           ),
         ),
-        const SizedBox(height: 4),
+        const SizedBox(height: 6),
         Text(title),
       ],
     );

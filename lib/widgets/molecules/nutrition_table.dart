@@ -26,7 +26,7 @@ class NutritionTable extends StatelessWidget {
         ),
         NutritionRow(
           context: context,
-          label: 'Saturated Fat',
+          label: 'Saturated Fats',
           amount: nutrition.fats.saturates,
         ),
         NutritionRow(
@@ -36,17 +36,17 @@ class NutritionTable extends StatelessWidget {
         ),
         NutritionRow(
           context: context,
-          label: 'Sugar',
+          label: 'Sugars',
           amount: nutrition.carbohydrates.sugars,
         ),
         NutritionRow(
           context: context,
-          label: 'Fiber',
+          label: 'Fibers',
           amount: nutrition.carbohydrates.fibers,
         ),
         NutritionRow(
           context: context,
-          label: 'Protein',
+          label: 'Proteins',
           amount: nutrition.proteins.total,
         ),
         NutritionRow(

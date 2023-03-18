@@ -54,8 +54,24 @@ class PerformancesService {
         )
         .orderBy('timestamp')
         .snapshots()
-        .map((snapshot) =>
-            Performances(snapshot.docs.map((doc) => doc.data()).toList()));
+        .map(
+          (snapshot) => Performances(
+            snapshot.docs.map((doc) => doc.data()).toList(),
+          ),
+        );
+  }
+
+  static Stream<ExercisePerformance> latest({
+    required String name,
+    Timestamp? before,
+  }) {
+    return _collection
+        .where('exercise.name', isEqualTo: name)
+        .where('timestamp', isLessThanOrEqualTo: before)
+        .orderBy('timestamp', descending: true)
+        .limit(1)
+        .snapshots()
+        .map((snapshot) => snapshot.docs[0].data() as ExercisePerformance);
   }
 
   static Future<void> create(Performance performance) async {
@@ -68,6 +84,8 @@ class PerformancesService {
 
     /// TODO: Figure out how I can make this use the `_collection.toFirestore`
     /// method so that I don't have to repeat the `.toMap()` every time.
+    /// EDIT: I shouldn't use the `reference.set()`. Instead, I should store the
+    /// ID on the model and use `_collection.doc(id).set(performance)`.
     return performance.reference!.set(performance.toMap());
   }
 

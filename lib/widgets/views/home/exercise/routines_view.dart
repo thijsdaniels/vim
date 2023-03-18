@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:vim/models/exercise/routine.dart';
-import 'package:vim/models/exercise/routines.dart';
 import 'package:vim/widgets/atoms/secondary_text.dart';
 import 'package:vim/widgets/views/home/exercise/routines/create_routine_view.dart';
 import 'package:vim/widgets/views/home/exercise/routines/routine_view.dart';
@@ -28,27 +27,26 @@ class _RoutinesViewState extends State<RoutinesView> {
         child: const Icon(Icons.add),
       ),
       body: SafeArea(
-        child: Consumer<Routines>(
+        child: Consumer<Iterable<Routine>>(
           builder: (context, routines, child) => ListView.builder(
             padding: const EdgeInsets.all(16),
             shrinkWrap: true,
             itemCount: routines.length,
             itemBuilder: (context, index) {
-              Routine routine = routines.get(index);
+              Routine routine = routines.elementAt(index);
 
               return Card(
                 child: ListTile(
                   title: Text(routine.name),
                   subtitle: SecondaryText(
                     [
-                      '${routine.performances.length} exercises',
-                      '${routine.calories.round()} kcal',
+                      '${routine.exerciseReferences.length} exercises',
                     ].join(" • "),
                   ),
                   onTap: () {
                     Navigator.of(context).push(
                       MaterialPageRoute(
-                        builder: (context) => RoutineView(routine: routine),
+                        builder: (context) => RoutineView(routine.id!),
                       ),
                     );
                   },
