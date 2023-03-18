@@ -2,9 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:vim/models/date_model.dart';
 import 'package:vim/models/exercise/exercises.dart';
-import 'package:vim/models/exercise/performance.dart';
 import 'package:vim/models/exercise/performances.dart';
-import 'package:vim/models/exercise/routines.dart';
+import 'package:vim/models/exercise/routine.dart';
 import 'package:vim/models/food/consumptions.dart';
 import 'package:vim/models/food/ingredients.dart';
 import 'package:vim/models/food/recipes.dart';
@@ -29,6 +28,7 @@ class Vim extends StatelessWidget {
           theme: ThemeData(
             useMaterial3: true,
             brightness: Brightness.light,
+            colorSchemeSeed: Colors.deepPurple,
             fontFamily: 'GoogleSans',
             inputDecorationTheme: const InputDecorationTheme(
               border: OutlineInputBorder(),
@@ -41,6 +41,7 @@ class Vim extends StatelessWidget {
           darkTheme: ThemeData(
             useMaterial3: true,
             brightness: Brightness.dark,
+            colorSchemeSeed: Colors.deepPurple,
             fontFamily: 'GoogleSans',
             inputDecorationTheme: const InputDecorationTheme(
               border: OutlineInputBorder(),
@@ -70,21 +71,21 @@ class Providers extends StatelessWidget {
   Widget build(BuildContext context) {
     return MultiProvider(
       providers: [
-        StreamProvider<Ingredients>(
+        StreamProvider(
           create: (context) => IngredientsService.all(),
-          initialData: Ingredients([]),
+          initialData: const Ingredients([]),
         ),
-        StreamProvider<Recipes>(
+        StreamProvider(
           create: (context) => RecipesService.all(),
-          initialData: Recipes([]),
+          initialData: const Recipes([]),
         ),
-        StreamProvider<Exercises>(
-          create: (context) => ExercisesService.all(),
-          initialData: Exercises([]),
+        StreamProvider(
+          create: (context) => ExercisesService.instance.all(),
+          initialData: const Exercises([]),
         ),
-        StreamProvider<Routines>(
+        StreamProvider<Iterable<Routine>>(
           create: (context) => RoutinesService.all(),
-          initialData: Routines([]),
+          initialData: const [],
         ),
         ChangeNotifierProvider(
           create: (context) => DateModel(),
@@ -98,11 +99,11 @@ class Providers extends StatelessWidget {
           providers: [
             StreamProvider.value(
               value: ConsumptionsService.forDate(dateModel.date),
-              initialData: Consumptions([]),
+              initialData: const Consumptions([]),
             ),
             StreamProvider.value(
               value: PerformancesService.forDate(dateModel.date),
-              initialData: Performances(<Performance>[]),
+              initialData: const Performances([]),
             ),
           ],
           child: child,

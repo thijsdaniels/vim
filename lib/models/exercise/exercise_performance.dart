@@ -1,8 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:vim/models/exercise/exercise.dart';
 import 'package:vim/models/exercise/performance.dart';
-import 'package:vim/models/exercise/resistance_exercise_performance.dart';
-import 'package:vim/models/exercise/weights_exercise_performance.dart';
 
 class ExercisePerformance extends Performance {
   DocumentReference? _reference;

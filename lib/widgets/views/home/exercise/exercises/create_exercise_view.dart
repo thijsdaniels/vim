@@ -55,9 +55,9 @@ class _CreateExerciseViewState extends State<CreateExerciseView> {
                   exercise.name = _name!;
                   exercise.type = _type!;
 
-                  ExercisesService.update(exercise);
+                  ExercisesService.instance.update(exercise);
                 } else {
-                  ExercisesService.create(Exercise(
+                  ExercisesService.instance.create(Exercise(
                     name: _name!,
                     type: _type!,
                   ));

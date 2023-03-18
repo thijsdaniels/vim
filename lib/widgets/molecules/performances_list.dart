@@ -1,17 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:vim/models/exercise/exercise_performance.dart';
 import 'package:vim/models/exercise/performance.dart';
 import 'package:vim/models/exercise/performances.dart';
 import 'package:vim/models/exercise/resistance_exercise_performance.dart';
-import 'package:vim/models/exercise/routine_performance.dart';
 import 'package:vim/models/exercise/weights_exercise_performance.dart';
-import 'package:vim/services/performances_service.dart';
 import 'package:vim/widgets/atoms/secondary_text.dart';
-import 'package:vim/widgets/molecules/with_confirmation_dialog.dart';
-import 'package:vim/widgets/views/home/log/exercise_log/create_exercise_performance_view.dart';
-import 'package:vim/widgets/views/home/log/exercise_log/create_quick_track_performance_view.dart';
-import 'package:vim/widgets/views/home/log/exercise_log/create_routine_performance_view.dart';
 import 'package:vim/widgets/views/home/log/exercise_log/performance_view.dart';
 
 // TODO: Receive `performances` as a parameter instead of taking them from

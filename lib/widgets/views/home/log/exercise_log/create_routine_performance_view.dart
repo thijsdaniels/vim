@@ -3,7 +3,6 @@ import 'package:provider/provider.dart';
 import 'package:vim/models/date_model.dart';
 import 'package:vim/models/exercise/routine.dart';
 import 'package:vim/models/exercise/routine_performance.dart';
-import 'package:vim/services/performances_service.dart';
 import 'package:vim/widgets/atoms/routine_dropdown_menu.dart';
 import 'package:vim/widgets/molecules/simple_card.dart';
 
@@ -71,7 +70,7 @@ class _CreateRoutinePerformanceViewState
               title: 'Details',
               child: Column(
                 mainAxisSize: MainAxisSize.min,
-                children: <Widget>[
+                children: [
                   if (widget.routinePerformance == null)
                     RoutineDropdownMenu(
                       initialSelection: _routine,

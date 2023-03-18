@@ -129,6 +129,7 @@ class _CreateIngredientConsumptionViewState
                                 _ingredient?.serving == null) {
                               return "Serving size not defined.";
                             }
+                            return null;
                           },
                         ),
                       ),

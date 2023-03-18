@@ -7,7 +7,7 @@ import 'package:vim/models/exercise/routine_performance.dart';
 import 'package:vim/models/exercise/weights_exercise_performance.dart';
 
 class Performances extends MutableCollection<Performance> {
-  Performances([super.entries = const []]);
+  const Performances([super.entries = const []]);
 
   num get calories {
     return entries.isNotEmpty
@@ -24,22 +24,28 @@ class Performances extends MutableCollection<Performance> {
   // repetition.
   factory Performances.fromMap(List<dynamic> list) {
     return Performances(
-      list.map((map) {
-        if (map['exercise'] != null) {
-          switch (ExerciseType.values.byName(map['exercise']['type'])) {
-            case ExerciseType.manual:
-              return ExercisePerformance.fromMap(map);
-            case ExerciseType.resistance:
-              return ResistanceExercisePerformance.fromMap(map);
-            case ExerciseType.weights:
-              return WeightsExercisePerformance.fromMap(map);
-          }
-        } else if (map['routine'] != null) {
-          return RoutinePerformance.fromMap(map);
-        } else {
-          return Performance.fromMap(map);
-        }
-      }).toList(),
+      list.map<Performance>(performanceFromMap).toList(),
     );
+  }
+}
+
+Performance performanceFromMap(dynamic map) {
+  if (map['exercise'] != null) {
+    return exercisePerformanceFromMap(map);
+  } else if (map['routine'] != null) {
+    return RoutinePerformance.fromMap(map);
+  } else {
+    return Performance.fromMap(map);
+  }
+}
+
+ExercisePerformance exercisePerformanceFromMap(dynamic map) {
+  switch (ExerciseType.values.byName(map['exercise']['type'])) {
+    case ExerciseType.manual:
+      return ExercisePerformance.fromMap(map);
+    case ExerciseType.resistance:
+      return ResistanceExercisePerformance.fromMap(map);
+    case ExerciseType.weights:
+      return WeightsExercisePerformance.fromMap(map);
   }
 }

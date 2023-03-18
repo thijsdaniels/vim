@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:vim/models/collection.dart';
 import 'package:vim/models/exercise/exercise.dart';
-import 'package:vim/models/exercise/exercises.dart';
 
 class ExerciseDropdownMenu extends StatelessWidget {
   final Exercise? initialSelection;
@@ -19,7 +19,7 @@ class ExerciseDropdownMenu extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Consumer<Exercises>(
+    return Consumer<Collection<Exercise>>(
       builder: (context, exercises, child) {
         return DropdownMenu<Exercise>(
           initialSelection: initialSelection,

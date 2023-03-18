@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:vim/models/exercise/routine.dart';
-import 'package:vim/models/exercise/routines.dart';
 
 class RoutineDropdownMenu extends StatelessWidget {
   final Routine? initialSelection;
@@ -17,7 +16,7 @@ class RoutineDropdownMenu extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Consumer<Routines>(
+    return Consumer<Iterable<Routine>>(
       builder: (context, routines, child) {
         return DropdownMenu<Routine>(
           initialSelection: initialSelection,

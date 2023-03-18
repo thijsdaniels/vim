@@ -208,7 +208,7 @@ class _ConsumptionViewState extends State<ConsumptionView> {
                   child: Center(
                     child: Table(
                       defaultColumnWidth: const IntrinsicColumnWidth(),
-                      children: consumption.recipe.ingredientAmounts
+                      children: consumption.ingredientAmounts
                           .map(
                             (ingredientAmount) => TableRow(
                               children: [

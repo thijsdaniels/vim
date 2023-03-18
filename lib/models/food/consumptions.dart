@@ -3,7 +3,7 @@ import 'package:vim/models/food/consumption.dart';
 import 'package:vim/models/food/nutrition.dart';
 
 class Consumptions extends Collection<Consumption> {
-  Consumptions([super.entries = const []]);
+  const Consumptions([super.entries = const []]);
 
   /// TODO: Implement the `fromMap` if I ever need it. Keep in mind that it
   /// needs to instantiate either `Consumption`, `IngredientConsumption` or
