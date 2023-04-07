@@ -21,8 +21,11 @@ class IngredientsService {
       );
 
   static Stream<Ingredients> all() {
-    return _collection.orderBy('name').snapshots().map((snapshot) =>
-        Ingredients(snapshot.docs.map((doc) => doc.data()).toList()));
+    return _collection.orderBy('name').snapshots().map(
+          (snapshot) => Ingredients(
+            snapshot.docs.map((doc) => doc.data()).toList(),
+          ),
+        );
   }
 
   static Future<void> create(Ingredient ingredient) async {

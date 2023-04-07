@@ -6,36 +6,19 @@ import 'package:vim/models/food/nutrition.dart';
 import 'package:vim/models/model.dart';
 
 class IngredientAmounts extends Collection<IngredientAmount> {
-  final List<IngredientAmount> _ingredientAmounts;
-
-  @override
-  int get length => _ingredientAmounts.length;
-
   num get amount {
-    return _ingredientAmounts
+    return entries
         .map((ingredientAmount) => ingredientAmount.amount)
         .reduce((total, amount) => total + amount);
   }
 
   Nutrition get nutrition {
-    return _ingredientAmounts
+    return entries
         .map((ingredientAmount) => ingredientAmount.nutrition)
         .reduce((total, entry) => total + entry);
   }
 
-  IngredientAmounts([this._ingredientAmounts = const []]);
-
-  @override
-  IngredientAmount get(int index) {
-    return _ingredientAmounts[index];
-  }
-
-  @override
-  List<Map<String, dynamic>> toMap() {
-    return _ingredientAmounts
-        .map((ingredientAmount) => ingredientAmount.toMap())
-        .toList();
-  }
+  IngredientAmounts([super.entries = const []]);
 
   static IngredientAmounts fromMap(Iterable<dynamic> map) {
     return IngredientAmounts(
@@ -46,7 +29,7 @@ class IngredientAmounts extends Collection<IngredientAmount> {
   Nutrition nutritionForAmount(num amount) {
     num factor = amount / this.amount;
 
-    return _ingredientAmounts
+    return entries
         .map((ingredientAmount) => ingredientAmount.nutrition * factor)
         .reduce((total, nutrition) => total + nutrition);
   }
@@ -54,14 +37,8 @@ class IngredientAmounts extends Collection<IngredientAmount> {
   IngredientAmounts forAmount(num amount) {
     num factor = amount / this.amount;
 
-    return IngredientAmounts(_ingredientAmounts
-        .map((ingredientAmount) => ingredientAmount * factor)
-        .toList());
-  }
-
-  @override
-  Iterable<T> map<T>(T Function(IngredientAmount) toElement) {
-    return _ingredientAmounts.map(toElement);
+    return IngredientAmounts(
+        entries.map((ingredientAmount) => ingredientAmount * factor).toList());
   }
 }
 
@@ -98,36 +75,30 @@ class IngredientAmount extends Model {
   }
 }
 
-class IngredientAmountsReference extends Collection<IngredientAmountReference> {
-  final List<IngredientAmountReference> _ingredientAmounts;
-
-  @override
-  int get length => _ingredientAmounts.length;
+class IngredientAmountsReference
+    extends MutableCollection<IngredientAmountReference> {
+  IngredientAmountsReference([super.entries = const []]) {
+    entries.sort((a, b) => a.amount > b.amount ? -1 : 1);
+  }
 
   num get amount {
-    return _ingredientAmounts
-        .map((ingredientAmount) => ingredientAmount.amount)
-        .reduce((total, amount) => total + amount);
+    if (entries.isEmpty) {
+      return 0;
+    } else {
+      return entries
+          .map((ingredientAmount) => ingredientAmount.amount)
+          .reduce((total, amount) => total + amount);
+    }
   }
 
   Future<Nutrition> get nutrition async {
-    return _ingredientAmounts
+    if (entries.isEmpty) {
+      return Nutrition.zero;
+    }
+
+    return entries
         .map((ingredientAmount) => ingredientAmount.nutrition)
         .reduce((total, entry) async => await total + await entry);
-  }
-
-  IngredientAmountsReference([this._ingredientAmounts = const []]);
-
-  @override
-  IngredientAmountReference get(int index) {
-    return _ingredientAmounts[index];
-  }
-
-  @override
-  List<Map<String, dynamic>> toMap() {
-    return _ingredientAmounts
-        .map((ingredientAmount) => ingredientAmount.toMap())
-        .toList();
   }
 
   static IngredientAmountsReference fromMap(Iterable<dynamic> map) {
@@ -139,7 +110,7 @@ class IngredientAmountsReference extends Collection<IngredientAmountReference> {
   Future<Nutrition> nutritionForAmount(num amount) async {
     num factor = amount / this.amount;
 
-    return _ingredientAmounts
+    return entries
         .map(
           (ingredientAmount) async => await ingredientAmount.nutrition * factor,
         )
@@ -150,17 +121,12 @@ class IngredientAmountsReference extends Collection<IngredientAmountReference> {
 
   Future<IngredientAmounts> resolve() async {
     List<IngredientAmount> ingredientAmounts = await Future.wait(
-      _ingredientAmounts.map(
+      entries.map(
         (ingredientAmount) async => await ingredientAmount.resolve(),
       ),
     );
 
     return IngredientAmounts(ingredientAmounts);
-  }
-
-  @override
-  Iterable<E> map<E>(E Function(IngredientAmountReference) toElement) {
-    return _ingredientAmounts.map(toElement);
   }
 }
 
@@ -170,6 +136,7 @@ class IngredientAmountReference extends Model {
   final DocumentReference ingredientReference;
   final num amount;
 
+  /// TODO: Turn this into a Stream<Ingredient?> for real-time updates.
   Future<Ingredient> get ingredient async {
     _ingredient ??= (await ingredientReference
             .withConverter(

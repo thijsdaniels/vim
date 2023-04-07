@@ -20,8 +20,8 @@ class Recipe extends Model {
   Recipe({
     required this.name,
     this.servings = 1,
-    required this.ingredientAmounts,
-  });
+    IngredientAmountsReference? ingredientAmounts,
+  }) : ingredientAmounts = ingredientAmounts ?? IngredientAmountsReference([]);
 
   @override
   Map<String, dynamic> toMap() {
