@@ -3,6 +3,7 @@ import 'package:flutter/services.dart';
 import 'package:vim/models/food/ingredient.dart';
 import 'package:vim/models/food/nutrition.dart';
 import 'package:vim/services/ingredients_service.dart';
+import 'package:vim/widgets/atoms/icons8_icon_dropdown_menu.dart';
 import 'package:vim/widgets/molecules/nutrition_form_fields.dart';
 import 'package:vim/widgets/molecules/simple_card.dart';
 
@@ -17,6 +18,7 @@ class CreateIngredientView extends StatefulWidget {
 
 class _CreateIngredientViewState extends State<CreateIngredientView> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+  String? _icon;
   final TextEditingController _nameController = TextEditingController();
   final TextEditingController _brandController = TextEditingController();
   final TextEditingController _servingController = TextEditingController();
@@ -30,6 +32,7 @@ class _CreateIngredientViewState extends State<CreateIngredientView> {
     Ingredient? ingredient = widget.ingredient;
 
     if (ingredient != null) {
+      _icon = ingredient.icon;
       _nameController.text = ingredient.name;
       _brandController.text = ingredient.brand ?? "";
       _servingController.text = ingredient.serving?.toString() ?? "";
@@ -70,6 +73,7 @@ class _CreateIngredientViewState extends State<CreateIngredientView> {
                 Ingredient? ingredient = widget.ingredient;
 
                 if (ingredient != null) {
+                  ingredient.icon = _icon;
                   ingredient.name = name;
                   ingredient.brand = brand;
                   ingredient.serving = serving;
@@ -78,6 +82,7 @@ class _CreateIngredientViewState extends State<CreateIngredientView> {
                   IngredientsService.update(ingredient);
                 } else {
                   ingredient = Ingredient(
+                    icon: _icon,
                     name: name,
                     brand: brand,
                     serving: serving,
@@ -104,6 +109,15 @@ class _CreateIngredientViewState extends State<CreateIngredientView> {
                   title: 'Details',
                   child: Column(
                     children: [
+                      Icons8IconDropdownMenu(
+                        initialSelection: _icon,
+                        onSelected: (String? icon) {
+                          setState(() {
+                            _icon = icon;
+                          });
+                        },
+                      ),
+                      const SizedBox(height: 16),
                       TextFormField(
                         autofocus: true,
                         controller: _nameController,

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:vim/widgets/atoms/surface.dart';
 
 class SimpleCard extends StatelessWidget {
   const SimpleCard({
@@ -17,7 +18,7 @@ class SimpleCard extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
-        Card(
+        Surface(
           child: Padding(
             padding: const EdgeInsets.all(16.0),
             child: Column(

@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:vim/models/collection.dart';
 import 'package:vim/models/date_model.dart';
-import 'package:vim/models/exercise/exercises.dart';
+import 'package:vim/models/exercise/exercise.dart';
 import 'package:vim/models/exercise/performances.dart';
 import 'package:vim/models/exercise/routine.dart';
 import 'package:vim/models/food/consumptions.dart';
@@ -27,8 +28,10 @@ class Vim extends StatelessWidget {
           title: 'Vim',
           theme: ThemeData(
             useMaterial3: true,
-            brightness: Brightness.light,
-            colorSchemeSeed: Colors.deepPurple,
+            colorScheme: ColorScheme.fromSeed(
+              seedColor: Colors.deepPurple,
+              brightness: Brightness.light,
+            ),
             fontFamily: 'GoogleSans',
             inputDecorationTheme: const InputDecorationTheme(
               border: OutlineInputBorder(),
@@ -36,12 +39,15 @@ class Vim extends StatelessWidget {
             shadowColor: Colors.transparent,
             cardTheme: const CardTheme(
               shadowColor: Colors.transparent,
+              margin: EdgeInsets.zero,
             ),
           ),
           darkTheme: ThemeData(
             useMaterial3: true,
-            brightness: Brightness.dark,
-            colorSchemeSeed: Colors.deepPurple,
+            colorScheme: ColorScheme.fromSeed(
+              brightness: Brightness.dark,
+              seedColor: Colors.deepPurple,
+            ),
             fontFamily: 'GoogleSans',
             inputDecorationTheme: const InputDecorationTheme(
               border: OutlineInputBorder(),
@@ -49,6 +55,7 @@ class Vim extends StatelessWidget {
             shadowColor: Colors.transparent,
             cardTheme: const CardTheme(
               shadowColor: Colors.transparent,
+              margin: EdgeInsets.zero,
             ),
           ),
           themeMode: themeModel.mode,
@@ -79,9 +86,9 @@ class Providers extends StatelessWidget {
           create: (context) => RecipesService.all(),
           initialData: const Recipes([]),
         ),
-        StreamProvider(
+        StreamProvider<Collection<Exercise>>(
           create: (context) => ExercisesService.instance.all(),
-          initialData: const Exercises([]),
+          initialData: const Collection(),
         ),
         StreamProvider<Iterable<Routine>>(
           create: (context) => RoutinesService.all(),
@@ -114,7 +121,7 @@ class Providers extends StatelessWidget {
 }
 
 class ThemeModel extends ChangeNotifier {
-  ThemeMode _mode = ThemeMode.dark;
+  ThemeMode _mode = ThemeMode.system;
 
   ThemeMode get mode => _mode;
 

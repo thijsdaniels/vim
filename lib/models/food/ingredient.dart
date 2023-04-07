@@ -6,6 +6,7 @@ import 'package:vim/models/model.dart';
 
 class Ingredient extends Model {
   DocumentReference? _reference;
+  String? icon;
   String name;
   String? brand;
   num? serving;
@@ -14,6 +15,7 @@ class Ingredient extends Model {
   DocumentReference? get reference => _reference;
 
   Ingredient({
+    this.icon,
     required this.name,
     this.brand,
     this.serving,
@@ -23,6 +25,7 @@ class Ingredient extends Model {
   @override
   Map<String, dynamic> toMap() {
     return {
+      'icon': icon,
       'name': name,
       'brand': brand,
       'serving': serving,
@@ -43,6 +46,7 @@ class Ingredient extends Model {
 
   static Ingredient fromMap(Map<String, dynamic> map) {
     return Ingredient(
+      icon: map['icon'],
       name: map['name'],
       brand: map['brand'],
       serving: map['serving'],

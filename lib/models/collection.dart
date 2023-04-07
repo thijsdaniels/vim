@@ -1,3 +1,4 @@
+import 'package:collection/collection.dart';
 import 'package:flutter/foundation.dart';
 import 'package:vim/models/model.dart';
 
@@ -36,6 +37,14 @@ class Collection<M extends Model> {
   Map<int, M> asMap() {
     return entries.asMap();
   }
+
+  M? firstWhereOrNull(bool Function(M) test) {
+    return entries.firstWhereOrNull(test);
+  }
+
+  ListSlice<M> slice(int start, [int? end]) {
+    return entries.slice(start, end);
+  }
 }
 
 class MutableCollection<M extends Model> extends Collection<M> {
@@ -51,6 +60,10 @@ class MutableCollection<M extends Model> extends Collection<M> {
 
   M removeAt(int index) {
     return entries.removeAt(index);
+  }
+
+  void replace(int index, M value) {
+    entries[index] = value;
   }
 
   void move(int from, int to) {
