@@ -4,6 +4,7 @@ import 'package:vim/extensions/string.dart';
 import 'package:vim/models/collection.dart';
 import 'package:vim/models/exercise/exercise.dart';
 import 'package:vim/widgets/atoms/secondary_text.dart';
+import 'package:vim/widgets/atoms/surface_list.dart';
 import 'package:vim/widgets/views/home/exercise/exercises/create_exercise_view.dart';
 import 'package:vim/widgets/views/home/exercise/exercises/exercise_view.dart';
 
@@ -35,25 +36,21 @@ class _ExercisesViewState extends State<ExercisesView> {
       ),
       body: SafeArea(
         child: Consumer<Collection<Exercise>>(
-          builder: (context, exercises, child) => ListView.builder(
-            padding: const EdgeInsets.all(16),
-            shrinkWrap: true,
+          builder: (context, exercises, child) => SurfaceList(
             itemCount: exercises.length,
             itemBuilder: (context, index) {
               Exercise exercise = exercises.get(index);
 
-              return Card(
-                child: ListTile(
-                  onTap: () {
-                    Navigator.of(context).push(
-                      MaterialPageRoute(
-                        builder: (context) => ExerciseView(exercise: exercise),
-                      ),
-                    );
-                  },
-                  title: Text(exercise.name),
-                  subtitle: SecondaryText(exercise.type.name.toTitleCase()),
-                ),
+              return ListTile(
+                onTap: () {
+                  Navigator.of(context).push(
+                    MaterialPageRoute(
+                      builder: (context) => ExerciseView(exercise: exercise),
+                    ),
+                  );
+                },
+                title: Text(exercise.name),
+                subtitle: SecondaryText(exercise.type.name.toTitleCase()),
               );
             },
           ),

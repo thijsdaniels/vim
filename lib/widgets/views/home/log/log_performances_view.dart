@@ -24,12 +24,7 @@ class LogPerformancesView extends StatelessWidget {
         },
         child: const Icon(Icons.add),
       ),
-      body: const SingleChildScrollView(
-        child: Padding(
-          padding: EdgeInsets.all(16.0),
-          child: PerformancesList(),
-        ),
-      ),
+      body: const PerformancesList(),
     );
   }
 }

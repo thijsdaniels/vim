@@ -16,7 +16,7 @@ Settings settings = Settings(
   length: 176,
   muscle: 81.0,
   fat: 14.8,
-  neat: 600, // a rough estimate
+  neat: 300, // a rough estimate
   surplus: 0.1,
   exercise: 400,
   carbohydrates: 0.45,
@@ -36,7 +36,9 @@ class LogProgressView extends StatelessWidget {
           child: Column(
             children: const [
               CaloriesCard(),
+              SizedBox(height: 12),
               MacrosCard(),
+              SizedBox(height: 12),
               NutritionCard(),
             ],
           ),

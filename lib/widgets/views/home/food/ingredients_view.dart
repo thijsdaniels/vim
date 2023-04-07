@@ -2,7 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:vim/models/food/ingredient.dart';
 import 'package:vim/models/food/ingredients.dart';
+import 'package:vim/widgets/atoms/icons8_icon.dart';
 import 'package:vim/widgets/atoms/secondary_text.dart';
+import 'package:vim/widgets/atoms/surface_list.dart';
+import 'package:vim/widgets/molecules/list_surface.dart';
 import 'package:vim/widgets/views/home/food/ingredients/create_ingredient_view.dart';
 import 'package:vim/widgets/views/home/food/ingredients/ingredient_view.dart';
 
@@ -29,44 +32,59 @@ class _IngredientsViewState extends State<IngredientsView> {
       ),
       body: SafeArea(
         child: Consumer<Ingredients>(
-          builder: (context, ingredients, child) => ListView.builder(
-            padding: const EdgeInsets.all(16),
-            shrinkWrap: true,
+          builder: (context, ingredients, child) => SurfaceList(
             itemCount: ingredients.length,
             itemBuilder: (context, index) {
               Ingredient ingredient = ingredients.get(index);
 
-              return Card(
-                child: ListTile(
-                  onTap: () {
-                    Navigator.of(context).push(
-                      MaterialPageRoute(
-                        builder: (context) =>
-                            IngredientView(ingredient: ingredient),
-                      ),
-                    );
-                  },
-                  title: Text(ingredient.name),
-                  subtitle: SecondaryText(
-                    // TODO: Try to change this into Chip widgets.
-                    [
-                      if (ingredient.brand != null) ...[
-                        '${ingredient.brand}',
-                      ],
-                      '${ingredient.nutrition.calories.round()} cal',
-                      [
-                        '${ingredient.nutrition.carbohydrates.total?.round() ?? 0}',
-                        '${ingredient.nutrition.proteins.total?.round() ?? 0}',
-                        '${ingredient.nutrition.fats.total?.round() ?? 0}',
-                      ].join("/")
-                    ].join(" • "),
-                  ),
-                ),
+              return IngredientListTile(
+                ingredient: ingredient,
               );
             },
           ),
         ),
       ),
+    );
+  }
+}
+
+class IngredientListTile extends StatelessWidget {
+  const IngredientListTile({
+    super.key,
+    required this.ingredient,
+  });
+
+  final Ingredient ingredient;
+
+  @override
+  Widget build(BuildContext context) {
+    return ListSurface(
+      onTap: () {
+        Navigator.of(context).push(
+          MaterialPageRoute(
+            builder: (context) => IngredientView(ingredient: ingredient),
+          ),
+        );
+      },
+      icon: ingredient.icon != null
+          ? Icons8Icon.asset(ingredient.icon!, size: 48)
+          : null,
+      title: Text(ingredient.name),
+      subtitle: SecondaryText(ingredient.brand ?? "--"),
+      // subtitle: SecondaryText(
+      //   // TODO: Try to change this into Chip widgets.
+      //   [
+      //     if (ingredient.brand != null) ...[
+      //       '${ingredient.brand}',
+      //     ],
+      //     '${ingredient.nutrition.calories.round()} cal',
+      //     [
+      //       '${ingredient.nutrition.carbohydrates.total?.round() ?? 0}',
+      //       '${ingredient.nutrition.proteins.total?.round() ?? 0}',
+      //       '${ingredient.nutrition.fats.total?.round() ?? 0}',
+      //     ].join("/")
+      //   ].join(" • "),
+      // ),
     );
   }
 }
