@@ -53,6 +53,14 @@ class Nutrition extends NutrientGroup<Nutrition> {
     );
   }
 
+  static const Nutrition zero = Nutrition(
+    calories: 0,
+    carbohydrates: Carbohydrates.zero,
+    proteins: Proteins.zero,
+    fats: Fats.zero,
+    minerals: Minerals.zero,
+  );
+
   @override
   Nutrition operator +(Nutrition other) {
     return Nutrition(
@@ -120,6 +128,8 @@ class Carbohydrates extends NutrientGroup<Carbohydrates> {
     );
   }
 
+  static const Carbohydrates zero = Carbohydrates(0, sugars: 0, fibers: 0);
+
   @override
   Carbohydrates operator +(Carbohydrates other) {
     return Carbohydrates(
@@ -176,6 +186,8 @@ class Fats extends NutrientGroup<Fats> {
     );
   }
 
+  static const Fats zero = Fats(0, saturates: 0);
+
   @override
   Fats operator +(Fats other) {
     return Fats(
@@ -224,6 +236,8 @@ class Proteins extends NutrientGroup<Proteins> {
     );
   }
 
+  static const Proteins zero = Proteins(0);
+
   @override
   Proteins operator +(Proteins other) {
     return Proteins(
@@ -265,6 +279,8 @@ class Minerals extends NutrientGroup<Minerals> {
       salt: map['salt'],
     );
   }
+
+  static const Minerals zero = Minerals(salt: 0);
 
   static saltToSodium(num? grams) => grams != null ? grams * 0.4 : null;
   static sodiumToSalt(num? grams) => grams != null ? grams * 2.5 : null;
