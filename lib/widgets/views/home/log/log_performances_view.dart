@@ -19,7 +19,7 @@ class LogPerformancesView extends StatelessWidget {
           );
 
           if (performance != null) {
-            PerformancesService.create(performance);
+            PerformancesService.instance.create(performance);
           }
         },
         child: const Icon(Icons.add),

@@ -1,13 +1,36 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:vim/models/exercise/exercise.dart';
 import 'package:vim/models/exercise/exercise_performance.dart';
 import 'package:vim/models/exercise/performance.dart';
-import 'package:vim/models/exercise/performances.dart';
+import 'package:vim/models/exercise/resistance_exercise_performance.dart';
 import 'package:vim/models/exercise/routine.dart';
+import 'package:vim/models/exercise/weights_exercise_performance.dart';
 
 class RoutinePerformance extends Performance {
   DocumentReference? _reference;
+
   Routine routine;
-  Map<String, ExercisePerformance?> performances;
+
+  // TODO: Move this to a service.
+  CollectionReference<ExercisePerformance>? get _performances => _reference !=
+          null
+      ? FirebaseFirestore.instance
+          .collection('${_reference!.path}/performances')
+          .withConverter(
+              fromFirestore: (snapshot, _) {
+                Map<String, dynamic> data = snapshot.data()!;
+
+                switch (ExerciseType.values.byName(data['exercise']['type'])) {
+                  case ExerciseType.manual:
+                    return ExercisePerformance.fromSnapshot(snapshot);
+                  case ExerciseType.resistance:
+                    return ResistanceExercisePerformance.fromSnapshot(snapshot);
+                  case ExerciseType.weights:
+                    return WeightsExercisePerformance.fromSnapshot(snapshot);
+                }
+              },
+              toFirestore: (performance, options) => performance.toMap())
+      : null;
 
   @override
   DocumentReference? get reference => _reference;
@@ -15,20 +38,22 @@ class RoutinePerformance extends Performance {
   @override
   String get name => routine.name;
 
-  @override
-  set name(String name) {
-    routine.name = name;
+  Map<String, DocumentReference> performanceReferences;
+
+  Stream<List<ExercisePerformance>>? get performances {
+    return _performances?.snapshots().map(
+      (snapshot) {
+        return snapshot.docs.map((doc) => doc.data()).toList();
+      },
+    );
   }
 
   @override
   num get calories {
-    /// TODO: Prepending the 0 element is an ugly way to make sure there is at
-    /// least one element, which is necessary for reduce.. Find a way to make
-    /// this prettier.
-    return [
-      0,
-      ...performances.values.map((performance) => performance?.calories ?? 0)
-    ].reduce((total, calories) => total + calories);
+    return 0;
+
+    /// TODO: Stream the number of calories from the performances.
+    // return performances?.map((performances) => performances.calories);
   }
 
   @override
@@ -39,8 +64,9 @@ class RoutinePerformance extends Performance {
   RoutinePerformance({
     required super.timestamp,
     required this.routine,
-    this.performances = const {},
-  }) : super(name: "", calories: 0);
+    Map<String, DocumentReference>? performanceReferences,
+  })  : performanceReferences = performanceReferences ?? {},
+        super(name: "", calories: 0);
 
   static RoutinePerformance fromSnapshot(
     DocumentSnapshot<Map<String, dynamic>> snapshot,
@@ -57,12 +83,8 @@ class RoutinePerformance extends Performance {
     return RoutinePerformance(
       timestamp: map['timestamp'],
       routine: Routine.fromMap(map['routine']),
-      performances: (map['performances'] as Map<String, dynamic>).map(
-        (key, performance) => MapEntry(
-          key,
-          exercisePerformanceFromMap(performance),
-        ),
-      ),
+      performanceReferences:
+          map['performances'].cast<String, DocumentReference>(),
     );
   }
 
@@ -71,12 +93,35 @@ class RoutinePerformance extends Performance {
     return {
       'timestamp': timestamp,
       'routine': routine.toMap(),
-      'performances': performances.map(
-        (key, performance) => MapEntry(
-          key,
-          performance?.toMap(),
-        ),
-      ),
+      'performances': performanceReferences,
     };
+  }
+
+  Future<DocumentReference> addPerformance(
+      int exerciseIndex, ExercisePerformance performance) async {
+    DocumentReference reference = await _performances!.add(performance);
+
+    performanceReferences[exerciseIndex.toString()] = reference;
+    _reference?.update(toMap());
+
+    return reference;
+  }
+
+  Future<void> updatePerformance(ExercisePerformance performance) async {
+    assert(performance.reference != null);
+    return _performances!.doc(performance.reference!.id).set(performance);
+  }
+
+  Future<void> deletePerformance(ExercisePerformance performance) async {
+    assert(performance.reference != null);
+
+    await _performances!.doc(performance.reference!.id).delete();
+    performanceReferences.removeWhere(
+      (key, value) => value.id == performance.reference!.id,
+    );
+
+    _reference?.update(toMap());
+
+    return;
   }
 }

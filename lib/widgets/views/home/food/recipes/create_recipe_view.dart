@@ -27,6 +27,7 @@ class _CreateRecipeViewState extends State<CreateRecipeView> {
     if (recipe != null) {
       _name = recipe.name;
       _servings = recipe.servings;
+    }
   }
 
   @override

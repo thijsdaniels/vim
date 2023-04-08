@@ -1,13 +1,14 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:vim/models/model.dart';
+import 'package:vim/services/service.dart';
 
-class Performance extends Model {
+class Performance extends Document {
   DocumentReference? _reference;
 
   Timestamp? timestamp;
   String name;
   num calories;
 
+  @override
   DocumentReference? get reference => _reference;
 
   Performance({

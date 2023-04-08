@@ -48,9 +48,9 @@ class ConsumptionsService {
             Consumptions(snapshot.docs.map((doc) => doc.data()).toList()));
   }
 
-  static Future<void> create(Consumption consumption) async {
+  static Future<DocumentReference> create(Consumption consumption) async {
     assert(consumption.id == null);
-    return _collection.doc().set(consumption);
+    return _collection.add(consumption);
   }
 
   static Future<void> update(Consumption consumption) async {

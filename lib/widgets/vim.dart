@@ -109,7 +109,7 @@ class Providers extends StatelessWidget {
               initialData: const Consumptions([]),
             ),
             StreamProvider.value(
-              value: PerformancesService.forDate(dateModel.date),
+              value: PerformancesService.instance.forDate(dateModel.date),
               initialData: const Performances([]),
             ),
           ],

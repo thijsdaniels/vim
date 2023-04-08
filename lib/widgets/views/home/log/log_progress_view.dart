@@ -17,7 +17,7 @@ Settings settings = Settings(
   muscle: 81.0,
   fat: 14.8,
   neat: 300, // a rough estimate
-  surplus: 0.1,
+  surplus: -0.05,
   exercise: 400,
   carbohydrates: 0.45,
   proteins: 0.25,
