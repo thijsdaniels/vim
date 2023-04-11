@@ -1,12 +1,19 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:vim/services/service.dart';
 
+/// TODO: Make this an abstract class and create a ManualPerformance subclass,
+/// so that the ManualPerformance can have a calories setter without the other
+/// subclasses of Performance inheriting that setter.
 class Performance extends Document {
   DocumentReference? _reference;
 
   Timestamp? timestamp;
   String name;
-  num calories;
+  num _calories;
+
+  Future<num> get calories {
+    return Future(() => _calories);
+  }
 
   @override
   DocumentReference? get reference => _reference;
@@ -14,8 +21,8 @@ class Performance extends Document {
   Performance({
     required this.timestamp,
     required this.name,
-    required this.calories,
-  });
+    required num calories,
+  }) : _calories = calories;
 
   @override
   Map<String, dynamic> toMap() {
@@ -24,6 +31,12 @@ class Performance extends Document {
       'name': name,
       'calories': calories,
     };
+  }
+
+  /// TODO: Related to the comment above this class, when there is a
+  /// ManualPerformance subclass, this method should be removed.
+  void setCalories(num calories) {
+    _calories = calories;
   }
 
   static Performance fromSnapshot(

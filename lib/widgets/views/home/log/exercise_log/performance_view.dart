@@ -1,4 +1,3 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:vim/models/exercise/exercise_performance.dart';
 import 'package:vim/models/exercise/performance.dart';
@@ -95,42 +94,45 @@ class _PerformanceViewState extends State<PerformanceView> {
                       SimpleCard(
                         title: 'Details',
                         child: Center(
-                          child: Table(
-                            defaultColumnWidth: const IntrinsicColumnWidth(),
-                            children: [
-                              if (performance is! ExercisePerformance &&
-                                  performance is! RoutinePerformance)
+                          child: FutureBuilder(
+                            future: performance.calories,
+                            builder: (context, snapshot) => Table(
+                              defaultColumnWidth: const IntrinsicColumnWidth(),
+                              children: [
+                                if (performance is! ExercisePerformance &&
+                                    performance is! RoutinePerformance)
+                                  TableRow(
+                                    children: [
+                                      const SecondaryText('Name'),
+                                      const SizedBox(width: 32),
+                                      Text(performance.name),
+                                    ],
+                                  ),
+                                if (performance is ExercisePerformance)
+                                  TableRow(
+                                    children: [
+                                      const SecondaryText('Exercise'),
+                                      const SizedBox(width: 32),
+                                      Text(performance.exercise.name),
+                                    ],
+                                  ),
+                                if (performance is RoutinePerformance)
+                                  TableRow(
+                                    children: [
+                                      const SecondaryText('Routine'),
+                                      const SizedBox(width: 32),
+                                      Text(performance.routine.name),
+                                    ],
+                                  ),
                                 TableRow(
                                   children: [
-                                    const SecondaryText('Name'),
+                                    const SecondaryText('Calories'),
                                     const SizedBox(width: 32),
-                                    Text(performance.name),
+                                    Text('${snapshot.data?.round()} cal'),
                                   ],
                                 ),
-                              if (performance is ExercisePerformance)
-                                TableRow(
-                                  children: [
-                                    const SecondaryText('Exercise'),
-                                    const SizedBox(width: 32),
-                                    Text(performance.exercise.name),
-                                  ],
-                                ),
-                              if (performance is RoutinePerformance)
-                                TableRow(
-                                  children: [
-                                    const SecondaryText('Routine'),
-                                    const SizedBox(width: 32),
-                                    Text(performance.routine.name),
-                                  ],
-                                ),
-                              TableRow(
-                                children: [
-                                  const SecondaryText('Calories'),
-                                  const SizedBox(width: 32),
-                                  Text('${performance.calories.round()} cal'),
-                                ],
-                              ),
-                            ],
+                              ],
+                            ),
                           ),
                         ),
                       ),

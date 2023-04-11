@@ -26,8 +26,9 @@ class ResistanceExercisePerformance extends ExercisePerformance {
   Energy get energy => Energy.watts(watts, duration);
 
   @override
-  num get calories =>
-      energy.kiloCalories / ResistanceExercisePerformance.efficiency;
+  Future<num> get calories => Future(
+        () => energy.kiloCalories / ResistanceExercisePerformance.efficiency,
+      );
 
   ResistanceExercisePerformance({
     required super.timestamp,

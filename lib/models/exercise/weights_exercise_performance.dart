@@ -16,7 +16,7 @@ class WeightsExercisePerformance extends ExercisePerformance {
   String get name => exercise.name;
 
   @override
-  num get calories => sets.calories;
+  Future<num> get calories => Future(() => sets.calories);
 
   WeightsExercisePerformance({
     required super.timestamp,

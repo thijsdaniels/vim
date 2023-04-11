@@ -49,16 +49,17 @@ class RoutinePerformance extends Performance {
   }
 
   @override
-  num get calories {
-    return 0;
-
-    /// TODO: Stream the number of calories from the performances.
-    // return performances?.map((performances) => performances.calories);
-  }
-
-  @override
-  set calories(num calories) {
-    throw Exception("Cannot set RoutinePerformance's calories directly.");
+  Future<num> get calories async {
+    return await performances!
+        .map(
+          (performances) => [
+            /// TODO: I prepend a 0, because .reduce() throws an error when
+            /// there are no entries. Find a prettier solution to this.
+            Future(() => 0),
+            ...performances.map((performance) => performance.calories)
+          ].reduce((total, calories) async => await total + await calories),
+        )
+        .first;
   }
 
   RoutinePerformance({

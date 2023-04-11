@@ -60,7 +60,7 @@ class Settings {
 
   double get intake => (bmr + neat) * (1 + surplus);
 
-  double adjustedIntake(Performances performances) {
-    return adjustIntake ? intake + performances.calories : intake;
+  Future<double> adjustedIntake(Performances performances) async {
+    return adjustIntake ? intake + await performances.calories : intake;
   }
 }

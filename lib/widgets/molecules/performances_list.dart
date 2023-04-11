@@ -35,23 +35,26 @@ class PerformancesList extends StatelessWidget {
 
         return ListTile(
           title: Text(performance.name),
-          subtitle: SecondaryText(
-            // TODO: Try to change this into Chip widgets.
-            [
-              '${performance.calories.round()} cal',
-              if (performance is WeightsExercisePerformance) ...[
-                '${(performance.sets.weight / performance.sets.length).decimals(2)} kg',
-                performance.sets
-                    .map(
-                      (set) => '${set.repetitions}',
-                    )
-                    .join("/"),
-              ],
-              if (performance is ResistanceExercisePerformance) ...[
-                '${performance.watts} watts',
-                '${performance.duration.inMinutes} m',
-              ],
-            ].join(" • "),
+          subtitle: FutureBuilder(
+            future: performance.calories,
+            builder: (context, snapshot) => SecondaryText(
+              // TODO: Try to change this into Chip widgets.
+              [
+                '${snapshot.data?.round()} cal',
+                if (performance is WeightsExercisePerformance) ...[
+                  '${(performance.sets.weight / performance.sets.length).decimals(2)} kg',
+                  performance.sets
+                      .map(
+                        (set) => '${set.repetitions}',
+                      )
+                      .join("/"),
+                ],
+                if (performance is ResistanceExercisePerformance) ...[
+                  '${performance.watts} watts',
+                  '${performance.duration.inMinutes} m',
+                ],
+              ].join(" • "),
+            ),
           ),
           onTap: () {
             Navigator.of(context).push(

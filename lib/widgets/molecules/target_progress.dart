@@ -9,13 +9,13 @@ class TargetProgress extends StatelessWidget {
   const TargetProgress({
     super.key,
     required this.title,
-    required this.target,
+    this.target,
     required this.progress,
     this.barSize = TargetProgressBarSize.small,
   });
 
   final String title;
-  final num target;
+  final num? target;
   final num progress;
   final TargetProgressBarSize barSize;
 
@@ -35,10 +35,11 @@ class TargetProgress extends StatelessWidget {
                     color: Theme.of(context).colorScheme.primary,
                   ),
             ),
-            Text(
-              ' / ${target.round().toString()}',
-              style: Theme.of(context).textTheme.bodySmall,
-            ),
+            if (target != null)
+              Text(
+                ' / ${target!.round().toString()}',
+                style: Theme.of(context).textTheme.bodySmall,
+              ),
           ],
         ),
         const SizedBox(height: 6),
@@ -53,7 +54,7 @@ class TargetProgress extends StatelessWidget {
               curve: Curves.easeInOut,
               tween: Tween<double>(
                 begin: 0,
-                end: progress / target,
+                end: target != null ? progress / target! : 0,
               ),
               builder: (context, value, _) => LinearProgressIndicator(
                 value: value,

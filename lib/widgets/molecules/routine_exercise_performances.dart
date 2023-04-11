@@ -84,53 +84,62 @@ class RoutineExercisePerformances extends StatelessWidget {
                           ),
                           title: Text(exercise?.name ?? ''),
                           subtitle: performance != null
-                              ? SecondaryText(
-                                  // TODO: Try to change this into Chip widgets.
-                                  [
-                                    if (performance
-                                            is! WeightsExercisePerformance &&
-                                        performance
-                                            is! ResistanceExercisePerformance)
-                                      '${performance.calories.round()} cal',
-                                    if (performance
-                                        is WeightsExercisePerformance) ...[
-                                      '${(performance.sets.weight / performance.sets.length).decimals(2)} kg',
-                                      performance.sets
-                                          .map((set) => '${set.repetitions}')
-                                          .join("/"),
-                                    ],
-                                    if (performance
-                                        is ResistanceExercisePerformance) ...[
-                                      '${performance.watts} watts',
-                                      '${performance.duration.inMinutes} m',
-                                    ],
-                                    if (latest != null)
-                                      '${(performance.calories / latest.calories * 100).round()}%'
-                                  ].join(" • "),
+                              ? FutureBuilder(
+                                  future: performance.calories,
+                                  builder: (context, snapshot) => SecondaryText(
+                                    // TODO: Try to change this into Chip widgets.
+                                    [
+                                      if (performance
+                                              is! WeightsExercisePerformance &&
+                                          performance
+                                              is! ResistanceExercisePerformance)
+                                        '${snapshot.data?.round()} cal',
+                                      if (performance
+                                          is WeightsExercisePerformance) ...[
+                                        '${(performance.sets.weight / performance.sets.length).decimals(2)} kg',
+                                        performance.sets
+                                            .map((set) => '${set.repetitions}')
+                                            .join("/"),
+                                      ],
+                                      if (performance
+                                          is ResistanceExercisePerformance) ...[
+                                        '${performance.watts} watts',
+                                        '${performance.duration.inMinutes} m',
+                                      ],
+
+                                      /// TODO: Re-enable this.
+                                      // if (latest != null)
+                                      //   '${(snapshot.data ?? 0 / latest.calories * 100).round()}%'
+                                    ].join(" • "),
+                                  ),
                                 )
                               : latest != null
-                                  ? SecondaryText(
-                                      // TODO: Try to change this into Chip widgets.
-                                      [
-                                        if (latest
-                                                is! WeightsExercisePerformance &&
-                                            latest
-                                                is! ResistanceExercisePerformance)
-                                          '${latest.calories.round()} cal',
-                                        if (latest
-                                            is WeightsExercisePerformance) ...[
-                                          '${(latest.sets.weight / latest.sets.length).decimals(2)} kg',
-                                          latest.sets
-                                              .map(
-                                                  (set) => '${set.repetitions}')
-                                              .join("/"),
-                                        ],
-                                        if (latest
-                                            is ResistanceExercisePerformance) ...[
-                                          '${latest.watts} watts',
-                                          '${latest.duration.inMinutes} m',
-                                        ],
-                                      ].join(" • "),
+                                  ? FutureBuilder(
+                                      future: latest.calories,
+                                      builder: (context, snapshot) =>
+                                          SecondaryText(
+                                        // TODO: Try to change this into Chip widgets.
+                                        [
+                                          if (latest
+                                                  is! WeightsExercisePerformance &&
+                                              latest
+                                                  is! ResistanceExercisePerformance)
+                                            '${snapshot.data?.round()} cal',
+                                          if (latest
+                                              is WeightsExercisePerformance) ...[
+                                            '${(latest.sets.weight / latest.sets.length).decimals(2)} kg',
+                                            latest.sets
+                                                .map((set) =>
+                                                    '${set.repetitions}')
+                                                .join("/"),
+                                          ],
+                                          if (latest
+                                              is ResistanceExercisePerformance) ...[
+                                            '${latest.watts} watts',
+                                            '${latest.duration.inMinutes} m',
+                                          ],
+                                        ].join(" • "),
+                                      ),
                                     )
                                   : const SecondaryText('--'),
                           trailing: Row(
@@ -190,7 +199,7 @@ class PerformedCheckbox extends StatelessWidget {
   Widget build(BuildContext context) {
     return Checkbox(
       value: exercisePerformance != null,
-      onChanged: (value) {
+      onChanged: (value) async {
         if (value!) {
           ExercisePerformance exercisePerformance;
 
@@ -199,7 +208,7 @@ class PerformedCheckbox extends StatelessWidget {
               exercisePerformance = ExercisePerformance(
                 timestamp: Timestamp.now(),
                 exercise: exercise,
-                calories: previousExercisePerformance?.calories ?? 0,
+                calories: await previousExercisePerformance?.calories ?? 0,
               );
               break;
             case ExerciseType.resistance:

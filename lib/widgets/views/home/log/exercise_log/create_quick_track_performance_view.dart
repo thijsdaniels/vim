@@ -58,7 +58,7 @@ class _CreateQuickTrackPerformanceViewState
 
                   if (performance != null) {
                     performance.name = name;
-                    performance.calories = calories;
+                    performance.setCalories(calories);
                   } else {
                     performance = Performance(
                       timestamp: dateModel.timestamp,

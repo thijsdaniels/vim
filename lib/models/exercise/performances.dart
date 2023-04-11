@@ -9,12 +9,12 @@ import 'package:vim/models/exercise/weights_exercise_performance.dart';
 class Performances extends MutableCollection<Performance> {
   const Performances([super.entries = const []]);
 
-  num get calories {
+  Future<num> get calories async {
     return entries.isNotEmpty
         ? entries
             .map((performance) => performance.calories)
-            .reduce((total, entry) => total + entry)
-        : 0;
+            .reduce((total, entry) async => await total + await entry)
+        : Future(() => 0);
   }
 
   // TODO: Implement the `fromMap` if I ever need it. Keep in mind that it

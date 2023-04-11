@@ -56,24 +56,28 @@ class CaloriesCard extends StatelessWidget {
     Consumptions consumptions = Provider.of<Consumptions>(context);
     Performances performances = Provider.of<Performances>(context);
 
-    double adjustedIntake = settings.adjustedIntake(performances);
-
     return SimpleCard(
       title: 'Calories',
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceAround,
         children: [
-          TargetProgress(
-            title: 'Consumed',
-            progress: consumptions.nutrition.calories,
-            target: adjustedIntake,
-            barSize: TargetProgressBarSize.large,
+          FutureBuilder(
+            future: settings.adjustedIntake(performances),
+            builder: (context, snapshot) => TargetProgress(
+              title: 'Consumed',
+              progress: consumptions.nutrition.calories,
+              target: snapshot.hasData ? snapshot.data! : null,
+              barSize: TargetProgressBarSize.large,
+            ),
           ),
-          TargetProgress(
-            title: 'Burned',
-            progress: performances.calories,
-            target: settings.exercise,
-            barSize: TargetProgressBarSize.large,
+          FutureBuilder(
+            future: performances.calories,
+            builder: (context, snapshot) => TargetProgress(
+              title: 'Burned',
+              progress: snapshot.data ?? 0,
+              target: settings.exercise,
+              barSize: TargetProgressBarSize.large,
+            ),
           ),
         ],
       ),
@@ -89,31 +93,43 @@ class MacrosCard extends StatelessWidget {
     Consumptions consumptions = Provider.of<Consumptions>(context);
     Performances performances = Provider.of<Performances>(context);
 
-    double adjustedIntake = settings.adjustedIntake(performances);
-
     return SimpleCard(
       title: 'Macros',
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceAround,
-        children: [
-          TargetProgress(
-            title: 'Carbs',
-            progress: consumptions.nutrition.carbohydrates.total ?? 0,
-            target: Carbohydrates.grams(
-              adjustedIntake * settings.carbohydrates,
+      child: FutureBuilder(
+        future: settings.adjustedIntake(performances),
+        builder: (context, snapshot) => Row(
+          mainAxisAlignment: MainAxisAlignment.spaceAround,
+          children: [
+            TargetProgress(
+              title: 'Carbs',
+              progress: snapshot.hasData
+                  ? consumptions.nutrition.carbohydrates.total ?? 0
+                  : 0,
+              target: snapshot.hasData
+                  ? Carbohydrates.grams(
+                      snapshot.data! * settings.carbohydrates,
+                    )
+                  : null,
             ),
-          ),
-          TargetProgress(
-            title: 'Proteins',
-            progress: consumptions.nutrition.proteins.total ?? 0,
-            target: Proteins.grams(adjustedIntake * settings.proteins),
-          ),
-          TargetProgress(
-            title: 'Fats',
-            progress: consumptions.nutrition.fats.total ?? 0,
-            target: Fats.grams(adjustedIntake * settings.fats),
-          ),
-        ],
+            TargetProgress(
+              title: 'Proteins',
+              progress: snapshot.hasData
+                  ? consumptions.nutrition.proteins.total ?? 0
+                  : 0,
+              target: snapshot.hasData
+                  ? Proteins.grams(snapshot.data! * settings.proteins)
+                  : null,
+            ),
+            TargetProgress(
+              title: 'Fats',
+              progress:
+                  snapshot.hasData ? consumptions.nutrition.fats.total ?? 0 : 0,
+              target: snapshot.hasData
+                  ? Fats.grams(snapshot.data! * settings.fats)
+                  : null,
+            ),
+          ],
+        ),
       ),
     );
   }

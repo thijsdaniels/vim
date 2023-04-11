@@ -1,4 +1,3 @@
-import 'package:vim/extensions/num.dart';
 import 'package:vim/models/collection.dart';
 import 'package:vim/models/exercise/set.dart';
 

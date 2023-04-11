@@ -42,7 +42,7 @@ class _CreateExercisePerformanceViewState
 
     if (exercisePerformance != null) {
       _exercise = exercisePerformance.exercise;
-      _calories = exercisePerformance.calories;
+      _calories = 0; // exercisePerformance.calories; // TODO: Fix this
 
       if (exercisePerformance is WeightsExercisePerformance) {
         _sets = exercisePerformance.sets.toMap();
@@ -92,7 +92,7 @@ class _CreateExercisePerformanceViewState
                     } else {
                       exercisePerformance.timestamp = dateModel.timestamp;
                       exercisePerformance.exercise = _exercise!;
-                      exercisePerformance.calories = _calories!;
+                      exercisePerformance.setCalories(_calories!);
                     }
                   } else {
                     switch (_exercise!.type) {
