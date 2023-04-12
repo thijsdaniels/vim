@@ -4,7 +4,7 @@ import 'package:vim/models/food/recipe.dart';
 import 'package:vim/models/food/recipes.dart';
 import 'package:vim/widgets/atoms/icons8_icons_stack.dart';
 import 'package:vim/widgets/atoms/secondary_text.dart';
-import 'package:vim/widgets/atoms/surface_list.dart';
+import 'package:vim/widgets/atoms/standard_list.dart';
 import 'package:vim/widgets/molecules/list_surface.dart';
 import 'package:vim/widgets/views/home/food/recipes/create_recipe_view.dart';
 import 'package:vim/widgets/views/home/food/recipes/recipe_view.dart';
@@ -32,7 +32,7 @@ class _RecipesViewState extends State<RecipesView> {
       ),
       body: SafeArea(
         child: Consumer<Recipes>(
-          builder: (context, recipes, child) => SurfaceList(
+          builder: (context, recipes, child) => StandardList(
             itemCount: recipes.length,
             itemBuilder: (context, index) {
               Recipe recipe = recipes.get(index);

@@ -3,6 +3,7 @@ import 'package:vim/extensions/string.dart';
 import 'package:vim/models/exercise/exercise.dart';
 import 'package:vim/services/exercises_service.dart';
 import 'package:vim/widgets/atoms/secondary_text.dart';
+import 'package:vim/widgets/atoms/standard_list.dart';
 import 'package:vim/widgets/molecules/simple_card.dart';
 import 'package:vim/widgets/molecules/with_confirmation_dialog.dart';
 import 'package:vim/widgets/views/home/exercise/exercises/create_exercise_view.dart';
@@ -58,36 +59,31 @@ class _ExerciseViewState extends State<ExerciseView> {
           ),
         ],
       ),
-      body: SingleChildScrollView(
-        child: Padding(
-          padding: const EdgeInsets.all(16),
-          child: Column(
-            children: [
-              SimpleCard(
-                title: 'Details',
-                child: Table(
-                  defaultColumnWidth: const IntrinsicColumnWidth(),
+      body: StandardList(
+        children: [
+          SimpleCard(
+            title: 'Details',
+            child: Table(
+              defaultColumnWidth: const IntrinsicColumnWidth(),
+              children: [
+                TableRow(
                   children: [
-                    TableRow(
-                      children: [
-                        const SecondaryText('Name'),
-                        const SizedBox(width: 32),
-                        Text(exercise.name),
-                      ],
-                    ),
-                    TableRow(
-                      children: [
-                        const SecondaryText('Type'),
-                        const SizedBox(width: 32),
-                        Text(exercise.type.name.toTitleCase()),
-                      ],
-                    ),
+                    const SecondaryText('Name'),
+                    const SizedBox(width: 32),
+                    Text(exercise.name),
                   ],
                 ),
-              ),
-            ],
+                TableRow(
+                  children: [
+                    const SecondaryText('Type'),
+                    const SizedBox(width: 32),
+                    Text(exercise.type.name.toTitleCase()),
+                  ],
+                ),
+              ],
+            ),
           ),
-        ),
+        ],
       ),
     );
   }

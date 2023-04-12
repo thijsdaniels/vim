@@ -13,7 +13,10 @@ import 'package:vim/models/exercise/set.dart';
 import 'package:vim/models/exercise/sets.dart';
 import 'package:vim/models/exercise/weights_exercise_performance.dart';
 import 'package:vim/services/performances_service.dart';
+import 'package:vim/widgets/atoms/icons8_icon.dart';
 import 'package:vim/widgets/atoms/secondary_text.dart';
+import 'package:vim/widgets/atoms/standard_list.dart';
+import 'package:vim/widgets/molecules/list_surface.dart';
 import 'package:vim/widgets/views/home/log/exercise_log/create_exercise_performance_view.dart';
 
 class RoutineExercisePerformances extends StatelessWidget {
@@ -33,149 +36,147 @@ class RoutineExercisePerformances extends StatelessWidget {
           builder: (context, snapshot) {
             List<ExercisePerformance>? performances = snapshot.data;
 
-            return ListView(
-              shrinkWrap: true,
-              physics: const NeverScrollableScrollPhysics(),
-              children: routinePerformance.routine.exerciseReferences
-                  .asMap()
-                  .entries
-                  .map(
-                (entry) {
-                  String id = entry.value.id;
+            return StandardList(
+              padding: EdgeInsets.zero,
+              itemCount: routinePerformance.routine.exerciseReferences.length,
+              itemBuilder: (context, index) {
+                DocumentReference exerciseReference =
+                    routinePerformance.routine.exerciseReferences[index];
+                String exerciseId = exerciseReference.id;
 
-                  Exercise? exercise = exercises.firstWhereOrNull(
-                    (exercise) => exercise.reference?.id == id,
-                  );
+                Exercise? exercise = exercises.firstWhereOrNull(
+                  (exercise) => exercise.reference?.id == exerciseId,
+                );
 
-                  ExercisePerformance? performance =
-                      performances?.firstWhereOrNull(
-                    (performance) =>
-                        performance.reference?.id ==
-                        routinePerformance
-                            .performanceReferences[entry.key.toString()]?.id,
-                  );
+                ExercisePerformance? performance =
+                    performances?.firstWhereOrNull(
+                  (performance) =>
+                      performance.reference?.id ==
+                      routinePerformance
+                          .performanceReferences[index.toString()]?.id,
+                );
 
-                  return Card(
-                    elevation: 4,
-                    child: StreamBuilder<Performance>(
-                      stream: exercise != null
-                          ? PerformancesService.instance.latest(
-                              name: exercise.name,
-                              before: routinePerformance.timestamp,
+                return StreamBuilder<Performance>(
+                  stream: exercise != null
+                      ? PerformancesService.instance.latest(
+                          name: exercise.name,
+                          before: routinePerformance.timestamp,
+                        )
+                      : null,
+                  builder: (context, snapshot) {
+                    ExercisePerformance? latest =
+                        snapshot.data as ExercisePerformance?;
+
+                    return ListSurface(
+                      elevation: 4,
+                      icon: exercise != null ? getIcon(exercise) : null,
+                      title: Text(exercise?.name ?? ''),
+                      subtitle: performance != null
+                          ? FutureBuilder(
+                              future: performance.calories,
+                              builder: (context, snapshot) => SecondaryText(
+                                // TODO: Try to change this into Chip widgets.
+                                [
+                                  if (performance
+                                          is! WeightsExercisePerformance &&
+                                      performance
+                                          is! ResistanceExercisePerformance)
+                                    '${snapshot.data?.round()} cal',
+                                  if (performance
+                                      is WeightsExercisePerformance) ...[
+                                    '${(performance.sets.weight / performance.sets.length).decimals(2)} kg',
+                                    performance.sets
+                                        .map((set) => '${set.repetitions}')
+                                        .join("/"),
+                                  ],
+                                  if (performance
+                                      is ResistanceExercisePerformance) ...[
+                                    '${performance.watts} watts',
+                                    '${performance.duration.inMinutes} m',
+                                  ],
+
+                                  /// TODO: Re-enable this.
+                                  // if (latest != null)
+                                  //   '${(snapshot.data ?? 0 / latest.calories * 100).round()}%'
+                                ].join(" • "),
+                              ),
                             )
-                          : null,
-                      builder: (context, snapshot) {
-                        ExercisePerformance? latest =
-                            snapshot.data as ExercisePerformance?;
-
-                        return ListTile(
-                          leading: Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              if (exercise != null)
-                                PerformedCheckbox(
-                                  index: entry.key,
-                                  exercise: exercise,
-                                  exercisePerformance: performance,
-                                  previousExercisePerformance: latest,
-                                  routinePerformance: routinePerformance,
-                                ),
-                            ],
-                          ),
-                          title: Text(exercise?.name ?? ''),
-                          subtitle: performance != null
+                          : latest != null
                               ? FutureBuilder(
-                                  future: performance.calories,
+                                  future: latest.calories,
                                   builder: (context, snapshot) => SecondaryText(
                                     // TODO: Try to change this into Chip widgets.
                                     [
-                                      if (performance
+                                      if (latest
                                               is! WeightsExercisePerformance &&
-                                          performance
+                                          latest
                                               is! ResistanceExercisePerformance)
                                         '${snapshot.data?.round()} cal',
-                                      if (performance
+                                      if (latest
                                           is WeightsExercisePerformance) ...[
-                                        '${(performance.sets.weight / performance.sets.length).decimals(2)} kg',
-                                        performance.sets
+                                        '${(latest.sets.weight / latest.sets.length).decimals(2)} kg',
+                                        latest.sets
                                             .map((set) => '${set.repetitions}')
                                             .join("/"),
                                       ],
-                                      if (performance
+                                      if (latest
                                           is ResistanceExercisePerformance) ...[
-                                        '${performance.watts} watts',
-                                        '${performance.duration.inMinutes} m',
+                                        '${latest.watts} watts',
+                                        '${latest.duration.inMinutes} m',
                                       ],
-
-                                      /// TODO: Re-enable this.
-                                      // if (latest != null)
-                                      //   '${(snapshot.data ?? 0 / latest.calories * 100).round()}%'
                                     ].join(" • "),
                                   ),
                                 )
-                              : latest != null
-                                  ? FutureBuilder(
-                                      future: latest.calories,
-                                      builder: (context, snapshot) =>
-                                          SecondaryText(
-                                        // TODO: Try to change this into Chip widgets.
-                                        [
-                                          if (latest
-                                                  is! WeightsExercisePerformance &&
-                                              latest
-                                                  is! ResistanceExercisePerformance)
-                                            '${snapshot.data?.round()} cal',
-                                          if (latest
-                                              is WeightsExercisePerformance) ...[
-                                            '${(latest.sets.weight / latest.sets.length).decimals(2)} kg',
-                                            latest.sets
-                                                .map((set) =>
-                                                    '${set.repetitions}')
-                                                .join("/"),
-                                          ],
-                                          if (latest
-                                              is ResistanceExercisePerformance) ...[
-                                            '${latest.watts} watts',
-                                            '${latest.duration.inMinutes} m',
-                                          ],
-                                        ].join(" • "),
-                                      ),
-                                    )
-                                  : const SecondaryText('--'),
-                          trailing: Row(
-                            mainAxisSize: MainAxisSize.min,
-                            children: [
-                              if (performance != null)
-                                IconButton(
-                                  icon: const Icon(Icons.edit),
-                                  onPressed: () async {
-                                    ExercisePerformance edited =
-                                        await Navigator.of(context).push(
-                                      MaterialPageRoute(
-                                        builder: (context) =>
-                                            CreateExercisePerformanceView(
-                                          exercisePerformance: performance,
-                                        ),
-                                      ),
-                                    );
+                              : const SecondaryText('--'),
+                      actions: Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          if (performance != null)
+                            IconButton(
+                              icon: const Icon(Icons.edit),
+                              onPressed: () async {
+                                ExercisePerformance edited =
+                                    await Navigator.of(context).push(
+                                  MaterialPageRoute(
+                                    builder: (context) =>
+                                        CreateExercisePerformanceView(
+                                      exercisePerformance: performance,
+                                    ),
+                                  ),
+                                );
 
-                                    routinePerformance
-                                        .updatePerformance(edited);
-                                  },
-                                ),
-                            ],
-                          ),
-                        );
-                      },
-                    ),
-                  );
-                },
-              ).toList(),
+                                routinePerformance.updatePerformance(edited);
+                              },
+                            ),
+                          if (exercise != null)
+                            PerformedCheckbox(
+                              index: index,
+                              exercise: exercise,
+                              exercisePerformance: performance,
+                              previousExercisePerformance: latest,
+                              routinePerformance: routinePerformance,
+                            ),
+                        ],
+                      ),
+                    );
+                  },
+                );
+              },
             );
           },
         );
       },
     );
+  }
+
+  Widget? getIcon(Exercise exercise) {
+    if (exercise.type == ExerciseType.weights) {
+      return Icons8Icon.network('dumbbell', size: 48);
+    } else if (exercise.type == ExerciseType.resistance) {
+      return Icons8Icon.network('trainers', size: 48);
+    }
+
+    return null;
   }
 }
 

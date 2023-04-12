@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:vim/models/food/ingredient_amounts.dart';
 import 'package:vim/widgets/atoms/ingredient_reference_dropdown_menu.dart';
 import 'package:vim/widgets/atoms/number_form_field.dart';
+import 'package:vim/widgets/atoms/standard_list.dart';
 import 'package:vim/widgets/molecules/simple_card.dart';
 
 class CreateIngredientAmountView extends StatefulWidget {
@@ -62,12 +63,11 @@ class _CreateIngredientAmountViewState
           ),
         ],
       ),
-      body: SingleChildScrollView(
-        child: Padding(
-          padding: const EdgeInsets.all(16.0),
-          child: Form(
-            key: _formKey,
-            child: SimpleCard(
+      body: Form(
+        key: _formKey,
+        child: StandardList(
+          children: [
+            SimpleCard(
               title: 'Details',
               child: Column(
                 mainAxisSize: MainAxisSize.min,
@@ -100,7 +100,7 @@ class _CreateIngredientAmountViewState
                 ],
               ),
             ),
-          ),
+          ],
         ),
       ),
     );

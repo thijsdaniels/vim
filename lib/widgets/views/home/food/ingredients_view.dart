@@ -4,7 +4,7 @@ import 'package:vim/models/food/ingredient.dart';
 import 'package:vim/models/food/ingredients.dart';
 import 'package:vim/widgets/atoms/icons8_icon.dart';
 import 'package:vim/widgets/atoms/secondary_text.dart';
-import 'package:vim/widgets/atoms/surface_list.dart';
+import 'package:vim/widgets/atoms/standard_list.dart';
 import 'package:vim/widgets/molecules/list_surface.dart';
 import 'package:vim/widgets/views/home/food/ingredients/create_ingredient_view.dart';
 import 'package:vim/widgets/views/home/food/ingredients/ingredient_view.dart';
@@ -32,7 +32,7 @@ class _IngredientsViewState extends State<IngredientsView> {
       ),
       body: SafeArea(
         child: Consumer<Ingredients>(
-          builder: (context, ingredients, child) => SurfaceList(
+          builder: (context, ingredients, child) => StandardList(
             itemCount: ingredients.length,
             itemBuilder: (context, index) {
               Ingredient ingredient = ingredients.get(index);

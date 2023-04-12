@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 
+const Icons8Style defaultStyle = Icons8Style.arcade;
+
 class Icons8Icon {
   static Image network(
     String slug, {
-    Icons8Style style = Icons8Style.arcade,
+    Icons8Style style = defaultStyle,
     double size = 32,
     Widget Function(BuildContext, Object, StackTrace?)? errorBuilder,
   }) {
@@ -21,7 +23,7 @@ class Icons8Icon {
 
   static Image asset(
     String slug, {
-    Icons8Style style = Icons8Style.arcade,
+    Icons8Style style = defaultStyle,
     double size = 32,
   }) {
     return Image(

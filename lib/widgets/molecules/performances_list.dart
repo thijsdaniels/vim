@@ -4,9 +4,12 @@ import 'package:vim/extensions/num.dart';
 import 'package:vim/models/exercise/performance.dart';
 import 'package:vim/models/exercise/performances.dart';
 import 'package:vim/models/exercise/resistance_exercise_performance.dart';
+import 'package:vim/models/exercise/routine_performance.dart';
 import 'package:vim/models/exercise/weights_exercise_performance.dart';
+import 'package:vim/widgets/atoms/icons8_icon.dart';
 import 'package:vim/widgets/atoms/secondary_text.dart';
-import 'package:vim/widgets/atoms/surface_list.dart';
+import 'package:vim/widgets/atoms/standard_list.dart';
+import 'package:vim/widgets/molecules/list_surface.dart';
 import 'package:vim/widgets/views/home/log/exercise_log/performance_view.dart';
 
 // TODO: Receive `performances` as a parameter instead of taking them from
@@ -28,12 +31,13 @@ class PerformancesList extends StatelessWidget {
       );
     }
 
-    return SurfaceList(
+    return StandardList(
       itemCount: performances.length,
       itemBuilder: (context, index) {
         Performance performance = performances.get(index);
 
-        return ListTile(
+        return ListSurface(
+          icon: getIcon(performance),
           title: Text(performance.name),
           subtitle: FutureBuilder(
             future: performance.calories,
@@ -111,5 +115,17 @@ class PerformancesList extends StatelessWidget {
         );
       },
     );
+  }
+
+  Widget? getIcon(Performance performance) {
+    if (performance is RoutinePerformance) {
+      return Icons8Icon.asset('greek-helmet', size: 48);
+    } else if (performance is WeightsExercisePerformance) {
+      return Icons8Icon.network('dumbbell', size: 48);
+    } else if (performance is ResistanceExercisePerformance) {
+      return Icons8Icon.network('trainers', size: 48);
+    }
+
+    return null;
   }
 }

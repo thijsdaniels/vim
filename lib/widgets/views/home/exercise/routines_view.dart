@@ -2,7 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:vim/models/exercise/routine.dart';
 import 'package:vim/widgets/atoms/secondary_text.dart';
-import 'package:vim/widgets/atoms/surface_list.dart';
+import 'package:vim/widgets/atoms/standard_list.dart';
+import 'package:vim/widgets/molecules/list_surface.dart';
 import 'package:vim/widgets/views/home/exercise/routines/create_routine_view.dart';
 import 'package:vim/widgets/views/home/exercise/routines/routine_view.dart';
 
@@ -29,12 +30,12 @@ class _RoutinesViewState extends State<RoutinesView> {
       ),
       body: SafeArea(
         child: Consumer<Iterable<Routine>>(
-          builder: (context, routines, child) => SurfaceList(
+          builder: (context, routines, child) => StandardList(
             itemCount: routines.length,
             itemBuilder: (context, index) {
               Routine routine = routines.elementAt(index);
 
-              return ListTile(
+              return ListSurface(
                 title: Text(routine.name),
                 subtitle: SecondaryText(
                   [

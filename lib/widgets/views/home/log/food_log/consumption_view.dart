@@ -6,7 +6,10 @@ import 'package:vim/models/food/consumption.dart';
 import 'package:vim/models/food/ingredient_consumption.dart';
 import 'package:vim/models/food/recipe_consumption.dart';
 import 'package:vim/services/consumptions_service.dart';
+import 'package:vim/widgets/atoms/icons8_icon.dart';
 import 'package:vim/widgets/atoms/secondary_text.dart';
+import 'package:vim/widgets/atoms/standard_list.dart';
+import 'package:vim/widgets/molecules/list_surface.dart';
 import 'package:vim/widgets/molecules/nutrition_table.dart';
 import 'package:vim/widgets/molecules/simple_card.dart';
 import 'package:vim/widgets/molecules/with_confirmation_dialog.dart';
@@ -83,163 +86,147 @@ class _ConsumptionViewState extends State<ConsumptionView> {
           ),
         ],
       ),
-      body: SingleChildScrollView(
-        child: Padding(
-          padding: const EdgeInsets.all(16),
-          child: Column(
-            children: [
-              SimpleCard(
-                title: 'Details',
-                child: Center(
-                  child: Table(
-                    defaultColumnWidth: const IntrinsicColumnWidth(),
-                    children: [
-                      if (consumption is! IngredientConsumption &&
-                          consumption is! RecipeConsumption)
-                        TableRow(
-                          children: [
-                            const SecondaryText('Name'),
-                            const SizedBox(width: 32),
-                            Text(consumption.name),
-                          ],
-                        ),
-                      if (consumption is IngredientConsumption) ...[
-                        TableRow(
-                          children: [
-                            const SecondaryText('Ingredient'),
-                            const SizedBox(width: 32),
-                            Text(consumption.ingredient.name),
-                          ],
-                        ),
-                        TableRow(
-                          children: [
-                            const SecondaryText('Brand'),
-                            const SizedBox(width: 32),
-                            consumption.ingredient.brand != null
-                                ? Text(consumption.ingredient.brand!)
-                                : const SecondaryText('--'),
-                          ],
-                        ),
-                        TableRow(
-                          children: [
-                            const SecondaryText('Amount'),
-                            const SizedBox(width: 32),
-                            Column(
-                              children: [
-                                Row(
-                                  children: [
-                                    Text(consumption.amount.value.toString()),
-                                    const SizedBox(width: 4),
-                                    SecondaryText(
-                                      describeEnum(consumption.amount.unit),
-                                    ),
-                                  ],
-                                ),
-                                if (consumption.amount.unit == Unit.servings)
-                                  Row(
-                                    children: [
-                                      Text((consumption.amount.value *
-                                              consumption.ingredient.serving!)
-                                          .toString()),
-                                      const SizedBox(width: 4),
-                                      const SecondaryText('grams'),
-                                    ],
-                                  ),
-                              ],
-                            ),
-                          ],
-                        ),
+      body: StandardList(
+        children: [
+          SimpleCard(
+            title: 'Details',
+            child: Center(
+              child: Table(
+                defaultColumnWidth: const IntrinsicColumnWidth(),
+                children: [
+                  if (consumption is! IngredientConsumption &&
+                      consumption is! RecipeConsumption)
+                    TableRow(
+                      children: [
+                        const SecondaryText('Name'),
+                        const SizedBox(width: 32),
+                        Text(consumption.name),
                       ],
-                      if (consumption is RecipeConsumption) ...[
-                        TableRow(
-                          children: [
-                            const SecondaryText('Recipe'),
-                            const SizedBox(width: 32),
-                            Text(consumption.recipe.name),
-                          ],
-                        ),
-                        TableRow(
-                          children: [
-                            const SecondaryText('Amount'),
-                            const SizedBox(width: 32),
-                            Column(
-                              children: [
-                                Row(
-                                  children: [
-                                    Text(consumption.amount.value.toString()),
-                                    const SizedBox(width: 4),
-                                    SecondaryText(
-                                      describeEnum(consumption.amount.unit),
-                                    ),
-                                  ],
-                                ),
-                                if (consumption.amount.unit == Unit.servings)
-                                  Row(
-                                    children: [
-                                      Text((consumption.amount.value *
-                                              consumption.recipe
-                                                  .ingredientAmounts.amount /
-                                              consumption.recipe.servings)
-                                          .toString()),
-                                      const SizedBox(width: 4),
-                                      const SecondaryText('grams'),
-                                    ],
-                                  ),
-                              ],
-                            ),
-                          ],
-                        ),
-                      ],
-                    ],
-                  ),
-                ),
-              ),
-              SimpleCard(
-                title: 'Nutrition',
-                child: Center(
-                  child: NutritionTable(
-                    nutrition: consumption.nutrition,
-                  ),
-                ),
-              ),
-              if (consumption is RecipeConsumption)
-                SimpleCard(
-                  title: 'Ingredients',
-                  child: Center(
-                    child: Table(
-                      defaultColumnWidth: const IntrinsicColumnWidth(),
-                      children: consumption.ingredientAmounts
-                          .map(
-                            (ingredientAmount) => TableRow(
-                              children: [
-                                Row(
-                                  mainAxisAlignment: MainAxisAlignment.end,
-                                  children: [
-                                    Text(ingredientAmount.ingredient.name),
-                                  ],
-                                ),
-                                const SizedBox(width: 32),
-                                Row(
-                                  children: [
-                                    Text(
-                                      ingredientAmount.amount
-                                          .decimals(2)
-                                          .toString(),
-                                    ),
-                                    const SizedBox(width: 4),
-                                    const SecondaryText('g'),
-                                  ],
-                                ),
-                              ],
-                            ),
-                          )
-                          .toList(),
                     ),
-                  ),
-                ),
-            ],
+                  if (consumption is IngredientConsumption) ...[
+                    TableRow(
+                      children: [
+                        const SecondaryText('Ingredient'),
+                        const SizedBox(width: 32),
+                        Text(consumption.ingredient.name),
+                      ],
+                    ),
+                    TableRow(
+                      children: [
+                        const SecondaryText('Brand'),
+                        const SizedBox(width: 32),
+                        consumption.ingredient.brand != null
+                            ? Text(consumption.ingredient.brand!)
+                            : const SecondaryText('--'),
+                      ],
+                    ),
+                    TableRow(
+                      children: [
+                        const SecondaryText('Amount'),
+                        const SizedBox(width: 32),
+                        Column(
+                          children: [
+                            Row(
+                              children: [
+                                Text(consumption.amount.value.toString()),
+                                const SizedBox(width: 4),
+                                SecondaryText(
+                                  describeEnum(consumption.amount.unit),
+                                ),
+                              ],
+                            ),
+                            if (consumption.amount.unit == Unit.servings)
+                              Row(
+                                children: [
+                                  Text((consumption.amount.value *
+                                          consumption.ingredient.serving!)
+                                      .toString()),
+                                  const SizedBox(width: 4),
+                                  const SecondaryText('grams'),
+                                ],
+                              ),
+                          ],
+                        ),
+                      ],
+                    ),
+                  ],
+                  if (consumption is RecipeConsumption) ...[
+                    TableRow(
+                      children: [
+                        const SecondaryText('Recipe'),
+                        const SizedBox(width: 32),
+                        Text(consumption.recipe.name),
+                      ],
+                    ),
+                    TableRow(
+                      children: [
+                        const SecondaryText('Amount'),
+                        const SizedBox(width: 32),
+                        Column(
+                          children: [
+                            Row(
+                              children: [
+                                Text(consumption.amount.value.toString()),
+                                const SizedBox(width: 4),
+                                SecondaryText(
+                                  describeEnum(consumption.amount.unit),
+                                ),
+                              ],
+                            ),
+                            if (consumption.amount.unit == Unit.servings)
+                              Row(
+                                children: [
+                                  Text((consumption.amount.value *
+                                          consumption
+                                              .recipe.ingredientAmounts.amount /
+                                          consumption.recipe.servings)
+                                      .toString()),
+                                  const SizedBox(width: 4),
+                                  const SecondaryText('grams'),
+                                ],
+                              ),
+                          ],
+                        ),
+                      ],
+                    ),
+                  ],
+                ],
+              ),
+            ),
           ),
-        ),
+          SimpleCard(
+            title: 'Nutrition',
+            child: Center(
+              child: NutritionTable(
+                nutrition: consumption.nutrition,
+              ),
+            ),
+          ),
+          if (consumption is RecipeConsumption)
+            SimpleCard(
+              title: 'Ingredients',
+              child: StandardList(
+                padding: EdgeInsets.zero,
+                children: consumption.ingredientAmounts
+                    .map(
+                      (ingredientAmount) => ListSurface(
+                        elevation: 4,
+                        icon: ingredientAmount.ingredient.icon != null
+                            ? Icons8Icon.asset(
+                                ingredientAmount.ingredient.icon!,
+                                size: 48,
+                              )
+                            : null,
+                        title: Text(ingredientAmount.ingredient.name),
+                        subtitle: SecondaryText(
+                          '${ingredientAmount.amount.decimals(2).toString()} grams',
+                        ),
+                      ),
+                    )
+                    .toList(),
+              ),
+            ),
+        ],
       ),
     );
   }

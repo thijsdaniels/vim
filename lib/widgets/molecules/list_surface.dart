@@ -6,6 +6,8 @@ class ListSurface extends StatelessWidget {
   final Function()? onTap;
   final Widget title;
   final Widget? subtitle;
+  final Widget? actions;
+  final double? elevation;
 
   const ListSurface({
     super.key,
@@ -13,32 +15,36 @@ class ListSurface extends StatelessWidget {
     this.onTap,
     required this.title,
     this.subtitle,
+    this.actions,
+    this.elevation,
   });
 
   @override
   Widget build(BuildContext context) {
     return Surface(
-      child: Row(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Surface(
-            elevation: 4,
-            child: SizedBox(
-              width: 72,
-              height: 72,
-              child: Center(child: icon),
+      elevation: elevation,
+      child: InkWell(
+        onTap: onTap,
+        child: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Surface(
+              elevation: (elevation ?? 0) + 4,
+              child: SizedBox(
+                width: 72,
+                height: 72,
+                child: Center(child: icon),
+              ),
             ),
-          ),
-          const SizedBox(width: 16),
-          Expanded(
-            child: ListTile(
-              contentPadding: EdgeInsets.zero,
-              onTap: onTap,
-              title: title,
-              subtitle: subtitle,
+            Expanded(
+              child: ListTile(
+                title: title,
+                subtitle: subtitle,
+                trailing: actions,
+              ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }

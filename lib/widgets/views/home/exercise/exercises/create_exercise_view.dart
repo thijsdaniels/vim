@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:vim/extensions/string.dart';
 import 'package:vim/models/exercise/exercise.dart';
 import 'package:vim/services/exercises_service.dart';
+import 'package:vim/widgets/atoms/standard_list.dart';
 import 'package:vim/widgets/molecules/simple_card.dart';
 
 class CreateExerciseView extends StatefulWidget {
@@ -69,67 +70,62 @@ class _CreateExerciseViewState extends State<CreateExerciseView> {
           )
         ],
       ),
-      body: SingleChildScrollView(
-        child: Padding(
-          padding: const EdgeInsets.all(16.0),
-          child: Form(
-            key: _formKey,
-            child: Column(
-              children: [
-                SimpleCard(
-                  title: 'Details',
-                  child: Column(
-                    children: [
-                      TextFormField(
-                        autofocus: true,
-                        initialValue: _name,
-                        onChanged: (name) => setState(() {
-                          _name = name;
-                        }),
-                        textCapitalization: TextCapitalization.words,
-                        decoration: const InputDecoration(
-                          labelText: 'Name',
-                        ),
-                        textInputAction: TextInputAction.next,
-                        validator: (value) {
-                          if (value == null || value.isEmpty) {
-                            return 'Please enter a name.';
-                          }
-                          return null;
-                        },
-                      ),
-                      const SizedBox(height: 16),
-                      DropdownButtonFormField<ExerciseType>(
-                        decoration: const InputDecoration(
-                          label: Text('Type'),
-                        ),
-                        value: _type,
-                        items: ExerciseType.values
-                            .map(
-                              (type) => DropdownMenuItem<ExerciseType>(
-                                value: type,
-                                child: Text(
-                                  type.name.toTitleCase(),
-                                ),
-                              ),
-                            )
-                            .toList(),
-                        onChanged: (type) => setState(() {
-                          _type = type;
-                        }),
-                        validator: (value) {
-                          if (value == null) {
-                            return 'Please choose a type.';
-                          }
-                          return null;
-                        },
-                      ),
-                    ],
+      body: Form(
+        key: _formKey,
+        child: StandardList(
+          children: [
+            SimpleCard(
+              title: 'Details',
+              child: Column(
+                children: [
+                  TextFormField(
+                    autofocus: true,
+                    initialValue: _name,
+                    onChanged: (name) => setState(() {
+                      _name = name;
+                    }),
+                    textCapitalization: TextCapitalization.words,
+                    decoration: const InputDecoration(
+                      labelText: 'Name',
+                    ),
+                    textInputAction: TextInputAction.next,
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return 'Please enter a name.';
+                      }
+                      return null;
+                    },
                   ),
-                ),
-              ],
+                  const SizedBox(height: 16),
+                  DropdownButtonFormField<ExerciseType>(
+                    decoration: const InputDecoration(
+                      label: Text('Type'),
+                    ),
+                    value: _type,
+                    items: ExerciseType.values
+                        .map(
+                          (type) => DropdownMenuItem<ExerciseType>(
+                            value: type,
+                            child: Text(
+                              type.name.toTitleCase(),
+                            ),
+                          ),
+                        )
+                        .toList(),
+                    onChanged: (type) => setState(() {
+                      _type = type;
+                    }),
+                    validator: (value) {
+                      if (value == null) {
+                        return 'Please choose a type.';
+                      }
+                      return null;
+                    },
+                  ),
+                ],
+              ),
             ),
-          ),
+          ],
         ),
       ),
     );

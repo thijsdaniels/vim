@@ -7,7 +7,7 @@ import 'package:vim/models/food/recipe_consumption.dart';
 import 'package:vim/widgets/atoms/icons8_icon.dart';
 import 'package:vim/widgets/atoms/icons8_icons_stack.dart';
 import 'package:vim/widgets/atoms/secondary_text.dart';
-import 'package:vim/widgets/atoms/surface_list.dart';
+import 'package:vim/widgets/atoms/standard_list.dart';
 import 'package:vim/widgets/molecules/list_surface.dart';
 import 'package:vim/widgets/views/home/log/food_log/consumption_view.dart';
 
@@ -30,7 +30,7 @@ class ConsumptionsList extends StatelessWidget {
       );
     }
 
-    return SurfaceList(
+    return StandardList(
       itemCount: consumptions.length,
       itemBuilder: (context, index) {
         Consumption consumption = consumptions.get(index);

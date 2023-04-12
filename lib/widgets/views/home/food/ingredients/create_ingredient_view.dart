@@ -4,6 +4,7 @@ import 'package:vim/models/food/ingredient.dart';
 import 'package:vim/models/food/nutrition.dart';
 import 'package:vim/services/ingredients_service.dart';
 import 'package:vim/widgets/atoms/icons8_icon_dropdown_menu.dart';
+import 'package:vim/widgets/atoms/standard_list.dart';
 import 'package:vim/widgets/molecules/nutrition_form_fields.dart';
 import 'package:vim/widgets/molecules/simple_card.dart';
 
@@ -98,76 +99,70 @@ class _CreateIngredientViewState extends State<CreateIngredientView> {
           )
         ],
       ),
-      body: SingleChildScrollView(
-        child: Padding(
-          padding: const EdgeInsets.all(16.0),
-          child: Form(
-            key: _formKey,
-            child: Column(
-              children: [
-                SimpleCard(
-                  title: 'Details',
-                  child: Column(
-                    children: [
-                      Icons8IconDropdownMenu(
-                        initialSelection: _icon,
-                        onSelected: (String? icon) {
-                          setState(() {
-                            _icon = icon;
-                          });
-                        },
-                      ),
-                      const SizedBox(height: 16),
-                      TextFormField(
-                        autofocus: true,
-                        controller: _nameController,
-                        textCapitalization: TextCapitalization.words,
-                        decoration: const InputDecoration(
-                          labelText: 'Name',
-                        ),
-                        textInputAction: TextInputAction.next,
-                        validator: (value) {
-                          if (value == null || value.isEmpty) {
-                            return 'Please enter a name.';
-                          }
-                          return null;
-                        },
-                      ),
-                      const SizedBox(height: 16),
-                      TextFormField(
-                        controller: _brandController,
-                        textCapitalization: TextCapitalization.words,
-                        decoration: const InputDecoration(
-                          labelText: 'Brand',
-                        ),
-                        textInputAction: TextInputAction.next,
-                      ),
-                      const SizedBox(height: 16),
-                      TextFormField(
-                        controller: _servingController,
-                        decoration: const InputDecoration(
-                          labelText: 'Serving',
-                          hintText: 'Grams',
-                        ),
-                        keyboardType: TextInputType.number,
-                        inputFormatters: <TextInputFormatter>[
-                          FilteringTextInputFormatter.allow(RegExp(r'[0-9\.]'))
-                        ],
-                        textInputAction: TextInputAction.next,
-                      ),
+      body: Form(
+        key: _formKey,
+        child: StandardList(
+          children: [
+            SimpleCard(
+              title: 'Details',
+              child: Column(
+                children: [
+                  Icons8IconDropdownMenu(
+                    initialSelection: _icon,
+                    onSelected: (String? icon) {
+                      setState(() {
+                        _icon = icon;
+                      });
+                    },
+                  ),
+                  const SizedBox(height: 16),
+                  TextFormField(
+                    autofocus: true,
+                    controller: _nameController,
+                    textCapitalization: TextCapitalization.words,
+                    decoration: const InputDecoration(
+                      labelText: 'Name',
+                    ),
+                    textInputAction: TextInputAction.next,
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return 'Please enter a name.';
+                      }
+                      return null;
+                    },
+                  ),
+                  const SizedBox(height: 16),
+                  TextFormField(
+                    controller: _brandController,
+                    textCapitalization: TextCapitalization.words,
+                    decoration: const InputDecoration(
+                      labelText: 'Brand',
+                    ),
+                    textInputAction: TextInputAction.next,
+                  ),
+                  const SizedBox(height: 16),
+                  TextFormField(
+                    controller: _servingController,
+                    decoration: const InputDecoration(
+                      labelText: 'Serving',
+                      hintText: 'Grams',
+                    ),
+                    keyboardType: TextInputType.number,
+                    inputFormatters: <TextInputFormatter>[
+                      FilteringTextInputFormatter.allow(RegExp(r'[0-9\.]'))
                     ],
+                    textInputAction: TextInputAction.next,
                   ),
-                ),
-                const SizedBox(height: 32),
-                SimpleCard(
-                  title: 'Nutrition',
-                  child: NutritionFormFields(
-                    controller: _nutritionController,
-                  ),
-                ),
-              ],
+                ],
+              ),
             ),
-          ),
+            SimpleCard(
+              title: 'Nutrition',
+              child: NutritionFormFields(
+                controller: _nutritionController,
+              ),
+            ),
+          ],
         ),
       ),
     );
