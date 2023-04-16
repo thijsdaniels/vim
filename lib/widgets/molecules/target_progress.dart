@@ -59,7 +59,7 @@ class TargetProgress extends StatelessWidget {
               builder: (context, value, _) => LinearProgressIndicator(
                 value: value,
                 minHeight: barSize == TargetProgressBarSize.small ? 6 : 8,
-                color: Theme.of(context).colorScheme.inversePrimary,
+                color: Theme.of(context).colorScheme.primaryContainer,
               ),
             ),
           ),

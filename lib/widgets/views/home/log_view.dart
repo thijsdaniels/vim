@@ -14,12 +14,6 @@ class LogView extends StatelessWidget {
       child: Scaffold(
         appBar: AppBar(
           title: const Text('Log'),
-          actions: const [
-            Padding(
-              padding: EdgeInsets.all(8.0),
-              child: DateStepper(),
-            ),
-          ],
           bottom: const TabBar(
             tabs: [
               Tab(text: 'Status'),
@@ -34,6 +28,19 @@ class LogView extends StatelessWidget {
             LogConsumptionsView(),
             LogPerformancesView(),
           ],
+        ),
+        bottomNavigationBar: Container(
+          decoration: BoxDecoration(
+            color: Theme.of(context).colorScheme.primaryContainer,
+            borderRadius: const BorderRadius.only(
+              topLeft: Radius.circular(16),
+              topRight: Radius.circular(16),
+            ),
+          ),
+          child: const Padding(
+            padding: EdgeInsets.all(4.0),
+            child: DateStepper(),
+          ),
         ),
       ),
     );
