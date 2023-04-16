@@ -119,11 +119,11 @@ class PerformancesList extends StatelessWidget {
 
   Widget? getIcon(Performance performance) {
     if (performance is RoutinePerformance) {
-      return Icons8Icon.asset('greek-helmet', size: 48);
+      return const Icons8Icon('greek-helmet');
     } else if (performance is WeightsExercisePerformance) {
-      return Icons8Icon.network('dumbbell', size: 48);
+      return const Icons8Icon('strength');
     } else if (performance is ResistanceExercisePerformance) {
-      return Icons8Icon.network('trainers', size: 48);
+      return const Icons8Icon('trainers');
     }
 
     return null;

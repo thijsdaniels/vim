@@ -14,6 +14,7 @@ import 'package:vim/services/ingredients_service.dart';
 import 'package:vim/services/performances_service.dart';
 import 'package:vim/services/recipes_service.dart';
 import 'package:vim/services/routines_service.dart';
+import 'package:vim/widgets/atoms/icons8_icon.dart';
 import 'package:vim/widgets/views/home_view.dart';
 
 class Vim extends StatelessWidget {
@@ -22,7 +23,7 @@ class Vim extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Providers(
-      child: Consumer<ThemeModel>(
+      child: Consumer<SettingsModel>(
         builder: (context, themeModel, _) => MaterialApp(
           debugShowCheckedModeBanner: false,
           title: 'Vim',
@@ -98,7 +99,7 @@ class Providers extends StatelessWidget {
           create: (context) => DateModel(),
         ),
         ChangeNotifierProvider(
-          create: (context) => ThemeModel(),
+          create: (context) => SettingsModel(),
         ),
       ],
       child: Consumer<DateModel>(
@@ -120,13 +121,21 @@ class Providers extends StatelessWidget {
   }
 }
 
-class ThemeModel extends ChangeNotifier {
+class SettingsModel extends ChangeNotifier {
   ThemeMode _mode = ThemeMode.system;
+  Icons8Style _style = Icons8Style.stickers;
 
   ThemeMode get mode => _mode;
 
   set mode(ThemeMode mode) {
     _mode = mode;
+    notifyListeners();
+  }
+
+  Icons8Style get style => _style;
+
+  set style(Icons8Style style) {
+    _style = style;
     notifyListeners();
   }
 }

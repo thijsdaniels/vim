@@ -38,7 +38,7 @@ class ConsumptionsList extends StatelessWidget {
         return ListSurface(
           icon: consumption is IngredientConsumption &&
                   consumption.ingredient.icon != null
-              ? Icons8Icon.asset(consumption.ingredient.icon!, size: 48)
+              ? Icons8Icon(consumption.ingredient.icon!)
               : consumption is RecipeConsumption
                   ? Icons8IconStack(
                       icons: consumption.recipe.ingredientAmounts

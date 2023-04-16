@@ -1,14 +1,55 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:vim/models/settings_model.dart';
 
-const Icons8Style defaultStyle = Icons8Style.arcade;
+class Icons8Icon extends StatelessWidget {
+  final String slug;
+  final Icons8Style? style;
+  final double size;
+  final Widget Function(BuildContext, Object, StackTrace?)? errorBuilder;
 
-class Icons8Icon {
-  static Image network(
-    String slug, {
-    Icons8Style style = defaultStyle,
-    double size = 32,
-    Widget Function(BuildContext, Object, StackTrace?)? errorBuilder,
-  }) {
+  const Icons8Icon(
+    this.slug, {
+    super.key,
+    this.style,
+    this.size = 44,
+    this.errorBuilder,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    if (style != null) {
+      return _resolver(style!)();
+    } else {
+      return Consumer<SettingsModel>(
+        builder: (context, settingsModel, _) {
+          return _resolver(settingsModel.style)();
+        },
+      );
+    }
+  }
+
+  Image Function() _resolver(Icons8Style style) {
+    switch (style) {
+      case Icons8Style.arcade:
+      case Icons8Style.stickers:
+        return () => _asset(style);
+      default:
+        return () => _network(style);
+    }
+  }
+
+  Image _asset(Icons8Style style) {
+    return Image(
+      image: AssetImage(_path(slug, style)),
+      width: size,
+      height: size,
+      errorBuilder:
+          errorBuilder ?? (context, exception, trace) => _network(style),
+    );
+  }
+
+  Image _network(Icons8Style style) {
     return Image.network(
       _url(slug, style),
       width: size,
@@ -21,49 +62,41 @@ class Icons8Icon {
     );
   }
 
-  static Image asset(
-    String slug, {
-    Icons8Style style = defaultStyle,
-    double size = 32,
-  }) {
-    return Image(
-      image: AssetImage(_path(slug, style)),
-      width: size,
-      height: size,
-    );
-  }
-
-  static String _url(String slug, Icons8Style style) {
-    switch (style) {
-      case Icons8Style.arcade:
-        return 'https://img.icons8.com/arcade/100/null/$slug.png';
-      case Icons8Style.color:
-        return 'https://img.icons8.com/color/96/null/$slug.png';
-      case Icons8Style.colorGlass:
-        return 'https://img.icons8.com/color-glass/96/null/$slug.png';
-      case Icons8Style.dusk:
-        return 'https://img.icons8.com/dusk/64/null/$slug.png';
-      case Icons8Style.fluency:
-        return 'https://img.icons8.com/fluency/96/null/$slug.png';
-      case Icons8Style.stickers:
-        return 'https://img.icons8.com/stickers/100/null/$slug.png';
-    }
-  }
-
-  static String _path(String slug, Icons8Style style) {
+  String _path(String slug, Icons8Style style) {
     switch (style) {
       case Icons8Style.arcade:
         return 'assets/images/icons8/arcade/icons8-$slug-100.png';
       case Icons8Style.color:
-        return 'assets/images/icons8/color/icons8-$slug-96.png';
+        return 'assets/images/icons8/color/icons8-$slug-100.png';
       case Icons8Style.colorGlass:
-        return 'assets/images/icons8/color-glass/icons8-$slug-96.png';
+        return 'assets/images/icons8/color-glass/icons8-$slug-100.png';
       case Icons8Style.dusk:
-        return 'assets/images/icons8/dusk/icons8-$slug-64.png';
+        return 'assets/images/icons8/dusk/icons8-$slug-100.png';
       case Icons8Style.fluency:
-        return 'assets/images/icons8/fluency/icons8-$slug-96.png';
+        return 'assets/images/icons8/fluency/icons8-$slug-100.png';
+      case Icons8Style.pulsarColor:
+        return 'assets/images/icons8/pulsar-color/icons8-$slug-100.png';
       case Icons8Style.stickers:
         return 'assets/images/icons8/stickers/icons8-$slug-100.png';
+    }
+  }
+
+  String _url(String slug, Icons8Style style) {
+    switch (style) {
+      case Icons8Style.arcade:
+        return 'https://img.icons8.com/arcade/100/null/$slug.png';
+      case Icons8Style.color:
+        return 'https://img.icons8.com/color/100/null/$slug.png';
+      case Icons8Style.colorGlass:
+        return 'https://img.icons8.com/color-glass/100/null/$slug.png';
+      case Icons8Style.dusk:
+        return 'https://img.icons8.com/dusk/100/null/$slug.png';
+      case Icons8Style.fluency:
+        return 'https://img.icons8.com/fluency/100/null/$slug.png';
+      case Icons8Style.pulsarColor:
+        return 'https://img.icons8.com/pulsar-color/100/null/$slug.png';
+      case Icons8Style.stickers:
+        return 'https://img.icons8.com/stickers/100/null/$slug.png';
     }
   }
 }
@@ -74,14 +107,18 @@ enum Icons8Style {
   colorGlass,
   dusk, // AKA "Cute Color"
   fluency, // AKA "Windows 11 Color"
+  pulsarColor,
   stickers,
 }
 
 // TODO: Turn into Enum.
 const icons8Slugs = [
+  'alcohol',
+  'almond',
   'apple-jam',
   'apple',
   'apricot',
+  'artichoke',
   'asian-street-food',
   'asparagus',
   'avocado',
@@ -93,6 +130,7 @@ const icons8Slugs = [
   'barbecue',
   'barley',
   'basil',
+  'beef',
   'beer-bottle',
   'beer-can',
   'beer-glass',
@@ -108,15 +146,19 @@ const icons8Slugs = [
   'blueberry',
   'bottle-of-water',
   'brazil-nut',
+  'bread-loaf',
   'bread',
+  'brezel',
   'brigadeiro',
   'broccoli',
+  'bubble-tea',
   'butter',
   'cabbage',
   'cactus',
   'cake',
   'candy',
   'carrot',
+  'cashew',
   'cauliflower',
   'celery',
   'cereal',
@@ -154,6 +196,8 @@ const icons8Slugs = [
   'cucumber',
   'cup-with-straw',
   'cupcake',
+  'cutted-melon',
+  'cutted-watermelon',
   'dessert',
   'dim-sum',
   'dolmades',
@@ -161,6 +205,7 @@ const icons8Slugs = [
   'dragon-fruit',
   'dressed-fish',
   'durian',
+  'egg-basket',
   'eggplant',
   'eggs',
   'energy-drink',
@@ -174,19 +219,24 @@ const icons8Slugs = [
   'french-fries',
   'french-press',
   'fried-chicken',
+  'fruit-bag',
+  'fry',
   'garlic',
   'ginger',
   'gingerbread-house',
   'glass-of-whiskey',
+  'goji',
   'grains-of-rice',
   'grapes',
   'greek-salad',
   'green-tea',
   'grocery-bag',
+  'grocery-shelf',
   'group-of-fruits',
   'group-of-vegetables',
   'guacamole',
   'guinness-beer',
+  'half-orange',
   'hamburger',
   'hamper',
   'hazelnut',
@@ -205,14 +255,18 @@ const icons8Slugs = [
   'ketchup',
   'kiwi',
   'kohlrabi',
+  'korean-rice-cake',
   'leek',
   'lemonade',
+  'lentil',
   'lettuce',
   'lime',
+  'liquor-shelf',
   'macaron',
   'mango',
   'mate',
   'mayonnaise',
+  'meat',
   'melon',
   'melting-ice-cream',
   'merry-pie',
@@ -220,8 +274,10 @@ const icons8Slugs = [
   'milk-carton',
   'milk',
   'milkshake',
+  'mint',
   'moka-pot',
   'moonshine-jug',
+  'mulled-wine',
   'mushroom',
   'mushrooms',
   'mustard',
@@ -230,6 +286,7 @@ const icons8Slugs = [
   'nonya-kueh',
   'noodles',
   'nut',
+  'nutshell',
   'oat-milk',
   'octopus',
   'olive-oil',
@@ -237,21 +294,26 @@ const icons8Slugs = [
   'omlette',
   'onion',
   'orange-juice',
+  'orange-soda',
   'orange',
   'paella',
   'pancake-stack',
   'papaya',
   'paprika',
+  'parsley',
   'pastel-de-nata',
   'peach',
   'peanuts',
   'pear',
   'peas',
+  'pelmen',
   'pie',
   'pineapple',
   'pint',
+  'pizza-five-eighths',
   'pizza',
   'plastic-bottle',
+  'plastic-food-container',
   'plum',
   'pomegranate',
   'popcorn',
@@ -267,6 +329,7 @@ const icons8Slugs = [
   'radish',
   'raspberry',
   'real-food-for-meals',
+  'refreshments',
   'rice-bowl',
   'rolled-oats',
   'salad',
@@ -274,16 +337,21 @@ const icons8Slugs = [
   'salami',
   'salmon-sushi',
   'salt-shaker',
+  'salt',
+  'samosa',
   'sandwich-with-fried-egg',
   'sandwich',
   'sauce',
+  'sausage',
   'sausages',
   'seafood',
   'sesame',
   'shellfish',
   'shrimp-and-lobster',
+  'slice-of-watermelon',
   'soda-bottle',
   'soda-can',
+  'soda-water',
   'soda',
   'soup-plate',
   'soursop',
@@ -294,34 +362,52 @@ const icons8Slugs = [
   'sparkling-water',
   'spice',
   'spinach',
+  'spoon-of-sugar',
   'sport-bottle',
+  'squash',
+  'steak',
   'strawberry',
+  'street-food',
   'sugar-cube',
+  'sugar-cubes',
+  'sugar',
+  'sugarcane',
   'sunny-side-up-eggs',
   'sushi',
   'sweet-potato',
   'sweetener',
   'taco',
   'take-away-food',
+  'takeaway-hot-drink',
+  'tangelo',
   'tapas',
   'tea',
   'thanksgiving',
+  'the-toast',
+  'thyme',
   'tin-can',
   'toast',
   'tomato',
+  'topping',
+  'vegetables-bag',
   'vodka-shot',
   'vodka',
   'watermelon',
   'wheat',
   'whipped-cream',
+  'whiskey',
   'white-beans',
   'white-wine',
   'whole-fish',
+  'whole-melon',
   'wine-and-grapes',
+  'wine-bar',
+  'wine-bottle',
   'wine-glass',
   'wine',
   'wooden-beer-keg',
   'worcestershire-sauce',
+  'wrap',
   'yogurt',
   'zucchini',
 ];

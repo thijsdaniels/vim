@@ -66,9 +66,7 @@ class IngredientListTile extends StatelessWidget {
           ),
         );
       },
-      icon: ingredient.icon != null
-          ? Icons8Icon.asset(ingredient.icon!, size: 48)
-          : null,
+      icon: ingredient.icon != null ? Icons8Icon(ingredient.icon!) : null,
       title: Text(ingredient.name),
       subtitle: SecondaryText(ingredient.brand ?? "--"),
       // subtitle: SecondaryText(

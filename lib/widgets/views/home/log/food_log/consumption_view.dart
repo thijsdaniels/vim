@@ -206,16 +206,14 @@ class _ConsumptionViewState extends State<ConsumptionView> {
             SimpleCard(
               title: 'Ingredients',
               child: StandardList(
+                physics: const NeverScrollableScrollPhysics(),
                 padding: EdgeInsets.zero,
                 children: consumption.ingredientAmounts
                     .map(
                       (ingredientAmount) => ListSurface(
                         elevation: 4,
                         icon: ingredientAmount.ingredient.icon != null
-                            ? Icons8Icon.asset(
-                                ingredientAmount.ingredient.icon!,
-                                size: 48,
-                              )
+                            ? Icons8Icon(ingredientAmount.ingredient.icon!)
                             : null,
                         title: Text(ingredientAmount.ingredient.name),
                         subtitle: SecondaryText(

@@ -24,7 +24,7 @@ class Icons8IconDropdownMenu extends StatelessWidget {
       label: const Text('Icon'),
       dropdownMenuEntries: icons8Slugs.map((slug) {
         return DropdownMenuEntry(
-          leadingIcon: Icons8Icon.asset(slug),
+          leadingIcon: Icons8Icon(slug, size: 32),
           value: slug,
           label: slug.fromKebabCase().toTitleCase(),
         );

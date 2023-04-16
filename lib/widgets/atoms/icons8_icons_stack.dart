@@ -27,7 +27,7 @@ class Icons8IconStack extends StatelessWidget {
                 [-6.0, -1.0, 4.0][entry.key],
               ),
               child: entry.value != null
-                  ? Icons8Icon.asset(
+                  ? Icons8Icon(
                       entry.value!,
                       size: [40.0, 36.0, 32.0][entry.key],
                     )

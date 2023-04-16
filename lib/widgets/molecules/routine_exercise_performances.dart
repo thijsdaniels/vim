@@ -37,6 +37,7 @@ class RoutineExercisePerformances extends StatelessWidget {
             List<ExercisePerformance>? performances = snapshot.data;
 
             return StandardList(
+              physics: const NeverScrollableScrollPhysics(),
               padding: EdgeInsets.zero,
               itemCount: routinePerformance.routine.exerciseReferences.length,
               itemBuilder: (context, index) {
@@ -171,9 +172,9 @@ class RoutineExercisePerformances extends StatelessWidget {
 
   Widget? getIcon(Exercise exercise) {
     if (exercise.type == ExerciseType.weights) {
-      return Icons8Icon.network('dumbbell', size: 48);
+      return const Icons8Icon('strength');
     } else if (exercise.type == ExerciseType.resistance) {
-      return Icons8Icon.network('trainers', size: 48);
+      return const Icons8Icon('trainers');
     }
 
     return null;
