@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:vim/models/collection.dart';
@@ -16,6 +17,7 @@ import 'package:vim/services/recipes_service.dart';
 import 'package:vim/services/routines_service.dart';
 import 'package:vim/widgets/atoms/icons8_icon.dart';
 import 'package:vim/widgets/views/home_view.dart';
+import 'package:vim/widgets/views/login_view.dart';
 
 class Vim extends StatelessWidget {
   const Vim({super.key});
@@ -60,7 +62,11 @@ class Vim extends StatelessWidget {
             ),
           ),
           themeMode: themeModel.mode,
-          home: const HomeView(),
+          home: StreamBuilder<User?>(
+            stream: FirebaseAuth.instance.authStateChanges(),
+            builder: (context, snapshot) =>
+                snapshot.hasData ? const HomeView() : const LoginView(),
+          ),
         ),
       ),
     );

@@ -6,6 +6,7 @@
 		"dashboard",
 		"ingredients",
 		"exercises",
-		"routines"
+		"routines",
+		"auth"
 	]
 }

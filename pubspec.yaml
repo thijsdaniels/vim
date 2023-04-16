@@ -10,7 +10,7 @@ environment:
 dependencies:
   cloud_firestore: ^4.3.1
   # firebase_analytics: ^10.1.5
-  # firebase_auth: ^4.2.5
+  firebase_auth: ^4.2.5
   collection: ^1.17.0
   firebase_core: ^2.4.1
   # firebase_crashlytics: ^3.0.16
@@ -36,6 +36,7 @@ flutter:
         - asset: assets/fonts/google-sans/regular.ttf
   assets:
     - assets/images/icons8/arcade/
+    - assets/images/icons8/stickers/
 
 flutter_icons:
   android: true
