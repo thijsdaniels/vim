@@ -10,7 +10,7 @@ class SimpleCard extends StatelessWidget {
   });
 
   final String? title;
-  final Widget? actions;
+  final List<Widget>? actions;
   final Widget child;
 
   @override
@@ -32,7 +32,7 @@ class SimpleCard extends StatelessWidget {
                         title!,
                         style: Theme.of(context).textTheme.titleMedium,
                       ),
-                    if (actions != null) actions!,
+                    if (actions != null) Row(children: actions!),
                   ],
                 ),
                 if (title != null || actions != null)

@@ -115,25 +115,28 @@ class _RecipeViewState extends State<RecipeView> {
           ),
           SimpleCard(
             title: 'Ingredients',
-            actions: IconButton(
-              icon: const Icon(Icons.add),
-              onPressed: () async {
-                IngredientAmountReference? ingredientAmount =
-                    await Navigator.of(context).push(
-                  MaterialPageRoute(
-                    builder: (context) => const CreateIngredientAmountView(),
-                  ),
-                );
+            actions: [
+              IconButton(
+                icon: const Icon(Icons.add),
+                onPressed: () async {
+                  IngredientAmountReference? ingredientAmount =
+                      await Navigator.of(context).push(
+                    MaterialPageRoute(
+                      builder: (context) => const CreateIngredientAmountView(),
+                    ),
+                  );
 
-                if (ingredientAmount != null) {
-                  setState(() {
-                    recipe.ingredientAmounts.add(ingredientAmount);
-                    RecipesService.update(recipe);
-                  });
-                }
-              },
-            ),
+                  if (ingredientAmount != null) {
+                    setState(() {
+                      recipe.ingredientAmounts.add(ingredientAmount);
+                      RecipesService.update(recipe);
+                    });
+                  }
+                },
+              ),
+            ],
             child: StandardList(
+              physics: const NeverScrollableScrollPhysics(),
               padding: EdgeInsets.zero,
               itemCount: recipe.ingredientAmounts.length,
               itemBuilder: (context, index) {
@@ -147,7 +150,7 @@ class _RecipeViewState extends State<RecipeView> {
                       future: ingredientAmount.ingredient,
                       builder: (context, snapshot) =>
                           (snapshot.hasData && snapshot.data!.icon != null)
-                              ? Icons8Icon.asset(snapshot.data!.icon!, size: 48)
+                              ? Icons8Icon(snapshot.data!.icon!)
                               : const CircularProgressIndicator(),
                     ),
                     title: FutureBuilder(

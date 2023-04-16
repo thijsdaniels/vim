@@ -5,7 +5,7 @@ enum Gender {
   female,
 }
 
-class Settings {
+class Body {
   final Gender? gender;
   final double? age;
   final double? length;
@@ -15,12 +15,12 @@ class Settings {
   final double neat;
   final double surplus;
   final int exercise;
-  final double carbohydrates;
-  final double proteins;
-  final double fats;
+  // final double carbohydrates; // as a percentage of daily caloric intake
+  final double proteinGramsPerKilo; // in grams per kilogram of bodyweight
+  final double fats; // as a percentage of daily caloric intake
   final bool adjustIntake;
 
-  Settings({
+  Body({
     required this.gender,
     required this.age,
     required this.weight,
@@ -30,14 +30,18 @@ class Settings {
     required this.neat,
     required this.surplus,
     required this.exercise,
-    required this.carbohydrates,
-    required this.proteins,
+    // required this.carbohydrates,
+    required this.proteinGramsPerKilo,
     required this.fats,
     this.adjustIntake = true,
   }) : assert(
           fat != null || (gender != null && length != null),
           'Either "fat" or the combination of "gender", "age" and "length" must be provided.',
         );
+
+  double get proteins => proteinGramsPerKilo * weight * 4 / intake;
+
+  double get carbohydrates => 1 - fats - proteins;
 
   double get leanMass {
     if (fat != null) {
@@ -62,5 +66,37 @@ class Settings {
 
   Future<double> adjustedIntake(Performances performances) async {
     return adjustIntake ? intake + await performances.calories : intake;
+  }
+
+  Body copyWith({
+    Gender? gender,
+    double? age,
+    double? length,
+    double? weight,
+    double? muscle,
+    double? fat,
+    double? neat,
+    double? surplus,
+    int? exercise,
+    // double? carbohydrates,
+    double? proteinGramsPerKilo,
+    double? fats,
+    bool? adjustIntake,
+  }) {
+    return Body(
+      gender: gender ?? this.gender,
+      age: age ?? this.age,
+      length: length ?? this.length,
+      weight: weight ?? this.weight,
+      muscle: muscle ?? this.muscle,
+      fat: fat ?? this.fat,
+      neat: neat ?? this.neat,
+      surplus: surplus ?? this.surplus,
+      exercise: exercise ?? this.exercise,
+      // carbohydrates: carbohydrates ?? this.carbohydrates,
+      proteinGramsPerKilo: proteinGramsPerKilo ?? this.proteinGramsPerKilo,
+      fats: fats ?? this.fats,
+      adjustIntake: adjustIntake ?? this.adjustIntake,
+    );
   }
 }

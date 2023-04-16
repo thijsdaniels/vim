@@ -9,13 +9,13 @@ import 'package:vim/models/exercise/routine.dart';
 import 'package:vim/models/food/consumptions.dart';
 import 'package:vim/models/food/ingredients.dart';
 import 'package:vim/models/food/recipes.dart';
+import 'package:vim/models/settings_model.dart';
 import 'package:vim/services/consumptions_service.dart';
 import 'package:vim/services/exercises_service.dart';
 import 'package:vim/services/ingredients_service.dart';
 import 'package:vim/services/performances_service.dart';
 import 'package:vim/services/recipes_service.dart';
 import 'package:vim/services/routines_service.dart';
-import 'package:vim/widgets/atoms/icons8_icon.dart';
 import 'package:vim/widgets/views/home_view.dart';
 import 'package:vim/widgets/views/login_view.dart';
 
@@ -124,24 +124,5 @@ class Providers extends StatelessWidget {
         ),
       ),
     );
-  }
-}
-
-class SettingsModel extends ChangeNotifier {
-  ThemeMode _mode = ThemeMode.system;
-  Icons8Style _style = Icons8Style.stickers;
-
-  ThemeMode get mode => _mode;
-
-  set mode(ThemeMode mode) {
-    _mode = mode;
-    notifyListeners();
-  }
-
-  Icons8Style get style => _style;
-
-  set style(Icons8Style style) {
-    _style = style;
-    notifyListeners();
   }
 }

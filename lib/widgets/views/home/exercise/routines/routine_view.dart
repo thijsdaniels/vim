@@ -94,21 +94,22 @@ class _RoutineViewState extends State<RoutineView> {
               ),
               SimpleCard(
                 title: 'Exercises',
-                actions: routine != null
-                    ? IconButton(
-                        icon: const Icon(Icons.add),
-                        onPressed: () async {
-                          Exercise exercise = await Navigator.of(context).push(
-                            MaterialPageRoute(
-                              builder: (context) => const SelectExerciseView(),
-                            ),
-                          );
+                actions: [
+                  if (routine != null)
+                    IconButton(
+                      icon: const Icon(Icons.add),
+                      onPressed: () async {
+                        Exercise exercise = await Navigator.of(context).push(
+                          MaterialPageRoute(
+                            builder: (context) => const SelectExerciseView(),
+                          ),
+                        );
 
-                          routine.exerciseReferences.add(exercise.reference!);
-                          await RoutinesService.update(routine);
-                        },
-                      )
-                    : null,
+                        routine.exerciseReferences.add(exercise.reference!);
+                        await RoutinesService.update(routine);
+                      },
+                    )
+                ],
                 child: routine != null
                     ? ExercisesList(
                         exerciseReferences: routine.exerciseReferences,
