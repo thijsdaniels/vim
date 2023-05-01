@@ -5,7 +5,8 @@ class StandardList extends StatelessWidget {
   final Widget Function(BuildContext context, int index)? itemBuilder;
   final List<Widget>? children;
   final ScrollPhysics? physics;
-  final EdgeInsets? padding;
+  final EdgeInsets padding;
+  final double spacing;
 
   const StandardList({
     super.key,
@@ -14,6 +15,7 @@ class StandardList extends StatelessWidget {
     this.itemBuilder,
     this.physics,
     this.padding = const EdgeInsets.all(16),
+    this.spacing = 12,
   }) : assert(itemCount != null && itemBuilder != null || children != null);
 
   @override
@@ -26,7 +28,7 @@ class StandardList extends StatelessWidget {
       itemBuilder: itemBuilder != null
           ? itemBuilder!
           : (context, index) => children![index],
-      separatorBuilder: (context, index) => const SizedBox(height: 12),
+      separatorBuilder: (context, index) => SizedBox(height: spacing),
     );
   }
 }

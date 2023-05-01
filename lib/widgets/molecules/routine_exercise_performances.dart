@@ -172,7 +172,7 @@ class RoutineExercisePerformances extends StatelessWidget {
 
   Widget? getIcon(Exercise exercise) {
     if (exercise.type == ExerciseType.weights) {
-      return const Icons8Icon('strength');
+      return const Icons8Icon('dumbbell');
     } else if (exercise.type == ExerciseType.resistance) {
       return const Icons8Icon('trainers');
     }

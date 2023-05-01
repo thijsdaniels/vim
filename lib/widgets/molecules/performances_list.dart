@@ -121,7 +121,7 @@ class PerformancesList extends StatelessWidget {
     if (performance is RoutinePerformance) {
       return const Icons8Icon('greek-helmet');
     } else if (performance is WeightsExercisePerformance) {
-      return const Icons8Icon('strength');
+      return const Icons8Icon('dumbbell');
     } else if (performance is ResistanceExercisePerformance) {
       return const Icons8Icon('trainers');
     }

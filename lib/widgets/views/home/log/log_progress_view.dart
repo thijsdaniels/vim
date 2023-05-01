@@ -4,6 +4,7 @@ import 'package:vim/models/exercise/performances.dart';
 import 'package:vim/models/food/consumptions.dart';
 import 'package:vim/models/food/nutrition.dart';
 import 'package:vim/models/settings_model.dart';
+import 'package:vim/widgets/atoms/standard_list.dart';
 import 'package:vim/widgets/molecules/nutrition_table.dart';
 import 'package:vim/widgets/molecules/simple_card.dart';
 import 'package:vim/widgets/molecules/target_progress.dart';
@@ -13,21 +14,13 @@ class LogProgressView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-      child: SingleChildScrollView(
-        child: Padding(
-          padding: const EdgeInsets.all(16.0),
-          child: Column(
-            children: const [
-              CaloriesCard(),
-              SizedBox(height: 12),
-              MacrosCard(),
-              SizedBox(height: 12),
-              NutritionCard(),
-            ],
-          ),
-        ),
-      ),
+    return const StandardList(
+      spacing: 16,
+      children: [
+        CaloriesCard(),
+        MacrosCard(),
+        NutritionCard(),
+      ],
     );
   }
 }

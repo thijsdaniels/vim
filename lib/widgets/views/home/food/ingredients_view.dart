@@ -9,14 +9,9 @@ import 'package:vim/widgets/molecules/list_surface.dart';
 import 'package:vim/widgets/views/home/food/ingredients/create_ingredient_view.dart';
 import 'package:vim/widgets/views/home/food/ingredients/ingredient_view.dart';
 
-class IngredientsView extends StatefulWidget {
+class IngredientsView extends StatelessWidget {
   const IngredientsView({super.key});
 
-  @override
-  State<IngredientsView> createState() => _IngredientsViewState();
-}
-
-class _IngredientsViewState extends State<IngredientsView> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(

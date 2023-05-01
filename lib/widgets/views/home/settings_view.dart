@@ -36,6 +36,7 @@ class SettingsView extends StatelessWidget {
           ],
         ),
         body: const StandardList(
+          spacing: 16,
           children: [
             ProfileSettings(),
             BodySettings(),

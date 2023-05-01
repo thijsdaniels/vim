@@ -1,13 +1,8 @@
 import 'package:flutter/material.dart';
 
-class EquipmentsView extends StatefulWidget {
+class EquipmentsView extends StatelessWidget {
   const EquipmentsView({super.key});
 
-  @override
-  State<EquipmentsView> createState() => _EquipmentsViewState();
-}
-
-class _EquipmentsViewState extends State<EquipmentsView> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(

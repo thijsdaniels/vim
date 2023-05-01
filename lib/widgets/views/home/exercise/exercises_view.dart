@@ -9,14 +9,9 @@ import 'package:vim/widgets/molecules/list_surface.dart';
 import 'package:vim/widgets/views/home/exercise/exercises/create_exercise_view.dart';
 import 'package:vim/widgets/views/home/exercise/exercises/exercise_view.dart';
 
-class ExercisesView extends StatefulWidget {
+class ExercisesView extends StatelessWidget {
   const ExercisesView({super.key});
 
-  @override
-  State<ExercisesView> createState() => _ExercisesViewState();
-}
-
-class _ExercisesViewState extends State<ExercisesView> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(

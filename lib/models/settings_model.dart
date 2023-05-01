@@ -5,7 +5,7 @@ import 'package:vim/widgets/atoms/icons8_icon.dart';
 class SettingsModel extends ChangeNotifier {
   ThemeMode _mode = ThemeMode.system;
 
-  Icons8Style _style = Icons8Style.stickers;
+  Icons8Style _style = Icons8Style.arcade;
 
   Body _body = Body(
     gender: Gender.male,

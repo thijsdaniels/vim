@@ -15,9 +15,8 @@ class Body {
   final double neat;
   final double surplus;
   final int exercise;
-  // final double carbohydrates; // as a percentage of daily caloric intake
-  final double proteinGramsPerKilo; // in grams per kilogram of bodyweight
-  final double fats; // as a percentage of daily caloric intake
+  final double proteinGramsPerKilo;
+  final double fats;
   final bool adjustIntake;
 
   Body({
@@ -30,7 +29,6 @@ class Body {
     required this.neat,
     required this.surplus,
     required this.exercise,
-    // required this.carbohydrates,
     required this.proteinGramsPerKilo,
     required this.fats,
     this.adjustIntake = true,
@@ -78,7 +76,6 @@ class Body {
     double? neat,
     double? surplus,
     int? exercise,
-    // double? carbohydrates,
     double? proteinGramsPerKilo,
     double? fats,
     bool? adjustIntake,
@@ -93,7 +90,6 @@ class Body {
       neat: neat ?? this.neat,
       surplus: surplus ?? this.surplus,
       exercise: exercise ?? this.exercise,
-      // carbohydrates: carbohydrates ?? this.carbohydrates,
       proteinGramsPerKilo: proteinGramsPerKilo ?? this.proteinGramsPerKilo,
       fats: fats ?? this.fats,
       adjustIntake: adjustIntake ?? this.adjustIntake,

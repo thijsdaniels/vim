@@ -7,14 +7,9 @@ import 'package:vim/widgets/molecules/list_surface.dart';
 import 'package:vim/widgets/views/home/exercise/routines/create_routine_view.dart';
 import 'package:vim/widgets/views/home/exercise/routines/routine_view.dart';
 
-class RoutinesView extends StatefulWidget {
+class RoutinesView extends StatelessWidget {
   const RoutinesView({super.key});
 
-  @override
-  State<RoutinesView> createState() => _RoutinesViewState();
-}
-
-class _RoutinesViewState extends State<RoutinesView> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
