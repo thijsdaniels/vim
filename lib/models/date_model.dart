@@ -3,19 +3,26 @@ import 'package:flutter/foundation.dart';
 import 'package:vim/extensions/date_time.dart';
 
 class DateModel extends ChangeNotifier {
-  DateTime _date = DateTime.now().toDate();
+  DateTime _date = DateTime.now().startOfDay();
 
   DateTime get date => _date;
+
   Timestamp get timestamp {
     DateTime now = DateTime.now();
-    return Timestamp.fromDate(
-      DateTime(date.year, date.month, date.day, now.hour, now.minute,
-          now.second, now.millisecond, now.microsecond),
-    );
+    DateTime startOfToday = now.startOfDay();
+    DateTime endOfToday = now.startOfDay();
+
+    if (date.isBefore(startOfToday)) {
+      return Timestamp.fromDate(date.endOfDay());
+    } else if (date.isAfter(endOfToday)) {
+      return Timestamp.fromDate(date);
+    } else {
+      return Timestamp.fromDate(date.withTimeOf(now));
+    }
   }
 
   void set(DateTime dateTime) {
-    _date = dateTime.toDate();
+    _date = dateTime.startOfDay();
     notifyListeners();
   }
 

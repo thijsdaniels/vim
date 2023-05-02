@@ -30,163 +30,165 @@ class _PerformanceViewState extends State<PerformanceView> {
   @override
   Widget build(BuildContext context) {
     return StreamBuilder<Performance?>(
-        stream: PerformancesService.instance.get(widget.performanceId),
-        builder: (context, snapshot) {
-          Performance? performance = snapshot.data;
+      stream: PerformancesService.instance.get(widget.performanceId),
+      builder: (context, snapshot) {
+        Performance? performance = snapshot.data;
 
-          return Scaffold(
-            appBar: AppBar(
-              title: Text(performance?.name ?? ''),
-              actions: [
-                IconButton(
-                  icon: const Icon(Icons.edit),
-                  onPressed: () async {
-                    Performance? edited = await Navigator.of(context).push(
-                      MaterialPageRoute(
-                        builder: (context) {
-                          if (performance is RoutinePerformance) {
-                            return CreateRoutinePerformanceView(
-                              routinePerformance: performance,
-                            );
-                          } else if (performance is ExercisePerformance) {
-                            return CreateExercisePerformanceView(
-                              exercisePerformance: performance,
-                            );
-                          } else {
-                            return CreateQuickTrackPerformanceView(
-                              performance: performance,
-                            );
-                          }
-                        },
-                      ),
-                    );
-
-                    if (edited != null) {
-                      PerformancesService.instance.update(edited);
-                    }
-                  },
-                ),
-                if (performance != null)
-                  WithConfirmationDialog(
-                    title: performance.name,
-                    description:
-                        'Are you sure you want to delete this performance?',
-                    builder: (context, confirm) => IconButton(
-                      icon: const Icon(Icons.delete_rounded),
-                      onPressed: () async {
-                        if (await confirm()) {
-                          PerformancesService.instance.delete(performance);
-
-                          if (mounted) {
-                            Navigator.of(context).pop();
-                          }
+        return Scaffold(
+          appBar: AppBar(
+            title: Text(performance?.name ?? ''),
+            actions: [
+              IconButton(
+                icon: const Icon(Icons.edit),
+                onPressed: () async {
+                  Performance? edited = await Navigator.of(context).push(
+                    MaterialPageRoute(
+                      builder: (context) {
+                        if (performance is RoutinePerformance) {
+                          return CreateRoutinePerformanceView(
+                            routinePerformance: performance,
+                          );
+                        } else if (performance is ExercisePerformance) {
+                          return CreateExercisePerformanceView(
+                            exercisePerformance: performance,
+                          );
+                        } else {
+                          return CreateQuickTrackPerformanceView(
+                            performance: performance,
+                          );
                         }
                       },
                     ),
+                  );
+
+                  if (edited != null) {
+                    PerformancesService.instance.update(edited);
+                  }
+                },
+              ),
+              if (performance != null)
+                WithConfirmationDialog(
+                  title: performance.name,
+                  description:
+                      'Are you sure you want to delete this performance?',
+                  builder: (context, confirm) => IconButton(
+                    icon: const Icon(Icons.delete_rounded),
+                    onPressed: () async {
+                      if (await confirm()) {
+                        PerformancesService.instance.delete(performance);
+
+                        if (mounted) {
+                          Navigator.of(context).pop();
+                        }
+                      }
+                    },
                   ),
-              ],
-            ),
-            body: StandardList(
-              children: [
-                if (performance != null)
-                  SimpleCard(
-                    title: 'Details',
-                    child: Center(
-                      child: FutureBuilder(
-                        future: performance.calories,
-                        builder: (context, snapshot) => Table(
-                          defaultColumnWidth: const IntrinsicColumnWidth(),
-                          children: [
-                            if (performance is! ExercisePerformance &&
-                                performance is! RoutinePerformance)
-                              TableRow(
-                                children: [
-                                  const SecondaryText('Name'),
-                                  const SizedBox(width: 32),
-                                  Text(performance.name),
-                                ],
-                              ),
-                            if (performance is ExercisePerformance)
-                              TableRow(
-                                children: [
-                                  const SecondaryText('Exercise'),
-                                  const SizedBox(width: 32),
-                                  Text(performance.exercise.name),
-                                ],
-                              ),
-                            if (performance is RoutinePerformance)
-                              TableRow(
-                                children: [
-                                  const SecondaryText('Routine'),
-                                  const SizedBox(width: 32),
-                                  Text(performance.routine.name),
-                                ],
-                              ),
-                            TableRow(
-                              children: [
-                                const SecondaryText('Calories'),
-                                const SizedBox(width: 32),
-                                Text('${snapshot.data?.round()} cal'),
-                              ],
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
-                  ),
-                if (performance is ResistanceExercisePerformance)
-                  SimpleCard(
-                    title: 'Performance',
-                    child: Center(
-                      child: Table(
+                ),
+            ],
+          ),
+          body: StandardList(
+            children: [
+              if (performance != null)
+                SimpleCard(
+                  title: 'Details',
+                  child: Center(
+                    child: FutureBuilder(
+                      future: performance.calories,
+                      builder: (context, snapshot) => Table(
                         defaultColumnWidth: const IntrinsicColumnWidth(),
                         children: [
+                          if (performance is! ExercisePerformance &&
+                              performance is! RoutinePerformance)
+                            TableRow(
+                              children: [
+                                const SecondaryText('Name'),
+                                const SizedBox(width: 32),
+                                Text(performance.name),
+                              ],
+                            ),
+                          if (performance is ExercisePerformance)
+                            TableRow(
+                              children: [
+                                const SecondaryText('Exercise'),
+                                const SizedBox(width: 32),
+                                Text(performance.exercise.name),
+                              ],
+                            ),
+                          if (performance is RoutinePerformance)
+                            TableRow(
+                              children: [
+                                const SecondaryText('Routine'),
+                                const SizedBox(width: 32),
+                                Text(performance.routine.name),
+                              ],
+                            ),
                           TableRow(
                             children: [
-                              const SecondaryText('Duration'),
+                              const SecondaryText('Calories'),
                               const SizedBox(width: 32),
-                              Text('${performance.duration.inMinutes} m'),
-                            ],
-                          ),
-                          TableRow(
-                            children: [
-                              const SecondaryText('Power'),
-                              const SizedBox(width: 32),
-                              Text('${performance.watts} watts'),
+                              Text('${snapshot.data?.round()} cal'),
                             ],
                           ),
                         ],
                       ),
                     ),
                   ),
-                if (performance is WeightsExercisePerformance)
-                  SimpleCard(
-                    title: 'Performance',
-                    child: Column(
-                      children: performance.sets
-                          .map(
-                            (set) => Card(
-                              elevation: 4,
-                              child: ListTile(
-                                title: Text(
-                                  '${set.repetitions} x ${set.weight} kg',
-                                ),
+                ),
+              if (performance is ResistanceExercisePerformance)
+                SimpleCard(
+                  title: 'Performance',
+                  child: Center(
+                    child: Table(
+                      defaultColumnWidth: const IntrinsicColumnWidth(),
+                      children: [
+                        TableRow(
+                          children: [
+                            const SecondaryText('Duration'),
+                            const SizedBox(width: 32),
+                            Text('${performance.duration.inMinutes} m'),
+                          ],
+                        ),
+                        TableRow(
+                          children: [
+                            const SecondaryText('Power'),
+                            const SizedBox(width: 32),
+                            Text('${performance.watts} watts'),
+                          ],
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              if (performance is WeightsExercisePerformance)
+                SimpleCard(
+                  title: 'Sets',
+                  child: StandardList(
+                    padding: EdgeInsets.zero,
+                    children: performance.sets
+                        .map(
+                          (set) => Card(
+                            elevation: 4,
+                            child: ListTile(
+                              title: Text(
+                                '${set.repetitions} x ${set.weight} kg',
                               ),
                             ),
-                          )
-                          .toList(),
-                    ),
+                          ),
+                        )
+                        .toList(),
                   ),
-                if (performance is RoutinePerformance)
-                  SimpleCard(
-                    title: 'Performances',
-                    child: RoutineExercisePerformances(
-                      routinePerformance: performance,
-                    ),
+                ),
+              if (performance is RoutinePerformance)
+                SimpleCard(
+                  title: 'Performances',
+                  child: RoutineExercisePerformances(
+                    routinePerformance: performance,
                   ),
-              ],
-            ),
-          );
-        });
+                ),
+            ],
+          ),
+        );
+      },
+    );
   }
 }

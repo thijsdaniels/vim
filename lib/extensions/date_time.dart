@@ -1,5 +1,45 @@
 extension DateExtension on DateTime {
-  DateTime toDate() => DateTime(year, month, day);
+  DateTime startOfDay() => withTime(0, 0, 0, 0, 0);
+
+  DateTime endOfDay() => withTime(23, 59, 59, 999, 999);
+
+  DateTime withTimeOf(DateTime other) => withTime(
+        other.hour,
+        other.minute,
+        other.second,
+        other.millisecond,
+        other.microsecond,
+      );
+
+  DateTime withTime(
+    int hour, [
+    int minute = 0,
+    int second = 0,
+    int millisecond = 0,
+    int microsecond = 0,
+  ]) =>
+      DateTime(
+        year,
+        month,
+        day,
+        hour,
+        minute,
+        second,
+        millisecond,
+        microsecond,
+      );
+
+  DateTime clamp(DateTime start, DateTime end) {
+    assert(end.isAfter(start));
+
+    if (isBefore(start)) {
+      return start;
+    } else if (isAfter(end)) {
+      return end;
+    }
+
+    return this;
+  }
 
   bool isToday() {
     return isAtSameDayAs(DateTime.now());
