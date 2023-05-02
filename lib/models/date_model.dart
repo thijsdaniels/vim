@@ -6,7 +6,13 @@ class DateModel extends ChangeNotifier {
   DateTime _date = DateTime.now().toDate();
 
   DateTime get date => _date;
-  Timestamp get timestamp => Timestamp.fromDate(date);
+  Timestamp get timestamp {
+    DateTime now = DateTime.now();
+    return Timestamp.fromDate(
+      DateTime(date.year, date.month, date.day, now.hour, now.minute,
+          now.second, now.millisecond, now.microsecond),
+    );
+  }
 
   void set(DateTime dateTime) {
     _date = dateTime.toDate();
