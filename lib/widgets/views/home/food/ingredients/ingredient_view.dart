@@ -100,8 +100,19 @@ class _IngredientViewState extends State<IngredientView> {
               ),
             ),
           ),
+
+          /// TODO: Add a switch to allow the user to see the `Nutrition` for
+          /// 100g even if the ingredient's data contains the `Nutrition` per
+          /// serving, and vice versa.
           SimpleCard(
             title: 'Nutrition',
+            actions: [
+              Text(
+                widget.ingredient.nutritionPerServing
+                    ? '1 Serving'
+                    : '100 Grams',
+              )
+            ],
             child: Center(
               child: NutritionTable(
                 nutrition: widget.ingredient.nutrition,

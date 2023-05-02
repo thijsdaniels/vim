@@ -5,6 +5,7 @@ import 'package:vim/models/food/nutrition.dart';
 import 'package:vim/services/ingredients_service.dart';
 import 'package:vim/widgets/atoms/icons8_icon_dropdown_menu.dart';
 import 'package:vim/widgets/atoms/standard_list.dart';
+import 'package:vim/widgets/atoms/switch_form_field.dart';
 import 'package:vim/widgets/molecules/nutrition_form_fields.dart';
 import 'package:vim/widgets/molecules/simple_card.dart';
 
@@ -23,6 +24,7 @@ class _CreateIngredientViewState extends State<CreateIngredientView> {
   final TextEditingController _nameController = TextEditingController();
   final TextEditingController _brandController = TextEditingController();
   final TextEditingController _servingController = TextEditingController();
+  bool _nutritionPerServing = false;
   final NutritionEditingController _nutritionController =
       NutritionEditingController();
 
@@ -37,6 +39,7 @@ class _CreateIngredientViewState extends State<CreateIngredientView> {
       _nameController.text = ingredient.name;
       _brandController.text = ingredient.brand ?? "";
       _servingController.text = ingredient.serving?.toString() ?? "";
+      _nutritionPerServing = ingredient.nutritionPerServing;
       _nutritionController.nutrition = ingredient.nutrition;
     }
   }
@@ -78,6 +81,7 @@ class _CreateIngredientViewState extends State<CreateIngredientView> {
                   ingredient.name = name;
                   ingredient.brand = brand;
                   ingredient.serving = serving;
+                  ingredient.nutritionPerServing = _nutritionPerServing;
                   ingredient.nutrition = nutrition;
 
                   IngredientsService.update(ingredient);
@@ -88,6 +92,7 @@ class _CreateIngredientViewState extends State<CreateIngredientView> {
                     brand: brand,
                     serving: serving,
                     nutrition: nutrition,
+                    nutritionPerServing: _nutritionPerServing,
                   );
 
                   IngredientsService.create(ingredient);
@@ -158,8 +163,22 @@ class _CreateIngredientViewState extends State<CreateIngredientView> {
             ),
             SimpleCard(
               title: 'Nutrition',
-              child: NutritionFormFields(
-                controller: _nutritionController,
+              child: Column(
+                children: [
+                  SwitchFormField(
+                    label: const Text('Per Serving'),
+                    value: _nutritionPerServing,
+                    onChanged: (perServing) {
+                      setState(() {
+                        _nutritionPerServing = perServing;
+                      });
+                    },
+                  ),
+                  const SizedBox(height: 16),
+                  NutritionFormFields(
+                    controller: _nutritionController,
+                  ),
+                ],
               ),
             ),
           ],

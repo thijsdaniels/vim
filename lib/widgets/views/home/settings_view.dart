@@ -8,6 +8,7 @@ import 'package:vim/models/settings_model.dart';
 import 'package:vim/widgets/atoms/icons8_icon.dart';
 import 'package:vim/widgets/atoms/number_form_field.dart';
 import 'package:vim/widgets/atoms/standard_list.dart';
+import 'package:vim/widgets/atoms/switch_form_field.dart';
 import 'package:vim/widgets/molecules/simple_card.dart';
 
 class SettingsView extends StatelessWidget {
@@ -257,19 +258,14 @@ class PerformanceSettings extends StatelessWidget {
               },
             ),
             const SizedBox(height: 16),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                const Text('Adjust Target Intake'),
-                Switch(
-                  value: settings.body.adjustIntake,
-                  onChanged: (adjustIntake) {
-                    settings.body = settings.body.copyWith(
-                      adjustIntake: adjustIntake,
-                    );
-                  },
-                ),
-              ],
+            SwitchFormField(
+              label: const Text('Adjust Target Intake'),
+              value: settings.body.adjustIntake,
+              onChanged: (adjustIntake) {
+                settings.body = settings.body.copyWith(
+                  adjustIntake: adjustIntake,
+                );
+              },
             ),
           ],
         ),

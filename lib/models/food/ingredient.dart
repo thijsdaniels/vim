@@ -11,6 +11,7 @@ class Ingredient extends Model {
   String? brand;
   num? serving;
   Nutrition nutrition;
+  bool nutritionPerServing;
 
   DocumentReference? get reference => _reference;
 
@@ -20,7 +21,9 @@ class Ingredient extends Model {
     this.brand,
     this.serving,
     required this.nutrition,
-  });
+    this.nutritionPerServing = false,
+  }) : assert(!nutritionPerServing || serving != null,
+            "A serving size must be provided if the nutrition is provided per serving.");
 
   @override
   Map<String, dynamic> toMap() {
@@ -30,6 +33,7 @@ class Ingredient extends Model {
       'brand': brand,
       'serving': serving,
       'nutrition': nutrition.toMap(),
+      'nutritionPerServing': nutritionPerServing,
     };
   }
 
@@ -51,6 +55,7 @@ class Ingredient extends Model {
       brand: map['brand'],
       serving: map['serving'],
       nutrition: Nutrition.fromMap(map['nutrition']),
+      nutritionPerServing: map['nutritionPerServing'] ?? false,
     );
   }
 
@@ -66,7 +71,9 @@ class Ingredient extends Model {
   }
 
   Nutrition nutritionForAmount(Amount amount) {
-    return nutrition * 0.01 * _weightForAmount(amount);
+    num weightForNutrition = nutritionPerServing ? serving! : 100;
+    Nutrition nutritionPerGram = nutrition * (1 / weightForNutrition);
+    return nutritionPerGram * _weightForAmount(amount);
   }
 
   num _weightForAmount(Amount amount) {
