@@ -9,7 +9,9 @@ class SecondaryText extends StatelessWidget {
     return Text(
       text,
       style: TextStyle(
-          color: Theme.of(context).colorScheme.onBackground.withOpacity(0.5)),
+        color: Theme.of(context).colorScheme.onBackground.withOpacity(0.5),
+        fontSize: 14,
+      ),
     );
   }
 }

@@ -1,13 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:vim/widgets/atoms/number_form_field.dart';
+import 'package:vim/widgets/atoms/standard_list.dart';
 
 class SetsFormFields extends StatefulWidget {
-  final List<Map<String, dynamic>> sets;
+  final List<({num? repetitions, num? weight})> sets;
+  final void Function(List<({num? repetitions, num? weight})> sets) onChanged;
   final double elevation;
 
   const SetsFormFields({
     super.key,
     required this.sets,
+    required this.onChanged,
     this.elevation = 1,
   });
 
@@ -16,15 +19,24 @@ class SetsFormFields extends StatefulWidget {
 }
 
 class _SetsFormFieldsState extends State<SetsFormFields> {
+  late List<({num? repetitions, num? weight})> _sets;
+
+  @override
+  void initState() {
+    super.initState();
+
+    _sets = widget.sets;
+  }
+
   @override
   Widget build(BuildContext context) {
-    var sets = widget.sets;
-
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.end,
+    return StandardList(
+      padding: EdgeInsets.zero,
       children: [
-        ...sets.asMap().entries.map(
+        ..._sets.asMap().entries.map(
           (entry) {
+            var (:repetitions, :weight) = entry.value;
+
             return Card(
               elevation: widget.elevation,
               child: Padding(
@@ -33,9 +45,13 @@ class _SetsFormFieldsState extends State<SetsFormFields> {
                   children: [
                     Expanded(
                       child: NumberFormField(
-                        initialValue: entry.value['weight'],
-                        onChanged: (weight) => setState(() {
-                          entry.value['weight'] = weight;
+                        initialValue: weight,
+                        onChanged: (value) => setState(() {
+                          _sets[entry.key] = (
+                            weight: value,
+                            repetitions: entry.value.repetitions,
+                          );
+                          widget.onChanged(_sets);
                         }),
                         decoration: const InputDecoration(
                           labelText: 'Weight',
@@ -53,9 +69,13 @@ class _SetsFormFieldsState extends State<SetsFormFields> {
                     const SizedBox(width: 16),
                     Expanded(
                       child: NumberFormField(
-                        initialValue: entry.value['repetitions'],
-                        onChanged: (repetitions) => setState(() {
-                          entry.value['repetitions'] = repetitions;
+                        initialValue: repetitions,
+                        onChanged: (value) => setState(() {
+                          _sets[entry.key] = (
+                            weight: entry.value.weight,
+                            repetitions: value,
+                          );
+                          widget.onChanged(_sets);
                         }),
                         decoration: const InputDecoration(
                           labelText: 'Repetitions',
@@ -72,10 +92,11 @@ class _SetsFormFieldsState extends State<SetsFormFields> {
                     const SizedBox(width: 16),
                     IconButton(
                       icon: const Icon(Icons.clear),
-                      onPressed: sets.length > 1
+                      onPressed: _sets.length > 1
                           ? () {
                               setState(() {
-                                sets.removeAt(entry.key);
+                                _sets.removeAt(entry.key);
+                                widget.onChanged(_sets);
                               });
                             }
                           : null,
@@ -92,11 +113,11 @@ class _SetsFormFieldsState extends State<SetsFormFields> {
             child: const Text('Add Set'),
             onPressed: () {
               setState(() {
-                sets.add({
-                  'repetitions':
-                      sets.isNotEmpty ? sets.last['repetitions'] : null,
-                  'weight': sets.isNotEmpty ? sets.last['weight'] : null,
-                });
+                _sets.add((
+                  repetitions: _sets.isNotEmpty ? _sets.last.repetitions : null,
+                  weight: _sets.isNotEmpty ? _sets.last.weight : null,
+                ));
+                widget.onChanged(_sets);
               });
             },
           ),

@@ -1,7 +1,7 @@
 extension DateExtension on DateTime {
   DateTime startOfDay() => withTime(0, 0, 0, 0, 0);
 
-  DateTime endOfDay() => withTime(23, 59, 59, 999, 999);
+  DateTime endOfDay() => withTime(23, 59, 59);
 
   DateTime withTimeOf(DateTime other) => withTime(
         other.hour,

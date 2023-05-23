@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:flutter/foundation.dart';
+import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:vim/extensions/date_time.dart';
 
 class DateModel extends ChangeNotifier {
@@ -44,5 +45,9 @@ class DateModel extends ChangeNotifier {
 
   void next() {
     add(1);
+  }
+
+  static DateModel of(BuildContext context) {
+    return Provider.of<DateModel>(context, listen: false);
   }
 }

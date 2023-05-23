@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:vim/models/food/consumption.dart';
 import 'package:vim/models/food/consumptions.dart';
@@ -11,9 +12,9 @@ import 'package:vim/widgets/atoms/standard_list.dart';
 import 'package:vim/widgets/molecules/list_surface.dart';
 import 'package:vim/widgets/views/home/log/food_log/consumption_view.dart';
 
-// TODO: Receive `consumptions` as a parameter instead of taking them from
-// context, so that this widget can also be used with a particular set of
-// consumptions other than the main one.
+/// TODO: Receive `consumptions` as a parameter instead of taking them from
+/// context, so that this widget can also be used with a particular set of
+/// consumptions other than the main one.
 class ConsumptionsList extends StatelessWidget {
   const ConsumptionsList({super.key});
 
@@ -49,7 +50,7 @@ class ConsumptionsList extends StatelessWidget {
                           .toList(),
                     )
                   : null,
-          title: Text(consumption.name),
+          title: Text(consumption.name, overflow: TextOverflow.ellipsis),
           // TODO: Try to change this into Chip widgets.
           subtitle: SecondaryText(
             [
@@ -74,6 +75,9 @@ class ConsumptionsList extends StatelessWidget {
               ),
             );
           },
+          actions: SecondaryText(
+            DateFormat.Hm('en_US').format(consumption.timestamp.toDate()),
+          ),
           // trailing: Row(
           //   mainAxisSize: MainAxisSize.min,
           //   children: [

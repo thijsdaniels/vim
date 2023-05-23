@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:vim/extensions/num.dart';
 import 'package:vim/models/exercise/performance.dart';
@@ -69,6 +70,9 @@ class PerformancesList extends StatelessWidget {
               ),
             );
           },
+          actions: SecondaryText(
+            DateFormat.Hm('en_US').format(performance.timestamp.toDate()),
+          ),
           // trailing: Row(
           //   mainAxisSize: MainAxisSize.min,
           //   children: [

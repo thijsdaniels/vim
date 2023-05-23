@@ -26,6 +26,7 @@ class PerformanceView extends StatefulWidget {
   State<PerformanceView> createState() => _PerformanceViewState();
 }
 
+/// TODO: Split into a separate View class per performance type.
 class _PerformanceViewState extends State<PerformanceView> {
   @override
   Widget build(BuildContext context) {
@@ -38,34 +39,35 @@ class _PerformanceViewState extends State<PerformanceView> {
           appBar: AppBar(
             title: Text(performance?.name ?? ''),
             actions: [
-              IconButton(
-                icon: const Icon(Icons.edit),
-                onPressed: () async {
-                  Performance? edited = await Navigator.of(context).push(
-                    MaterialPageRoute(
-                      builder: (context) {
-                        if (performance is RoutinePerformance) {
-                          return CreateRoutinePerformanceView(
-                            routinePerformance: performance,
-                          );
-                        } else if (performance is ExercisePerformance) {
-                          return CreateExercisePerformanceView(
-                            exercisePerformance: performance,
-                          );
-                        } else {
-                          return CreateQuickTrackPerformanceView(
-                            performance: performance,
-                          );
-                        }
-                      },
-                    ),
-                  );
+              if (performance is! RoutinePerformance)
+                IconButton(
+                  icon: const Icon(Icons.edit),
+                  onPressed: () async {
+                    Performance? edited = await Navigator.of(context).push(
+                      MaterialPageRoute(
+                        builder: (context) {
+                          if (performance is RoutinePerformance) {
+                            return CreateRoutinePerformanceView(
+                              routinePerformance: performance,
+                            );
+                          } else if (performance is ExercisePerformance) {
+                            return CreateExercisePerformanceView(
+                              exercisePerformance: performance,
+                            );
+                          } else {
+                            return CreateQuickTrackPerformanceView(
+                              performance: performance,
+                            );
+                          }
+                        },
+                      ),
+                    );
 
-                  if (edited != null) {
-                    PerformancesService.instance.update(edited);
-                  }
-                },
-              ),
+                    if (edited != null) {
+                      PerformancesService.instance.update(edited);
+                    }
+                  },
+                ),
               if (performance != null)
                 WithConfirmationDialog(
                   title: performance.name,

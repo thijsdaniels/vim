@@ -28,6 +28,7 @@ class NutritionTable extends StatelessWidget {
           context: context,
           label: 'Saturated Fats',
           amount: nutrition.fats.saturates,
+          indented: true,
         ),
         NutritionRow(
           context: context,
@@ -38,11 +39,13 @@ class NutritionTable extends StatelessWidget {
           context: context,
           label: 'Sugars',
           amount: nutrition.carbohydrates.sugars,
+          indented: true,
         ),
         NutritionRow(
           context: context,
           label: 'Fibers',
           amount: nutrition.carbohydrates.fibers,
+          indented: true,
         ),
         NutritionRow(
           context: context,
@@ -64,6 +67,7 @@ class NutritionRow extends TableRow {
   final num? amount;
   final BuildContext context;
   final String unit;
+  final bool indented;
 
   const NutritionRow({
     super.key,
@@ -71,14 +75,17 @@ class NutritionRow extends TableRow {
     required this.label,
     required this.amount,
     this.unit = 'g',
+    this.indented = false,
   });
 
   @override
   get children {
     return [
       Row(
-        mainAxisAlignment: MainAxisAlignment.end,
-        children: [Text(label)],
+        children: [
+          if (indented) const SizedBox(width: 16),
+          Text(label),
+        ],
       ),
       const SizedBox(width: 32),
       Row(

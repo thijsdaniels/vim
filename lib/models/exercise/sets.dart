@@ -10,6 +10,12 @@ class Sets extends Collection<Set> {
     );
   }
 
+  static Sets fromRecords(Iterable<({num? weight, num? repetitions})> records) {
+    return Sets(
+      records.map((record) => Set.fromRecord(record)).toList(),
+    );
+  }
+
   num get calories => entries
       .map((set) => set.calories)
       .reduce((total, calories) => total + calories);

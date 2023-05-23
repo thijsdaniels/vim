@@ -21,6 +21,13 @@ class Set extends Model {
     );
   }
 
+  static Set fromRecord(({num? weight, num? repetitions}) record) {
+    return Set(
+      weight: record.weight ?? 0,
+      repetitions: record.repetitions ?? 0,
+    );
+  }
+
   @override
   Map<String, dynamic> toMap() {
     return {

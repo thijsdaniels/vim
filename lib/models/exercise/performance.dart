@@ -7,7 +7,7 @@ import 'package:vim/services/service.dart';
 class Performance extends Document {
   DocumentReference? _reference;
 
-  Timestamp? timestamp;
+  Timestamp timestamp;
   String name;
   num _calories;
 

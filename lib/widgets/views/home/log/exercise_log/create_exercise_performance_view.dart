@@ -6,18 +6,20 @@ import 'package:vim/models/exercise/exercise_performance.dart';
 import 'package:vim/models/exercise/resistance_exercise_performance.dart';
 import 'package:vim/models/exercise/sets.dart';
 import 'package:vim/models/exercise/weights_exercise_performance.dart';
-import 'package:vim/widgets/atoms/exercise_dropdown_menu.dart';
 import 'package:vim/widgets/atoms/number_form_field.dart';
 import 'package:vim/widgets/atoms/sets_form_field.dart';
+import 'package:vim/widgets/atoms/standard_list.dart';
 import 'package:vim/widgets/molecules/simple_card.dart';
 
 class CreateExercisePerformanceView extends StatefulWidget {
   final ExercisePerformance? exercisePerformance;
+  final Exercise? exercise;
 
   const CreateExercisePerformanceView({
     super.key,
     this.exercisePerformance,
-  });
+    this.exercise,
+  }) : assert(exercise != null || exercisePerformance != null);
 
   @override
   State<CreateExercisePerformanceView> createState() =>
@@ -28,9 +30,10 @@ class _CreateExercisePerformanceViewState
     extends State<CreateExercisePerformanceView> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
-  Exercise? _exercise;
   num? _calories;
-  List<Map<String, dynamic>> _sets = [{}];
+  List<({num? repetitions, num? weight})> _sets = [
+    (repetitions: null, weight: null)
+  ];
   int? _minutes;
   num? _watts;
 
@@ -41,11 +44,12 @@ class _CreateExercisePerformanceViewState
     ExercisePerformance? exercisePerformance = widget.exercisePerformance;
 
     if (exercisePerformance != null) {
-      _exercise = exercisePerformance.exercise;
       _calories = 0; // exercisePerformance.calories; // TODO: Fix this
 
       if (exercisePerformance is WeightsExercisePerformance) {
-        _sets = exercisePerformance.sets.toMap();
+        _sets = exercisePerformance.sets
+            .map((set) => (repetitions: set.repetitions, weight: set.weight))
+            .toList();
       }
 
       if (exercisePerformance is ResistanceExercisePerformance) {
@@ -62,7 +66,7 @@ class _CreateExercisePerformanceViewState
     return Scaffold(
       appBar: AppBar(
         title: exercisePerformance == null
-            ? const Text('Perform Exercise')
+            ? Text(widget.exercise!.name)
             : Text(exercisePerformance.name),
         actions: [
           Consumer<DateModel>(
@@ -80,33 +84,30 @@ class _CreateExercisePerformanceViewState
                   if (exercisePerformance != null) {
                     if (exercisePerformance is ResistanceExercisePerformance) {
                       exercisePerformance.timestamp = dateModel.timestamp;
-                      exercisePerformance.exercise = _exercise!;
                       exercisePerformance.duration =
                           Duration(minutes: _minutes!);
                       exercisePerformance.watts = _watts!;
                     } else if (exercisePerformance
                         is WeightsExercisePerformance) {
                       exercisePerformance.timestamp = dateModel.timestamp;
-                      exercisePerformance.exercise = _exercise!;
-                      exercisePerformance.sets = Sets.fromMap(_sets);
+                      exercisePerformance.sets = Sets.fromRecords(_sets);
                     } else {
                       exercisePerformance.timestamp = dateModel.timestamp;
-                      exercisePerformance.exercise = _exercise!;
                       exercisePerformance.setCalories(_calories!);
                     }
                   } else {
-                    switch (_exercise!.type) {
+                    switch (widget.exercise!.type) {
                       case ExerciseType.manual:
                         exercisePerformance = ExercisePerformance(
                           timestamp: dateModel.timestamp,
-                          exercise: _exercise!,
+                          exercise: widget.exercise!,
                           calories: _calories!,
                         );
                         break;
                       case ExerciseType.resistance:
                         exercisePerformance = ResistanceExercisePerformance(
                           timestamp: dateModel.timestamp,
-                          exercise: _exercise!,
+                          exercise: widget.exercise!,
                           duration: Duration(minutes: _minutes!),
                           watts: _watts!,
                         );
@@ -114,8 +115,8 @@ class _CreateExercisePerformanceViewState
                       case ExerciseType.weights:
                         exercisePerformance = WeightsExercisePerformance(
                           timestamp: dateModel.timestamp,
-                          exercise: _exercise!,
-                          sets: Sets.fromMap(_sets),
+                          exercise: widget.exercise!,
+                          sets: Sets.fromRecords(_sets),
                         );
                         break;
                     }
@@ -128,112 +129,98 @@ class _CreateExercisePerformanceViewState
           ),
         ],
       ),
-      body: SingleChildScrollView(
-        child: Padding(
-          padding: const EdgeInsets.all(16.0),
-          child: Form(
-            key: _formKey,
-            child: Column(
-              children: [
-                if (exercisePerformance == null)
-                  SimpleCard(
-                    title: 'Details',
-                    child: Column(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        ExerciseDropdownMenu(
-                          initialSelection: _exercise,
-                          onSelected: (Exercise? exercise) {
-                            setState(() {
-                              _exercise = exercise;
-                            });
-                          },
-                        ),
-                      ],
+      body: Form(
+        key: _formKey,
+        child: StandardList(
+          children: [
+            if (exerciseType == ExerciseType.manual)
+              SimpleCard(
+                title: 'Effort',
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    NumberFormField(
+                      initialValue: _calories,
+                      onChanged: (calories) => setState(() {
+                        _calories = calories;
+                      }),
+                      decoration: const InputDecoration(
+                        labelText: 'Calories',
+                      ),
+                      textInputAction: TextInputAction.done,
+                      validator: (value) {
+                        if (value == null) {
+                          return 'Please enter an amount.';
+                        }
+                        return null;
+                      },
                     ),
-                  ),
-                if (_exercise?.type == ExerciseType.manual)
-                  SimpleCard(
-                    title: 'Effort',
-                    child: Column(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        NumberFormField(
-                          initialValue: _calories,
-                          onChanged: (calories) => setState(() {
-                            _calories = calories;
-                          }),
-                          decoration: const InputDecoration(
-                            labelText: 'Calories',
-                          ),
-                          textInputAction: TextInputAction.done,
-                          validator: (value) {
-                            if (value == null) {
-                              return 'Please enter an amount.';
-                            }
-                            return null;
-                          },
-                        ),
-                      ],
+                  ],
+                ),
+              ),
+            if (exerciseType == ExerciseType.resistance)
+              SimpleCard(
+                title: 'Effort',
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    NumberFormField(
+                      initialValue: _minutes,
+                      onChanged: (minutes) => setState(() {
+                        _minutes = minutes?.toInt();
+                      }),
+                      decoration: const InputDecoration(
+                        labelText: 'Duration',
+                        hintText: 'Minutes',
+                      ),
+                      textInputAction: TextInputAction.next,
+                      validator: (value) {
+                        if (value == null) {
+                          return 'Please enter a duration.';
+                        }
+                        return null;
+                      },
                     ),
-                  ),
-                if (_exercise?.type == ExerciseType.resistance)
-                  SimpleCard(
-                    title: 'Effort',
-                    child: Column(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        NumberFormField(
-                          initialValue: _minutes,
-                          onChanged: (minutes) => setState(() {
-                            _minutes = minutes?.toInt();
-                          }),
-                          decoration: const InputDecoration(
-                            labelText: 'Duration',
-                            hintText: 'Minutes',
-                          ),
-                          textInputAction: TextInputAction.next,
-                          validator: (value) {
-                            if (value == null) {
-                              return 'Please enter a duration.';
-                            }
-                            return null;
-                          },
-                        ),
-                        const SizedBox(height: 16),
-                        NumberFormField(
-                          initialValue: _watts,
-                          onChanged: (watts) => setState(() {
-                            _watts = watts?.toInt();
-                          }),
-                          decoration: const InputDecoration(
-                            labelText: 'Power',
-                            hintText: 'Watts',
-                          ),
-                          textInputAction: TextInputAction.done,
-                          validator: (value) {
-                            if (value == null) {
-                              return 'Please enter a wattage.';
-                            }
-                            return null;
-                          },
-                        ),
-                      ],
+                    const SizedBox(height: 16),
+                    NumberFormField(
+                      initialValue: _watts,
+                      onChanged: (watts) => setState(() {
+                        _watts = watts?.toInt();
+                      }),
+                      decoration: const InputDecoration(
+                        labelText: 'Power',
+                        hintText: 'Watts',
+                      ),
+                      textInputAction: TextInputAction.done,
+                      validator: (value) {
+                        if (value == null) {
+                          return 'Please enter a wattage.';
+                        }
+                        return null;
+                      },
                     ),
-                  ),
-                if (_exercise?.type == ExerciseType.weights)
-                  SimpleCard(
-                    title: 'Sets',
-                    child: SetsFormFields(
-                      sets: _sets,
-                      elevation: 4,
-                    ),
-                  ),
-              ],
-            ),
-          ),
+                  ],
+                ),
+              ),
+            if (exerciseType == ExerciseType.weights)
+              SimpleCard(
+                title: 'Sets',
+                child: SetsFormFields(
+                  sets: _sets,
+                  elevation: 4,
+                  onChanged: (sets) => setState(() {
+                    _sets = sets;
+                  }),
+                ),
+              ),
+          ],
         ),
       ),
     );
+  }
+
+  ExerciseType get exerciseType {
+    return (widget.exercise?.type ??
+        widget.exercisePerformance?.exercise.type)!;
   }
 }

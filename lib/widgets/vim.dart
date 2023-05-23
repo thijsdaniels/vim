@@ -55,7 +55,7 @@ class Vim extends StatelessWidget {
             inputDecorationTheme: const InputDecorationTheme(
               border: OutlineInputBorder(),
             ),
-            shadowColor: Colors.transparent,
+            shadowColor: const Color.fromARGB(0, 18, 5, 5),
             cardTheme: const CardTheme(
               shadowColor: Colors.transparent,
               margin: EdgeInsets.zero,
@@ -85,11 +85,11 @@ class Providers extends StatelessWidget {
   Widget build(BuildContext context) {
     return MultiProvider(
       providers: [
-        StreamProvider(
+        StreamProvider<Ingredients>(
           create: (context) => IngredientsService.all(),
           initialData: const Ingredients([]),
         ),
-        StreamProvider(
+        StreamProvider<Recipes>(
           create: (context) => RecipesService.all(),
           initialData: const Recipes([]),
         ),
@@ -101,10 +101,10 @@ class Providers extends StatelessWidget {
           create: (context) => RoutinesService.all(),
           initialData: const [],
         ),
-        ChangeNotifierProvider(
+        ChangeNotifierProvider<DateModel>(
           create: (context) => DateModel(),
         ),
-        ChangeNotifierProvider(
+        ChangeNotifierProvider<SettingsModel>(
           create: (context) => SettingsModel(),
         ),
       ],

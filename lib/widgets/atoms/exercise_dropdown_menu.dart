@@ -21,6 +21,13 @@ class ExerciseDropdownMenu extends StatelessWidget {
   Widget build(BuildContext context) {
     return Consumer<Collection<Exercise>>(
       builder: (context, exercises, child) {
+        return Autocomplete<Exercise>(
+          initialValue: controller?.value,
+          optionsBuilder: (value) => exercises.map((exercise) => exercise),
+          displayStringForOption: (exercise) => exercise.name,
+          onSelected: onSelected,
+        );
+
         return DropdownMenu<Exercise>(
           initialSelection: initialSelection,
           controller: controller,
