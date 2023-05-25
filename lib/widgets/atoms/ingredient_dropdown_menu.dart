@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:vim/models/food/ingredient.dart';
-import 'package:vim/models/food/ingredients.dart';
 
 class IngredientDropdownMenu extends StatelessWidget {
   final Ingredient? initialSelection;
@@ -17,7 +16,7 @@ class IngredientDropdownMenu extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Consumer<Ingredients>(
+    return Consumer<List<Ingredient>>(
       builder: (context, ingredients, child) {
         return DropdownMenu<Ingredient>(
           initialSelection: initialSelection,

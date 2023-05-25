@@ -1,9 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:flutter/material.dart';
 import 'package:collection/collection.dart';
+import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:vim/extensions/num.dart';
-import 'package:vim/models/collection.dart';
 import 'package:vim/models/exercise/exercise.dart';
 import 'package:vim/models/exercise/exercise_performance.dart';
 import 'package:vim/models/exercise/performance.dart';
@@ -29,7 +28,7 @@ class RoutineExercisePerformances extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Consumer<Collection<Exercise>>(
+    return Consumer<List<Exercise>>(
       builder: (context, exercises, _) {
         return StreamBuilder(
           stream: routinePerformance.performances,

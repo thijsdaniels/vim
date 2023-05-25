@@ -1,17 +1,20 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:vim/models/document.dart';
 import 'package:vim/models/food/amount.dart';
 import 'package:vim/models/food/ingredient_amounts.dart';
+import 'package:vim/models/food/ingredient_amounts_reference.dart';
 import 'package:vim/models/food/nutrition.dart';
 import 'package:vim/models/food/recipe_consumption.dart';
 import 'package:vim/models/model.dart';
 
-class Recipe extends Model {
-  String? _id;
+class Recipe extends Document {
+  DocumentReference? _reference;
   String name;
   num servings;
   IngredientAmountsReference ingredientAmounts;
 
-  String? get id => _id;
+  @override
+  DocumentReference? get reference => _reference;
 
   Future<Nutrition> get nutrition async {
     return ingredientAmounts.nutrition;
@@ -38,7 +41,7 @@ class Recipe extends Model {
     Map<String, dynamic> map = snapshot.data()!;
 
     Recipe recipe = fromMap(map);
-    recipe._id = snapshot.id;
+    recipe._reference = snapshot.reference;
 
     return recipe;
   }

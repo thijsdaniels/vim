@@ -1,4 +1,5 @@
-import 'package:vim/models/exercise/performances.dart';
+import 'package:vim/extensions/performances_list.dart';
+import 'package:vim/models/exercise/performance.dart';
 
 enum Gender {
   male,
@@ -10,8 +11,8 @@ class Body {
   final double? age;
   final double? length;
   final double weight;
-  final double? muscle;
-  final double? fat;
+  final double? muscle; // TODO: Rename to leanMass
+  final double? fat; // TODO: Rename to fatMass
   final double neat;
   final double surplus;
   final int exercise;
@@ -33,8 +34,8 @@ class Body {
     required this.fats,
     this.adjustIntake = true,
   }) : assert(
-          fat != null || (gender != null && length != null),
-          'Either "fat" or the combination of "gender", "age" and "length" must be provided.',
+          muscle != null || fat != null || (gender != null && length != null),
+          'Either "muscle" or "fat" or the combination of "gender" and "length" must be provided.',
         );
 
   double get proteins => proteinGramsPerKilo * weight * 4 / intake;
@@ -42,6 +43,12 @@ class Body {
   double get carbohydrates => 1 - fats - proteins;
 
   double get leanMass {
+    if (muscle != null) {
+      return weight * (muscle! / 100);
+    }
+
+    /// TODO: This is incorrect! The `boneMass` also needs to be subtracted from
+    /// the weight.
     if (fat != null) {
       return weight * (1 - (fat! / 100));
     }
@@ -62,7 +69,7 @@ class Body {
 
   double get intake => (bmr + neat) * (1 + surplus);
 
-  Future<double> adjustedIntake(Performances performances) async {
+  Future<double> adjustedIntake(List<Performance> performances) async {
     return adjustIntake ? intake + await performances.calories : intake;
   }
 

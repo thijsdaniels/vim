@@ -1,14 +1,15 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:vim/models/document.dart';
 import 'package:vim/models/exercise/routine_performance.dart';
-import 'package:vim/models/model.dart';
 
-class Routine extends Model {
-  String? _id;
+class Routine extends Document {
+  DocumentReference? _reference;
 
   String name;
   List<DocumentReference> exerciseReferences;
 
-  String? get id => _id;
+  @override
+  DocumentReference? get reference => _reference;
 
   Routine({
     required this.name,
@@ -29,7 +30,7 @@ class Routine extends Model {
     Map<String, dynamic> map = snapshot.data()!;
 
     Routine routine = fromMap(map);
-    routine._id = snapshot.id;
+    routine._reference = snapshot.reference;
 
     return routine;
   }

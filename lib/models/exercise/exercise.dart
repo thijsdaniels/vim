@@ -1,5 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:vim/services/service.dart';
+import 'package:vim/models/document.dart';
 
 enum ExerciseType {
   manual,
@@ -9,7 +9,6 @@ enum ExerciseType {
 
 class Exercise extends Document {
   DocumentReference? _reference;
-
   ExerciseType type;
   String name;
 

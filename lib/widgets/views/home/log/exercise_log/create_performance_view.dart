@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:vim/models/collection.dart';
 import 'package:vim/models/date_model.dart';
 import 'package:vim/models/exercise/exercise.dart';
 import 'package:vim/models/exercise/exercise_performance.dart';
@@ -43,8 +42,8 @@ class _CreatePerformanceViewState extends State<CreatePerformanceView> {
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
-        child: Consumer<Iterable<Routine>>(
-          builder: (context, routines, _) => Consumer<Collection<Exercise>>(
+        child: Consumer<List<Routine>>(
+          builder: (context, routines, _) => Consumer<List<Exercise>>(
             builder: (context, exercises, _) => SearchAnchor.bar(
               barHintText: "Search",
               suggestionsBuilder: (context, controller) {

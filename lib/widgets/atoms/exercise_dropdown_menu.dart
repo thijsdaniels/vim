@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:vim/models/collection.dart';
 import 'package:vim/models/exercise/exercise.dart';
 
 class ExerciseDropdownMenu extends StatelessWidget {
@@ -19,29 +18,16 @@ class ExerciseDropdownMenu extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Consumer<Collection<Exercise>>(
+    return Consumer<List<Exercise>>(
       builder: (context, exercises, child) {
         return Autocomplete<Exercise>(
           initialValue: controller?.value,
-          optionsBuilder: (value) => exercises.map((exercise) => exercise),
+          optionsBuilder: (value) => exercises.where(
+            (exercise) =>
+                exercise.name.toLowerCase().contains(value.text.toLowerCase()),
+          ),
           displayStringForOption: (exercise) => exercise.name,
           onSelected: onSelected,
-        );
-
-        return DropdownMenu<Exercise>(
-          initialSelection: initialSelection,
-          controller: controller,
-          menuHeight: 256,
-          enableFilter: true,
-          label: const Text('Exercise'),
-          dropdownMenuEntries: exercises.map((exercise) {
-            return DropdownMenuEntry(
-              value: exercise,
-              label: exercise.name,
-            );
-          }).toList(),
-          onSelected: onSelected,
-          enabled: enabled,
         );
       },
     );

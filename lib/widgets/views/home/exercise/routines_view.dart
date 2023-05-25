@@ -24,7 +24,7 @@ class RoutinesView extends StatelessWidget {
         child: const Icon(Icons.add),
       ),
       body: SafeArea(
-        child: Consumer<Iterable<Routine>>(
+        child: Consumer<List<Routine>>(
           builder: (context, routines, child) => StandardList(
             itemCount: routines.length,
             itemBuilder: (context, index) {
@@ -40,7 +40,7 @@ class RoutinesView extends StatelessWidget {
                 onTap: () {
                   Navigator.of(context).push(
                     MaterialPageRoute(
-                      builder: (context) => RoutineView(routine.id!),
+                      builder: (context) => RoutineView(routine.reference!.id),
                     ),
                   );
                 },

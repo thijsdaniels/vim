@@ -53,14 +53,14 @@ class _CreateRecipeViewState extends State<CreateRecipeView> {
                   recipe.name = _name;
                   recipe.servings = _servings!;
 
-                  RecipesService.update(recipe);
+                  RecipesService.instance.update(recipe);
                 } else {
                   recipe = Recipe(
                     name: _name,
                     servings: _servings!,
                   );
 
-                  RecipesService.create(recipe);
+                  RecipesService.instance.create(recipe);
                 }
 
                 Navigator.of(context).pop(recipe);

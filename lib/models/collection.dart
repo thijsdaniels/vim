@@ -2,10 +2,8 @@ import 'package:collection/collection.dart';
 import 'package:flutter/foundation.dart';
 import 'package:vim/models/model.dart';
 
-/// @todo This is basically a wrapper for `List`, but it seems like really bad
-/// practice to have to manually expose some of List's functionality here, like
-/// as the `length` getter and such. It would be much better to _extend_ `List`
-/// if I can figure out how to do that.
+/// TODO: Get rid of this class, because it's bad practice. I should just use
+/// the `List` class, and where necessary add extensions on it.
 class Collection<M extends Model> {
   @protected
   final List<M> entries;

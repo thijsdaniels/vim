@@ -1,7 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:vim/models/food/ingredients.dart';
+import 'package:vim/models/food/ingredient.dart';
 
 /// TODO: Can I somehow combine this widget with the `IngredientDropdownMenu`?
 class IngredientReferenceDropdownMenu extends StatelessWidget {
@@ -18,7 +18,7 @@ class IngredientReferenceDropdownMenu extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Consumer<Ingredients>(
+    return Consumer<List<Ingredient>>(
       builder: (context, ingredients, child) {
         return DropdownMenu<DocumentReference>(
           initialSelection: initialSelection,

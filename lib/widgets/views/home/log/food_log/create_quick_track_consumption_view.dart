@@ -65,7 +65,7 @@ class _CreateQuickTrackConsumptionViewState
                     consumption.name = name;
                     consumption.nutrition = nutrition;
 
-                    ConsumptionsService.update(consumption);
+                    ConsumptionsService.instance.update(consumption);
                   } else {
                     consumption = Consumption(
                       timestamp: dateModel.timestamp,
@@ -73,7 +73,7 @@ class _CreateQuickTrackConsumptionViewState
                       nutrition: nutrition,
                     );
 
-                    ConsumptionsService.create(consumption);
+                    ConsumptionsService.instance.create(consumption);
                   }
 
                   Navigator.of(context).pop(consumption);

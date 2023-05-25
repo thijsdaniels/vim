@@ -7,84 +7,91 @@ import 'package:vim/widgets/atoms/standard_list.dart';
 import 'package:vim/widgets/molecules/simple_card.dart';
 import 'package:vim/widgets/molecules/with_confirmation_dialog.dart';
 import 'package:vim/widgets/views/home/exercise/exercises/create_exercise_view.dart';
+import 'package:vim/widgets/views/loading_view.dart';
+import 'package:vim/widgets/views/not_found_view.dart';
 
-class ExerciseView extends StatefulWidget {
-  final Exercise exercise;
+class ExerciseView extends StatelessWidget {
+  final String exerciseId;
 
-  const ExerciseView({
+  const ExerciseView(
+    this.exerciseId, {
     super.key,
-    required this.exercise,
   });
 
   @override
-  State<ExerciseView> createState() => _ExerciseViewState();
-}
-
-class _ExerciseViewState extends State<ExerciseView> {
-  @override
   Widget build(BuildContext context) {
-    Exercise exercise = widget.exercise;
+    return StreamBuilder<Exercise?>(
+        stream: ExercisesService.instance.get(exerciseId),
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return const LoadingView();
+          }
 
-    return Scaffold(
-      appBar: AppBar(
-        title: Text(exercise.name),
-        actions: [
-          IconButton(
-            icon: const Icon(Icons.edit_rounded),
-            onPressed: () async {
-              Navigator.of(context).push(
-                MaterialPageRoute(
-                  builder: (context) => CreateExerciseView(
-                    exercise: exercise,
+          if (!snapshot.hasData) {
+            return const NotFoundView();
+          }
+
+          Exercise exercise = snapshot.requireData!;
+
+          return Scaffold(
+            appBar: AppBar(
+              title: Text(exercise.name),
+              actions: [
+                IconButton(
+                  icon: const Icon(Icons.edit_rounded),
+                  onPressed: () async {
+                    Navigator.of(context).push(
+                      MaterialPageRoute(
+                        builder: (context) => CreateExerciseView(
+                          exercise: exercise,
+                        ),
+                      ),
+                    );
+                  },
+                ),
+                WithConfirmationDialog(
+                  title: exercise.name,
+                  description: 'Are you sure you want to delete this exercise?',
+                  builder: (context, confirm) => IconButton(
+                    icon: const Icon(Icons.delete_rounded),
+                    onPressed: () async {
+                      var navigator = Navigator.of(context);
+                      if (await confirm()) {
+                        ExercisesService.instance.delete(exercise);
+                        navigator.pop();
+                      }
+                    },
                   ),
-                ),
-              );
-            },
-          ),
-          WithConfirmationDialog(
-            title: exercise.name,
-            description: 'Are you sure you want to delete this exercise?',
-            builder: (context, confirm) => IconButton(
-              icon: const Icon(Icons.delete_rounded),
-              onPressed: () async {
-                if (await confirm()) {
-                  ExercisesService.instance.delete(exercise);
-
-                  if (mounted) {
-                    Navigator.of(context).pop();
-                  }
-                }
-              },
-            ),
-          ),
-        ],
-      ),
-      body: StandardList(
-        children: [
-          SimpleCard(
-            title: 'Details',
-            child: Table(
-              defaultColumnWidth: const IntrinsicColumnWidth(),
-              children: [
-                TableRow(
-                  children: [
-                    const SecondaryText('Name'),
-                    const SizedBox(width: 32),
-                    Text(exercise.name),
-                  ],
-                ),
-                TableRow(
-                  children: [
-                    const SecondaryText('Type'),
-                    const SizedBox(width: 32),
-                    Text(exercise.type.name.toTitleCase()),
-                  ],
                 ),
               ],
             ),
-          ),
-        ],
-      ),
-    );
+            body: StandardList(
+              children: [
+                SimpleCard(
+                  title: 'Details',
+                  child: Table(
+                    defaultColumnWidth: const IntrinsicColumnWidth(),
+                    children: [
+                      TableRow(
+                        children: [
+                          const SecondaryText('Name'),
+                          const SizedBox(width: 32),
+                          Text(exercise.name),
+                        ],
+                      ),
+                      TableRow(
+                        children: [
+                          const SecondaryText('Type'),
+                          const SizedBox(width: 32),
+                          Text(exercise.type.name.toTitleCase()),
+                        ],
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+          );
+        });
   }
 }

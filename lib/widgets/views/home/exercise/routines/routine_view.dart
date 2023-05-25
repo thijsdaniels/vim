@@ -9,8 +9,10 @@ import 'package:vim/widgets/molecules/simple_card.dart';
 import 'package:vim/widgets/molecules/with_confirmation_dialog.dart';
 import 'package:vim/widgets/views/home/exercise/routines/create_routine_view.dart';
 import 'package:vim/widgets/views/home/log/exercise_log/select_exercise_view.dart';
+import 'package:vim/widgets/views/loading_view.dart';
+import 'package:vim/widgets/views/not_found_view.dart';
 
-class RoutineView extends StatefulWidget {
+class RoutineView extends StatelessWidget {
   final String routineId;
 
   const RoutineView(
@@ -19,20 +21,23 @@ class RoutineView extends StatefulWidget {
   });
 
   @override
-  State<RoutineView> createState() => _RoutineViewState();
-}
-
-class _RoutineViewState extends State<RoutineView> {
-  @override
   Widget build(BuildContext context) {
     return StreamBuilder<Routine?>(
-      stream: RoutinesService.get(widget.routineId),
+      stream: RoutinesService.instance.get(routineId),
       builder: (context, snapshot) {
-        Routine? routine = snapshot.data;
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return const LoadingView();
+        }
+
+        if (!snapshot.hasData) {
+          return const NotFoundView();
+        }
+
+        Routine routine = snapshot.requireData!;
 
         return Scaffold(
           appBar: AppBar(
-            title: Text(routine?.name ?? '...'),
+            title: Text(routine.name),
             actions: [
               IconButton(
                 icon: const Icon(Icons.edit),
@@ -46,23 +51,20 @@ class _RoutineViewState extends State<RoutineView> {
                   );
                 },
               ),
-              if (routine != null)
-                WithConfirmationDialog(
-                  title: routine.name,
-                  description: 'Are you sure you want to delete this routine?',
-                  builder: (context, confirm) => IconButton(
-                    icon: const Icon(Icons.delete_rounded),
-                    onPressed: () async {
-                      if (await confirm()) {
-                        RoutinesService.delete(routine);
-
-                        if (mounted) {
-                          Navigator.of(context).pop();
-                        }
-                      }
-                    },
-                  ),
+              WithConfirmationDialog(
+                title: routine.name,
+                description: 'Are you sure you want to delete this routine?',
+                builder: (context, confirm) => IconButton(
+                  icon: const Icon(Icons.delete_rounded),
+                  onPressed: () async {
+                    var navigator = Navigator.of(context);
+                    if (await confirm()) {
+                      RoutinesService.instance.delete(routine);
+                      navigator.pop();
+                    }
+                  },
                 ),
+              ),
             ],
           ),
           body: StandardList(
@@ -76,17 +78,16 @@ class _RoutineViewState extends State<RoutineView> {
                       children: [
                         const SecondaryText('Name'),
                         const SizedBox(width: 32),
-                        if (routine != null) Text(routine.name),
+                        Text(routine.name),
                       ],
                     ),
                     TableRow(
                       children: [
                         const SecondaryText('Exercises'),
                         const SizedBox(width: 32),
-                        if (routine != null)
-                          Text(
-                            routine.exerciseReferences.length.toString(),
-                          ),
+                        Text(
+                          routine.exerciseReferences.length.toString(),
+                        ),
                       ],
                     ),
                   ],
@@ -95,30 +96,27 @@ class _RoutineViewState extends State<RoutineView> {
               SimpleCard(
                 title: 'Exercises',
                 actions: [
-                  if (routine != null)
-                    IconButton(
-                      icon: const Icon(Icons.add),
-                      onPressed: () async {
-                        Exercise exercise = await Navigator.of(context).push(
-                          MaterialPageRoute(
-                            builder: (context) => const SelectExerciseView(),
-                          ),
-                        );
+                  IconButton(
+                    icon: const Icon(Icons.add),
+                    onPressed: () async {
+                      Exercise exercise = await Navigator.of(context).push(
+                        MaterialPageRoute(
+                          builder: (context) => const SelectExerciseView(),
+                        ),
+                      );
 
-                        routine.exerciseReferences.add(exercise.reference!);
-                        await RoutinesService.update(routine);
-                      },
-                    )
+                      routine.exerciseReferences.add(exercise.reference!);
+                      await RoutinesService.instance.update(routine);
+                    },
+                  )
                 ],
-                child: routine != null
-                    ? ExercisesList(
-                        exerciseReferences: routine.exerciseReferences,
-                        onChanged: (exerciseReferences) {
-                          routine.exerciseReferences = exerciseReferences;
-                          RoutinesService.update(routine);
-                        },
-                      )
-                    : const CircularProgressIndicator(),
+                child: ExercisesList(
+                  exerciseReferences: routine.exerciseReferences,
+                  onChanged: (exerciseReferences) {
+                    routine.exerciseReferences = exerciseReferences;
+                    RoutinesService.instance.update(routine);
+                  },
+                ),
               ),
             ],
           ),

@@ -1,14 +1,13 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:vim/models/collection.dart';
 import 'package:vim/models/date_model.dart';
 import 'package:vim/models/exercise/exercise.dart';
-import 'package:vim/models/exercise/performances.dart';
+import 'package:vim/models/exercise/performance.dart';
 import 'package:vim/models/exercise/routine.dart';
-import 'package:vim/models/food/consumptions.dart';
-import 'package:vim/models/food/ingredients.dart';
-import 'package:vim/models/food/recipes.dart';
+import 'package:vim/models/food/consumption.dart';
+import 'package:vim/models/food/ingredient.dart';
+import 'package:vim/models/food/recipe.dart';
 import 'package:vim/models/settings_model.dart';
 import 'package:vim/services/consumptions_service.dart';
 import 'package:vim/services/exercises_service.dart';
@@ -26,48 +25,20 @@ class Vim extends StatelessWidget {
   Widget build(BuildContext context) {
     return Providers(
       child: Consumer<SettingsModel>(
-        builder: (context, themeModel, _) => MaterialApp(
-          debugShowCheckedModeBanner: false,
-          title: 'Vim',
-          theme: ThemeData(
-            useMaterial3: true,
-            colorScheme: ColorScheme.fromSeed(
-              seedColor: Colors.deepPurple,
-              brightness: Brightness.light,
+        builder: (context, settingsModel, _) {
+          return MaterialApp(
+            debugShowCheckedModeBanner: false,
+            title: 'Vim',
+            theme: lightTheme,
+            darkTheme: darkTheme,
+            themeMode: settingsModel.themeMode,
+            home: StreamBuilder<User?>(
+              stream: FirebaseAuth.instance.authStateChanges(),
+              builder: (context, snapshot) =>
+                  snapshot.hasData ? const HomeView() : const LoginView(),
             ),
-            fontFamily: 'GoogleSans',
-            inputDecorationTheme: const InputDecorationTheme(
-              border: OutlineInputBorder(),
-            ),
-            shadowColor: Colors.transparent,
-            cardTheme: const CardTheme(
-              shadowColor: Colors.transparent,
-              margin: EdgeInsets.zero,
-            ),
-          ),
-          darkTheme: ThemeData(
-            useMaterial3: true,
-            colorScheme: ColorScheme.fromSeed(
-              brightness: Brightness.dark,
-              seedColor: Colors.deepPurple,
-            ),
-            fontFamily: 'GoogleSans',
-            inputDecorationTheme: const InputDecorationTheme(
-              border: OutlineInputBorder(),
-            ),
-            shadowColor: const Color.fromARGB(0, 18, 5, 5),
-            cardTheme: const CardTheme(
-              shadowColor: Colors.transparent,
-              margin: EdgeInsets.zero,
-            ),
-          ),
-          themeMode: themeModel.mode,
-          home: StreamBuilder<User?>(
-            stream: FirebaseAuth.instance.authStateChanges(),
-            builder: (context, snapshot) =>
-                snapshot.hasData ? const HomeView() : const LoginView(),
-          ),
-        ),
+          );
+        },
       ),
     );
   }
@@ -85,39 +56,39 @@ class Providers extends StatelessWidget {
   Widget build(BuildContext context) {
     return MultiProvider(
       providers: [
-        StreamProvider<Ingredients>(
-          create: (context) => IngredientsService.all(),
-          initialData: const Ingredients([]),
+        ChangeNotifierProvider<DateModel>.value(
+          value: DateModel(),
         ),
-        StreamProvider<Recipes>(
-          create: (context) => RecipesService.all(),
-          initialData: const Recipes([]),
-        ),
-        StreamProvider<Collection<Exercise>>(
-          create: (context) => ExercisesService.instance.all(),
-          initialData: const Collection(),
-        ),
-        StreamProvider<Iterable<Routine>>(
-          create: (context) => RoutinesService.all(),
-          initialData: const [],
-        ),
-        ChangeNotifierProvider<DateModel>(
-          create: (context) => DateModel(),
-        ),
-        ChangeNotifierProvider<SettingsModel>(
-          create: (context) => SettingsModel(),
+        ChangeNotifierProvider<SettingsModel>.value(
+          value: SettingsModel(),
         ),
       ],
       child: Consumer<DateModel>(
         builder: (context, dateModel, _) => MultiProvider(
           providers: [
-            StreamProvider.value(
-              value: ConsumptionsService.forDate(dateModel.date),
-              initialData: const Consumptions([]),
+            StreamProvider<List<Ingredient>>.value(
+              value: IngredientsService.instance.all(),
+              initialData: const [],
             ),
-            StreamProvider.value(
+            StreamProvider<List<Recipe>>.value(
+              value: RecipesService.instance.all(),
+              initialData: const [],
+            ),
+            StreamProvider<List<Exercise>>.value(
+              value: ExercisesService.instance.all(),
+              initialData: const [],
+            ),
+            StreamProvider<List<Routine>>.value(
+              value: RoutinesService.instance.all(),
+              initialData: const [],
+            ),
+            StreamProvider<List<Consumption>>.value(
+              value: ConsumptionsService.instance.forDate(dateModel.date),
+              initialData: const [],
+            ),
+            StreamProvider<List<Performance>>.value(
               value: PerformancesService.instance.forDate(dateModel.date),
-              initialData: const Performances([]),
+              initialData: const [],
             ),
           ],
           child: child,
@@ -126,3 +97,37 @@ class Providers extends StatelessWidget {
     );
   }
 }
+
+var lightTheme = ThemeData(
+  useMaterial3: true,
+  colorScheme: ColorScheme.fromSeed(
+    seedColor: Colors.deepPurple,
+    brightness: Brightness.light,
+  ),
+  fontFamily: 'GoogleSans',
+  inputDecorationTheme: const InputDecorationTheme(
+    border: OutlineInputBorder(),
+  ),
+  shadowColor: Colors.transparent,
+  cardTheme: const CardTheme(
+    shadowColor: Colors.transparent,
+    margin: EdgeInsets.zero,
+  ),
+);
+
+var darkTheme = ThemeData(
+  useMaterial3: true,
+  colorScheme: ColorScheme.fromSeed(
+    brightness: Brightness.dark,
+    seedColor: Colors.deepPurple,
+  ),
+  fontFamily: 'GoogleSans',
+  inputDecorationTheme: const InputDecorationTheme(
+    border: OutlineInputBorder(),
+  ),
+  shadowColor: const Color.fromARGB(0, 18, 5, 5),
+  cardTheme: const CardTheme(
+    shadowColor: Colors.transparent,
+    margin: EdgeInsets.zero,
+  ),
+);

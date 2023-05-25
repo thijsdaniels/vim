@@ -1,6 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:vim/models/food/ingredient_amounts.dart';
+import 'package:vim/models/food/ingredient_amount_reference.dart';
 import 'package:vim/widgets/atoms/ingredient_reference_dropdown_menu.dart';
 import 'package:vim/widgets/atoms/number_form_field.dart';
 import 'package:vim/widgets/atoms/standard_list.dart';

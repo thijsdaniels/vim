@@ -1,6 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:vim/models/food/ingredient.dart';
-import 'package:vim/models/food/ingredients.dart';
+import 'package:vim/services/service.dart';
 
 /// TODO: Filter all operations by the currently authenticated user. It might be
 /// a good idea to apply this generally to the entire service:
@@ -11,35 +11,14 @@ import 'package:vim/models/food/ingredients.dart';
 ///     .collection('ingredients')
 ///     ...
 /// ```
-class IngredientsService {
-  static final CollectionReference<Ingredient> _collection = FirebaseFirestore
-      .instance
+class IngredientsService extends Service<Ingredient> {
+  static final instance = IngredientsService();
+
+  @override
+  final CollectionReference<Ingredient> collection = FirebaseFirestore.instance
       .collection('ingredients')
       .withConverter<Ingredient>(
         fromFirestore: (snapshot, _) => Ingredient.fromSnapshot(snapshot),
         toFirestore: (ingredient, _) => ingredient.toMap(),
       );
-
-  static Stream<Ingredients> all() {
-    return _collection.orderBy('name').snapshots().map(
-          (snapshot) => Ingredients(
-            snapshot.docs.map((doc) => doc.data()).toList(),
-          ),
-        );
-  }
-
-  static Future<void> create(Ingredient ingredient) async {
-    assert(ingredient.reference == null);
-    return _collection.doc().set(ingredient);
-  }
-
-  static Future<void> update(Ingredient ingredient) async {
-    assert(ingredient.reference != null);
-    return _collection.doc(ingredient.reference!.id).set(ingredient);
-  }
-
-  static Future<void> delete(Ingredient ingredient) async {
-    assert(ingredient.reference != null);
-    return _collection.doc(ingredient.reference!.id).delete();
-  }
 }

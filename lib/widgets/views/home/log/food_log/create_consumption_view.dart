@@ -3,10 +3,8 @@ import 'package:provider/provider.dart';
 import 'package:vim/models/food/consumption.dart';
 import 'package:vim/models/food/ingredient.dart';
 import 'package:vim/models/food/ingredient_consumption.dart';
-import 'package:vim/models/food/ingredients.dart';
 import 'package:vim/models/food/recipe.dart';
 import 'package:vim/models/food/recipe_consumption.dart';
-import 'package:vim/models/food/recipes.dart';
 import 'package:vim/widgets/molecules/ingredient_list_tile.dart';
 import 'package:vim/widgets/molecules/recipe_list_item.dart';
 import 'package:vim/widgets/views/home/log/food_log/create_ingredient_consumption_view.dart';
@@ -44,8 +42,8 @@ class CreateConsumptionView extends StatelessWidget {
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
-        child: Consumer<Recipes>(
-          builder: (context, recipes, _) => Consumer<Ingredients>(
+        child: Consumer<List<Recipe>>(
+          builder: (context, recipes, _) => Consumer<List<Ingredient>>(
             builder: (context, ingredients, _) => SearchAnchor.bar(
               viewElevation: 4,
               isFullScreen: true,

@@ -1,14 +1,15 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:vim/models/document.dart';
 import 'package:vim/models/food/nutrition.dart';
-import 'package:vim/models/model.dart';
 
-class Consumption extends Model {
-  String? _id;
+class Consumption extends Document {
+  DocumentReference? _reference;
   Timestamp timestamp;
   String name;
   Nutrition nutrition;
 
-  String? get id => _id;
+  @override
+  DocumentReference? get reference => _reference;
 
   Consumption({
     required this.timestamp,
@@ -31,7 +32,7 @@ class Consumption extends Model {
     Map<String, dynamic> map = snapshot.data()!;
 
     Consumption consumption = fromMap(map);
-    consumption._id = snapshot.id;
+    consumption._reference = snapshot.reference;
 
     return consumption;
   }

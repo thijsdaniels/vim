@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:vim/models/exercise/performances.dart';
-import 'package:vim/models/food/consumptions.dart';
+import 'package:vim/extensions/consumptions_list.dart';
+import 'package:vim/extensions/performances_list.dart';
+import 'package:vim/models/exercise/performance.dart';
+import 'package:vim/models/food/consumption.dart';
 import 'package:vim/models/food/nutrition.dart';
 import 'package:vim/models/settings_model.dart';
 import 'package:vim/widgets/atoms/standard_list.dart';
@@ -30,8 +32,8 @@ class CaloriesCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    Consumptions consumptions = Provider.of<Consumptions>(context);
-    Performances performances = Provider.of<Performances>(context);
+    List<Consumption> consumptions = Provider.of<List<Consumption>>(context);
+    List<Performance> performances = Provider.of<List<Performance>>(context);
 
     return Consumer<SettingsModel>(
       builder: (context, settings, _) => SimpleCard(
@@ -69,8 +71,8 @@ class MacrosCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    Consumptions consumptions = Provider.of<Consumptions>(context);
-    Performances performances = Provider.of<Performances>(context);
+    List<Consumption> consumptions = Provider.of<List<Consumption>>(context);
+    List<Performance> performances = Provider.of<List<Performance>>(context);
 
     return Consumer<SettingsModel>(
       builder: (context, settings, _) => SimpleCard(
@@ -122,7 +124,7 @@ class NutritionCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    Consumptions consumptions = Provider.of<Consumptions>(context);
+    List<Consumption> consumptions = Provider.of<List<Consumption>>(context);
 
     return SimpleCard(
       title: 'Nutrition',

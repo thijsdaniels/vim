@@ -79,7 +79,7 @@ class _CreateRecipeConsumptionViewState
                     value: _amount!,
                   );
 
-                  ConsumptionsService.update(recipeConsumption);
+                  ConsumptionsService.instance.update(recipeConsumption);
                 } else {
                   recipeConsumption = await widget.recipe?.consumption(
                     timestamp: timestamp,
@@ -90,7 +90,7 @@ class _CreateRecipeConsumptionViewState
                   );
 
                   if (recipeConsumption != null) {
-                    ConsumptionsService.create(recipeConsumption);
+                    ConsumptionsService.instance.create(recipeConsumption);
                   }
                 }
 

@@ -1,5 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:vim/services/service.dart';
+import 'package:vim/models/document.dart';
 
 /// TODO: Make this an abstract class and create a ManualPerformance subclass,
 /// so that the ManualPerformance can have a calories setter without the other

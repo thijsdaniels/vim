@@ -1,15 +1,16 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:vim/models/collection.dart';
-import 'package:vim/models/model.dart';
+import 'package:vim/models/document.dart';
 
+/// TODO: Rename to Collection to reflect that this represents a Firestore
+/// collection. If I have other non-Firestore services, I should make a Service
+/// super class or interface for that, but this class is tightly coupled to
+/// Firestore.
 abstract class Service<D extends Document> {
   CollectionReference<D> get collection;
 
-  Stream<Collection<D>> all() {
+  Stream<List<D>> all() {
     return collection.orderBy('name').snapshots().map(
-          (snapshot) => Collection(
-            snapshot.docs.map((doc) => doc.data()).toList(),
-          ),
+          (snapshot) => snapshot.docs.map((doc) => doc.data()).toList(),
         );
   }
 
@@ -17,6 +18,9 @@ abstract class Service<D extends Document> {
     return collection.doc(id).snapshots().map((snapshot) => snapshot.data());
   }
 
+  /// TODO: Is it okay to return a list of streams? Shouldn't I at least merge
+  /// the individual streams returned by `get()` into a single stream? Or better
+  /// yet, perform a single query with a where clause?
   List<Stream<D?>> some(List<String> ids) {
     return ids.map(get).toList();
   }
@@ -35,8 +39,4 @@ abstract class Service<D extends Document> {
     assert(document.reference != null);
     return collection.doc(document.reference!.id).delete();
   }
-}
-
-abstract class Document extends Model {
-  DocumentReference? get reference;
 }

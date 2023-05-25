@@ -16,7 +16,7 @@ class RoutineDropdownMenu extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Consumer<Iterable<Routine>>(
+    return Consumer<List<Routine>>(
       builder: (context, routines, child) {
         return DropdownMenu<Routine>(
           initialSelection: initialSelection,

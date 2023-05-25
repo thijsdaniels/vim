@@ -3,7 +3,6 @@ import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:vim/extensions/num.dart';
 import 'package:vim/models/exercise/performance.dart';
-import 'package:vim/models/exercise/performances.dart';
 import 'package:vim/models/exercise/resistance_exercise_performance.dart';
 import 'package:vim/models/exercise/routine_performance.dart';
 import 'package:vim/models/exercise/weights_exercise_performance.dart';
@@ -21,9 +20,9 @@ class PerformancesList extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    Performances performances = Provider.of<Performances>(context);
+    List<Performance> performances = Provider.of<List<Performance>>(context);
 
-    if (performances.length == 0) {
+    if (performances.isEmpty) {
       return Center(
         child: Icon(
           Icons.more_horiz,
@@ -35,7 +34,7 @@ class PerformancesList extends StatelessWidget {
     return StandardList(
       itemCount: performances.length,
       itemBuilder: (context, index) {
-        Performance performance = performances.get(index);
+        Performance performance = performances[index];
 
         return ListSurface(
           icon: getIcon(performance),

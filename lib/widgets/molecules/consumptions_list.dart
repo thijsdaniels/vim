@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:vim/models/food/consumption.dart';
-import 'package:vim/models/food/consumptions.dart';
 import 'package:vim/models/food/ingredient_consumption.dart';
 import 'package:vim/models/food/recipe_consumption.dart';
 import 'package:vim/widgets/atoms/icons8_icon.dart';
@@ -20,9 +19,9 @@ class ConsumptionsList extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    Consumptions consumptions = Provider.of<Consumptions>(context);
+    List<Consumption> consumptions = Provider.of<List<Consumption>>(context);
 
-    if (consumptions.length == 0) {
+    if (consumptions.isEmpty) {
       return Center(
         child: Icon(
           Icons.more_horiz,
@@ -34,7 +33,7 @@ class ConsumptionsList extends StatelessWidget {
     return StandardList(
       itemCount: consumptions.length,
       itemBuilder: (context, index) {
-        Consumption consumption = consumptions.get(index);
+        Consumption consumption = consumptions[index];
 
         return ListSurface(
           icon: consumption is IngredientConsumption &&

@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:vim/extensions/string.dart';
-import 'package:vim/models/collection.dart';
 import 'package:vim/models/exercise/exercise.dart';
 import 'package:vim/widgets/atoms/secondary_text.dart';
 import 'package:vim/widgets/atoms/standard_list.dart';
@@ -31,11 +30,11 @@ class ExercisesView extends StatelessWidget {
         ],
       ),
       body: SafeArea(
-        child: Consumer<Collection<Exercise>>(
+        child: Consumer<List<Exercise>>(
           builder: (context, exercises, child) => StandardList(
             itemCount: exercises.length,
             itemBuilder: (context, index) {
-              Exercise exercise = exercises.get(index);
+              Exercise exercise = exercises[index];
 
               return ListSurface(
                 title: Text(exercise.name),
@@ -43,7 +42,8 @@ class ExercisesView extends StatelessWidget {
                 onTap: () {
                   Navigator.of(context).push(
                     MaterialPageRoute(
-                      builder: (context) => ExerciseView(exercise: exercise),
+                      builder: (context) =>
+                          ExerciseView(exercise.reference!.id),
                     ),
                   );
                 },

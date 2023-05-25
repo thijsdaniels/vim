@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:vim/models/food/recipe.dart';
-import 'package:vim/models/food/recipes.dart';
 import 'package:vim/widgets/atoms/standard_list.dart';
 import 'package:vim/widgets/molecules/recipe_list_item.dart';
 import 'package:vim/widgets/views/home/food/recipes/create_recipe_view.dart';
@@ -24,18 +23,18 @@ class RecipesView extends StatelessWidget {
         child: const Icon(Icons.add),
       ),
       body: SafeArea(
-        child: Consumer<Recipes>(
+        child: Consumer<List<Recipe>>(
           builder: (context, recipes, child) => StandardList(
             itemCount: recipes.length,
             itemBuilder: (context, index) {
-              Recipe recipe = recipes.get(index);
+              Recipe recipe = recipes[index];
 
               return RecipeListItem(
                 recipe: recipe,
                 onTap: () {
                   Navigator.of(context).push(
                     MaterialPageRoute(
-                      builder: (context) => RecipeView(recipe: recipe),
+                      builder: (context) => RecipeView(recipe.reference!.id),
                     ),
                   );
                 },

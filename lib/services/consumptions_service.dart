@@ -1,8 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:vim/models/food/consumption.dart';
-import 'package:vim/models/food/consumptions.dart';
 import 'package:vim/models/food/ingredient_consumption.dart';
 import 'package:vim/models/food/recipe_consumption.dart';
+import 'package:vim/services/service.dart';
 
 /// TODO: Filter all operations by the currently authenticated user. It might be
 /// a good idea to apply this generally to the entire service:
@@ -13,9 +13,11 @@ import 'package:vim/models/food/recipe_consumption.dart';
 ///     .collection('consumptions')
 ///     ...
 /// ```
-class ConsumptionsService {
-  static final CollectionReference<Consumption> _collection = FirebaseFirestore
-      .instance
+class ConsumptionsService extends Service<Consumption> {
+  static final instance = ConsumptionsService();
+
+  @override
+  final CollectionReference<Consumption> collection = FirebaseFirestore.instance
       .collection('consumptions')
       .withConverter<Consumption>(
         fromFirestore: (snapshot, _) {
@@ -32,11 +34,11 @@ class ConsumptionsService {
         toFirestore: (consumption, _) => consumption.toMap(),
       );
 
-  static Stream<Consumptions> forDate(DateTime date) {
+  Stream<List<Consumption>> forDate(DateTime date) {
     DateTime today = DateTime(date.year, date.month, date.day);
     DateTime tomorrow = today.add(const Duration(days: 1));
 
-    return _collection
+    return collection
         .where(
           'timestamp',
           isGreaterThanOrEqualTo: Timestamp.fromDate(today),
@@ -44,22 +46,6 @@ class ConsumptionsService {
         )
         .orderBy('timestamp')
         .snapshots()
-        .map((snapshot) =>
-            Consumptions(snapshot.docs.map((doc) => doc.data()).toList()));
-  }
-
-  static Future<DocumentReference> create(Consumption consumption) async {
-    assert(consumption.id == null);
-    return _collection.add(consumption);
-  }
-
-  static Future<void> update(Consumption consumption) async {
-    assert(consumption.id != null);
-    return _collection.doc(consumption.id).set(consumption);
-  }
-
-  static Future<void> delete(Consumption consumption) async {
-    assert(consumption.id != null);
-    return _collection.doc(consumption.id).delete();
+        .map((snapshot) => snapshot.docs.map((doc) => doc.data()).toList());
   }
 }

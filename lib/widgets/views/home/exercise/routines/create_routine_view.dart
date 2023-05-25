@@ -51,14 +51,14 @@ class _CreateRoutineViewState extends State<CreateRoutineView> {
                 if (routine != null) {
                   routine.name = _name;
 
-                  RoutinesService.update(routine);
+                  RoutinesService.instance.update(routine);
                 } else {
                   routine = Routine(
                     name: _name,
                     exerciseReferences: [],
                   );
 
-                  RoutinesService.create(routine);
+                  RoutinesService.instance.create(routine);
                 }
 
                 Navigator.of(context).pop(routine);

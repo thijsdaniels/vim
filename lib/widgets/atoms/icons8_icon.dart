@@ -23,7 +23,7 @@ class Icons8Icon extends StatelessWidget {
     } else {
       return Consumer<SettingsModel>(
         builder: (context, settingsModel, _) {
-          return _resolver(settingsModel.style)();
+          return _resolver(settingsModel.iconStyle)();
         },
       );
     }

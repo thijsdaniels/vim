@@ -433,7 +433,7 @@ class AppearanceSettings extends StatelessWidget {
               decoration: const InputDecoration(
                 label: Text('Theme'),
               ),
-              value: settings.mode,
+              value: settings.themeMode,
               items: ThemeMode.values
                   .map(
                     (mode) => DropdownMenuItem<ThemeMode>(
@@ -444,7 +444,7 @@ class AppearanceSettings extends StatelessWidget {
                   .toList(),
               onChanged: (mode) {
                 if (mode != null) {
-                  settings.mode = mode;
+                  settings.themeMode = mode;
                 }
               },
             ),
@@ -453,7 +453,7 @@ class AppearanceSettings extends StatelessWidget {
               decoration: const InputDecoration(
                 label: Text('Icon Set'),
               ),
-              value: settings.style,
+              value: settings.iconStyle,
               items: Icons8Style.values
                   .map(
                     (style) => DropdownMenuItem<Icons8Style>(
@@ -470,7 +470,7 @@ class AppearanceSettings extends StatelessWidget {
                   .toList(),
               onChanged: (style) {
                 if (style != null) {
-                  settings.style = style;
+                  settings.iconStyle = style;
                 }
               },
             ),

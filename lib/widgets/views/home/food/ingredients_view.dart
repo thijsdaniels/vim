@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:vim/models/food/ingredient.dart';
-import 'package:vim/models/food/ingredients.dart';
 import 'package:vim/widgets/atoms/standard_list.dart';
 import 'package:vim/widgets/molecules/ingredient_list_tile.dart';
 import 'package:vim/widgets/views/home/food/ingredients/create_ingredient_view.dart';
@@ -24,11 +23,11 @@ class IngredientsView extends StatelessWidget {
         child: const Icon(Icons.add),
       ),
       body: SafeArea(
-        child: Consumer<Ingredients>(
+        child: Consumer<List<Ingredient>>(
           builder: (context, ingredients, child) => StandardList(
             itemCount: ingredients.length,
             itemBuilder: (context, index) {
-              Ingredient ingredient = ingredients.get(index);
+              Ingredient ingredient = ingredients[index];
 
               return IngredientListTile(
                 ingredient: ingredient,
@@ -36,7 +35,7 @@ class IngredientsView extends StatelessWidget {
                   Navigator.of(context).push(
                     MaterialPageRoute(
                       builder: (context) =>
-                          IngredientView(ingredient: ingredient),
+                          IngredientView(ingredient.reference!.id),
                     ),
                   );
                 },

@@ -1,10 +1,10 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:vim/models/document.dart';
 import 'package:vim/models/food/amount.dart';
 import 'package:vim/models/food/ingredient_consumption.dart';
 import 'package:vim/models/food/nutrition.dart';
-import 'package:vim/models/model.dart';
 
-class Ingredient extends Model {
+class Ingredient extends Document {
   DocumentReference? _reference;
   String? icon;
   String name;
@@ -13,6 +13,7 @@ class Ingredient extends Model {
   Nutrition nutrition;
   bool nutritionPerServing;
 
+  @override
   DocumentReference? get reference => _reference;
 
   Ingredient({

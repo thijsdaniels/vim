@@ -13,9 +13,6 @@ class ExercisePerformance extends Performance {
   @override
   String get name => exercise.name;
 
-  // @override
-  // num get calories => exercise.calories;
-
   ExercisePerformance({
     required super.timestamp,
     required this.exercise,

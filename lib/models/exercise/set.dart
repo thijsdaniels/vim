@@ -37,11 +37,9 @@ class Set extends Model {
   }
 }
 
-/**
- * @todo This class is currently not used, but I kinda like the idea of using
- * input classes that validate their requirements when they get turned into
- * models. I'm keeping this in case I want to refactor to it later.
- */
+/// TODO: This class is currently not used, but I kinda like the idea of using
+/// input classes that validate their requirements when they get turned into
+/// models. I'm keeping this in case I want to refactor to it later.
 // class SetInput extends Model {
 //   num? repetitions;
 //   num? weight;
