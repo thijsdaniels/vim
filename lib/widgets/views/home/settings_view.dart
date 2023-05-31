@@ -10,42 +10,47 @@ import 'package:vim/widgets/atoms/number_form_field.dart';
 import 'package:vim/widgets/atoms/standard_list.dart';
 import 'package:vim/widgets/atoms/switch_form_field.dart';
 import 'package:vim/widgets/molecules/simple_card.dart';
+import 'package:vim/widgets/views/home/debug_view.dart';
 
 class SettingsView extends StatelessWidget {
   const SettingsView({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return DefaultTabController(
-      length: 3,
-      child: Scaffold(
-        appBar: AppBar(
-          title: const Text('Settings'),
-          actions: [
-            Padding(
-              padding: const EdgeInsets.all(12.0),
-              child: PopupMenuButton(
-                tooltip: '',
-                itemBuilder: (context) => [
-                  PopupMenuItem(
-                    onTap: FirebaseAuth.instance.signOut,
-                    child: const Text('Sign Out'),
-                  ),
-                ],
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text('Settings'),
+        actions: [
+          IconButton(
+            onPressed: () {
+              Navigator.of(context).push(
+                MaterialPageRoute(
+                  builder: (context) => const DebugView(),
+                ),
+              );
+            },
+            icon: const Icon(Icons.developer_mode),
+          ),
+          PopupMenuButton(
+            tooltip: '',
+            itemBuilder: (context) => [
+              PopupMenuItem(
+                onTap: FirebaseAuth.instance.signOut,
+                child: const Text('Sign Out'),
               ),
-            ),
-          ],
-        ),
-        body: const StandardList(
-          spacing: 16,
-          children: [
-            ProfileSettings(),
-            BodySettings(),
-            PerformanceSettings(),
-            ConsumptionSettings(),
-            AppearanceSettings(),
-          ],
-        ),
+            ],
+          ),
+        ],
+      ),
+      body: const StandardList(
+        spacing: 16,
+        children: [
+          ProfileSettings(),
+          BodySettings(),
+          PerformanceSettings(),
+          ConsumptionSettings(),
+          AppearanceSettings(),
+        ],
       ),
     );
   }

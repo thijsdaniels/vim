@@ -12,7 +12,6 @@ import 'package:vim/models/exercise/set.dart';
 import 'package:vim/models/exercise/sets.dart';
 import 'package:vim/models/exercise/weights_exercise_performance.dart';
 import 'package:vim/services/performances_service.dart';
-import 'package:vim/widgets/atoms/icons8_icon.dart';
 import 'package:vim/widgets/atoms/secondary_text.dart';
 import 'package:vim/widgets/atoms/standard_list.dart';
 import 'package:vim/widgets/molecules/list_surface.dart';
@@ -69,7 +68,7 @@ class RoutineExercisePerformances extends StatelessWidget {
 
                     return ListSurface(
                       elevation: 4,
-                      icon: exercise != null ? getIcon(exercise) : null,
+                      icon: exercise?.icon,
                       title: Text(exercise?.name ?? ''),
                       subtitle: performance != null
                           ? FutureBuilder(
@@ -167,16 +166,6 @@ class RoutineExercisePerformances extends StatelessWidget {
         );
       },
     );
-  }
-
-  Widget? getIcon(Exercise exercise) {
-    if (exercise.type == ExerciseType.weights) {
-      return const Icons8Icon('dumbbell');
-    } else if (exercise.type == ExerciseType.resistance) {
-      return const Icons8Icon('trainers');
-    }
-
-    return null;
   }
 }
 

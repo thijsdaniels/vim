@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:vim/extensions/string.dart';
 import 'package:vim/models/exercise/exercise.dart';
 import 'package:vim/services/exercises_service.dart';
+import 'package:vim/widgets/atoms/multiselect_dropdown.dart';
+import 'package:vim/widgets/atoms/muscle_map/muscle_map.dart';
 import 'package:vim/widgets/atoms/standard_list.dart';
 import 'package:vim/widgets/molecules/simple_card.dart';
 
@@ -19,6 +21,8 @@ class _CreateExerciseViewState extends State<CreateExerciseView> {
 
   String? _name;
   ExerciseType? _type;
+  MuscleGroup? _primaryMuscleGroup;
+  List<MuscleGroup> _secondaryMuscleGroups = [];
 
   @override
   void initState() {
@@ -29,6 +33,8 @@ class _CreateExerciseViewState extends State<CreateExerciseView> {
     if (exercise != null) {
       _name = exercise.name;
       _type = exercise.type;
+      _primaryMuscleGroup = exercise.muscleGroups.primary;
+      _secondaryMuscleGroups = exercise.muscleGroups.secondary;
     }
   }
 
@@ -55,12 +61,20 @@ class _CreateExerciseViewState extends State<CreateExerciseView> {
                 if (exercise != null) {
                   exercise.name = _name!;
                   exercise.type = _type!;
+                  exercise.muscleGroups = (
+                    primary: _primaryMuscleGroup,
+                    secondary: _secondaryMuscleGroups,
+                  );
 
                   ExercisesService.instance.update(exercise);
                 } else {
                   ExercisesService.instance.create(Exercise(
                     name: _name!,
                     type: _type!,
+                    muscleGroups: (
+                      primary: _primaryMuscleGroup,
+                      secondary: _secondaryMuscleGroups,
+                    ),
                   ));
                 }
 
@@ -97,29 +111,44 @@ class _CreateExerciseViewState extends State<CreateExerciseView> {
                     },
                   ),
                   const SizedBox(height: 16),
-                  DropdownButtonFormField<ExerciseType>(
-                    decoration: const InputDecoration(
-                      label: Text('Type'),
-                    ),
+                  ExerciseTypeDropdown(
                     value: _type,
-                    items: ExerciseType.values
-                        .map(
-                          (type) => DropdownMenuItem<ExerciseType>(
-                            value: type,
-                            child: Text(
-                              type.name.toTitleCase(),
-                            ),
-                          ),
-                        )
-                        .toList(),
                     onChanged: (type) => setState(() {
                       _type = type;
                     }),
-                    validator: (value) {
-                      if (value == null) {
-                        return 'Please choose a type.';
-                      }
-                      return null;
+                  ),
+                ],
+              ),
+            ),
+            SimpleCard(
+              title: 'Muscle Groups',
+              child: Column(
+                children: [
+                  MuscleGroupDropdown(
+                    value: _primaryMuscleGroup,
+                    onChanged: (muscleGroup) => setState(() {
+                      _primaryMuscleGroup = muscleGroup;
+                    }),
+                  ),
+                  const SizedBox(height: 16),
+
+                  /// TODO: Improve this UX and get rid of the `multiselect`
+                  /// package.
+                  MultiselectDropdown<MuscleGroup>(
+                    decoration: const InputDecoration(
+                      label: Text('Secondary'),
+                    ),
+                    items: MuscleGroup.values
+                        .map((muscleGroup) => (
+                              value: muscleGroup,
+                              name: muscleGroup.name.toTitleCase(),
+                            ))
+                        .toList(),
+                    selected: _secondaryMuscleGroups,
+                    onChanged: (muscleGroups) {
+                      setState(() {
+                        _secondaryMuscleGroups = muscleGroups;
+                      });
                     },
                   ),
                 ],
@@ -128,6 +157,76 @@ class _CreateExerciseViewState extends State<CreateExerciseView> {
           ],
         ),
       ),
+    );
+  }
+}
+
+class ExerciseTypeDropdown extends StatelessWidget {
+  final ExerciseType? value;
+  final void Function(ExerciseType? value) onChanged;
+
+  const ExerciseTypeDropdown({
+    super.key,
+    required this.value,
+    required this.onChanged,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return DropdownButtonFormField<ExerciseType>(
+      decoration: const InputDecoration(
+        label: Text('Type'),
+      ),
+      value: value,
+      items: ExerciseType.values
+          .map(
+            (type) => DropdownMenuItem<ExerciseType>(
+              value: type,
+              child: Text(
+                type.name.toTitleCase(),
+              ),
+            ),
+          )
+          .toList(),
+      onChanged: onChanged,
+      validator: (value) {
+        if (value == null) {
+          return 'Please choose a type.';
+        }
+        return null;
+      },
+    );
+  }
+}
+
+class MuscleGroupDropdown extends StatelessWidget {
+  final MuscleGroup? value;
+  final void Function(MuscleGroup? value) onChanged;
+
+  const MuscleGroupDropdown({
+    super.key,
+    required this.value,
+    required this.onChanged,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return DropdownButtonFormField<MuscleGroup>(
+      decoration: const InputDecoration(
+        label: Text('Primary'),
+      ),
+      value: value,
+      items: MuscleGroup.values
+          .map(
+            (muscleGroup) => DropdownMenuItem<MuscleGroup>(
+              value: muscleGroup,
+              child: Text(
+                muscleGroup.name.toTitleCase(),
+              ),
+            ),
+          )
+          .toList(),
+      onChanged: onChanged,
     );
   }
 }

@@ -5,6 +5,8 @@ import 'package:vim/models/exercise/resistance_exercise_performance.dart';
 import 'package:vim/models/exercise/routine_performance.dart';
 import 'package:vim/models/exercise/weights_exercise_performance.dart';
 import 'package:vim/services/performances_service.dart';
+import 'package:vim/widgets/atoms/muscle_groups.dart';
+import 'package:vim/widgets/atoms/muscle_map/muscle_map.dart';
 import 'package:vim/widgets/atoms/secondary_text.dart';
 import 'package:vim/widgets/atoms/standard_list.dart';
 import 'package:vim/widgets/molecules/routine_exercise_performances.dart';
@@ -13,6 +15,8 @@ import 'package:vim/widgets/molecules/with_confirmation_dialog.dart';
 import 'package:vim/widgets/views/home/log/exercise_log/create_exercise_performance_view.dart';
 import 'package:vim/widgets/views/home/log/exercise_log/create_quick_track_performance_view.dart';
 import 'package:vim/widgets/views/home/log/exercise_log/create_routine_performance_view.dart';
+import 'package:vim/widgets/views/loading_view.dart';
+import 'package:vim/widgets/views/not_found_view.dart';
 
 class PerformanceView extends StatefulWidget {
   final String performanceId;
@@ -33,11 +37,19 @@ class _PerformanceViewState extends State<PerformanceView> {
     return StreamBuilder<Performance?>(
       stream: PerformancesService.instance.get(widget.performanceId),
       builder: (context, snapshot) {
-        Performance? performance = snapshot.data;
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return const LoadingView();
+        }
+
+        if (!snapshot.hasData) {
+          return const NotFoundView();
+        }
+
+        Performance performance = snapshot.requireData!;
 
         return Scaffold(
           appBar: AppBar(
-            title: Text(performance?.name ?? ''),
+            title: Text(performance.name),
             actions: [
               if (performance is! RoutinePerformance)
                 IconButton(
@@ -68,74 +80,97 @@ class _PerformanceViewState extends State<PerformanceView> {
                     }
                   },
                 ),
-              if (performance != null)
-                WithConfirmationDialog(
-                  title: performance.name,
-                  description:
-                      'Are you sure you want to delete this performance?',
-                  builder: (context, confirm) => IconButton(
-                    icon: const Icon(Icons.delete_rounded),
-                    onPressed: () async {
-                      if (await confirm()) {
-                        PerformancesService.instance.delete(performance);
+              WithConfirmationDialog(
+                title: performance.name,
+                description:
+                    'Are you sure you want to delete this performance?',
+                builder: (context, confirm) => IconButton(
+                  icon: const Icon(Icons.delete_rounded),
+                  onPressed: () async {
+                    if (await confirm()) {
+                      PerformancesService.instance.delete(performance);
 
-                        if (mounted) {
-                          Navigator.of(context).pop();
-                        }
+                      if (mounted) {
+                        Navigator.of(context).pop();
                       }
-                    },
-                  ),
+                    }
+                  },
                 ),
+              ),
             ],
           ),
           body: StandardList(
             children: [
-              if (performance != null)
-                SimpleCard(
-                  title: 'Details',
-                  child: Center(
-                    child: FutureBuilder(
-                      future: performance.calories,
-                      builder: (context, snapshot) => Table(
-                        defaultColumnWidth: const IntrinsicColumnWidth(),
+              SimpleCard(
+                title: 'Details',
+                child: FutureBuilder(
+                  future: performance.calories,
+                  builder: (context, snapshot) => Table(
+                    defaultColumnWidth: const IntrinsicColumnWidth(),
+                    children: [
+                      if (performance is! ExercisePerformance &&
+                          performance is! RoutinePerformance)
+                        TableRow(
+                          children: [
+                            const SecondaryText('Name'),
+                            const SizedBox(width: 32),
+                            Text(performance.name),
+                          ],
+                        ),
+                      if (performance is ExercisePerformance)
+                        TableRow(
+                          children: [
+                            const SecondaryText('Exercise'),
+                            const SizedBox(width: 32),
+                            Text(performance.exercise.name),
+                          ],
+                        ),
+                      if (performance is RoutinePerformance)
+                        TableRow(
+                          children: [
+                            const SecondaryText('Routine'),
+                            const SizedBox(width: 32),
+                            Text(performance.routine.name),
+                          ],
+                        ),
+                      TableRow(
                         children: [
-                          if (performance is! ExercisePerformance &&
-                              performance is! RoutinePerformance)
-                            TableRow(
-                              children: [
-                                const SecondaryText('Name'),
-                                const SizedBox(width: 32),
-                                Text(performance.name),
-                              ],
-                            ),
-                          if (performance is ExercisePerformance)
-                            TableRow(
-                              children: [
-                                const SecondaryText('Exercise'),
-                                const SizedBox(width: 32),
-                                Text(performance.exercise.name),
-                              ],
-                            ),
-                          if (performance is RoutinePerformance)
-                            TableRow(
-                              children: [
-                                const SecondaryText('Routine'),
-                                const SizedBox(width: 32),
-                                Text(performance.routine.name),
-                              ],
-                            ),
-                          TableRow(
-                            children: [
-                              const SecondaryText('Calories'),
-                              const SizedBox(width: 32),
-                              Text('${snapshot.data?.round()} cal'),
-                            ],
-                          ),
+                          const SecondaryText('Calories'),
+                          const SizedBox(width: 32),
+                          Text('${snapshot.data?.round()} cal'),
                         ],
                       ),
-                    ),
+                    ],
                   ),
                 ),
+              ),
+              Row(
+                children: [
+                  Flexible(
+                    child: MuscleGroups(
+                      view: MuscleMapView.front,
+                      primary: performance is ExercisePerformance
+                          ? performance.exercise.muscleGroups.primary
+                          : null,
+                      secondary: performance is ExercisePerformance
+                          ? performance.exercise.muscleGroups.secondary
+                          : [],
+                    ),
+                  ),
+                  const SizedBox(width: 12),
+                  Flexible(
+                    child: MuscleGroups(
+                      view: MuscleMapView.back,
+                      primary: performance is ExercisePerformance
+                          ? performance.exercise.muscleGroups.primary
+                          : null,
+                      secondary: performance is ExercisePerformance
+                          ? performance.exercise.muscleGroups.secondary
+                          : [],
+                    ),
+                  ),
+                ],
+              ),
               if (performance is ResistanceExercisePerformance)
                 SimpleCard(
                   title: 'Performance',

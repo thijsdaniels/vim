@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:vim/models/exercise/exercise.dart';
 import 'package:vim/services/exercises_service.dart';
+import 'package:vim/widgets/atoms/muscle_groups_icon.dart';
 import 'package:vim/widgets/molecules/list_surface.dart';
 import 'package:vim/widgets/molecules/with_confirmation_dialog.dart';
 
@@ -37,6 +38,10 @@ class ExercisesList extends StatelessWidget {
               padding: const EdgeInsets.symmetric(vertical: 6),
               child: ListSurface(
                 elevation: 4,
+                icon: MuscleGroupsIcon(
+                  primary: exercise?.muscleGroups.primary,
+                  secondary: exercise?.muscleGroups.secondary ?? [],
+                ),
                 title: Text(exercise?.name ?? '...'),
                 actions: Row(
                   mainAxisSize: MainAxisSize.min,

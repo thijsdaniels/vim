@@ -1,6 +1,11 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/foundation.dart';
+import 'package:flutter/material.dart';
 import 'package:vim/models/document.dart';
+import 'package:vim/widgets/atoms/muscle_groups_icon.dart';
+import 'package:vim/widgets/atoms/muscle_map/muscle_map.dart';
 
+// TODO: Remove in favor of relating an exercise to a set of Equipment.
 enum ExerciseType {
   manual,
   resistance,
@@ -11,6 +16,11 @@ class Exercise extends Document {
   DocumentReference? _reference;
   ExerciseType type;
   String name;
+  // List<Equipment> equipment;
+  ({
+    MuscleGroup? primary,
+    List<MuscleGroup> secondary,
+  }) muscleGroups;
 
   @override
   DocumentReference? get reference => _reference;
@@ -18,7 +28,18 @@ class Exercise extends Document {
   Exercise({
     required this.type,
     required this.name,
+    this.muscleGroups = const (
+      primary: null,
+      secondary: [],
+    ),
   });
+
+  Widget get icon {
+    return MuscleGroupsIcon(
+      primary: muscleGroups.primary,
+      secondary: muscleGroups.secondary,
+    );
+  }
 
   static Exercise fromSnapshot(
     DocumentSnapshot<Map<String, dynamic>> snapshot,
@@ -35,6 +56,16 @@ class Exercise extends Document {
     return Exercise(
       type: ExerciseType.values.byName(map['type']),
       name: map['name'],
+      muscleGroups: (
+        primary: map['muscleGroups']?['primary'] != null
+            ? MuscleGroup.values.byName(map['muscleGroups']?['primary'])
+            : null,
+        secondary: List.castFrom<dynamic, MuscleGroup>(
+          (map['muscleGroups']?['secondary'] ?? [])
+              .map((muscleGroup) => MuscleGroup.values.byName(muscleGroup))
+              .toList(),
+        )
+      ),
     );
   }
 
@@ -43,6 +74,13 @@ class Exercise extends Document {
     return {
       'type': type.name,
       'name': name,
+      'muscleGroups': {
+        'primary': muscleGroups.primary != null
+            ? describeEnum(muscleGroups.primary!)
+            : null,
+        'secondary': muscleGroups.secondary
+            .map((muscleGroup) => describeEnum(muscleGroup)),
+      },
     };
   }
 }

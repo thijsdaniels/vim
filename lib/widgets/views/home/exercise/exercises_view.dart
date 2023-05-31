@@ -37,6 +37,7 @@ class ExercisesView extends StatelessWidget {
               Exercise exercise = exercises[index];
 
               return ListSurface(
+                icon: exercise.icon,
                 title: Text(exercise.name),
                 subtitle: SecondaryText(exercise.type.name.toTitleCase()),
                 onTap: () {

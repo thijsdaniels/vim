@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:vim/widgets/atoms/surface.dart';
 import 'package:vim/widgets/molecules/date_stepper.dart';
 import 'package:vim/widgets/views/home/log/log_consumptions_view.dart';
 import 'package:vim/widgets/views/home/log/log_performances_view.dart';
@@ -29,15 +30,15 @@ class LogView extends StatelessWidget {
             LogPerformancesView(),
           ],
         ),
-        bottomNavigationBar: Container(
-          decoration: BoxDecoration(
-            color: Theme.of(context).colorScheme.primaryContainer,
-            borderRadius: const BorderRadius.only(
-              topLeft: Radius.circular(16),
-              topRight: Radius.circular(16),
+        bottomNavigationBar: const Surface(
+          primary: true,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.only(
+              topLeft: Radius.circular(12),
+              topRight: Radius.circular(12),
             ),
           ),
-          child: const Padding(
+          child: Padding(
             padding: EdgeInsets.all(4.0),
             child: DateStepper(),
           ),

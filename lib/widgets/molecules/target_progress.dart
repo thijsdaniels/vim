@@ -1,4 +1,7 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
+import 'package:vim/widgets/atoms/surface.dart';
 
 enum TargetProgressBarSize {
   small,
@@ -45,27 +48,63 @@ class TargetProgress extends StatelessWidget {
         const SizedBox(height: 6),
         SizedBox(
           width: barSize == TargetProgressBarSize.small ? 80 : 128,
-          child: ClipRRect(
-            borderRadius: BorderRadius.all(
-              Radius.circular(barSize == TargetProgressBarSize.small ? 3 : 4),
+          child: TweenAnimationBuilder<double>(
+            duration: const Duration(milliseconds: 250),
+            curve: Curves.easeInOut,
+            tween: Tween<double>(
+              begin: 0,
+              end: target != null ? progress / target! : 0,
             ),
-            child: TweenAnimationBuilder<double>(
-              duration: const Duration(milliseconds: 250),
-              curve: Curves.easeInOut,
-              tween: Tween<double>(
-                begin: 0,
-                end: target != null ? progress / target! : 0,
-              ),
-              builder: (context, value, _) => LinearProgressIndicator(
-                value: value,
-                minHeight: barSize == TargetProgressBarSize.small ? 6 : 8,
-              ),
+            builder: (context, value, _) => LinearProgressIndicator(
+              value: value,
+              size: barSize,
             ),
           ),
         ),
         const SizedBox(height: 6),
         Text(title),
       ],
+    );
+  }
+}
+
+class LinearProgressIndicator extends StatelessWidget {
+  final double value;
+  final TargetProgressBarSize size;
+
+  const LinearProgressIndicator({
+    super.key,
+    required this.value,
+    this.size = TargetProgressBarSize.small,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Surface(
+      elevation: 8,
+      child: Padding(
+        padding: const EdgeInsets.all(3),
+        child: SizedBox(
+          height: size == TargetProgressBarSize.small ? 6 : 8,
+          child: Stack(
+            children: [
+              SizedBox(
+                width: size == TargetProgressBarSize.small ? 6 : 8,
+                child: const Surface(
+                  primary: true,
+                ),
+              ),
+              FractionallySizedBox(
+                alignment: Alignment.centerLeft,
+                widthFactor: max(0, min(1, value)),
+                child: const Surface(
+                  primary: true,
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
     );
   }
 }

@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:vim/extensions/string.dart';
 import 'package:vim/models/exercise/exercise.dart';
 import 'package:vim/services/exercises_service.dart';
+import 'package:vim/widgets/atoms/muscle_groups.dart';
+import 'package:vim/widgets/atoms/muscle_map/muscle_map.dart';
 import 'package:vim/widgets/atoms/secondary_text.dart';
 import 'package:vim/widgets/atoms/standard_list.dart';
 import 'package:vim/widgets/molecules/simple_card.dart';
@@ -21,77 +23,129 @@ class ExerciseView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return StreamBuilder<Exercise?>(
-        stream: ExercisesService.instance.get(exerciseId),
-        builder: (context, snapshot) {
-          if (snapshot.connectionState == ConnectionState.waiting) {
-            return const LoadingView();
-          }
+      stream: ExercisesService.instance.get(exerciseId),
+      builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return const LoadingView();
+        }
 
-          if (!snapshot.hasData) {
-            return const NotFoundView();
-          }
+        if (!snapshot.hasData) {
+          return const NotFoundView();
+        }
 
-          Exercise exercise = snapshot.requireData!;
+        Exercise exercise = snapshot.requireData!;
 
-          return Scaffold(
-            appBar: AppBar(
-              title: Text(exercise.name),
-              actions: [
-                IconButton(
-                  icon: const Icon(Icons.edit_rounded),
-                  onPressed: () async {
-                    Navigator.of(context).push(
-                      MaterialPageRoute(
-                        builder: (context) => CreateExerciseView(
-                          exercise: exercise,
-                        ),
+        return Scaffold(
+          appBar: AppBar(
+            title: Text(exercise.name),
+            actions: [
+              IconButton(
+                icon: const Icon(Icons.edit_rounded),
+                onPressed: () async {
+                  Navigator.of(context).push(
+                    MaterialPageRoute(
+                      builder: (context) => CreateExerciseView(
+                        exercise: exercise,
                       ),
-                    );
+                    ),
+                  );
+                },
+              ),
+              WithConfirmationDialog(
+                title: exercise.name,
+                description: 'Are you sure you want to delete this exercise?',
+                builder: (context, confirm) => IconButton(
+                  icon: const Icon(Icons.delete_rounded),
+                  onPressed: () async {
+                    var navigator = Navigator.of(context);
+                    if (await confirm()) {
+                      ExercisesService.instance.delete(exercise);
+                      navigator.pop();
+                    }
                   },
                 ),
-                WithConfirmationDialog(
-                  title: exercise.name,
-                  description: 'Are you sure you want to delete this exercise?',
-                  builder: (context, confirm) => IconButton(
-                    icon: const Icon(Icons.delete_rounded),
-                    onPressed: () async {
-                      var navigator = Navigator.of(context);
-                      if (await confirm()) {
-                        ExercisesService.instance.delete(exercise);
-                        navigator.pop();
-                      }
-                    },
-                  ),
+              ),
+            ],
+          ),
+          body: StandardList(
+            children: [
+              SimpleCard(
+                title: 'Details',
+                child: Table(
+                  defaultColumnWidth: const IntrinsicColumnWidth(),
+                  children: [
+                    TableRow(
+                      children: [
+                        const SecondaryText('Name'),
+                        const SizedBox(width: 32),
+                        Text(exercise.name),
+                      ],
+                    ),
+                    TableRow(
+                      children: [
+                        const SecondaryText('Type'),
+                        const SizedBox(width: 32),
+                        Text(exercise.type.name.toTitleCase()),
+                      ],
+                    ),
+                  ],
                 ),
-              ],
-            ),
-            body: StandardList(
-              children: [
-                SimpleCard(
-                  title: 'Details',
-                  child: Table(
-                    defaultColumnWidth: const IntrinsicColumnWidth(),
-                    children: [
-                      TableRow(
-                        children: [
-                          const SecondaryText('Name'),
-                          const SizedBox(width: 32),
-                          Text(exercise.name),
-                        ],
-                      ),
-                      TableRow(
-                        children: [
-                          const SecondaryText('Type'),
-                          const SizedBox(width: 32),
-                          Text(exercise.type.name.toTitleCase()),
-                        ],
-                      ),
-                    ],
+              ),
+              Row(
+                children: [
+                  Flexible(
+                    child: MuscleGroups(
+                      view: MuscleMapView.front,
+                      primary: exercise.muscleGroups.primary,
+                      secondary: exercise.muscleGroups.secondary,
+                    ),
                   ),
+                  const SizedBox(width: 12),
+                  Flexible(
+                    child: MuscleGroups(
+                      view: MuscleMapView.back,
+                      primary: exercise.muscleGroups.primary,
+                      secondary: exercise.muscleGroups.secondary,
+                    ),
+                  ),
+                ],
+              ),
+              SimpleCard(
+                title: 'Muscle Groups',
+                child: Table(
+                  defaultColumnWidth: const IntrinsicColumnWidth(),
+                  children: [
+                    TableRow(
+                      children: [
+                        const SecondaryText('Primary'),
+                        const SizedBox(width: 32),
+                        exercise.muscleGroups.primary != null
+                            ? Text(exercise.muscleGroups.primary!.name
+                                .toTitleCase())
+                            : const SecondaryText('--'),
+                      ],
+                    ),
+                    TableRow(
+                      children: [
+                        const SecondaryText('Secondary'),
+                        const SizedBox(width: 32),
+                        exercise.muscleGroups.secondary.isNotEmpty
+                            ? Text(
+                                exercise.muscleGroups.secondary
+                                    .map((muscleGroup) =>
+                                        muscleGroup.name.toTitleCase())
+                                    .join(', '),
+                              )
+                            : const SecondaryText('--'),
+                      ],
+                    ),
+                  ],
                 ),
-              ],
-            ),
-          );
-        });
+              ),
+            ],
+          ),
+        );
+      },
+    );
   }
 }

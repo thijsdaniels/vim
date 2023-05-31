@@ -2,11 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:vim/extensions/num.dart';
+import 'package:vim/models/exercise/exercise_performance.dart';
 import 'package:vim/models/exercise/performance.dart';
 import 'package:vim/models/exercise/resistance_exercise_performance.dart';
 import 'package:vim/models/exercise/routine_performance.dart';
 import 'package:vim/models/exercise/weights_exercise_performance.dart';
-import 'package:vim/widgets/atoms/icons8_icon.dart';
+import 'package:vim/widgets/atoms/muscle_groups_icon.dart';
 import 'package:vim/widgets/atoms/secondary_text.dart';
 import 'package:vim/widgets/atoms/standard_list.dart';
 import 'package:vim/widgets/molecules/list_surface.dart';
@@ -122,11 +123,9 @@ class PerformancesList extends StatelessWidget {
 
   Widget? getIcon(Performance performance) {
     if (performance is RoutinePerformance) {
-      return const Icons8Icon('greek-helmet');
-    } else if (performance is WeightsExercisePerformance) {
-      return const Icons8Icon('dumbbell');
-    } else if (performance is ResistanceExercisePerformance) {
-      return const Icons8Icon('trainers');
+      return const MuscleGroupsIcon(primary: null);
+    } else if (performance is ExercisePerformance) {
+      return performance.exercise.icon;
     }
 
     return null;
