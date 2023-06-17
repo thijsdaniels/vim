@@ -454,6 +454,30 @@ class AppearanceSettings extends StatelessWidget {
               },
             ),
             const SizedBox(height: 16),
+            DropdownButtonFormField<Color>(
+              decoration: const InputDecoration(
+                label: Text('Color'),
+              ),
+              value: settings.color,
+              items: Colors.primaries
+                  .map(
+                    (color) => DropdownMenuItem<Color>(
+                      value: color,
+                      child: Container(
+                        width: 96,
+                        height: 24,
+                        color: color,
+                      ),
+                    ),
+                  )
+                  .toList(),
+              onChanged: (color) {
+                if (color != null) {
+                  settings.color = color;
+                }
+              },
+            ),
+            const SizedBox(height: 16),
             DropdownButtonFormField<Icons8Style>(
               decoration: const InputDecoration(
                 label: Text('Icon Set'),

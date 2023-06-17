@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:vim/models/exercise/routine.dart';
-import 'package:vim/widgets/atoms/muscle_groups_icon.dart';
+import 'package:vim/widgets/atoms/floating_action_surface.dart';
+import 'package:vim/widgets/atoms/routine_icon.dart';
 import 'package:vim/widgets/atoms/secondary_text.dart';
 import 'package:vim/widgets/atoms/standard_list.dart';
 import 'package:vim/widgets/molecules/list_surface.dart';
@@ -14,7 +15,7 @@ class RoutinesView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      floatingActionButton: FloatingActionButton(
+      floatingActionButton: FloatingActionSurface(
         onPressed: () async {
           Navigator.of(context).push(
             MaterialPageRoute(
@@ -32,7 +33,7 @@ class RoutinesView extends StatelessWidget {
               Routine routine = routines.elementAt(index);
 
               return ListSurface(
-                icon: MuscleGroupsIcon(), // TODO: Display muscle groups.
+                icon: RoutineIcon(routine: routine),
                 title: Text(routine.name),
                 subtitle: SecondaryText(
                   [

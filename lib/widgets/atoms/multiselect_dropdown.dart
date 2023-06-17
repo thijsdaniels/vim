@@ -22,7 +22,7 @@ class MultiselectDropdown<T> extends StatelessWidget {
       decoration: decoration,
       icon: icon,
       onChanged: (_) {},
-      value: selected[0],
+      value: selected.isNotEmpty ? selected[0] : null,
       selectedItemBuilder: _selectedItemBuilder,
       items: items.map(_dropdownMenuItem).toList(),
     );

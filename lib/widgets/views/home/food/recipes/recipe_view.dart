@@ -177,52 +177,49 @@ class IngredientAmountListSurface extends StatelessWidget {
       builder: (context, snapshot) {
         Ingredient? ingredient = snapshot.data;
 
-        return Card(
+        return ListSurface(
           elevation: 4,
-          child: ListSurface(
-            elevation: 4,
-            icon: (ingredient?.icon != null)
-                ? Icons8Icon(ingredient!.icon!)
-                : const CircularProgressIndicator(),
-            title: Text(ingredient?.name ?? '...'),
-            subtitle: SecondaryText(
-              '${ingredientAmount.amount.decimals(2).toString()} grams',
-            ),
-            actions: Row(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                if (ingredient != null)
-                  IconButton(
-                    icon: const Icon(Icons.edit),
-                    onPressed: () async {
-                      IngredientAmountReference edited =
-                          await Navigator.of(context).push(
-                        MaterialPageRoute(
-                          builder: (context) => CreateIngredientAmountView(
-                            ingredientAmount: ingredientAmount,
-                          ),
+          icon: (ingredient?.icon != null)
+              ? Icons8Icon(ingredient!.icon!)
+              : const CircularProgressIndicator(),
+          title: Text(ingredient?.name ?? '...'),
+          subtitle: SecondaryText(
+            '${ingredientAmount.amount.decimals(2).toString()} grams',
+          ),
+          actions: Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              if (ingredient != null)
+                IconButton(
+                  icon: const Icon(Icons.edit),
+                  onPressed: () async {
+                    IngredientAmountReference edited =
+                        await Navigator.of(context).push(
+                      MaterialPageRoute(
+                        builder: (context) => CreateIngredientAmountView(
+                          ingredientAmount: ingredientAmount,
                         ),
-                      );
+                      ),
+                    );
 
-                      onChange(edited);
+                    onChange(edited);
+                  },
+                ),
+              if (ingredient != null)
+                WithConfirmationDialog(
+                  title: ingredient.name,
+                  description:
+                      'Are you sure you want to remove this ingredient?',
+                  builder: (context, confirm) => IconButton(
+                    icon: const Icon(Icons.remove),
+                    onPressed: () async {
+                      if (await confirm()) {
+                        onDelete();
+                      }
                     },
                   ),
-                if (ingredient != null)
-                  WithConfirmationDialog(
-                    title: ingredient.name,
-                    description:
-                        'Are you sure you want to remove this ingredient?',
-                    builder: (context, confirm) => IconButton(
-                      icon: const Icon(Icons.remove),
-                      onPressed: () async {
-                        if (await confirm()) {
-                          onDelete();
-                        }
-                      },
-                    ),
-                  ),
-              ],
-            ),
+                ),
+            ],
           ),
         );
       },

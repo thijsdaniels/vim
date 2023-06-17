@@ -12,6 +12,7 @@ class SecondaryText extends StatelessWidget {
         color: Theme.of(context).colorScheme.onBackground.withOpacity(0.5),
         fontSize: 14,
       ),
+      overflow: TextOverflow.ellipsis,
     );
   }
 }

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:vim/widgets/atoms/floating_action_surface.dart';
 
 class EquipmentsView extends StatelessWidget {
   const EquipmentsView({super.key});
@@ -9,7 +10,7 @@ class EquipmentsView extends StatelessWidget {
       floatingActionButton: Row(
         mainAxisAlignment: MainAxisAlignment.end,
         children: [
-          FloatingActionButton(
+          FloatingActionSurface(
             onPressed: () {},
             child: const Icon(Icons.add),
           ),

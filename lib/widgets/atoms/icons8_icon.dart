@@ -65,19 +65,19 @@ class Icons8Icon extends StatelessWidget {
   String _path(String slug, Icons8Style style) {
     switch (style) {
       case Icons8Style.arcade:
-        return 'assets/images/icons8/arcade/icons8-$slug-100.png';
+        return 'images/icons8/arcade/icons8-$slug-100.png';
       case Icons8Style.color:
-        return 'assets/images/icons8/color/icons8-$slug-100.png';
+        return 'images/icons8/color/icons8-$slug-100.png';
       case Icons8Style.colorGlass:
-        return 'assets/images/icons8/color-glass/icons8-$slug-100.png';
+        return 'images/icons8/color-glass/icons8-$slug-100.png';
       case Icons8Style.dusk:
-        return 'assets/images/icons8/dusk/icons8-$slug-100.png';
+        return 'images/icons8/dusk/icons8-$slug-100.png';
       case Icons8Style.fluency:
-        return 'assets/images/icons8/fluency/icons8-$slug-100.png';
+        return 'images/icons8/fluency/icons8-$slug-100.png';
       case Icons8Style.pulsarColor:
-        return 'assets/images/icons8/pulsar-color/icons8-$slug-100.png';
+        return 'images/icons8/pulsar-color/icons8-$slug-100.png';
       case Icons8Style.stickers:
-        return 'assets/images/icons8/stickers/icons8-$slug-100.png';
+        return 'images/icons8/stickers/icons8-$slug-100.png';
     }
   }
 

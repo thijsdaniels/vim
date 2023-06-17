@@ -1,3 +1,5 @@
+import 'dart:ui';
+
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -29,8 +31,8 @@ class Vim extends StatelessWidget {
           return MaterialApp(
             debugShowCheckedModeBanner: false,
             title: 'Vim',
-            theme: lightTheme,
-            darkTheme: darkTheme,
+            theme: lightTheme(settingsModel.color),
+            darkTheme: darkTheme(settingsModel.color),
             themeMode: settingsModel.themeMode,
             home: StreamBuilder<User?>(
               stream: FirebaseAuth.instance.authStateChanges(),
@@ -56,6 +58,11 @@ class Providers extends StatelessWidget {
   Widget build(BuildContext context) {
     return MultiProvider(
       providers: [
+        FutureProvider<FragmentProgram?>.value(
+          initialData: null,
+          value:
+              FragmentProgram.fromAsset('assets/shaders/surface_shader.frag'),
+        ),
         ChangeNotifierProvider<DateModel>.value(
           value: DateModel(),
         ),
@@ -98,36 +105,29 @@ class Providers extends StatelessWidget {
   }
 }
 
-var lightTheme = ThemeData(
-  useMaterial3: true,
-  colorScheme: ColorScheme.fromSeed(
-    seedColor: Colors.deepPurple,
-    brightness: Brightness.light,
-  ),
-  fontFamily: 'GoogleSans',
-  inputDecorationTheme: const InputDecorationTheme(
-    border: OutlineInputBorder(),
-  ),
-  shadowColor: Colors.transparent,
-  cardTheme: const CardTheme(
-    shadowColor: Colors.transparent,
-    margin: EdgeInsets.zero,
-  ),
-);
+var lightTheme = (Color seedColor) => theme(
+      colorScheme: ColorScheme.fromSeed(
+        brightness: Brightness.light,
+        seedColor: seedColor,
+      ),
+    );
 
-var darkTheme = ThemeData(
-  useMaterial3: true,
-  colorScheme: ColorScheme.fromSeed(
-    brightness: Brightness.dark,
-    seedColor: Colors.deepPurple,
-  ),
-  fontFamily: 'GoogleSans',
-  inputDecorationTheme: const InputDecorationTheme(
-    border: OutlineInputBorder(),
-  ),
-  shadowColor: const Color.fromARGB(0, 18, 5, 5),
-  cardTheme: const CardTheme(
-    shadowColor: Colors.transparent,
-    margin: EdgeInsets.zero,
-  ),
-);
+var darkTheme = (Color seedColor) => theme(
+      colorScheme: ColorScheme.fromSeed(
+        brightness: Brightness.dark,
+        seedColor: seedColor,
+      ),
+    );
+
+var theme = ({
+  required ColorScheme colorScheme,
+}) =>
+    ThemeData(
+      useMaterial3: true,
+      colorScheme: colorScheme,
+      fontFamily: 'GoogleSans',
+      inputDecorationTheme: const InputDecorationTheme(
+        border: OutlineInputBorder(),
+      ),
+      cardColor: Colors.black,
+    );

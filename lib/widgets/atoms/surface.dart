@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 class Surface extends Card {
   final double? width;
   final double? height;
-  final bool primary;
+  final bool isPrimary;
 
   const Surface({
     super.key,
@@ -12,7 +12,7 @@ class Surface extends Card {
     super.shape,
     this.width,
     this.height,
-    this.primary = false,
+    this.isPrimary = false,
   });
 
   @override
@@ -31,21 +31,14 @@ class Surface extends Card {
       ),
       child: Card(
         shape: shape,
-        elevation: primary ? 0 : elevation,
+        shadowColor: Colors.transparent,
+        margin: EdgeInsets.zero,
+        elevation: isPrimary ? 0 : elevation,
         clipBehavior: Clip.antiAlias,
-        child: primary
+        child: isPrimary
+            // ? PrimarySurfacePaint(child: child) // TODO: Improve performance.
             ? Container(
-                decoration: BoxDecoration(
-                  gradient: LinearGradient(
-                    begin: Alignment.topLeft,
-                    end: Alignment.bottomRight,
-                    colors: [
-                      Colors.purple[800]!,
-                      Colors.deepPurple[700]!,
-                    ],
-                    stops: const [0, 1],
-                  ),
-                ),
+                color: Theme.of(context).colorScheme.primaryContainer,
                 child: child,
               )
             : child,

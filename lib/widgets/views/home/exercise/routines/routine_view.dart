@@ -2,8 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:vim/models/exercise/exercise.dart';
 import 'package:vim/models/exercise/routine.dart';
 import 'package:vim/services/routines_service.dart';
-import 'package:vim/widgets/atoms/muscle_groups.dart';
-import 'package:vim/widgets/atoms/muscle_map/muscle_map.dart';
+import 'package:vim/widgets/atoms/routine_muscle_groups.dart';
 import 'package:vim/widgets/atoms/secondary_text.dart';
 import 'package:vim/widgets/atoms/standard_list.dart';
 import 'package:vim/widgets/molecules/exercises_list.dart';
@@ -95,26 +94,8 @@ class RoutineView extends StatelessWidget {
                   ],
                 ),
               ),
-
-              /// TODO: Fetch exercises and show muscle groups.
-              Row(
-                children: [
-                  Flexible(
-                    child: MuscleGroups(
-                      view: MuscleMapView.front,
-                      primary: null,
-                      secondary: [],
-                    ),
-                  ),
-                  const SizedBox(width: 12),
-                  Flexible(
-                    child: MuscleGroups(
-                      view: MuscleMapView.back,
-                      primary: null,
-                      secondary: [],
-                    ),
-                  ),
-                ],
+              RoutineMuscleGroups(
+                routine: routine,
               ),
               SimpleCard(
                 title: 'Exercises',

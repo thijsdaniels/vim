@@ -12,6 +12,7 @@ import 'package:vim/models/exercise/set.dart';
 import 'package:vim/models/exercise/sets.dart';
 import 'package:vim/models/exercise/weights_exercise_performance.dart';
 import 'package:vim/services/performances_service.dart';
+import 'package:vim/widgets/atoms/muscle_groups_focus_icon.dart';
 import 'package:vim/widgets/atoms/secondary_text.dart';
 import 'package:vim/widgets/atoms/standard_list.dart';
 import 'package:vim/widgets/molecules/list_surface.dart';
@@ -68,8 +69,41 @@ class RoutineExercisePerformances extends StatelessWidget {
 
                     return ListSurface(
                       elevation: 4,
-                      icon: exercise?.icon,
-                      title: Text(exercise?.name ?? ''),
+                      icon: MuscleGroupsFocusIcon(
+                        elevation: 8,
+                        primary: exercise?.muscleGroups.primary,
+                        secondary: exercise?.muscleGroups.secondary ?? [],
+                      ),
+                      onTap: performance != null
+                          ? () async {
+                              ExercisePerformance edited =
+                                  await Navigator.of(context).push(
+                                MaterialPageRoute(
+                                  builder: (context) =>
+                                      CreateExercisePerformanceView(
+                                    exercisePerformance: performance,
+                                  ),
+                                ),
+                              );
+
+                              routinePerformance.updatePerformance(edited);
+                            }
+                          : null,
+                      actions: Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          if (exercise != null)
+                            PerformedCheckbox(
+                              index: index,
+                              exercise: exercise,
+                              exercisePerformance: performance,
+                              previousExercisePerformance: latest,
+                              routinePerformance: routinePerformance,
+                            ),
+                        ],
+                      ),
+                      title: Text(exercise?.name ?? '',
+                          overflow: TextOverflow.ellipsis),
                       subtitle: performance != null
                           ? FutureBuilder(
                               future: performance.calories,
@@ -127,36 +161,6 @@ class RoutineExercisePerformances extends StatelessWidget {
                                   ),
                                 )
                               : const SecondaryText('--'),
-                      actions: Row(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          if (performance != null)
-                            IconButton(
-                              icon: const Icon(Icons.edit),
-                              onPressed: () async {
-                                ExercisePerformance edited =
-                                    await Navigator.of(context).push(
-                                  MaterialPageRoute(
-                                    builder: (context) =>
-                                        CreateExercisePerformanceView(
-                                      exercisePerformance: performance,
-                                    ),
-                                  ),
-                                );
-
-                                routinePerformance.updatePerformance(edited);
-                              },
-                            ),
-                          if (exercise != null)
-                            PerformedCheckbox(
-                              index: index,
-                              exercise: exercise,
-                              exercisePerformance: performance,
-                              previousExercisePerformance: latest,
-                              routinePerformance: routinePerformance,
-                            ),
-                        ],
-                      ),
                     );
                   },
                 );

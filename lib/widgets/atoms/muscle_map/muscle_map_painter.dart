@@ -5,14 +5,19 @@ abstract class MuscleMapPainter extends CustomPainter {
   final Map<MuscleGroup, double> muscles;
   final Paint silhouettePaint = Paint()
     ..style = PaintingStyle.fill
-    ..color = Colors.white.withOpacity(0.15)
+    ..color = Colors.white.withOpacity(0.33)
     ..blendMode = BlendMode.overlay;
-  final Color inactiveColor = Colors.white.withOpacity(0.1);
-  final Color activeColor = Colors.white.withOpacity(0.9);
+  late final Color inactiveColor;
+  late final Color activeColor;
 
   MuscleMapPainter({
     this.muscles = const {},
-  });
+    Color? inactiveColor,
+    Color? activeColor,
+  }) {
+    this.inactiveColor = (inactiveColor ?? Colors.white).withOpacity(0.2);
+    this.activeColor = (inactiveColor ?? Colors.white).withOpacity(0.85);
+  }
 
   Paint getMusclePaint(MuscleGroup muscleGroup) {
     return Paint()
@@ -22,8 +27,10 @@ abstract class MuscleMapPainter extends CustomPainter {
   }
 
   @override
-  bool shouldRepaint(covariant CustomPainter oldDelegate) {
-    return true;
+  bool shouldRepaint(covariant MuscleMapPainter oldDelegate) {
+    return muscles != oldDelegate.muscles ||
+        inactiveColor != oldDelegate.inactiveColor ||
+        activeColor != oldDelegate.activeColor;
   }
 
   @override

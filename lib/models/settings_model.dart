@@ -5,16 +5,18 @@ import 'package:vim/widgets/atoms/icons8_icon.dart';
 class SettingsModel extends ChangeNotifier {
   ThemeMode _themeMode = ThemeMode.system;
 
-  Icons8Style _iconStyle = Icons8Style.arcade;
+  Color _color = Colors.deepPurple;
+
+  Icons8Style _iconStyle = Icons8Style.stickers;
 
   Body _body = Body(
     gender: Gender.male,
     age: 34,
     length: 176,
-    weight: 67.0,
-    muscle: 79.3,
-    fat: 16.4,
-    neat: 400,
+    weight: 66.6,
+    muscle: 81.0,
+    fat: 14.7,
+    neat: 400.3704,
     exercise: 400,
     surplus: -0.05,
     proteinGramsPerKilo: 1.8,
@@ -25,6 +27,13 @@ class SettingsModel extends ChangeNotifier {
 
   set themeMode(ThemeMode themeMode) {
     _themeMode = themeMode;
+    notifyListeners();
+  }
+
+  Color get color => _color;
+
+  set color(Color color) {
+    _color = color;
     notifyListeners();
   }
 

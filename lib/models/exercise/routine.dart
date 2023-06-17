@@ -1,6 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:vim/models/document.dart';
+import 'package:vim/models/exercise/exercise.dart';
 import 'package:vim/models/exercise/routine_performance.dart';
+import 'package:vim/services/exercises_service.dart';
 
 class Routine extends Document {
   DocumentReference? _reference;
@@ -10,6 +12,12 @@ class Routine extends Document {
 
   @override
   DocumentReference? get reference => _reference;
+
+  Stream<List<Exercise>> get exercises {
+    return ExercisesService.instance.some(
+      exerciseReferences.map((reference) => reference.id).toList(),
+    );
+  }
 
   Routine({
     required this.name,

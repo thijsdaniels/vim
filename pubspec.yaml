@@ -21,6 +21,7 @@ dependencies:
   # google_sign_in: ^6.0.2
   intl: ^0.18.0
   provider: ^6.0.5
+  flutter_shaders: ^0.1.1
 
 dev_dependencies:
   flutter_test:
@@ -36,6 +37,8 @@ flutter:
   assets:
     - assets/images/icons8/arcade/
     - assets/images/icons8/stickers/
+  shaders:
+    - assets/shaders/surface_shader.frag
 
 flutter_icons:
   android: true

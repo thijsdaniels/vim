@@ -30,11 +30,15 @@ enum MuscleGroup {
 class MuscleMap extends StatelessWidget {
   final MuscleMapView view;
   final Map<MuscleGroup, double> muscles;
+  final Color? activeColor;
+  final Color? inactiveColor;
 
   const MuscleMap({
     super.key,
     required this.view,
     this.muscles = const {},
+    this.activeColor,
+    this.inactiveColor,
   });
 
   @override
@@ -47,6 +51,8 @@ class MuscleMap extends StatelessWidget {
             return CustomPaint(
               painter: MuscleMapFrontPainter(
                 muscles: muscles,
+                activeColor: activeColor,
+                inactiveColor: inactiveColor,
               ),
               size: const Size(200, 400),
             );
@@ -54,6 +60,8 @@ class MuscleMap extends StatelessWidget {
             return CustomPaint(
               painter: MuscleMapBackPainter(
                 muscles: muscles,
+                activeColor: activeColor,
+                inactiveColor: inactiveColor,
               ),
               size: const Size(200, 400),
             );

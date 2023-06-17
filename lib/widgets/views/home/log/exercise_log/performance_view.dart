@@ -5,10 +5,11 @@ import 'package:vim/models/exercise/resistance_exercise_performance.dart';
 import 'package:vim/models/exercise/routine_performance.dart';
 import 'package:vim/models/exercise/weights_exercise_performance.dart';
 import 'package:vim/services/performances_service.dart';
-import 'package:vim/widgets/atoms/muscle_groups.dart';
-import 'package:vim/widgets/atoms/muscle_map/muscle_map.dart';
+import 'package:vim/widgets/atoms/exercise_performance_muscle_groups.dart';
+import 'package:vim/widgets/atoms/routine_performance_muscle_groups.dart';
 import 'package:vim/widgets/atoms/secondary_text.dart';
 import 'package:vim/widgets/atoms/standard_list.dart';
+import 'package:vim/widgets/molecules/list_surface.dart';
 import 'package:vim/widgets/molecules/routine_exercise_performances.dart';
 import 'package:vim/widgets/molecules/simple_card.dart';
 import 'package:vim/widgets/molecules/with_confirmation_dialog.dart';
@@ -144,33 +145,14 @@ class _PerformanceViewState extends State<PerformanceView> {
                   ),
                 ),
               ),
-              Row(
-                children: [
-                  Flexible(
-                    child: MuscleGroups(
-                      view: MuscleMapView.front,
-                      primary: performance is ExercisePerformance
-                          ? performance.exercise.muscleGroups.primary
-                          : null,
-                      secondary: performance is ExercisePerformance
-                          ? performance.exercise.muscleGroups.secondary
-                          : [],
-                    ),
-                  ),
-                  const SizedBox(width: 12),
-                  Flexible(
-                    child: MuscleGroups(
-                      view: MuscleMapView.back,
-                      primary: performance is ExercisePerformance
-                          ? performance.exercise.muscleGroups.primary
-                          : null,
-                      secondary: performance is ExercisePerformance
-                          ? performance.exercise.muscleGroups.secondary
-                          : [],
-                    ),
-                  ),
-                ],
-              ),
+              if (performance is RoutinePerformance)
+                RoutinePerformanceMuscleGroups(
+                  performance: performance,
+                ),
+              if (performance is ExercisePerformance)
+                ExercisePerformanceMuscleGroups(
+                  performance: performance,
+                ),
               if (performance is ResistanceExercisePerformance)
                 SimpleCard(
                   title: 'Performance',
@@ -197,18 +179,20 @@ class _PerformanceViewState extends State<PerformanceView> {
                   ),
                 ),
               if (performance is WeightsExercisePerformance)
+
+                /// TODO: Add, edit and remove sets here instead of having to
+                /// navigate to an edit view.
                 SimpleCard(
                   title: 'Sets',
                   child: StandardList(
+                    physics: const NeverScrollableScrollPhysics(),
                     padding: EdgeInsets.zero,
                     children: performance.sets
                         .map(
-                          (set) => Card(
+                          (set) => ListSurface(
                             elevation: 4,
-                            child: ListTile(
-                              title: Text(
-                                '${set.repetitions} x ${set.weight} kg',
-                              ),
+                            title: Text(
+                              '${set.repetitions} x ${set.weight} kg',
                             ),
                           ),
                         )

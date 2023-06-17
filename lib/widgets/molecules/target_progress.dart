@@ -86,22 +86,12 @@ class LinearProgressIndicator extends StatelessWidget {
         padding: const EdgeInsets.all(3),
         child: SizedBox(
           height: size == TargetProgressBarSize.small ? 6 : 8,
-          child: Stack(
-            children: [
-              SizedBox(
-                width: size == TargetProgressBarSize.small ? 6 : 8,
-                child: const Surface(
-                  primary: true,
-                ),
-              ),
-              FractionallySizedBox(
-                alignment: Alignment.centerLeft,
-                widthFactor: max(0, min(1, value)),
-                child: const Surface(
-                  primary: true,
-                ),
-              ),
-            ],
+          child: FractionallySizedBox(
+            alignment: Alignment.centerLeft,
+            widthFactor: max(0, min(1, value)),
+            child: const Surface(
+              isPrimary: true,
+            ),
           ),
         ),
       ),

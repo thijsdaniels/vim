@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:collection/collection.dart';
 import 'package:vim/models/document.dart';
 
 /// TODO: Rename to Collection to reflect that this represents a Firestore
@@ -18,11 +19,16 @@ abstract class Service<D extends Document> {
     return collection.doc(id).snapshots().map((snapshot) => snapshot.data());
   }
 
-  /// TODO: Is it okay to return a list of streams? Shouldn't I at least merge
-  /// the individual streams returned by `get()` into a single stream? Or better
-  /// yet, perform a single query with a where clause?
-  List<Stream<D?>> some(List<String> ids) {
-    return ids.map(get).toList();
+  Stream<List<D>> some(List<String> ids) {
+    return collection
+        .where(
+          FieldPath.documentId,
+          whereIn: ids.slice(0, 10), // TODO: Support more than 10 IDs.
+        )
+        .snapshots()
+        .map(
+          (snapshot) => snapshot.docs.map((doc) => doc.data()).toList(),
+        );
   }
 
   Future<void> create(D document) async {

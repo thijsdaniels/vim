@@ -31,7 +31,7 @@ class LogView extends StatelessWidget {
           ],
         ),
         bottomNavigationBar: const Surface(
-          primary: true,
+          isPrimary: true,
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.only(
               topLeft: Radius.circular(12),

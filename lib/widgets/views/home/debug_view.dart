@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:vim/widgets/atoms/muscle_map/muscle_map.dart';
+import 'package:vim/widgets/atoms/surface.dart';
 
 class DebugView extends StatefulWidget {
   const DebugView({super.key});
@@ -23,19 +24,8 @@ class _DebugViewState extends State<DebugView> {
           children: [
             Padding(
               padding: const EdgeInsets.all(32.0),
-              child: Container(
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(16),
-                  gradient: LinearGradient(
-                    begin: Alignment.topLeft,
-                    end: Alignment.bottomRight,
-                    colors: [
-                      Colors.purple[800]!,
-                      Colors.deepPurple[700]!,
-                    ],
-                    stops: const [0, 1],
-                  ),
-                ),
+              child: Surface(
+                isPrimary: true,
                 child: Padding(
                   padding: const EdgeInsets.all(32.0),
                   child: MuscleMap(

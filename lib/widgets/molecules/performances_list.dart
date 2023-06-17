@@ -7,7 +7,8 @@ import 'package:vim/models/exercise/performance.dart';
 import 'package:vim/models/exercise/resistance_exercise_performance.dart';
 import 'package:vim/models/exercise/routine_performance.dart';
 import 'package:vim/models/exercise/weights_exercise_performance.dart';
-import 'package:vim/widgets/atoms/muscle_groups_icon.dart';
+import 'package:vim/widgets/atoms/exercise_performance_icon.dart';
+import 'package:vim/widgets/atoms/routine_performance_icon.dart';
 import 'package:vim/widgets/atoms/secondary_text.dart';
 import 'package:vim/widgets/atoms/standard_list.dart';
 import 'package:vim/widgets/molecules/list_surface.dart';
@@ -39,7 +40,7 @@ class PerformancesList extends StatelessWidget {
 
         return ListSurface(
           icon: getIcon(performance),
-          title: Text(performance.name),
+          title: Text(performance.name, overflow: TextOverflow.ellipsis),
           subtitle: FutureBuilder(
             future: performance.calories,
             builder: (context, snapshot) => SecondaryText(
@@ -123,9 +124,13 @@ class PerformancesList extends StatelessWidget {
 
   Widget? getIcon(Performance performance) {
     if (performance is RoutinePerformance) {
-      return const MuscleGroupsIcon(primary: null);
+      return RoutinePerformanceIcon(
+        performance: performance,
+      );
     } else if (performance is ExercisePerformance) {
-      return performance.exercise.icon;
+      return ExercisePerformanceIcon(
+        performance: performance,
+      );
     }
 
     return null;

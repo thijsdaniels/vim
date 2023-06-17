@@ -4,6 +4,8 @@ import 'package:vim/widgets/atoms/muscle_map/muscle_map_painter.dart';
 class MuscleMapBackPainter extends MuscleMapPainter {
   MuscleMapBackPainter({
     super.muscles,
+    super.activeColor,
+    super.inactiveColor,
   });
 
   @override

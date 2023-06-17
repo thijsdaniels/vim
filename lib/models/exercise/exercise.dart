@@ -1,8 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/foundation.dart';
-import 'package:flutter/material.dart';
 import 'package:vim/models/document.dart';
-import 'package:vim/widgets/atoms/muscle_groups_icon.dart';
 import 'package:vim/widgets/atoms/muscle_map/muscle_map.dart';
 
 // TODO: Remove in favor of relating an exercise to a set of Equipment.
@@ -33,13 +31,6 @@ class Exercise extends Document {
       secondary: [],
     ),
   });
-
-  Widget get icon {
-    return MuscleGroupsIcon(
-      primary: muscleGroups.primary,
-      secondary: muscleGroups.secondary,
-    );
-  }
 
   static Exercise fromSnapshot(
     DocumentSnapshot<Map<String, dynamic>> snapshot,

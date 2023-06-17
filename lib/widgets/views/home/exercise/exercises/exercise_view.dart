@@ -2,8 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:vim/extensions/string.dart';
 import 'package:vim/models/exercise/exercise.dart';
 import 'package:vim/services/exercises_service.dart';
-import 'package:vim/widgets/atoms/muscle_groups.dart';
-import 'package:vim/widgets/atoms/muscle_map/muscle_map.dart';
+import 'package:vim/widgets/atoms/exercise_muscle_groups.dart';
 import 'package:vim/widgets/atoms/secondary_text.dart';
 import 'package:vim/widgets/atoms/standard_list.dart';
 import 'package:vim/widgets/molecules/simple_card.dart';
@@ -91,25 +90,7 @@ class ExerciseView extends StatelessWidget {
                   ],
                 ),
               ),
-              Row(
-                children: [
-                  Flexible(
-                    child: MuscleGroups(
-                      view: MuscleMapView.front,
-                      primary: exercise.muscleGroups.primary,
-                      secondary: exercise.muscleGroups.secondary,
-                    ),
-                  ),
-                  const SizedBox(width: 12),
-                  Flexible(
-                    child: MuscleGroups(
-                      view: MuscleMapView.back,
-                      primary: exercise.muscleGroups.primary,
-                      secondary: exercise.muscleGroups.secondary,
-                    ),
-                  ),
-                ],
-              ),
+              ExerciseMuscleGroups(exercise: exercise),
               SimpleCard(
                 title: 'Muscle Groups',
                 child: Table(
