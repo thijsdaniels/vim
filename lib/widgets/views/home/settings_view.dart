@@ -1,10 +1,12 @@
-import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_auth/firebase_auth.dart' show FirebaseAuth;
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:vim/extensions/num.dart';
 import 'package:vim/extensions/string.dart';
-import 'package:vim/models/body.dart';
 import 'package:vim/models/settings_model.dart';
+import 'package:vim/models/user/body.dart';
+import 'package:vim/models/user/user.dart';
+import 'package:vim/services/users_service.dart';
 import 'package:vim/widgets/atoms/icons8_icon.dart';
 import 'package:vim/widgets/atoms/number_form_field.dart';
 import 'package:vim/widgets/atoms/standard_list.dart';
@@ -116,109 +118,129 @@ class BodySettings extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Consumer<SettingsModel>(
-      builder: (context, settings, _) => SimpleCard(
-        title: 'Body',
-        child: Column(
-          children: [
-            DropdownButtonFormField(
-              decoration: const InputDecoration(
-                label: Text('Gender'),
+    return Consumer<User?>(
+      builder: (context, user, _) {
+        if (user == null) {
+          return const CircularProgressIndicator();
+        }
+
+        return SimpleCard(
+          title: 'Body',
+          child: Column(
+            children: [
+              DropdownButtonFormField(
+                decoration: const InputDecoration(
+                  label: Text('Gender'),
+                ),
+                value: user.body.gender,
+                items: Gender.values
+                    .map(
+                      (gender) => DropdownMenuItem(
+                        value: gender,
+                        child: Text(gender.name.toTitleCase()),
+                      ),
+                    )
+                    .toList(),
+                onChanged: (value) {
+                  if (value != null) {
+                    user.body.gender = value;
+                    UsersService.instance.update(user);
+                  }
+                },
               ),
-              value: settings.body.gender,
-              items: Gender.values
-                  .map(
-                    (gender) => DropdownMenuItem(
-                      value: gender,
-                      child: Text(gender.name.toTitleCase()),
-                    ),
-                  )
-                  .toList(),
-              onChanged: (gender) {
-                if (gender != null) {
-                  settings.body = settings.body.copyWith(
-                    gender: gender,
-                  );
-                }
-              },
-            ),
-            const SizedBox(height: 16),
-            NumberFormField(
-              decoration: const InputDecoration(
-                label: Text('Age'),
+              const SizedBox(height: 16),
+              NumberFormField(
+                decoration: const InputDecoration(
+                  label: Text('Age'),
+                ),
+                initialValue: user.body.age,
+                onChanged: (value) {
+                  if (value != null) {
+                    user.body.age = value.toInt();
+                    UsersService.instance.update(user);
+                  }
+                },
               ),
-              initialValue: settings.body.age,
-              onChanged: (age) {
-                if (age != null) {
-                  settings.body = settings.body.copyWith(
-                    age: age.toDouble(),
-                  );
-                }
-              },
-            ),
-            const SizedBox(height: 16),
-            NumberFormField(
-              decoration: const InputDecoration(
-                label: Text('Length'),
-                hintText: 'Centimeters',
+              const SizedBox(height: 16),
+              NumberFormField(
+                decoration: const InputDecoration(
+                  label: Text('Length'),
+                  hintText: 'Centimeters',
+                ),
+                initialValue: user.body.length,
+                onChanged: (value) {
+                  if (value != null) {
+                    user.body.length = value.toInt();
+                    UsersService.instance.update(user);
+                  }
+                },
               ),
-              initialValue: settings.body.length,
-              onChanged: (length) {
-                if (length != null) {
-                  settings.body = settings.body.copyWith(
-                    length: length.toDouble(),
-                  );
-                }
-              },
-            ),
-            const SizedBox(height: 16),
-            NumberFormField(
-              decoration: const InputDecoration(
-                label: Text('Weight'),
-                hintText: 'Kilograms',
+              const SizedBox(height: 16),
+              NumberFormField(
+                decoration: const InputDecoration(
+                  label: Text('Weight'),
+                  hintText: 'Kilograms',
+                ),
+                initialValue: user.body.weight,
+                onChanged: (value) {
+                  if (value != null) {
+                    user.body.weight = value.toDouble();
+                    UsersService.instance.update(user);
+                  }
+                },
               ),
-              initialValue: settings.body.weight,
-              onChanged: (weight) {
-                if (weight != null) {
-                  settings.body = settings.body.copyWith(
-                    weight: weight.toDouble(),
-                  );
-                }
-              },
-            ),
-            const SizedBox(height: 16),
-            NumberFormField(
-              decoration: const InputDecoration(
-                label: Text('Muscle'),
-                hintText: 'Percentage',
+              const SizedBox(height: 16),
+              NumberFormField(
+                decoration: const InputDecoration(
+                  label: Text('Lean Mass'),
+                  hintText: 'Percentage',
+                ),
+                initialValue: user.body.composition.lean != null
+                    ? (user.body.composition.lean! * 100).decimals(1)
+                    : null,
+                onChanged: (value) {
+                  if (value != null) {
+                    user.body.composition.lean = (value / 100).toDouble();
+                    UsersService.instance.update(user);
+                  }
+                },
               ),
-              initialValue: settings.body.muscle,
-              onChanged: (muscle) {
-                if (muscle != null) {
-                  settings.body = settings.body.copyWith(
-                    muscle: muscle.toDouble(),
-                  );
-                }
-              },
-            ),
-            const SizedBox(height: 16),
-            NumberFormField(
-              decoration: const InputDecoration(
-                label: Text('Fat'),
-                hintText: 'Percentage',
+              const SizedBox(height: 16),
+              NumberFormField(
+                decoration: const InputDecoration(
+                  label: Text('Fat Mass'),
+                  hintText: 'Percentage',
+                ),
+                initialValue: user.body.composition.fat != null
+                    ? (user.body.composition.fat! * 100).decimals(1)
+                    : null,
+                onChanged: (value) {
+                  if (value != null) {
+                    user.body.composition.fat = (value / 100).toDouble();
+                    UsersService.instance.update(user);
+                  }
+                },
               ),
-              initialValue: settings.body.fat,
-              onChanged: (fat) {
-                if (fat != null) {
-                  settings.body = settings.body.copyWith(
-                    fat: fat.toDouble(),
-                  );
-                }
-              },
-            ),
-          ],
-        ),
-      ),
+              const SizedBox(height: 16),
+              NumberFormField(
+                decoration: const InputDecoration(
+                  label: Text('Bone Mass'),
+                  hintText: 'Percentage',
+                ),
+                initialValue: user.body.composition.bone != null
+                    ? (user.body.composition.bone! * 100).decimals(1)
+                    : null,
+                onChanged: (value) {
+                  if (value != null) {
+                    user.body.composition.bone = (value / 100).toDouble();
+                    UsersService.instance.update(user);
+                  }
+                },
+              ),
+            ],
+          ),
+        );
+      },
     );
   }
 }
@@ -230,51 +252,54 @@ class PerformanceSettings extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Consumer<SettingsModel>(
-      builder: (context, settings, _) => SimpleCard(
-        title: 'Performance',
-        child: Column(
-          children: [
-            NumberFormField(
-              decoration: const InputDecoration(
-                label: Text('NEAT'),
+    return Consumer<User?>(
+      builder: (context, user, _) {
+        if (user == null) {
+          return const CircularProgressIndicator();
+        }
+
+        return SimpleCard(
+          title: 'Performance',
+          child: Column(
+            children: [
+              NumberFormField(
+                decoration: const InputDecoration(
+                  label: Text('NEAT'),
+                ),
+                initialValue: user.neat,
+                onChanged: (value) {
+                  if (value != null) {
+                    user.neat = value.toDouble();
+                    UsersService.instance.update(user);
+                  }
+                },
               ),
-              initialValue: settings.body.neat,
-              onChanged: (neat) {
-                if (neat != null) {
-                  settings.body = settings.body.copyWith(
-                    neat: neat.toDouble(),
-                  );
-                }
-              },
-            ),
-            const SizedBox(height: 16),
-            NumberFormField(
-              decoration: const InputDecoration(
-                label: Text('Target Exercise'),
+              const SizedBox(height: 16),
+              NumberFormField(
+                decoration: const InputDecoration(
+                  label: Text('Target Exercise'),
+                ),
+                initialValue: user.target.performance.calories,
+                onChanged: (value) {
+                  if (value != null) {
+                    user.target.performance.calories = value.toInt();
+                    UsersService.instance.update(user);
+                  }
+                },
               ),
-              initialValue: settings.body.exercise,
-              onChanged: (exercise) {
-                if (exercise != null) {
-                  settings.body = settings.body.copyWith(
-                    exercise: exercise.toInt(),
-                  );
-                }
-              },
-            ),
-            const SizedBox(height: 16),
-            SwitchFormField(
-              label: const Text('Adjust Target Intake'),
-              value: settings.body.adjustIntake,
-              onChanged: (adjustIntake) {
-                settings.body = settings.body.copyWith(
-                  adjustIntake: adjustIntake,
-                );
-              },
-            ),
-          ],
-        ),
-      ),
+              const SizedBox(height: 16),
+              SwitchFormField(
+                label: const Text('Adjust Target Consumption'),
+                value: user.target.performance.adjustTargetConsumption,
+                onChanged: (value) {
+                  user.target.performance.adjustTargetConsumption = value;
+                  UsersService.instance.update(user);
+                },
+              ),
+            ],
+          ),
+        );
+      },
     );
   }
 }
@@ -286,72 +311,75 @@ class ConsumptionSettings extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Consumer<SettingsModel>(
-      builder: (context, settings, _) => SimpleCard(
-        title: 'Consumption',
-        child: Column(
-          children: [
-            const SizedBox(height: 16),
-            SliderFormField(
-              label: const Text('Surplus'),
-              valueLabel: '${(settings.body.surplus * 100).round()}%',
-              min: -0.2,
-              max: 0.2,
-              divisions: 8,
-              value: settings.body.surplus,
-              onChanged: (surplus) {
-                settings.body = settings.body.copyWith(
-                  surplus: surplus,
-                );
-              },
-            ),
-            const SizedBox(height: 16),
-            SliderFormField(
-              label: const Text('Carbs'),
-              valueLabel: '${(settings.body.carbohydrates * 100).round()}%',
-              value: settings.body.carbohydrates,
-              divisions: 100,
-              secondaryTrackValue:
-                  (1 - settings.body.proteins - settings.body.fats).clamp(0, 1),
-              enabled: false,
-            ),
-            const SizedBox(height: 16),
-            SliderFormField(
-              label: const Text('Proteins'),
-              valueLabel: '${(settings.body.proteinGramsPerKilo).decimals(1)}g',
-              value: settings.body.proteinGramsPerKilo,
-              min: 0,
-              max: 3,
-              divisions: 30,
-              onChanged: (proteinGramsPerKilo) {
-                settings.body = settings.body.copyWith(
-                  proteinGramsPerKilo: proteinGramsPerKilo,
-                );
-              },
-            ),
-            const SizedBox(height: 16),
-            SliderFormField(
-              label: const Text('Fats'),
-              valueLabel: '${(settings.body.fats * 100).round()}%',
-              value: settings.body.fats,
-              divisions: 100,
-              // secondaryTrackValue:
-              //     (1 - settings.body.carbohydrates - settings.body.proteins)
-              //         .clamp(0, 1),
-              onChanged: (fats) {
-                // if (settings.body.carbohydrates +
-                //         settings.body.proteins +
-                //         fats <=
-                //     1) {
-                settings.body = settings.body.copyWith(
-                  fats: fats,
-                );
-                // }
-              },
-            ),
-          ],
-        ),
-      ),
+    return Consumer<User?>(
+      builder: (context, user, _) {
+        if (user == null) {
+          return const CircularProgressIndicator();
+        }
+
+        return SimpleCard(
+          title: 'Consumption',
+          child: Column(
+            children: [
+              const SizedBox(height: 16),
+              SliderFormField(
+                label: const Text('Surplus'),
+                valueLabel:
+                    '${(user.target.consumption.surplus * 100).round()}%',
+                min: -0.2,
+                max: 0.2,
+                divisions: 8,
+                value: user.target.consumption.surplus,
+                onChanged: (value) {
+                  user.target.consumption.surplus = value.decimals(2);
+                  UsersService.instance.update(user);
+                },
+              ),
+              const SizedBox(height: 16),
+              SliderFormField(
+                label: const Text('Carbs'),
+                valueLabel:
+                    '${(user.targetCarbohydrateConsumption * 100).round()}%',
+                value: user.targetCarbohydrateConsumption,
+                divisions: 100,
+                secondaryTrackValue: (1 -
+                        user.targetProteinConsumption -
+                        user.target.consumption.fats)
+                    .clamp(0, 1),
+                enabled: false,
+              ),
+              const SizedBox(height: 16),
+              SliderFormField(
+                label: const Text('Proteins'),
+                valueLabel:
+                    '${(user.target.consumption.proteins).decimals(1)}g',
+                value: user.target.consumption.proteins,
+                min: 0,
+                max: 3,
+                divisions: 30,
+                onChanged: (value) {
+                  user.target.consumption.proteins = value.decimals(1);
+                  UsersService.instance.update(user);
+                },
+              ),
+              const SizedBox(height: 16),
+              SliderFormField(
+                label: const Text('Fats'),
+                valueLabel: '${(user.target.consumption.fats * 100).round()}%',
+                value: user.target.consumption.fats,
+                divisions: 100,
+                // secondaryTrackValue: (1 - settings.body.carbohydrates - settings.body.proteins).clamp(0, 1),
+                onChanged: (value) {
+                  // if (settings.body.carbohydrates + settings.body.proteins + value <= 1) {
+                  user.target.consumption.fats = value.decimals(2);
+                  UsersService.instance.update(user);
+                  // }
+                },
+              ),
+            ],
+          ),
+        );
+      },
     );
   }
 }

@@ -5,7 +5,7 @@ import 'package:vim/extensions/performances_list.dart';
 import 'package:vim/models/exercise/performance.dart';
 import 'package:vim/models/food/consumption.dart';
 import 'package:vim/models/food/nutrition.dart';
-import 'package:vim/models/settings_model.dart';
+import 'package:vim/models/user/user.dart';
 import 'package:vim/widgets/atoms/standard_list.dart';
 import 'package:vim/widgets/molecules/nutrition_table.dart';
 import 'package:vim/widgets/molecules/simple_card.dart';
@@ -35,14 +35,14 @@ class CaloriesCard extends StatelessWidget {
     List<Consumption> consumptions = Provider.of<List<Consumption>>(context);
     List<Performance> performances = Provider.of<List<Performance>>(context);
 
-    return Consumer<SettingsModel>(
-      builder: (context, settings, _) => SimpleCard(
+    return Consumer<User?>(
+      builder: (context, user, _) => SimpleCard(
         title: 'Calories',
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceAround,
           children: [
             FutureBuilder(
-              future: settings.body.adjustedIntake(performances),
+              future: user?.targetConsumption(performances),
               builder: (context, snapshot) => TargetProgress(
                 title: 'Consumed',
                 progress: consumptions.nutrition.calories,
@@ -55,7 +55,7 @@ class CaloriesCard extends StatelessWidget {
               builder: (context, snapshot) => TargetProgress(
                 title: 'Burned',
                 progress: snapshot.data ?? 0,
-                target: settings.body.exercise,
+                target: user?.target.performance.calories,
                 barSize: TargetProgressBarSize.large,
               ),
             ),
@@ -74,11 +74,11 @@ class MacrosCard extends StatelessWidget {
     List<Consumption> consumptions = Provider.of<List<Consumption>>(context);
     List<Performance> performances = Provider.of<List<Performance>>(context);
 
-    return Consumer<SettingsModel>(
-      builder: (context, settings, _) => SimpleCard(
+    return Consumer<User?>(
+      builder: (context, user, _) => SimpleCard(
         title: 'Macros',
         child: FutureBuilder(
-          future: settings.body.adjustedIntake(performances),
+          future: user?.targetConsumption(performances),
           builder: (context, snapshot) => Row(
             mainAxisAlignment: MainAxisAlignment.spaceAround,
             children: [
@@ -89,7 +89,8 @@ class MacrosCard extends StatelessWidget {
                     : 0,
                 target: snapshot.hasData
                     ? Carbohydrates.grams(
-                        snapshot.data! * settings.body.carbohydrates,
+                        snapshot.data! *
+                            (user?.targetCarbohydrateConsumption ?? 0),
                       )
                     : null,
               ),
@@ -99,7 +100,9 @@ class MacrosCard extends StatelessWidget {
                     ? consumptions.nutrition.proteins.total ?? 0
                     : 0,
                 target: snapshot.hasData
-                    ? Proteins.grams(snapshot.data! * settings.body.proteins)
+                    ? Proteins.grams(
+                        snapshot.data! * (user?.targetProteinConsumption ?? 0),
+                      )
                     : null,
               ),
               TargetProgress(
@@ -108,7 +111,8 @@ class MacrosCard extends StatelessWidget {
                     ? consumptions.nutrition.fats.total ?? 0
                     : 0,
                 target: snapshot.hasData
-                    ? Fats.grams(snapshot.data! * settings.body.fats)
+                    ? Fats.grams(
+                        snapshot.data! * (user?.targetFatConsumption ?? 0))
                     : null,
               ),
             ],

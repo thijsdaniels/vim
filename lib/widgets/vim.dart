@@ -1,6 +1,6 @@
 import 'dart:ui';
 
-import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_auth/firebase_auth.dart' as firebase_auth;
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:vim/models/date_model.dart';
@@ -10,6 +10,7 @@ import 'package:vim/models/exercise/routine.dart';
 import 'package:vim/models/food/consumption.dart';
 import 'package:vim/models/food/ingredient.dart';
 import 'package:vim/models/food/recipe.dart';
+import 'package:vim/models/user/user.dart';
 import 'package:vim/models/settings_model.dart';
 import 'package:vim/services/consumptions_service.dart';
 import 'package:vim/services/exercises_service.dart';
@@ -17,6 +18,7 @@ import 'package:vim/services/ingredients_service.dart';
 import 'package:vim/services/performances_service.dart';
 import 'package:vim/services/recipes_service.dart';
 import 'package:vim/services/routines_service.dart';
+import 'package:vim/services/users_service.dart';
 import 'package:vim/widgets/views/home_view.dart';
 import 'package:vim/widgets/views/login_view.dart';
 
@@ -34,10 +36,15 @@ class Vim extends StatelessWidget {
             theme: lightTheme(settingsModel.color),
             darkTheme: darkTheme(settingsModel.color),
             themeMode: settingsModel.themeMode,
-            home: StreamBuilder<User?>(
-              stream: FirebaseAuth.instance.authStateChanges(),
-              builder: (context, snapshot) =>
-                  snapshot.hasData ? const HomeView() : const LoginView(),
+            home: StreamBuilder<firebase_auth.User?>(
+              stream: firebase_auth.FirebaseAuth.instance.authStateChanges(),
+              builder: (context, snapshot) => snapshot.hasData
+                  ? StreamProvider<User?>.value(
+                      initialData: null,
+                      value: UsersService.instance.get(snapshot.data!.uid),
+                      child: const HomeView(),
+                    )
+                  : const LoginView(),
             ),
           );
         },
