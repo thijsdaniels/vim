@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'package:provider/provider.dart';
 import 'package:vim/extensions/num.dart';
 import 'package:vim/models/exercise/exercise_performance.dart';
 import 'package:vim/models/exercise/performance.dart';
@@ -14,16 +13,22 @@ import 'package:vim/widgets/atoms/standard_list.dart';
 import 'package:vim/widgets/molecules/list_surface.dart';
 import 'package:vim/widgets/views/home/log/exercise_log/performance_view.dart';
 
-// TODO: Receive `performances` as a parameter instead of taking them from
-// context, so that this widget can also be used with a particular set of
-// performances other than the main one.
 class PerformancesList extends StatelessWidget {
-  const PerformancesList({super.key});
+  const PerformancesList({
+    super.key,
+    required this.performances,
+    this.physics,
+    this.padding = const EdgeInsets.all(16.0),
+    this.elevation = 1,
+  });
+
+  final List<Performance> performances;
+  final ScrollPhysics? physics;
+  final EdgeInsets padding;
+  final double elevation;
 
   @override
   Widget build(BuildContext context) {
-    List<Performance> performances = Provider.of<List<Performance>>(context);
-
     if (performances.isEmpty) {
       return Center(
         child: Icon(
@@ -34,11 +39,14 @@ class PerformancesList extends StatelessWidget {
     }
 
     return StandardList(
+      physics: physics,
+      padding: padding,
       itemCount: performances.length,
       itemBuilder: (context, index) {
         Performance performance = performances[index];
 
         return ListSurface(
+          elevation: elevation,
           icon: getIcon(performance),
           title: Text(performance.name, overflow: TextOverflow.ellipsis),
           subtitle: FutureBuilder(

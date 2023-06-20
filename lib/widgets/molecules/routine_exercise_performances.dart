@@ -56,16 +56,17 @@ class RoutineExercisePerformances extends StatelessWidget {
                           .performanceReferences[index.toString()]?.id,
                 );
 
-                return StreamBuilder<Performance>(
+                return StreamBuilder<Iterable<Performance>>(
                   stream: exercise != null
-                      ? PerformancesService.instance.latest(
-                          name: exercise.name,
+                      ? PerformancesService.instance.forExercise(
+                          exercise,
                           before: routinePerformance.timestamp,
+                          limit: 1,
                         )
                       : null,
                   builder: (context, snapshot) {
                     ExercisePerformance? latest =
-                        snapshot.data as ExercisePerformance?;
+                        snapshot.data?.first as ExercisePerformance?;
 
                     return ListSurface(
                       elevation: 4,

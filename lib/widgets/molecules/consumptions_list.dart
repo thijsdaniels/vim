@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'package:provider/provider.dart';
 import 'package:vim/models/food/consumption.dart';
 import 'package:vim/models/food/ingredient_consumption.dart';
 import 'package:vim/models/food/recipe_consumption.dart';
@@ -11,16 +10,22 @@ import 'package:vim/widgets/atoms/standard_list.dart';
 import 'package:vim/widgets/molecules/list_surface.dart';
 import 'package:vim/widgets/views/home/log/food_log/consumption_view.dart';
 
-/// TODO: Receive `consumptions` as a parameter instead of taking them from
-/// context, so that this widget can also be used with a particular set of
-/// consumptions other than the main one.
 class ConsumptionsList extends StatelessWidget {
-  const ConsumptionsList({super.key});
+  const ConsumptionsList({
+    super.key,
+    required this.consumptions,
+    this.physics,
+    this.padding = const EdgeInsets.all(16.0),
+    this.elevation,
+  });
+
+  final List<Consumption> consumptions;
+  final ScrollPhysics? physics;
+  final EdgeInsets padding;
+  final double? elevation;
 
   @override
   Widget build(BuildContext context) {
-    List<Consumption> consumptions = Provider.of<List<Consumption>>(context);
-
     if (consumptions.isEmpty) {
       return Center(
         child: Icon(
@@ -31,11 +36,14 @@ class ConsumptionsList extends StatelessWidget {
     }
 
     return StandardList(
+      physics: physics,
+      padding: padding,
       itemCount: consumptions.length,
       itemBuilder: (context, index) {
         Consumption consumption = consumptions[index];
 
         return ListSurface(
+          elevation: elevation,
           icon: consumption is IngredientConsumption &&
                   consumption.ingredient.icon != null
               ? Icons8Icon(consumption.ingredient.icon!)

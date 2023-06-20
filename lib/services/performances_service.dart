@@ -76,21 +76,29 @@ class PerformancesService extends Service<Performance> {
   /// that this class extends `Service` with. This is technically correct, since
   /// the query performs a filter on the exercise name, but it is still an
   /// exception to the rule.
-  Stream<ExercisePerformance> latest({
-    required String name,
+  Stream<List<ExercisePerformance>> forExercise(
+    Exercise exercise, {
     Timestamp? before,
+    int? limit,
   }) {
-    return FirebaseFirestore.instance
+    var query = FirebaseFirestore.instance
         .collectionGroup('performances')
         .withConverter<Performance>(
           fromFirestore: _fromFirestore,
           toFirestore: _toFirestore,
         )
-        .where('exercise.name', isEqualTo: name)
+        .where('exercise.reference', isEqualTo: exercise.reference)
         .where('timestamp', isLessThan: before)
-        .orderBy('timestamp', descending: true)
-        .limit(1)
-        .snapshots()
-        .map((snapshot) => snapshot.docs[0].data() as ExercisePerformance);
+        .orderBy('timestamp', descending: true);
+
+    if (limit != null) {
+      query = query.limit(limit);
+    }
+
+    return query.snapshots().map(
+          (snapshot) => snapshot.docs
+              .map((doc) => doc.data() as ExercisePerformance)
+              .toList(),
+        );
   }
 }

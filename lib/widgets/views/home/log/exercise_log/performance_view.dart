@@ -141,6 +141,13 @@ class _PerformanceViewState extends State<PerformanceView> {
                           Text('${snapshot.data?.round()} cal'),
                         ],
                       ),
+                      TableRow(
+                        children: [
+                          const SecondaryText('Timestamp'),
+                          const SizedBox(width: 32),
+                          Text(performance.timestamp.toDate().toString()),
+                        ],
+                      ),
                     ],
                   ),
                 ),

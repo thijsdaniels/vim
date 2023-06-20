@@ -2,9 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:vim/extensions/string.dart';
 import 'package:vim/models/exercise/exercise.dart';
 import 'package:vim/services/exercises_service.dart';
+import 'package:vim/services/performances_service.dart';
 import 'package:vim/widgets/atoms/exercise_muscle_groups.dart';
-import 'package:vim/widgets/atoms/secondary_text.dart';
 import 'package:vim/widgets/atoms/standard_list.dart';
+import 'package:vim/widgets/atoms/stats_table.dart';
+import 'package:vim/widgets/molecules/performances_list.dart';
 import 'package:vim/widgets/molecules/simple_card.dart';
 import 'package:vim/widgets/molecules/with_confirmation_dialog.dart';
 import 'package:vim/widgets/views/home/exercise/exercises/create_exercise_view.dart';
@@ -70,57 +72,39 @@ class ExerciseView extends StatelessWidget {
             children: [
               SimpleCard(
                 title: 'Details',
-                child: Table(
-                  defaultColumnWidth: const IntrinsicColumnWidth(),
-                  children: [
-                    TableRow(
-                      children: [
-                        const SecondaryText('Name'),
-                        const SizedBox(width: 32),
-                        Text(exercise.name),
-                      ],
-                    ),
-                    TableRow(
-                      children: [
-                        const SecondaryText('Type'),
-                        const SizedBox(width: 32),
-                        Text(exercise.type.name.toTitleCase()),
-                      ],
-                    ),
-                  ],
+                child: StatsTable(
+                  items: {
+                    'Name': exercise.name,
+                    'Type': exercise.type.name.toTitleCase(),
+                  },
                 ),
               ),
               ExerciseMuscleGroups(exercise: exercise),
               SimpleCard(
                 title: 'Muscle Groups',
-                child: Table(
-                  defaultColumnWidth: const IntrinsicColumnWidth(),
-                  children: [
-                    TableRow(
-                      children: [
-                        const SecondaryText('Primary'),
-                        const SizedBox(width: 32),
-                        exercise.muscleGroups.primary != null
-                            ? Text(exercise.muscleGroups.primary!.name
-                                .toTitleCase())
-                            : const SecondaryText('--'),
-                      ],
-                    ),
-                    TableRow(
-                      children: [
-                        const SecondaryText('Secondary'),
-                        const SizedBox(width: 32),
-                        exercise.muscleGroups.secondary.isNotEmpty
-                            ? Text(
-                                exercise.muscleGroups.secondary
-                                    .map((muscleGroup) =>
-                                        muscleGroup.name.toTitleCase())
-                                    .join(', '),
-                              )
-                            : const SecondaryText('--'),
-                      ],
-                    ),
-                  ],
+                child: StatsTable(
+                  items: {
+                    'Primary':
+                        exercise.muscleGroups.primary?.name.toTitleCase(),
+                    'Secondary': exercise.muscleGroups.secondary.isNotEmpty
+                        ? exercise.muscleGroups.secondary
+                            .map(
+                                (muscleGroup) => muscleGroup.name.toTitleCase())
+                            .join(', ')
+                        : null,
+                  },
+                ),
+              ),
+              StreamBuilder(
+                stream: PerformancesService.instance.forExercise(exercise),
+                builder: (context, snapshot) => SimpleCard(
+                  title: "History",
+                  child: PerformancesList(
+                    performances: snapshot.data ?? [],
+                    padding: EdgeInsets.zero,
+                    physics: const NeverScrollableScrollPhysics(),
+                    elevation: 4,
+                  ),
                 ),
               ),
             ],
