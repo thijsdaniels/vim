@@ -32,7 +32,8 @@ class PerformancesService extends Service<Performance> {
     Map<String, dynamic> data = snapshot.data()!;
 
     if (data['exercise'] != null) {
-      switch (ExerciseType.values.byName(data['exercise']['type'])) {
+      switch (
+          ExerciseType.values.byName(data['exercise']['snapshot']['type'])) {
         case ExerciseType.manual:
           return ExercisePerformance.fromSnapshot(snapshot);
         case ExerciseType.resistance:
@@ -69,10 +70,12 @@ class PerformancesService extends Service<Performance> {
 
   /// TODO: This is a strange exception to the pattern, since it does not query
   /// just the root `performances` collection, but the entire collection _group_
-  /// of `performances. Technically, this is a _different_ collection, and I
+  /// of `performances`. Technically, this is a _different_ collection, and I
   /// think I should create a separate class for that. Another quirk is that it
   /// returns a stream of `ExercisePerformance` rather than the `Performance`
-  /// that this class extends `Service` with.
+  /// that this class extends `Service` with. This is technically correct, since
+  /// the query performs a filter on the exercise name, but it is still an
+  /// exception to the rule.
   Stream<ExercisePerformance> latest({
     required String name,
     Timestamp? before,

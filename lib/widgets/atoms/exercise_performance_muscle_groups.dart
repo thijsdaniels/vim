@@ -18,16 +18,18 @@ class ExercisePerformanceMuscleGroups extends StatelessWidget {
         Flexible(
           child: MuscleGroupsSurface(
             view: MuscleMapView.front,
-            primary: [performance.exercise.muscleGroups.primary].nonNulls,
-            secondary: performance.exercise.muscleGroups.secondary,
+            primary:
+                [performance.exercise.snapshot.muscleGroups.primary].nonNulls,
+            secondary: performance.exercise.snapshot.muscleGroups.secondary,
           ),
         ),
         const SizedBox(width: 12),
         Flexible(
           child: MuscleGroupsSurface(
             view: MuscleMapView.back,
-            primary: [performance.exercise.muscleGroups.primary].nonNulls,
-            secondary: performance.exercise.muscleGroups.secondary,
+            primary:
+                [performance.exercise.snapshot.muscleGroups.primary].nonNulls,
+            secondary: performance.exercise.snapshot.muscleGroups.secondary,
           ),
         ),
       ],

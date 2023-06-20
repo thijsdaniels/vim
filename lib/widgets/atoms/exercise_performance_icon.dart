@@ -14,8 +14,8 @@ class ExercisePerformanceIcon extends StatelessWidget {
   Widget build(BuildContext context) {
     return MuscleGroupsFocusIcon(
       elevation: 4,
-      primary: performance.exercise.muscleGroups.primary,
-      secondary: performance.exercise.muscleGroups.secondary,
+      primary: performance.exercise.snapshot.muscleGroups.primary,
+      secondary: performance.exercise.snapshot.muscleGroups.secondary,
     );
   }
 }

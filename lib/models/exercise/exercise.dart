@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/foundation.dart';
 import 'package:vim/models/document.dart';
+import 'package:vim/models/exercise/exercise_performance.dart';
 import 'package:vim/widgets/atoms/muscle_map/muscle_map.dart';
 
 // TODO: Remove in favor of relating an exercise to a set of Equipment.
@@ -73,5 +74,9 @@ class Exercise extends Document {
             .map((muscleGroup) => describeEnum(muscleGroup)),
       },
     };
+  }
+
+  ExerciseSnapshot toSnapshot() {
+    return ExerciseSnapshot(this);
   }
 }

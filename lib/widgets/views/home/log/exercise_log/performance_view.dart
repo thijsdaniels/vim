@@ -123,7 +123,7 @@ class _PerformanceViewState extends State<PerformanceView> {
                           children: [
                             const SecondaryText('Exercise'),
                             const SizedBox(width: 32),
-                            Text(performance.exercise.name),
+                            Text(performance.exercise.snapshot.name),
                           ],
                         ),
                       if (performance is RoutinePerformance)

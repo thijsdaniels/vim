@@ -100,14 +100,14 @@ class _CreateExercisePerformanceViewState
                       case ExerciseType.manual:
                         exercisePerformance = ExercisePerformance(
                           timestamp: dateModel.timestamp,
-                          exercise: widget.exercise!,
+                          exercise: widget.exercise!.toSnapshot(),
                           calories: _calories!,
                         );
                         break;
                       case ExerciseType.resistance:
                         exercisePerformance = ResistanceExercisePerformance(
                           timestamp: dateModel.timestamp,
-                          exercise: widget.exercise!,
+                          exercise: widget.exercise!.toSnapshot(),
                           duration: Duration(minutes: _minutes!),
                           watts: _watts!,
                         );
@@ -115,7 +115,7 @@ class _CreateExercisePerformanceViewState
                       case ExerciseType.weights:
                         exercisePerformance = WeightsExercisePerformance(
                           timestamp: dateModel.timestamp,
-                          exercise: widget.exercise!,
+                          exercise: widget.exercise!.toSnapshot(),
                           sets: Sets.fromRecords(_sets),
                         );
                         break;
@@ -221,6 +221,6 @@ class _CreateExercisePerformanceViewState
 
   ExerciseType get exerciseType {
     return (widget.exercise?.type ??
-        widget.exercisePerformance?.exercise.type)!;
+        widget.exercisePerformance?.exercise.snapshot.type)!;
   }
 }

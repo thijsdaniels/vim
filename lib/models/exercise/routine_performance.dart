@@ -20,7 +20,8 @@ class RoutinePerformance extends Performance {
               fromFirestore: (snapshot, _) {
                 Map<String, dynamic> data = snapshot.data()!;
 
-                switch (ExerciseType.values.byName(data['exercise']['type'])) {
+                switch (ExerciseType.values
+                    .byName(data['exercise']['snapshot']['type'])) {
                   case ExerciseType.manual:
                     return ExercisePerformance.fromSnapshot(snapshot);
                   case ExerciseType.resistance:

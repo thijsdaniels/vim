@@ -19,13 +19,13 @@ class RoutinePerformanceMuscleGroups extends StatelessWidget {
       stream: performance.performances,
       builder: (context, snapshot) {
         var primary = snapshot.data
-                ?.map(
-                    (performance) => performance.exercise.muscleGroups.primary)
+                ?.map((performance) =>
+                    performance.exercise.snapshot.muscleGroups.primary)
                 .nonNulls ??
             [];
         var secondary = snapshot.data
                 ?.map((performance) =>
-                    performance.exercise.muscleGroups.secondary)
+                    performance.exercise.snapshot.muscleGroups.secondary)
                 .flattened
                 .nonNulls ??
             [];

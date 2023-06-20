@@ -23,12 +23,12 @@ class RoutinePerformanceIcon extends StatelessWidget {
           elevation: elevation,
           primary: snapshot.data
                   ?.map((performance) =>
-                      performance.exercise.muscleGroups.primary)
+                      performance.exercise.snapshot.muscleGroups.primary)
                   .nonNulls ??
               [],
           secondary: snapshot.data
                   ?.map((performance) =>
-                      performance.exercise.muscleGroups.secondary)
+                      performance.exercise.snapshot.muscleGroups.secondary)
                   .flattened
                   .nonNulls ??
               [],

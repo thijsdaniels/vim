@@ -201,14 +201,14 @@ class PerformedCheckbox extends StatelessWidget {
             case ExerciseType.manual:
               exercisePerformance = ExercisePerformance(
                 timestamp: Timestamp.now(),
-                exercise: exercise,
+                exercise: exercise.toSnapshot(),
                 calories: await previousExercisePerformance?.calories ?? 0,
               );
               break;
             case ExerciseType.resistance:
               exercisePerformance = ResistanceExercisePerformance(
                 timestamp: Timestamp.now(),
-                exercise: exercise,
+                exercise: exercise.toSnapshot(),
                 duration: (previousExercisePerformance
                             as ResistanceExercisePerformance?)
                         ?.duration ??
@@ -222,7 +222,7 @@ class PerformedCheckbox extends StatelessWidget {
             case ExerciseType.weights:
               exercisePerformance = WeightsExercisePerformance(
                 timestamp: Timestamp.now(),
-                exercise: exercise,
+                exercise: exercise.toSnapshot(),
                 sets: Sets(
                   (previousExercisePerformance as WeightsExercisePerformance?)
                           ?.sets

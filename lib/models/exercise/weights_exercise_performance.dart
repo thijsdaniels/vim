@@ -1,9 +1,10 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:vim/models/exercise/exercise.dart';
 import 'package:vim/models/exercise/exercise_performance.dart';
-import 'package:vim/models/exercise/set.dart';
 import 'package:vim/models/exercise/sets.dart';
 
+/// TODO: Rename this class to `ResistanceExercisePerformance`.
+/// TODO: Delete this class in favor of relating `Equipment` to an
+/// `ExercisePerformance`.
 class WeightsExercisePerformance extends ExercisePerformance {
   DocumentReference? _reference;
 
@@ -11,9 +12,6 @@ class WeightsExercisePerformance extends ExercisePerformance {
 
   @override
   DocumentReference? get reference => _reference;
-
-  @override
-  String get name => exercise.name;
 
   @override
   Future<num> get calories => Future(() => sets.calories);
@@ -38,18 +36,19 @@ class WeightsExercisePerformance extends ExercisePerformance {
   static WeightsExercisePerformance fromMap(Map<String, dynamic> map) {
     return WeightsExercisePerformance(
       timestamp: map['timestamp'],
-      exercise: Exercise.fromMap(map['exercise']),
-      sets: map['sets'] is! num
-          ? Sets.fromMap(map['sets'])
-          : Sets(
-              List.filled(
-                map['sets'],
-                Set(
-                  repetitions: map['repetitions'],
-                  weight: map['weight'],
-                ),
-              ),
-            ),
+      exercise: ExerciseSnapshot.fromMap(map['exercise']),
+      sets: Sets.fromMap(map['sets']),
+      // sets: map['sets'] is! num
+      //     ? Sets.fromMap(map['sets'])
+      //     : Sets(
+      //         List.filled(
+      //           map['sets'],
+      //           Set(
+      //             repetitions: map['repetitions'],
+      //             weight: map['weight'],
+      //           ),
+      //         ),
+      //       ),
     );
   }
 
