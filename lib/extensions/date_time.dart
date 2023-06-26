@@ -1,3 +1,5 @@
+import 'package:intl/intl.dart';
+
 extension DateExtension on DateTime {
   DateTime startOfDay() => withTime(0, 0, 0, 0, 0);
 
@@ -55,5 +57,17 @@ extension DateExtension on DateTime {
 
   bool isAtSameDayAs(DateTime other) {
     return other.year == year && other.month == month && other.day == day;
+  }
+
+  String toDateTimeString() {
+    return '${toDateString()} ${toTimeString()}';
+  }
+
+  String toDateString() {
+    return DateFormat.yMMMMd('en_US').format(this);
+  }
+
+  String toTimeString() {
+    return DateFormat.Hm('en_US').format(this);
   }
 }

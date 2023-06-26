@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:vim/extensions/date_time.dart';
 import 'package:vim/models/exercise/exercise_performance.dart';
 import 'package:vim/models/exercise/performance.dart';
 import 'package:vim/models/exercise/resistance_exercise_performance.dart';
@@ -145,7 +146,7 @@ class _PerformanceViewState extends State<PerformanceView> {
                         children: [
                           const SecondaryText('Timestamp'),
                           const SizedBox(width: 32),
-                          Text(performance.timestamp.toDate().toString()),
+                          Text(performance.timestamp.toDate().toDateTimeString()),
                         ],
                       ),
                     ],

@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:vim/extensions/date_time.dart';
 import 'package:vim/models/date_model.dart';
@@ -25,7 +24,7 @@ class DateStepper extends StatelessWidget {
                       ? 'Tomorrow'
                       : dateModel.date.isYesterday()
                           ? 'Yesterday'
-                          : DateFormat.yMMMMd('en_US').format(dateModel.date),
+                          : dateModel.date.toDateString(),
               style: Theme.of(context).textTheme.titleMedium,
             ),
           ),

@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
+import 'package:vim/extensions/date_time.dart';
 import 'package:vim/models/food/consumption.dart';
 import 'package:vim/models/food/ingredient_consumption.dart';
 import 'package:vim/models/food/recipe_consumption.dart';
@@ -83,7 +83,7 @@ class ConsumptionsList extends StatelessWidget {
             );
           },
           actions: SecondaryText(
-            DateFormat.Hm('en_US').format(consumption.timestamp.toDate()),
+            consumption.timestamp.toDate().toTimeString(),
           ),
           // trailing: Row(
           //   mainAxisSize: MainAxisSize.min,

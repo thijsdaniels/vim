@@ -1,6 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
 import 'package:vim/extensions/date_time.dart';
 import 'package:vim/models/date_model.dart';
 import 'package:vim/models/food/amount.dart';
@@ -117,8 +116,7 @@ class _CreateRecipeConsumptionViewState
                           decoration: const InputDecoration(
                             label: Text("Date"),
                           ),
-                          initialValue: DateFormat.yMMMMd('en_US')
-                              .format(timestamp.toDate()),
+                          initialValue: timestamp.toDate().toDateString(),
                           enabled: false,
                         ),
                       ),
