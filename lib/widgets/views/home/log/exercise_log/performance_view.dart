@@ -5,6 +5,7 @@ import 'package:vim/models/exercise/performance.dart';
 import 'package:vim/models/exercise/resistance_exercise_performance.dart';
 import 'package:vim/models/exercise/routine_performance.dart';
 import 'package:vim/models/exercise/weights_exercise_performance.dart';
+import 'package:vim/services/performances_collection_group.dart';
 import 'package:vim/services/performances_service.dart';
 import 'package:vim/widgets/atoms/exercise_performance_muscle_groups.dart';
 import 'package:vim/widgets/atoms/routine_performance_muscle_groups.dart';
@@ -21,11 +22,11 @@ import 'package:vim/widgets/views/loading_view.dart';
 import 'package:vim/widgets/views/not_found_view.dart';
 
 class PerformanceView extends StatefulWidget {
-  final String performanceId;
+  final String path;
 
   const PerformanceView({
     super.key,
-    required this.performanceId,
+    required this.path,
   });
 
   @override
@@ -37,7 +38,7 @@ class _PerformanceViewState extends State<PerformanceView> {
   @override
   Widget build(BuildContext context) {
     return StreamBuilder<Performance?>(
-      stream: PerformancesService.instance.get(widget.performanceId),
+      stream: PerformancesCollectionGroup.instance.get(widget.path),
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
           return const LoadingView();

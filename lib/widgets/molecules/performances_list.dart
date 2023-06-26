@@ -74,7 +74,7 @@ class PerformancesList extends StatelessWidget {
             Navigator.of(context).push(
               MaterialPageRoute(
                 builder: (context) => PerformanceView(
-                  performanceId: performance.reference!.id,
+                  path: performance.reference!.path,
                 ),
               ),
             );

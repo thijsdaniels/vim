@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:vim/extensions/string.dart';
 import 'package:vim/models/exercise/exercise.dart';
 import 'package:vim/services/exercises_service.dart';
-import 'package:vim/services/performances_service.dart';
+import 'package:vim/services/performances_collection_group.dart';
 import 'package:vim/widgets/atoms/exercise_muscle_groups.dart';
 import 'package:vim/widgets/atoms/standard_list.dart';
 import 'package:vim/widgets/atoms/stats_table.dart';
@@ -101,7 +101,8 @@ class ExerciseView extends StatelessWidget {
                 ),
               ),
               StreamBuilder(
-                stream: PerformancesService.instance.forExercise(exercise),
+                stream:
+                    PerformancesCollectionGroup.instance.forExercise(exercise),
                 builder: (context, snapshot) => SimpleCard(
                   title: "History",
                   child: PerformancesList(

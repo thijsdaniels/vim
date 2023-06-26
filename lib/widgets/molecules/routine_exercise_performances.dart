@@ -11,13 +11,14 @@ import 'package:vim/models/exercise/routine_performance.dart';
 import 'package:vim/models/exercise/set.dart';
 import 'package:vim/models/exercise/sets.dart';
 import 'package:vim/models/exercise/weights_exercise_performance.dart';
-import 'package:vim/services/performances_service.dart';
+import 'package:vim/services/performances_collection_group.dart';
 import 'package:vim/widgets/atoms/muscle_groups_focus_icon.dart';
 import 'package:vim/widgets/atoms/secondary_text.dart';
 import 'package:vim/widgets/atoms/standard_list.dart';
 import 'package:vim/widgets/molecules/list_surface.dart';
 import 'package:vim/widgets/views/home/log/exercise_log/create_exercise_performance_view.dart';
 
+// TODO: This widget is a mess and should be refactored and abstracted.
 class RoutineExercisePerformances extends StatelessWidget {
   const RoutineExercisePerformances({
     super.key,
@@ -58,7 +59,7 @@ class RoutineExercisePerformances extends StatelessWidget {
 
                 return StreamBuilder<Iterable<Performance>>(
                   stream: exercise != null
-                      ? PerformancesService.instance.forExercise(
+                      ? PerformancesCollectionGroup.instance.forExercise(
                           exercise,
                           before: routinePerformance.timestamp,
                           limit: 1,
@@ -66,7 +67,9 @@ class RoutineExercisePerformances extends StatelessWidget {
                       : null,
                   builder: (context, snapshot) {
                     ExercisePerformance? latest =
-                        snapshot.data?.first as ExercisePerformance?;
+                        snapshot.data != null && snapshot.data!.isNotEmpty
+                            ? snapshot.data!.first as ExercisePerformance
+                            : null;
 
                     return ListSurface(
                       elevation: 4,
