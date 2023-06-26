@@ -83,16 +83,13 @@ class _CreateExercisePerformanceViewState
 
                   if (exercisePerformance != null) {
                     if (exercisePerformance is ResistanceExercisePerformance) {
-                      exercisePerformance.timestamp = dateModel.timestamp;
                       exercisePerformance.duration =
                           Duration(minutes: _minutes!);
                       exercisePerformance.watts = _watts!;
                     } else if (exercisePerformance
                         is WeightsExercisePerformance) {
-                      exercisePerformance.timestamp = dateModel.timestamp;
                       exercisePerformance.sets = Sets.fromRecords(_sets);
                     } else {
-                      exercisePerformance.timestamp = dateModel.timestamp;
                       exercisePerformance.setCalories(_calories!);
                     }
                   } else {
