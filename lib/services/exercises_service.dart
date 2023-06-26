@@ -1,4 +1,3 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:vim/models/exercise/exercise.dart';
 import 'package:vim/services/service.dart';
 
@@ -14,11 +13,10 @@ import 'package:vim/services/service.dart';
 class ExercisesService extends Service<Exercise> {
   static final instance = ExercisesService();
 
+  ExercisesService() : super(path: 'exercises');
+
   @override
-  final CollectionReference<Exercise> collection = FirebaseFirestore.instance
-      .collection('exercises')
-      .withConverter<Exercise>(
-        fromFirestore: (snapshot, _) => Exercise.fromSnapshot(snapshot),
-        toFirestore: (exercise, _) => exercise.toMap(),
-      );
+  Exercise fromFirestore(snapshot, options) {
+    return Exercise.fromSnapshot(snapshot);
+  }
 }

@@ -19,16 +19,10 @@ import 'package:vim/services/service.dart';
 class PerformancesService extends Service<Performance> {
   static final instance = PerformancesService();
 
-  @override
-  final CollectionReference<Performance> collection = FirebaseFirestore.instance
-      .collection('performances')
-      .withConverter<Performance>(
-        fromFirestore: _fromFirestore,
-        toFirestore: _toFirestore,
-      );
+  PerformancesService() : super(path: 'performances');
 
-  static Performance _fromFirestore(
-      DocumentSnapshot<Map<String, dynamic>> snapshot, SnapshotOptions? _) {
+  @override
+  Performance fromFirestore(snapshot, options) {
     Map<String, dynamic> data = snapshot.data()!;
 
     if (data['exercise'] != null) {
@@ -48,9 +42,6 @@ class PerformancesService extends Service<Performance> {
     }
   }
 
-  static Map<String, dynamic> _toFirestore(performance, _) =>
-      performance.toMap();
-
   Stream<List<Performance>> forDate(DateTime date) {
     DateTime today = DateTime(date.year, date.month, date.day);
     DateTime tomorrow = today.add(const Duration(days: 1));
@@ -65,40 +56,6 @@ class PerformancesService extends Service<Performance> {
         .snapshots()
         .map(
           (snapshot) => snapshot.docs.map((doc) => doc.data()).toList(),
-        );
-  }
-
-  /// TODO: This is a strange exception to the pattern, since it does not query
-  /// just the root `performances` collection, but the entire collection _group_
-  /// of `performances`. Technically, this is a _different_ collection, and I
-  /// think I should create a separate class for that. Another quirk is that it
-  /// returns a stream of `ExercisePerformance` rather than the `Performance`
-  /// that this class extends `Service` with. This is technically correct, since
-  /// the query performs a filter on the exercise name, but it is still an
-  /// exception to the rule.
-  Stream<List<ExercisePerformance>> forExercise(
-    Exercise exercise, {
-    Timestamp? before,
-    int? limit,
-  }) {
-    var query = FirebaseFirestore.instance
-        .collectionGroup('performances')
-        .withConverter<Performance>(
-          fromFirestore: _fromFirestore,
-          toFirestore: _toFirestore,
-        )
-        .where('exercise.reference', isEqualTo: exercise.reference)
-        .where('timestamp', isLessThan: before)
-        .orderBy('timestamp', descending: true);
-
-    if (limit != null) {
-      query = query.limit(limit);
-    }
-
-    return query.snapshots().map(
-          (snapshot) => snapshot.docs
-              .map((doc) => doc.data() as ExercisePerformance)
-              .toList(),
         );
   }
 }

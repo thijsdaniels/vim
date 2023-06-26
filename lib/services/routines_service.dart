@@ -1,4 +1,3 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:vim/models/exercise/routine.dart';
 import 'package:vim/services/service.dart';
 
@@ -14,10 +13,10 @@ import 'package:vim/services/service.dart';
 class RoutinesService extends Service<Routine> {
   static final instance = RoutinesService();
 
+  RoutinesService() : super(path: 'routines');
+
   @override
-  final CollectionReference<Routine> collection =
-      FirebaseFirestore.instance.collection('routines').withConverter<Routine>(
-            fromFirestore: (snapshot, _) => Routine.fromSnapshot(snapshot),
-            toFirestore: (routine, _) => routine.toMap(),
-          );
+  Routine fromFirestore(snapshot, options) {
+    return Routine.fromSnapshot(snapshot);
+  }
 }

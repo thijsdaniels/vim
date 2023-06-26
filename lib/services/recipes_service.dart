@@ -1,4 +1,3 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:vim/models/food/recipe.dart';
 import 'package:vim/services/service.dart';
 
@@ -14,10 +13,10 @@ import 'package:vim/services/service.dart';
 class RecipesService extends Service<Recipe> {
   static final instance = RecipesService();
 
+  RecipesService() : super(path: 'recipes');
+
   @override
-  final CollectionReference<Recipe> collection =
-      FirebaseFirestore.instance.collection('recipes').withConverter<Recipe>(
-            fromFirestore: (snapshot, _) => Recipe.fromSnapshot(snapshot),
-            toFirestore: (recipe, _) => recipe.toMap(),
-          );
+  Recipe fromFirestore(snapshot, options) {
+    return Recipe.fromSnapshot(snapshot);
+  }
 }

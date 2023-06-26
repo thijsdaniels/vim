@@ -16,23 +16,20 @@ import 'package:vim/services/service.dart';
 class ConsumptionsService extends Service<Consumption> {
   static final instance = ConsumptionsService();
 
-  @override
-  final CollectionReference<Consumption> collection = FirebaseFirestore.instance
-      .collection('consumptions')
-      .withConverter<Consumption>(
-        fromFirestore: (snapshot, _) {
-          Map<String, dynamic> data = snapshot.data()!;
+  ConsumptionsService() : super(path: 'consumptions');
 
-          if (data['recipe'] != null) {
-            return RecipeConsumption.fromSnapshot(snapshot);
-          } else if (data['ingredient'] != null) {
-            return IngredientConsumption.fromSnapshot(snapshot);
-          } else {
-            return Consumption.fromSnapshot(snapshot);
-          }
-        },
-        toFirestore: (consumption, _) => consumption.toMap(),
-      );
+  @override
+  Consumption fromFirestore(snapshot, options) {
+    Map<String, dynamic> data = snapshot.data()!;
+
+    if (data['recipe'] != null) {
+      return RecipeConsumption.fromSnapshot(snapshot);
+    } else if (data['ingredient'] != null) {
+      return IngredientConsumption.fromSnapshot(snapshot);
+    } else {
+      return Consumption.fromSnapshot(snapshot);
+    }
+  }
 
   Stream<List<Consumption>> forDate(DateTime date) {
     DateTime today = DateTime(date.year, date.month, date.day);
