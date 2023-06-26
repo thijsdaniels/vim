@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:vim/models/food/ingredient.dart';
 import 'package:vim/services/ingredients_service.dart';
-import 'package:vim/widgets/atoms/secondary_text.dart';
 import 'package:vim/widgets/atoms/standard_list.dart';
+import 'package:vim/widgets/atoms/stats_table.dart';
 import 'package:vim/widgets/molecules/nutrition_table.dart';
 import 'package:vim/widgets/molecules/simple_card.dart';
 import 'package:vim/widgets/molecules/with_confirmation_dialog.dart';
@@ -69,43 +69,16 @@ class IngredientView extends StatelessWidget {
             children: [
               SimpleCard(
                 title: 'Details',
-                child: Center(
-                  child: Table(
-                    defaultColumnWidth: const IntrinsicColumnWidth(),
-                    children: [
-                      TableRow(
-                        children: [
-                          const SecondaryText('Name'),
-                          const SizedBox(width: 32),
-                          Text(ingredient.name),
-                        ],
-                      ),
-                      TableRow(
-                        children: [
-                          const SecondaryText('Brand'),
-                          const SizedBox(width: 32),
-                          ingredient.brand != null
-                              ? Text(ingredient.brand!)
-                              : const SecondaryText('--'),
-                        ],
-                      ),
-                      TableRow(
-                        children: [
-                          const SecondaryText('Serving'),
-                          const SizedBox(width: 32),
-                          ingredient.serving != null
-                              ? Row(
-                                  children: [
-                                    Text(ingredient.serving.toString()),
-                                    const SizedBox(width: 4),
-                                    const SecondaryText('g'),
-                                  ],
-                                )
-                              : const SecondaryText('--'),
-                        ],
-                      ),
-                    ],
-                  ),
+                child: StatsTable(
+                  children: [
+                    StatsRow('Name', ingredient.name),
+                    StatsRow('Brand', ingredient.brand),
+                    StatsRow(
+                      'Serving',
+                      ingredient.serving.toString(),
+                      unit: 'g',
+                    ),
+                  ],
                 ),
               ),
 
@@ -119,10 +92,8 @@ class IngredientView extends StatelessWidget {
                     ingredient.nutritionPerServing ? '1 Serving' : '100 Grams',
                   )
                 ],
-                child: Center(
-                  child: NutritionTable(
-                    nutrition: ingredient.nutrition,
-                  ),
+                child: NutritionTable(
+                  nutrition: ingredient.nutrition,
                 ),
               ),
             ],

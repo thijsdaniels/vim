@@ -132,10 +132,8 @@ class NutritionCard extends StatelessWidget {
 
     return SimpleCard(
       title: 'Nutrition',
-      child: Center(
-        child: NutritionTable(
-          nutrition: consumptions.nutrition,
-        ),
+      child: NutritionTable(
+        nutrition: consumptions.nutrition,
       ),
     );
   }

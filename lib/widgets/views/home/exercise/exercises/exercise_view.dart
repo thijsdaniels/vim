@@ -73,26 +73,31 @@ class ExerciseView extends StatelessWidget {
               SimpleCard(
                 title: 'Details',
                 child: StatsTable(
-                  items: {
-                    'Name': exercise.name,
-                    'Type': exercise.type.name.toTitleCase(),
-                  },
+                  children: [
+                    StatsRow('Name', exercise.name),
+                    StatsRow('Type', exercise.type.name.toTitleCase()),
+                  ],
                 ),
               ),
               ExerciseMuscleGroups(exercise: exercise),
               SimpleCard(
                 title: 'Muscle Groups',
                 child: StatsTable(
-                  items: {
-                    'Primary':
-                        exercise.muscleGroups.primary?.name.toTitleCase(),
-                    'Secondary': exercise.muscleGroups.secondary.isNotEmpty
-                        ? exercise.muscleGroups.secondary
-                            .map(
-                                (muscleGroup) => muscleGroup.name.toTitleCase())
-                            .join(', ')
-                        : null,
-                  },
+                  children: [
+                    StatsRow(
+                      'Primary',
+                      exercise.muscleGroups.primary?.name.toTitleCase(),
+                    ),
+                    StatsRow(
+                      'Secondary',
+                      exercise.muscleGroups.secondary.isNotEmpty
+                          ? exercise.muscleGroups.secondary
+                              .map((muscleGroup) =>
+                                  muscleGroup.name.toTitleCase())
+                              .join(', ')
+                          : null,
+                    ),
+                  ],
                 ),
               ),
               StreamBuilder(

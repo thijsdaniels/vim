@@ -3,8 +3,8 @@ import 'package:vim/models/exercise/exercise.dart';
 import 'package:vim/models/exercise/routine.dart';
 import 'package:vim/services/routines_service.dart';
 import 'package:vim/widgets/atoms/routine_muscle_groups.dart';
-import 'package:vim/widgets/atoms/secondary_text.dart';
 import 'package:vim/widgets/atoms/standard_list.dart';
+import 'package:vim/widgets/atoms/stats_table.dart';
 import 'package:vim/widgets/molecules/exercises_list.dart';
 import 'package:vim/widgets/molecules/simple_card.dart';
 import 'package:vim/widgets/molecules/with_confirmation_dialog.dart';
@@ -72,24 +72,12 @@ class RoutineView extends StatelessWidget {
             children: [
               SimpleCard(
                 title: 'Details',
-                child: Table(
-                  defaultColumnWidth: const IntrinsicColumnWidth(),
+                child: StatsTable(
                   children: [
-                    TableRow(
-                      children: [
-                        const SecondaryText('Name'),
-                        const SizedBox(width: 32),
-                        Text(routine.name),
-                      ],
-                    ),
-                    TableRow(
-                      children: [
-                        const SecondaryText('Exercises'),
-                        const SizedBox(width: 32),
-                        Text(
-                          routine.exerciseReferences.length.toString(),
-                        ),
-                      ],
+                    StatsRow('Name', routine.name),
+                    StatsRow(
+                      'Exercises',
+                      routine.exerciseReferences.length.toString(),
                     ),
                   ],
                 ),

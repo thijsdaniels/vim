@@ -4,28 +4,46 @@ import 'package:vim/widgets/atoms/secondary_text.dart';
 class StatsTable extends StatelessWidget {
   const StatsTable({
     super.key,
-    required this.items,
+    required this.children,
   });
 
-  final Map<String, String?> items;
+  final List<StatsRow> children;
 
   @override
   Widget build(BuildContext context) {
     return Table(
       defaultColumnWidth: const IntrinsicColumnWidth(),
-      children: items.entries
-          .map(
-            (entry) => TableRow(
-              children: [
-                SecondaryText(entry.key),
-                const SizedBox(width: 32),
-                entry.value != null
-                    ? Text(entry.value!)
-                    : const SecondaryText('--'),
-              ],
-            ),
-          )
-          .toList(),
+      children: children,
     );
+  }
+}
+
+class StatsRow extends TableRow {
+  final String label;
+  final String? value;
+  final String? unit;
+
+  const StatsRow(
+    this.label,
+    this.value, {
+    super.key,
+    this.unit,
+  });
+
+  @override
+  get children {
+    return [
+      SecondaryText(label),
+      const SizedBox(width: 32),
+      Row(
+        children: [
+          value != null ? Text(value!) : const SecondaryText('--'),
+          if (unit != null) ...[
+            const SizedBox(width: 4),
+            SecondaryText(unit!),
+          ]
+        ],
+      ),
+    ];
   }
 }

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:vim/extensions/num.dart';
 import 'package:vim/models/food/nutrition.dart';
 import 'package:vim/widgets/atoms/secondary_text.dart';
+import 'package:vim/widgets/atoms/stats_table.dart';
 
 class NutritionTable extends StatelessWidget {
   final Nutrition nutrition;
@@ -10,73 +11,38 @@ class NutritionTable extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Table(
-      defaultColumnWidth: const IntrinsicColumnWidth(),
+    return StatsTable(
       children: [
+        NutritionRow('Calories', nutrition.calories, unit: 'kcal'),
+        NutritionRow('Fats', nutrition.fats.total),
         NutritionRow(
-          context: context,
-          label: 'Calories',
-          amount: nutrition.calories,
-          unit: 'kcal',
-        ),
-        NutritionRow(
-          context: context,
-          label: 'Fats',
-          amount: nutrition.fats.total,
-        ),
-        NutritionRow(
-          context: context,
-          label: 'Saturated Fats',
-          amount: nutrition.fats.saturates,
+          'Saturated Fats',
+          nutrition.fats.saturates,
           indented: true,
         ),
-        NutritionRow(
-          context: context,
-          label: 'Carbohydrates',
-          amount: nutrition.carbohydrates.total,
-        ),
-        NutritionRow(
-          context: context,
-          label: 'Sugars',
-          amount: nutrition.carbohydrates.sugars,
-          indented: true,
-        ),
-        NutritionRow(
-          context: context,
-          label: 'Fibers',
-          amount: nutrition.carbohydrates.fibers,
-          indented: true,
-        ),
-        NutritionRow(
-          context: context,
-          label: 'Proteins',
-          amount: nutrition.proteins.total,
-        ),
-        NutritionRow(
-          context: context,
-          label: 'Salt',
-          amount: nutrition.minerals.salt,
-        ),
+        NutritionRow('Carbohydrates', nutrition.carbohydrates.total),
+        NutritionRow('Sugars', nutrition.carbohydrates.sugars, indented: true),
+        NutritionRow('Fibers', nutrition.carbohydrates.fibers, indented: true),
+        NutritionRow('Proteins', nutrition.proteins.total),
+        NutritionRow('Salt', nutrition.minerals.salt),
       ],
     );
   }
 }
 
-class NutritionRow extends TableRow {
-  final String label;
-  final num? amount;
-  final BuildContext context;
-  final String unit;
-  final bool indented;
-
-  const NutritionRow({
+class NutritionRow extends StatsRow {
+  NutritionRow(
+    String label,
+    num? amount, {
     super.key,
-    required this.context,
-    required this.label,
-    required this.amount,
-    this.unit = 'g',
+    super.unit = 'g',
     this.indented = false,
-  });
+  }) : super(
+          label,
+          (amount ?? 0).decimals(2).toString(),
+        );
+
+  final bool indented;
 
   @override
   get children {
@@ -84,21 +50,13 @@ class NutritionRow extends TableRow {
       Row(
         children: [
           if (indented) const SizedBox(width: 16),
-          Text(label),
+          SecondaryText(label),
         ],
       ),
       const SizedBox(width: 32),
-      Row(
-        mainAxisAlignment: MainAxisAlignment.start,
-        children: [
-          if (amount == null) const SecondaryText('--'),
-          if (amount != null) ...[
-            Text(amount!.decimals(2).toString()),
-            const SizedBox(width: 4),
-            SecondaryText(unit),
-          ],
-        ],
-      ),
+      Text(value!, textAlign: TextAlign.end),
+      const SizedBox(width: 4),
+      SecondaryText(unit!),
     ];
   }
 }

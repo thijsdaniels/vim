@@ -9,6 +9,7 @@ import 'package:vim/services/consumptions_service.dart';
 import 'package:vim/widgets/atoms/icons8_icon.dart';
 import 'package:vim/widgets/atoms/secondary_text.dart';
 import 'package:vim/widgets/atoms/standard_list.dart';
+import 'package:vim/widgets/atoms/stats_table.dart';
 import 'package:vim/widgets/molecules/list_surface.dart';
 import 'package:vim/widgets/molecules/nutrition_table.dart';
 import 'package:vim/widgets/molecules/simple_card.dart';
@@ -86,112 +87,54 @@ class _ConsumptionViewState extends State<ConsumptionView> {
           ),
         ],
       ),
+
+      /// TODO: Split this body into three separate widgets, one for each of the
+      /// types of consumption. All these `if` statements I'm using are making
+      /// this body very difficult to read.
       body: StandardList(
         children: [
           SimpleCard(
             title: 'Details',
-            child: Center(
-              child: Table(
-                defaultColumnWidth: const IntrinsicColumnWidth(),
-                children: [
-                  if (consumption is! IngredientConsumption &&
-                      consumption is! RecipeConsumption)
-                    TableRow(
-                      children: [
-                        const SecondaryText('Name'),
-                        const SizedBox(width: 32),
-                        Text(consumption.name),
-                      ],
+            child: StatsTable(
+              children: [
+                if (consumption is! IngredientConsumption &&
+                    consumption is! RecipeConsumption)
+                  StatsRow('Name', consumption.name),
+                if (consumption is IngredientConsumption) ...[
+                  StatsRow('Ingredient', consumption.ingredient.name),
+                  StatsRow('Brand', consumption.ingredient.brand),
+                  StatsRow(
+                    'Amount',
+                    consumption.amount.value.toString(),
+                    unit: describeEnum(consumption.amount.unit),
+                  ),
+                  if (consumption.amount.unit == Unit.servings)
+                    StatsRow(
+                      '',
+                      (consumption.amount.value *
+                              consumption.ingredient.serving!)
+                          .toString(),
+                      unit: 'grams',
                     ),
-                  if (consumption is IngredientConsumption) ...[
-                    TableRow(
-                      children: [
-                        const SecondaryText('Ingredient'),
-                        const SizedBox(width: 32),
-                        Text(consumption.ingredient.name),
-                      ],
-                    ),
-                    TableRow(
-                      children: [
-                        const SecondaryText('Brand'),
-                        const SizedBox(width: 32),
-                        consumption.ingredient.brand != null
-                            ? Text(consumption.ingredient.brand!)
-                            : const SecondaryText('--'),
-                      ],
-                    ),
-                    TableRow(
-                      children: [
-                        const SecondaryText('Amount'),
-                        const SizedBox(width: 32),
-                        Column(
-                          children: [
-                            Row(
-                              children: [
-                                Text(consumption.amount.value.toString()),
-                                const SizedBox(width: 4),
-                                SecondaryText(
-                                  describeEnum(consumption.amount.unit),
-                                ),
-                              ],
-                            ),
-                            if (consumption.amount.unit == Unit.servings)
-                              Row(
-                                children: [
-                                  Text((consumption.amount.value *
-                                          consumption.ingredient.serving!)
-                                      .toString()),
-                                  const SizedBox(width: 4),
-                                  const SecondaryText('grams'),
-                                ],
-                              ),
-                          ],
-                        ),
-                      ],
-                    ),
-                  ],
-                  if (consumption is RecipeConsumption) ...[
-                    TableRow(
-                      children: [
-                        const SecondaryText('Recipe'),
-                        const SizedBox(width: 32),
-                        Text(consumption.recipe.name),
-                      ],
-                    ),
-                    TableRow(
-                      children: [
-                        const SecondaryText('Amount'),
-                        const SizedBox(width: 32),
-                        Column(
-                          children: [
-                            Row(
-                              children: [
-                                Text(consumption.amount.value.toString()),
-                                const SizedBox(width: 4),
-                                SecondaryText(
-                                  describeEnum(consumption.amount.unit),
-                                ),
-                              ],
-                            ),
-                            if (consumption.amount.unit == Unit.servings)
-                              Row(
-                                children: [
-                                  Text((consumption.amount.value *
-                                          consumption
-                                              .recipe.ingredientAmounts.amount /
-                                          consumption.recipe.servings)
-                                      .toString()),
-                                  const SizedBox(width: 4),
-                                  const SecondaryText('grams'),
-                                ],
-                              ),
-                          ],
-                        ),
-                      ],
-                    ),
-                  ],
                 ],
-              ),
+                if (consumption is RecipeConsumption) ...[
+                  StatsRow('Recipe', consumption.recipe.name),
+                  StatsRow(
+                    'Amount',
+                    consumption.amount.value.toString(),
+                    unit: describeEnum(consumption.amount.unit),
+                  ),
+                  if (consumption.amount.unit == Unit.servings)
+                    StatsRow(
+                      '',
+                      (consumption.amount.value *
+                              consumption.recipe.ingredientAmounts.amount /
+                              consumption.recipe.servings)
+                          .toString(),
+                      unit: 'grams',
+                    ),
+                ],
+              ],
             ),
           ),
           SimpleCard(

@@ -7,6 +7,7 @@ import 'package:vim/services/recipes_service.dart';
 import 'package:vim/widgets/atoms/icons8_icon.dart';
 import 'package:vim/widgets/atoms/secondary_text.dart';
 import 'package:vim/widgets/atoms/standard_list.dart';
+import 'package:vim/widgets/atoms/stats_table.dart';
 import 'package:vim/widgets/molecules/list_surface.dart';
 import 'package:vim/widgets/molecules/nutrition_table.dart';
 import 'package:vim/widgets/molecules/simple_card.dart';
@@ -75,26 +76,11 @@ class RecipeView extends StatelessWidget {
             children: [
               SimpleCard(
                 title: 'Details',
-                child: Center(
-                  child: Table(
-                    defaultColumnWidth: const IntrinsicColumnWidth(),
-                    children: [
-                      TableRow(
-                        children: [
-                          const SecondaryText('Name'),
-                          const SizedBox(width: 32),
-                          Text(recipe.name),
-                        ],
-                      ),
-                      TableRow(
-                        children: [
-                          const SecondaryText('Servings'),
-                          const SizedBox(width: 32),
-                          Text(recipe.servings.toString()),
-                        ],
-                      ),
-                    ],
-                  ),
+                child: StatsTable(
+                  children: [
+                    StatsRow('Name', recipe.name),
+                    StatsRow('Servings', recipe.servings.toString()),
+                  ],
                 ),
               ),
               SimpleCard(

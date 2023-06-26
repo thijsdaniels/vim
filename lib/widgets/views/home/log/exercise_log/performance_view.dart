@@ -8,8 +8,8 @@ import 'package:vim/models/exercise/weights_exercise_performance.dart';
 import 'package:vim/services/performances_service.dart';
 import 'package:vim/widgets/atoms/exercise_performance_muscle_groups.dart';
 import 'package:vim/widgets/atoms/routine_performance_muscle_groups.dart';
-import 'package:vim/widgets/atoms/secondary_text.dart';
 import 'package:vim/widgets/atoms/standard_list.dart';
+import 'package:vim/widgets/atoms/stats_table.dart';
 import 'package:vim/widgets/molecules/list_surface.dart';
 import 'package:vim/widgets/molecules/routine_exercise_performances.dart';
 import 'package:vim/widgets/molecules/simple_card.dart';
@@ -101,53 +101,41 @@ class _PerformanceViewState extends State<PerformanceView> {
               ),
             ],
           ),
+
+          /// TODO: Split this body into three separate widgets, one for each of
+          /// the types of performance. All these `if` statements I'm using are
+          /// making this body very difficult to read.
           body: StandardList(
             children: [
               SimpleCard(
                 title: 'Details',
                 child: FutureBuilder(
                   future: performance.calories,
-                  builder: (context, snapshot) => Table(
-                    defaultColumnWidth: const IntrinsicColumnWidth(),
+                  builder: (context, snapshot) => StatsTable(
                     children: [
                       if (performance is! ExercisePerformance &&
                           performance is! RoutinePerformance)
-                        TableRow(
-                          children: [
-                            const SecondaryText('Name'),
-                            const SizedBox(width: 32),
-                            Text(performance.name),
-                          ],
+                        StatsRow(
+                          'Name',
+                          performance.name,
                         ),
                       if (performance is ExercisePerformance)
-                        TableRow(
-                          children: [
-                            const SecondaryText('Exercise'),
-                            const SizedBox(width: 32),
-                            Text(performance.exercise.snapshot.name),
-                          ],
+                        StatsRow(
+                          'Exercise',
+                          performance.exercise.snapshot.name,
                         ),
                       if (performance is RoutinePerformance)
-                        TableRow(
-                          children: [
-                            const SecondaryText('Routine'),
-                            const SizedBox(width: 32),
-                            Text(performance.routine.name),
-                          ],
+                        StatsRow(
+                          'Routine',
+                          performance.routine.name,
                         ),
-                      TableRow(
-                        children: [
-                          const SecondaryText('Calories'),
-                          const SizedBox(width: 32),
-                          Text('${snapshot.data?.round()} cal'),
-                        ],
+                      StatsRow(
+                        'Calories',
+                        '${snapshot.data?.round()} cal',
                       ),
-                      TableRow(
-                        children: [
-                          const SecondaryText('Timestamp'),
-                          const SizedBox(width: 32),
-                          Text(performance.timestamp.toDate().toDateTimeString()),
-                        ],
+                      StatsRow(
+                        'Performed At',
+                        performance.timestamp.toDate().toDateTimeString(),
                       ),
                     ],
                   ),
@@ -164,26 +152,19 @@ class _PerformanceViewState extends State<PerformanceView> {
               if (performance is ResistanceExercisePerformance)
                 SimpleCard(
                   title: 'Performance',
-                  child: Center(
-                    child: Table(
-                      defaultColumnWidth: const IntrinsicColumnWidth(),
-                      children: [
-                        TableRow(
-                          children: [
-                            const SecondaryText('Duration'),
-                            const SizedBox(width: 32),
-                            Text('${performance.duration.inMinutes} m'),
-                          ],
-                        ),
-                        TableRow(
-                          children: [
-                            const SecondaryText('Power'),
-                            const SizedBox(width: 32),
-                            Text('${performance.watts} watts'),
-                          ],
-                        ),
-                      ],
-                    ),
+                  child: StatsTable(
+                    children: [
+                      StatsRow(
+                        'Duration',
+                        '${performance.duration.inMinutes}',
+                        unit: 'm',
+                      ),
+                      StatsRow(
+                        'Power',
+                        '${performance.watts}',
+                        unit: 'watts',
+                      ),
+                    ],
                   ),
                 ),
               if (performance is WeightsExercisePerformance)
