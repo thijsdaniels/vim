@@ -14,6 +14,11 @@ import 'package:vim/widgets/atoms/switch_form_field.dart';
 import 'package:vim/widgets/molecules/simple_card.dart';
 import 'package:vim/widgets/views/home/debug_view.dart';
 
+/// TODO: This file contains a lot of code that was duplicated from the
+/// `OnboardingView`. I should Make sure that most widgets in these two files
+/// can be used by both the `OnboardingView` and the `SettingsView` and then get
+/// rid of the duplicates.
+
 class SettingsView extends StatelessWidget {
   const SettingsView({super.key});
 

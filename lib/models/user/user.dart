@@ -6,6 +6,7 @@ import 'package:vim/models/food/nutrition.dart';
 import 'package:vim/models/user/body.dart';
 import 'package:vim/models/user/target.dart';
 
+/// TODO: Rename to `UserProfile` or even just `Profile`?
 class User extends Document {
   User({
     required this.body,

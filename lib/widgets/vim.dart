@@ -10,8 +10,8 @@ import 'package:vim/models/exercise/routine.dart';
 import 'package:vim/models/food/consumption.dart';
 import 'package:vim/models/food/ingredient.dart';
 import 'package:vim/models/food/recipe.dart';
-import 'package:vim/models/user/user.dart';
 import 'package:vim/models/settings_model.dart';
+import 'package:vim/models/user/user.dart';
 import 'package:vim/services/consumptions_service.dart';
 import 'package:vim/services/exercises_service.dart';
 import 'package:vim/services/ingredients_service.dart';
@@ -19,6 +19,7 @@ import 'package:vim/services/performances_service.dart';
 import 'package:vim/services/recipes_service.dart';
 import 'package:vim/services/routines_service.dart';
 import 'package:vim/services/users_service.dart';
+import 'package:vim/widgets/views/onboarding_view.dart';
 import 'package:vim/widgets/views/home_view.dart';
 import 'package:vim/widgets/views/login_view.dart';
 
@@ -39,7 +40,10 @@ class Vim extends StatelessWidget {
             darkTheme: darkTheme(settingsModel.color),
             themeMode: settingsModel.themeMode,
             home: WithAuthentication(
+              // TODO: registrationBuilder: (context) => const RegisterView(),
               loginBuilder: (context) => const LoginView(),
+              onboardingBuilder: (context, completeOnboarding) =>
+                  OnboardingView(onComplete: completeOnboarding),
               authenticatedBuilder: (context) => const ServiceProviders(
                 child: DataProviders(
                   child: HomeView(),
@@ -109,28 +113,77 @@ var theme = ({
       cardColor: Colors.black,
     );
 
-class WithAuthentication extends StatelessWidget {
+/// TODO: I'm currently setting an onboardingCompleted state just to make the
+/// widget rebuild and check if there is a `User` instance now. I don't like
+/// this solution, I think the creation of a `User` should automatically trigger
+/// a rebuild, which means I should use a `StreamBuilder` instead of a
+/// `FutureBuilder`. However, I haven't found a good way to check using a
+/// `StreamBuilder` whether there actually _is_ an instance to stream at all,
+/// hence my use of the `FutureBuilder` on the `stream.first`...
+class WithAuthentication extends StatefulWidget {
   const WithAuthentication({
     super.key,
-    required this.authenticatedBuilder,
     required this.loginBuilder,
+    required this.onboardingBuilder,
+    required this.authenticatedBuilder,
   });
 
-  final Widget Function(BuildContext context) authenticatedBuilder;
-  final Widget Function(BuildContext context) loginBuilder;
+  final Widget Function(
+    BuildContext context,
+  ) loginBuilder;
+
+  final Widget Function(
+    BuildContext context,
+    void Function(User user) completeOnboarding,
+  ) onboardingBuilder;
+
+  final Widget Function(
+    BuildContext context,
+  ) authenticatedBuilder;
+
+  @override
+  State<WithAuthentication> createState() => _WithAuthenticationState();
+}
+
+class _WithAuthenticationState extends State<WithAuthentication> {
+  bool onboardingCompleted = false;
 
   @override
   Widget build(BuildContext context) {
     return StreamBuilder<firebase_auth.User?>(
       stream: firebase_auth.FirebaseAuth.instance.authStateChanges(),
-      builder: (context, snapshot) {
-        return snapshot.hasData
-            ? StreamProvider<User?>.value(
-                initialData: null,
-                value: UsersService.instance.get(snapshot.data!.uid),
-                child: authenticatedBuilder(context),
-              )
-            : loginBuilder(context);
+      builder: (context, firebaseUserSnapshot) {
+        if (!firebaseUserSnapshot.hasData) {
+          return widget.loginBuilder(context);
+        }
+
+        return FutureBuilder(
+          future:
+              UsersService.instance.get(firebaseUserSnapshot.data!.uid).first,
+          builder: (context, userSnapshot) {
+            if (userSnapshot.connectionState == ConnectionState.waiting) {
+              return const Center(child: CircularProgressIndicator());
+            }
+
+            if (userSnapshot.data == null) {
+              return widget.onboardingBuilder(
+                context,
+                (user) async {
+                  await UsersService.instance
+                      .createForFirebaseUser(firebaseUserSnapshot.data!, user);
+                  setState(() => onboardingCompleted = true);
+                },
+              );
+            }
+
+            return StreamProvider<User?>.value(
+              initialData: userSnapshot.data,
+              value:
+                  UsersService.instance.get(userSnapshot.data!.reference!.id),
+              child: widget.authenticatedBuilder(context),
+            );
+          },
+        );
       },
     );
   }
