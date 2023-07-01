@@ -1,22 +1,19 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:vim/models/food/consumption.dart';
 import 'package:vim/models/food/ingredient_consumption.dart';
 import 'package:vim/models/food/recipe_consumption.dart';
+import 'package:vim/models/user/user.dart';
 import 'package:vim/services/service.dart';
 
-/// TODO: Filter all operations by the currently authenticated user. It might be
-/// a good idea to apply this generally to the entire service:
-/// ```
-///   instance
-///     .collection('users')
-///     .document(user.uid)
-///     .collection('consumptions')
-///     ...
-/// ```
 class ConsumptionsService extends Service<Consumption> {
-  static final instance = ConsumptionsService();
+  static ConsumptionsService of(BuildContext context) {
+    return Provider.of<ConsumptionsService>(context, listen: false);
+  }
 
-  ConsumptionsService() : super(path: 'consumptions');
+  ConsumptionsService(User user)
+      : super(path: 'users/${user.reference!.id}/consumptions');
 
   @override
   Consumption fromFirestore(snapshot, options) {

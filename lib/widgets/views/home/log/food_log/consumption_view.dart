@@ -76,7 +76,7 @@ class _ConsumptionViewState extends State<ConsumptionView> {
               icon: const Icon(Icons.delete_rounded),
               onPressed: () async {
                 if (await confirm()) {
-                  ConsumptionsService.instance.delete(consumption);
+                  ConsumptionsService.of(context).delete(consumption);
 
                   if (mounted) {
                     Navigator.of(context).pop();

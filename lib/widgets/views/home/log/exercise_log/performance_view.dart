@@ -79,7 +79,7 @@ class _PerformanceViewState extends State<PerformanceView> {
                     );
 
                     if (edited != null) {
-                      PerformancesService.instance.update(edited);
+                      PerformancesService.of(context).update(edited);
                     }
                   },
                 ),
@@ -91,7 +91,7 @@ class _PerformanceViewState extends State<PerformanceView> {
                   icon: const Icon(Icons.delete_rounded),
                   onPressed: () async {
                     if (await confirm()) {
-                      PerformancesService.instance.delete(performance);
+                      PerformancesService.of(context).delete(performance);
 
                       if (mounted) {
                         Navigator.of(context).pop();

@@ -77,7 +77,7 @@ class _CreateIngredientConsumptionViewState
                     unit: _unit!,
                   );
 
-                  ConsumptionsService.instance.update(ingredientConsumption);
+                  ConsumptionsService.of(context).update(ingredientConsumption);
                 } else {
                   ingredientConsumption = widget.ingredient?.consumption(
                     timestamp: timestamp,
@@ -88,7 +88,8 @@ class _CreateIngredientConsumptionViewState
                   );
 
                   if (ingredientConsumption != null) {
-                    ConsumptionsService.instance.create(ingredientConsumption);
+                    ConsumptionsService.of(context)
+                        .create(ingredientConsumption);
                   }
                 }
 

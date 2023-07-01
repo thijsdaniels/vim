@@ -100,7 +100,9 @@ class RoutinePerformance extends Performance {
   }
 
   Future<DocumentReference> addPerformance(
-      int exerciseIndex, ExercisePerformance performance) async {
+    int exerciseIndex,
+    ExercisePerformance performance,
+  ) async {
     DocumentReference reference = await _performances!.add(performance);
 
     performanceReferences[exerciseIndex.toString()] = reference;

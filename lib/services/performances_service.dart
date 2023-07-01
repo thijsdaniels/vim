@@ -1,25 +1,22 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:vim/models/exercise/exercise.dart';
 import 'package:vim/models/exercise/exercise_performance.dart';
 import 'package:vim/models/exercise/performance.dart';
 import 'package:vim/models/exercise/resistance_exercise_performance.dart';
 import 'package:vim/models/exercise/routine_performance.dart';
 import 'package:vim/models/exercise/weights_exercise_performance.dart';
+import 'package:vim/models/user/user.dart';
 import 'package:vim/services/service.dart';
 
-/// TODO: Filter all operations by the currently authenticated user. It might be
-/// a good idea to apply this generally to the entire service:
-/// ```
-///   instance
-///     .collection('users')
-///     .document(user.uid)
-///     .collection('performances')
-///     ...
-/// ```
 class PerformancesService extends Service<Performance> {
-  static final instance = PerformancesService();
+  static PerformancesService of(BuildContext context) {
+    return Provider.of<PerformancesService>(context, listen: false);
+  }
 
-  PerformancesService() : super(path: 'performances');
+  PerformancesService(User user)
+      : super(path: 'users/${user.reference!.id}/performances');
 
   @override
   Performance fromFirestore(snapshot, options) {

@@ -33,6 +33,12 @@ abstract class Service<D extends Document> {
         );
   }
 
+  /// TODO: This is a really handy method when I need to migrate data. It might
+  /// also be useful for other cases, so maybe I should make it official.
+  // Future<List<D>> getAll() async {
+  //   return (await collection.get()).docs.map((doc) => doc.data()).toList();
+  // }
+
   Stream<List<D>> all() {
     return collection.orderBy('name').snapshots().map(
           (snapshot) => snapshot.docs.map((doc) => doc.data()).toList(),

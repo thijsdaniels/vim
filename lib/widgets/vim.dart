@@ -23,11 +23,13 @@ import 'package:vim/widgets/views/home_view.dart';
 import 'package:vim/widgets/views/login_view.dart';
 
 class Vim extends StatelessWidget {
-  const Vim({super.key});
+  const Vim({
+    super.key,
+  });
 
   @override
   Widget build(BuildContext context) {
-    return Providers(
+    return StateProviders(
       child: Consumer<SettingsModel>(
         builder: (context, settingsModel, _) {
           return MaterialApp(
@@ -36,15 +38,13 @@ class Vim extends StatelessWidget {
             theme: lightTheme(settingsModel.color),
             darkTheme: darkTheme(settingsModel.color),
             themeMode: settingsModel.themeMode,
-            home: StreamBuilder<firebase_auth.User?>(
-              stream: firebase_auth.FirebaseAuth.instance.authStateChanges(),
-              builder: (context, snapshot) => snapshot.hasData
-                  ? StreamProvider<User?>.value(
-                      initialData: null,
-                      value: UsersService.instance.get(snapshot.data!.uid),
-                      child: const HomeView(),
-                    )
-                  : const LoginView(),
+            home: WithAuthentication(
+              loginBuilder: (context) => const LoginView(),
+              authenticatedBuilder: (context) => const ServiceProviders(
+                child: DataProviders(
+                  child: HomeView(),
+                ),
+              ),
             ),
           );
         },
@@ -53,10 +53,10 @@ class Vim extends StatelessWidget {
   }
 }
 
-class Providers extends StatelessWidget {
+class StateProviders extends StatelessWidget {
   final Widget child;
 
-  const Providers({
+  const StateProviders({
     super.key,
     required this.child,
   });
@@ -77,37 +77,7 @@ class Providers extends StatelessWidget {
           value: SettingsModel(),
         ),
       ],
-      child: Consumer<DateModel>(
-        builder: (context, dateModel, _) => MultiProvider(
-          providers: [
-            StreamProvider<List<Ingredient>>.value(
-              value: IngredientsService.instance.all(),
-              initialData: const [],
-            ),
-            StreamProvider<List<Recipe>>.value(
-              value: RecipesService.instance.all(),
-              initialData: const [],
-            ),
-            StreamProvider<List<Exercise>>.value(
-              value: ExercisesService.instance.all(),
-              initialData: const [],
-            ),
-            StreamProvider<List<Routine>>.value(
-              value: RoutinesService.instance.all(),
-              initialData: const [],
-            ),
-            StreamProvider<List<Consumption>>.value(
-              value: ConsumptionsService.instance.forDate(dateModel.date),
-              initialData: const [],
-            ),
-            StreamProvider<List<Performance>>.value(
-              value: PerformancesService.instance.forDate(dateModel.date),
-              initialData: const [],
-            ),
-          ],
-          child: child,
-        ),
-      ),
+      child: child,
     );
   }
 }
@@ -138,3 +108,106 @@ var theme = ({
       ),
       cardColor: Colors.black,
     );
+
+class WithAuthentication extends StatelessWidget {
+  const WithAuthentication({
+    super.key,
+    required this.authenticatedBuilder,
+    required this.loginBuilder,
+  });
+
+  final Widget Function(BuildContext context) authenticatedBuilder;
+  final Widget Function(BuildContext context) loginBuilder;
+
+  @override
+  Widget build(BuildContext context) {
+    return StreamBuilder<firebase_auth.User?>(
+      stream: firebase_auth.FirebaseAuth.instance.authStateChanges(),
+      builder: (context, snapshot) {
+        return snapshot.hasData
+            ? StreamProvider<User?>.value(
+                initialData: null,
+                value: UsersService.instance.get(snapshot.data!.uid),
+                child: authenticatedBuilder(context),
+              )
+            : loginBuilder(context);
+      },
+    );
+  }
+}
+
+class ServiceProviders extends StatelessWidget {
+  final Widget child;
+
+  const ServiceProviders({
+    super.key,
+    required this.child,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Consumer<User?>(
+      builder: (context, user, _) {
+        if (user == null) {
+          return const Center(child: CircularProgressIndicator());
+        }
+
+        return MultiProvider(
+          providers: [
+            Provider<ConsumptionsService>.value(
+              value: ConsumptionsService(user),
+            ),
+            Provider<PerformancesService>.value(
+              value: PerformancesService(user),
+            ),
+          ],
+          child: child,
+        );
+      },
+    );
+  }
+}
+
+class DataProviders extends StatelessWidget {
+  final Widget child;
+
+  const DataProviders({
+    super.key,
+    required this.child,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Consumer<DateModel>(
+      builder: (context, dateModel, _) => MultiProvider(
+        providers: [
+          StreamProvider<List<Ingredient>>.value(
+            value: IngredientsService.instance.all(),
+            initialData: const [],
+          ),
+          StreamProvider<List<Recipe>>.value(
+            value: RecipesService.instance.all(),
+            initialData: const [],
+          ),
+          StreamProvider<List<Exercise>>.value(
+            value: ExercisesService.instance.all(),
+            initialData: const [],
+          ),
+          StreamProvider<List<Routine>>.value(
+            value: RoutinesService.instance.all(),
+            initialData: const [],
+          ),
+          StreamProvider<List<Consumption>>.value(
+            value: ConsumptionsService.of(context).forDate(dateModel.date),
+            initialData: const [],
+          ),
+          StreamProvider<List<Performance>>.value(
+            value: PerformancesService.of(context).forDate(dateModel.date),
+            initialData: const [],
+          ),
+        ],
+        child: child,
+      ),
+    );
+  }
+}
