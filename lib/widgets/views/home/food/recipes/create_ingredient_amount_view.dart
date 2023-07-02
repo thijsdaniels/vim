@@ -1,7 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:vim/models/food/ingredient_amount_reference.dart';
-import 'package:vim/widgets/atoms/ingredient_reference_dropdown_menu.dart';
+import 'package:vim/services/ingredients_service.dart';
+import 'package:vim/widgets/atoms/ingredient_form_field.dart';
 import 'package:vim/widgets/atoms/number_form_field.dart';
 import 'package:vim/widgets/atoms/standard_list.dart';
 import 'package:vim/widgets/molecules/simple_card.dart';
@@ -72,13 +73,18 @@ class _CreateIngredientAmountViewState
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  IngredientReferenceDropdownMenu(
-                    initialSelection: _ingredient,
-                    onSelected: (DocumentReference? ingredient) {
-                      setState(() {
-                        _ingredient = ingredient;
-                      });
-                    },
+                  StreamBuilder(
+                    stream: _ingredient != null
+                        ? IngredientsService.instance.get(_ingredient!.id)
+                        : null,
+                    builder: (context, snapshot) => IngredientFormField(
+                      selection: snapshot.data,
+                      onSelected: (ingredient) {
+                        setState(() {
+                          _ingredient = ingredient?.reference;
+                        });
+                      },
+                    ),
                   ),
                   const SizedBox(height: 16),
                   NumberFormField(

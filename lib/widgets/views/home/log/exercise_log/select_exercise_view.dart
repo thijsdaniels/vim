@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:vim/models/date_model.dart';
 import 'package:vim/models/exercise/exercise.dart';
-import 'package:vim/widgets/atoms/exercise_dropdown_menu.dart';
+import 'package:vim/widgets/atoms/exercise_form_field.dart';
 import 'package:vim/widgets/molecules/simple_card.dart';
 
 class SelectExerciseView extends StatefulWidget {
@@ -69,8 +69,8 @@ class _SelectExerciseViewState extends State<SelectExerciseView> {
                     child: Column(
                       mainAxisSize: MainAxisSize.min,
                       children: [
-                        ExerciseDropdownMenu(
-                          initialSelection: _exercise,
+                        ExerciseFormField(
+                          selection: _exercise,
                           onSelected: (Exercise? exercise) {
                             setState(() {
                               _exercise = exercise;

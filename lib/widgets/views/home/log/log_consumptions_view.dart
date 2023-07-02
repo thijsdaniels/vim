@@ -12,6 +12,10 @@ class LogConsumptionsView extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       floatingActionButton: FloatingActionSurface(
+        /// TODO: Instead of going to a new view just to render a `SearchAnchor`
+        /// widget, which again renders its own view to show search results, I
+        /// should just open the `SearchAnchor` directly from here. This does
+        /// mean I need to find a new location for the "Quick Track" button.
         onPressed: () {
           Navigator.of(context).push(
             MaterialPageRoute(

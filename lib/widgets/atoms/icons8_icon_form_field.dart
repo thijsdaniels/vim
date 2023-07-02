@@ -1,75 +1,40 @@
 import 'package:flutter/material.dart';
-import 'package:vim/widgets/atoms/icons8_icon.dart';
 import 'package:vim/extensions/string.dart';
-import 'package:vim/widgets/molecules/list_surface.dart';
+import 'package:vim/widgets/atoms/icons8_icon.dart';
+import 'package:vim/widgets/atoms/search_form_field.dart';
 
-class Icons8IconDropdownMenu extends StatelessWidget {
-  final SearchController _controller = SearchController();
-
-  final String? initialSelection;
+class Icons8IconFormField extends StatelessWidget {
+  final String? selection;
   final void Function(String? icon)? onSelected;
 
-  Icons8IconDropdownMenu({
+  const Icons8IconFormField({
     super.key,
-    this.initialSelection,
+    this.selection,
     this.onSelected,
-  }) {
-    if (initialSelection != null) {
-      _controller.text = initialSelection!.fromKebabCase().toTitleCase();
-    }
-  }
+  });
 
   @override
   Widget build(BuildContext context) {
-    return SearchAnchor(
-      searchController: _controller,
-      builder: (context, controller) => TextFormField(
-        controller: controller,
-        decoration: InputDecoration(
-          labelText: 'Icon',
-          suffixIcon: initialSelection != null
-              ? Padding(
-                  padding: const EdgeInsets.all(16.0),
-                  child: Icons8Icon(initialSelection!, size: 32),
-                )
-              : null,
-        ),
-        onTap: controller.openView,
+    return SearchFormField(
+      decoration: InputDecoration(
+        labelText: 'Icon',
+        suffixIcon: selection != null
+            ? Padding(
+                padding: const EdgeInsets.all(16.0),
+                child: Icons8Icon(selection!, size: 32),
+              )
+            : null,
       ),
-      viewElevation: 4,
-      isFullScreen: true,
-      suggestionsBuilder: (context, controller) {
-        return [
-          const SizedBox(height: 6),
-          ...icons8Slugs
-              .where((slug) => slug
-                  .toLowerCase()
-                  .contains(controller.value.text.toLowerCase()))
-              .map(
-                (slug) => Padding(
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 12,
-                    vertical: 6,
-                  ),
-                  child: ListSurface(
-                    elevation: 8,
-                    icon: Icons8Icon(slug),
-                    title: slug.fromKebabCase().toTitleCase(),
-                    onTap: () {
-                      if (onSelected != null) {
-                        onSelected!(slug);
-                      }
-                      controller.text = slug.fromKebabCase().toTitleCase();
-                      Navigator.of(context).pop();
-                    },
-                  ),
-                ),
-              ),
-          const SizedBox(height: 6),
-        ];
-      },
+      options: icons8Slugs,
+      selection: selection,
+      onSelected: onSelected,
+      titleBuilder: (slug) => slug.fromKebabCase().toTitleCase(),
+      iconBuilder: (slug) => Icons8Icon(slug),
     );
 
+    /// TODO: Decide whether I want to use `Autocomplete` for anything in the
+    /// app and then either turn this into an abstract widget, or delete this
+    /// code.
     // return Autocomplete<String>(
     //   optionsBuilder: (value) => icons8Slugs.where(
     //     (slug) => slug.fromKebabCase().toLowerCase().contains(

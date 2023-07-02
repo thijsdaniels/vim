@@ -3,7 +3,7 @@ import 'package:flutter/services.dart';
 import 'package:vim/models/food/ingredient.dart';
 import 'package:vim/models/food/nutrition.dart';
 import 'package:vim/services/ingredients_service.dart';
-import 'package:vim/widgets/atoms/icons8_icon_dropdown_menu.dart';
+import 'package:vim/widgets/atoms/icons8_icon_form_field.dart';
 import 'package:vim/widgets/atoms/standard_list.dart';
 import 'package:vim/widgets/atoms/switch_form_field.dart';
 import 'package:vim/widgets/molecules/nutrition_form_fields.dart';
@@ -112,8 +112,8 @@ class _CreateIngredientViewState extends State<CreateIngredientView> {
               title: 'Details',
               child: Column(
                 children: [
-                  Icons8IconDropdownMenu(
-                    initialSelection: _icon,
+                  Icons8IconFormField(
+                    selection: _icon,
                     onSelected: (String? icon) {
                       setState(() {
                         _icon = icon;

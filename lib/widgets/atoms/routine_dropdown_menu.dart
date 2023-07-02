@@ -2,6 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:vim/models/exercise/routine.dart';
 
+/// TODO: This Widget isn't used anymore, because I'm using a `SearchAnchor`
+/// widget that shows the routines as well as the exercises in a single view
+/// when creating a performance log entry.
 class RoutineDropdownMenu extends StatelessWidget {
   final Routine? initialSelection;
   final TextEditingController? controller;

@@ -90,6 +90,11 @@ class RoutineView extends StatelessWidget {
                 actions: [
                   IconButton(
                     icon: const Icon(Icons.add),
+
+                    /// TODO: Instead of going to a new view to render a
+                    /// `SearchAnchor` widget, which again renders its own view
+                    /// to show search results, I should just open the
+                    /// `SearchAnchor` directly from here.
                     onPressed: () async {
                       Exercise exercise = await Navigator.of(context).push(
                         MaterialPageRoute(

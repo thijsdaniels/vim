@@ -12,7 +12,7 @@ import 'package:vim/models/exercise/set.dart';
 import 'package:vim/models/exercise/sets.dart';
 import 'package:vim/models/exercise/weights_exercise_performance.dart';
 import 'package:vim/services/performances_collection_group.dart';
-import 'package:vim/widgets/atoms/muscle_groups_focus_icon.dart';
+import 'package:vim/widgets/atoms/exercise_icon.dart';
 import 'package:vim/widgets/atoms/standard_list.dart';
 import 'package:vim/widgets/molecules/list_surface.dart';
 import 'package:vim/widgets/views/home/log/exercise_log/create_exercise_performance_view.dart';
@@ -72,11 +72,7 @@ class RoutineExercisePerformances extends StatelessWidget {
 
                     return ListSurface(
                       elevation: 4,
-                      icon: MuscleGroupsFocusIcon(
-                        elevation: 8,
-                        primary: exercise?.muscleGroups.primary,
-                        secondary: exercise?.muscleGroups.secondary ?? [],
-                      ),
+                      icon: ExerciseIcon(exercise, elevation: 8),
                       onTap: performance != null
                           ? () async {
                               ExercisePerformance edited =

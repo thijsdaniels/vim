@@ -1,10 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:vim/extensions/string.dart';
 import 'package:vim/models/date_model.dart';
 import 'package:vim/models/exercise/exercise.dart';
 import 'package:vim/models/exercise/exercise_performance.dart';
 import 'package:vim/models/exercise/performance.dart';
 import 'package:vim/models/exercise/routine.dart';
+import 'package:vim/widgets/atoms/exercise_icon.dart';
+import 'package:vim/widgets/atoms/routine_icon.dart';
+import 'package:vim/widgets/molecules/list_surface.dart';
 import 'package:vim/widgets/views/home/log/exercise_log/create_exercise_performance_view.dart';
 import 'package:vim/widgets/views/home/log/exercise_log/create_quick_track_performance_view.dart';
 
@@ -45,19 +49,37 @@ class _CreatePerformanceViewState extends State<CreatePerformanceView> {
         child: Consumer<List<Routine>>(
           builder: (context, routines, _) => Consumer<List<Exercise>>(
             builder: (context, exercises, _) => SearchAnchor.bar(
+              viewElevation: 4,
+              isFullScreen: true,
               barHintText: "Search",
               suggestionsBuilder: (context, controller) {
                 return [
+                  const SizedBox(height: 6),
                   ...routines
-                      .where((routine) => isMatch(routine.name, controller))
-                      .map((routine) => RoutineSearchResult(routine)),
+                      .where((recipe) => isMatch(recipe.name, controller))
+                      .map(
+                        (recipe) => Padding(
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 12,
+                            vertical: 6,
+                          ),
+                          child: RoutineSearchResult(recipe),
+                        ),
+                      ),
                   ...exercises
                       .where(
-                        (exercise) => isMatch(exercise.name, controller),
+                        (ingredient) => isMatch(ingredient.name, controller),
                       )
                       .map(
-                        (exercise) => ExerciseSearchResult(exercise),
-                      )
+                        (ingredient) => Padding(
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 12,
+                            vertical: 6,
+                          ),
+                          child: ExerciseSearchResult(ingredient),
+                        ),
+                      ),
+                  const SizedBox(height: 6),
                 ];
               },
             ),
@@ -82,8 +104,11 @@ class RoutineSearchResult extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ListTile(
-      title: Text(routine.name),
+    return ListSurface(
+      elevation: 8,
+      icon: RoutineIcon(routine: routine),
+      title: routine.name,
+      subtitle: 'Routine',
       onTap: () {
         var navigator = Navigator.of(context);
         navigator.pop();
@@ -107,8 +132,11 @@ class ExerciseSearchResult extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ListTile(
-      title: Text(exercise.name),
+    return ListSurface(
+      elevation: 8,
+      icon: ExerciseIcon(exercise, elevation: 8),
+      title: exercise.name,
+      subtitle: exercise.type.name.toTitleCase(),
       onTap: () async {
         var navigator = Navigator.of(context);
 

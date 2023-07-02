@@ -2,6 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:vim/models/food/recipe.dart';
 
+/// TODO: This Widget isn't used anymore, because I'm using a `SearchAnchor`
+/// widget that shows the recipes as well as the ingredients in a single view
+/// when creating a consumption log entry.
 class RecipeDropdownMenu extends StatelessWidget {
   final Recipe? initialSelection;
   final TextEditingController? controller;
