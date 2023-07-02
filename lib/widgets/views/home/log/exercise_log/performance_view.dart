@@ -181,9 +181,7 @@ class _PerformanceViewState extends State<PerformanceView> {
                         .map(
                           (set) => ListSurface(
                             elevation: 4,
-                            title: Text(
-                              '${set.repetitions} x ${set.weight} kg',
-                            ),
+                            title: '${set.repetitions} x ${set.weight} kg',
                           ),
                         )
                         .toList(),

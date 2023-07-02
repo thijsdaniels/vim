@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:vim/widgets/atoms/secondary_text.dart';
 import 'package:vim/widgets/atoms/surface.dart';
 
 class ListSurface extends StatelessWidget {
   final Widget? icon;
   final Function()? onTap;
-  final Widget title;
-  final Widget? subtitle;
+  final String title;
+  final String? subtitle;
   final Widget? actions;
   final double? elevation;
 
@@ -38,8 +39,11 @@ class ListSurface extends StatelessWidget {
             ),
             Expanded(
               child: ListTile(
-                title: title,
-                subtitle: subtitle,
+                title: Text(
+                  title,
+                  overflow: TextOverflow.ellipsis,
+                ),
+                subtitle: subtitle != null ? SecondaryText(subtitle!) : null,
                 trailing: actions,
               ),
             ),

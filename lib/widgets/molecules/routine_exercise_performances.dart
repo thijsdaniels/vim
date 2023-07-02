@@ -13,7 +13,6 @@ import 'package:vim/models/exercise/sets.dart';
 import 'package:vim/models/exercise/weights_exercise_performance.dart';
 import 'package:vim/services/performances_collection_group.dart';
 import 'package:vim/widgets/atoms/muscle_groups_focus_icon.dart';
-import 'package:vim/widgets/atoms/secondary_text.dart';
 import 'package:vim/widgets/atoms/standard_list.dart';
 import 'package:vim/widgets/molecules/list_surface.dart';
 import 'package:vim/widgets/views/home/log/exercise_log/create_exercise_performance_view.dart';
@@ -106,65 +105,13 @@ class RoutineExercisePerformances extends StatelessWidget {
                             ),
                         ],
                       ),
-                      title: Text(exercise?.name ?? '',
-                          overflow: TextOverflow.ellipsis),
+                      title: exercise?.name ?? '',
+                      // TODO: Try to change this into Chip widgets.
                       subtitle: performance != null
-                          ? FutureBuilder(
-                              future: performance.calories,
-                              builder: (context, snapshot) => SecondaryText(
-                                // TODO: Try to change this into Chip widgets.
-                                [
-                                  if (performance
-                                          is! WeightsExercisePerformance &&
-                                      performance
-                                          is! ResistanceExercisePerformance)
-                                    '${snapshot.data?.round()} cal',
-                                  if (performance
-                                      is WeightsExercisePerformance) ...[
-                                    '${(performance.sets.weight / performance.sets.length).decimals(2)} kg',
-                                    performance.sets
-                                        .map((set) => '${set.repetitions}')
-                                        .join("/"),
-                                  ],
-                                  if (performance
-                                      is ResistanceExercisePerformance) ...[
-                                    '${performance.watts} watts',
-                                    '${performance.duration.inMinutes} m',
-                                  ],
-
-                                  /// TODO: Re-enable this.
-                                  // if (latest != null)
-                                  //   '${(snapshot.data ?? 0 / latest.calories * 100).round()}%'
-                                ].join(" • "),
-                              ),
-                            )
+                          ? _performanceSubtitle(performance)
                           : latest != null
-                              ? FutureBuilder(
-                                  future: latest.calories,
-                                  builder: (context, snapshot) => SecondaryText(
-                                    // TODO: Try to change this into Chip widgets.
-                                    [
-                                      if (latest
-                                              is! WeightsExercisePerformance &&
-                                          latest
-                                              is! ResistanceExercisePerformance)
-                                        '${snapshot.data?.round()} cal',
-                                      if (latest
-                                          is WeightsExercisePerformance) ...[
-                                        '${(latest.sets.weight / latest.sets.length).decimals(2)} kg',
-                                        latest.sets
-                                            .map((set) => '${set.repetitions}')
-                                            .join("/"),
-                                      ],
-                                      if (latest
-                                          is ResistanceExercisePerformance) ...[
-                                        '${latest.watts} watts',
-                                        '${latest.duration.inMinutes} m',
-                                      ],
-                                    ].join(" • "),
-                                  ),
-                                )
-                              : const SecondaryText('--'),
+                              ? _performanceSubtitle(latest)
+                              : '--',
                     );
                   },
                 );
@@ -174,6 +121,26 @@ class RoutineExercisePerformances extends StatelessWidget {
         );
       },
     );
+  }
+
+  String _performanceSubtitle(Performance performance) {
+    return [
+      // TODO: Re-enable this.
+      // if (performance is! WeightsExercisePerformance &&
+      //     performance is! ResistanceExercisePerformance)
+      //   '${performance.calories} kcal',
+      if (performance is WeightsExercisePerformance) ...[
+        '${(performance.sets.weight / performance.sets.length).decimals(2)} kg',
+        performance.sets.map((set) => '${set.repetitions}').join("/"),
+      ],
+      if (performance is ResistanceExercisePerformance) ...[
+        '${performance.watts} watts',
+        '${performance.duration.inMinutes} m',
+      ],
+      // TODO: Re-enable this.
+      // if (latest != null)
+      //   '${(snapshot.data ?? 0 / latest.calories * 100).round()}%'
+    ].join(" • ");
   }
 }
 

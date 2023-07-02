@@ -43,7 +43,7 @@ class ExercisesList extends StatelessWidget {
                   primary: exercise?.muscleGroups.primary,
                   secondary: exercise?.muscleGroups.secondary ?? [],
                 ),
-                title: Text(exercise?.name ?? '...'),
+                title: exercise?.name ?? '...',
                 actions: Row(
                   mainAxisSize: MainAxisSize.min,
                   children: [

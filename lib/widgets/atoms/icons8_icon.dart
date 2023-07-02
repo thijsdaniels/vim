@@ -44,8 +44,11 @@ class Icons8Icon extends StatelessWidget {
       image: AssetImage(_path(slug, style)),
       width: size,
       height: size,
-      errorBuilder:
-          errorBuilder ?? (context, exception, trace) => _network(style),
+      errorBuilder: errorBuilder ??
+          (context, exception, trace) => SizedBox(
+                width: size,
+                height: size,
+              ),
     );
   }
 
@@ -65,19 +68,19 @@ class Icons8Icon extends StatelessWidget {
   String _path(String slug, Icons8Style style) {
     switch (style) {
       case Icons8Style.arcade:
-        return 'images/icons8/arcade/icons8-$slug-100.png';
+        return 'assets/images/icons8/arcade/icons8-$slug-100.png';
       case Icons8Style.color:
-        return 'images/icons8/color/icons8-$slug-100.png';
+        return 'assets/images/icons8/color/icons8-$slug-100.png';
       case Icons8Style.colorGlass:
-        return 'images/icons8/color-glass/icons8-$slug-100.png';
+        return 'assets/images/icons8/color-glass/icons8-$slug-100.png';
       case Icons8Style.dusk:
-        return 'images/icons8/dusk/icons8-$slug-100.png';
+        return 'assets/images/icons8/dusk/icons8-$slug-100.png';
       case Icons8Style.fluency:
-        return 'images/icons8/fluency/icons8-$slug-100.png';
+        return 'assets/images/icons8/fluency/icons8-$slug-100.png';
       case Icons8Style.pulsarColor:
-        return 'images/icons8/pulsar-color/icons8-$slug-100.png';
+        return 'assets/images/icons8/pulsar-color/icons8-$slug-100.png';
       case Icons8Style.stickers:
-        return 'images/icons8/stickers/icons8-$slug-100.png';
+        return 'assets/images/icons8/stickers/icons8-$slug-100.png';
     }
   }
 

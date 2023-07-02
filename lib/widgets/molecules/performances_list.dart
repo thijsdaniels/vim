@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
+import 'package:vim/extensions/date_time.dart';
 import 'package:vim/extensions/num.dart';
 import 'package:vim/models/exercise/exercise_performance.dart';
 import 'package:vim/models/exercise/performance.dart';
@@ -45,86 +45,41 @@ class PerformancesList extends StatelessWidget {
       itemBuilder: (context, index) {
         Performance performance = performances[index];
 
-        return ListSurface(
-          elevation: elevation,
-          icon: getIcon(performance),
-          title: Text(performance.name, overflow: TextOverflow.ellipsis),
-          subtitle: FutureBuilder(
-            future: performance.calories,
-            builder: (context, snapshot) => SecondaryText(
-              // TODO: Try to change this into Chip widgets.
-              [
-                '${snapshot.data?.round()} cal',
-                if (performance is WeightsExercisePerformance) ...[
-                  '${(performance.sets.weight / performance.sets.length).decimals(2)} kg',
-                  performance.sets
-                      .map(
-                        (set) => '${set.repetitions}',
-                      )
-                      .join("/"),
-                ],
-                if (performance is ResistanceExercisePerformance) ...[
-                  '${performance.watts} watts',
-                  '${performance.duration.inMinutes} m',
-                ],
-              ].join(" • "),
+        return FutureBuilder(
+          future: performance.calories,
+          builder: (context, snapshot) => ListSurface(
+            elevation: elevation,
+            icon: getIcon(performance),
+            title: performance.name,
+            // TODO: Try to change this into Chip widgets.
+            subtitle: [
+              '${snapshot.data?.round()} cal',
+              if (performance is WeightsExercisePerformance) ...[
+                '${(performance.sets.weight / performance.sets.length).decimals(2)} kg',
+                performance.sets
+                    .map(
+                      (set) => '${set.repetitions}',
+                    )
+                    .join("/"),
+              ],
+              if (performance is ResistanceExercisePerformance) ...[
+                '${performance.watts} watts',
+                '${performance.duration.inMinutes} m',
+              ],
+            ].join(" • "),
+            onTap: () {
+              Navigator.of(context).push(
+                MaterialPageRoute(
+                  builder: (context) => PerformanceView(
+                    path: performance.reference!.path,
+                  ),
+                ),
+              );
+            },
+            actions: SecondaryText(
+              performance.timestamp.toDate().toTimeString(),
             ),
           ),
-          onTap: () {
-            Navigator.of(context).push(
-              MaterialPageRoute(
-                builder: (context) => PerformanceView(
-                  path: performance.reference!.path,
-                ),
-              ),
-            );
-          },
-          actions: SecondaryText(
-            DateFormat.Hm('en_US').format(performance.timestamp.toDate()),
-          ),
-          // trailing: Row(
-          //   mainAxisSize: MainAxisSize.min,
-          //   children: [
-          //     IconButton(
-          //       icon: const Icon(Icons.edit),
-          //       onPressed: () async {
-          //         Performance editedPerformance =
-          //             await Navigator.of(context).push(
-          //           MaterialPageRoute(builder: (context) {
-          //             if (performance is ExercisePerformance) {
-          //               return CreateExercisePerformanceView(
-          //                 exercisePerformance: performance,
-          //               );
-          //             } else if (performance is RoutinePerformance) {
-          //               return CreateRoutinePerformanceView(
-          //                 routinePerformance: performance,
-          //               );
-          //             } else {
-          //               return CreatePerformanceView(
-          //                 performance: performance,
-          //               );
-          //             }
-          //           }),
-          //         );
-
-          //         PerformancesService.update(editedPerformance);
-          //       },
-          //     ),
-          //     WithConfirmationDialog(
-          //       title: performance.name,
-          //       description:
-          //           'Are you sure you want to delete this performance?',
-          //       builder: (context, confirm) => IconButton(
-          //         icon: const Icon(Icons.delete),
-          //         onPressed: () async {
-          //           if (await confirm()) {
-          //             PerformancesService.delete(performance);
-          //           }
-          //         },
-          //       ),
-          //     ),
-          //   ],
-          // ),
         );
       },
     );

@@ -5,7 +5,6 @@ import 'package:vim/models/food/ingredient_amount_reference.dart';
 import 'package:vim/models/food/recipe.dart';
 import 'package:vim/services/recipes_service.dart';
 import 'package:vim/widgets/atoms/icons8_icon.dart';
-import 'package:vim/widgets/atoms/secondary_text.dart';
 import 'package:vim/widgets/atoms/standard_list.dart';
 import 'package:vim/widgets/atoms/stats_table.dart';
 import 'package:vim/widgets/molecules/list_surface.dart';
@@ -168,29 +167,22 @@ class IngredientAmountListSurface extends StatelessWidget {
           icon: (ingredient?.icon != null)
               ? Icons8Icon(ingredient!.icon!)
               : const CircularProgressIndicator(),
-          title: Text(ingredient?.name ?? '...'),
-          subtitle: SecondaryText(
-            '${ingredientAmount.amount.decimals(2).toString()} grams',
-          ),
+          title: ingredient?.name ?? '...',
+          subtitle: '${ingredientAmount.amount.decimals(2).toString()} grams',
+          onTap: () async {
+            IngredientAmountReference edited = await Navigator.of(context).push(
+              MaterialPageRoute(
+                builder: (context) => CreateIngredientAmountView(
+                  ingredientAmount: ingredientAmount,
+                ),
+              ),
+            );
+
+            onChange(edited);
+          },
           actions: Row(
             mainAxisSize: MainAxisSize.min,
             children: [
-              if (ingredient != null)
-                IconButton(
-                  icon: const Icon(Icons.edit),
-                  onPressed: () async {
-                    IngredientAmountReference edited =
-                        await Navigator.of(context).push(
-                      MaterialPageRoute(
-                        builder: (context) => CreateIngredientAmountView(
-                          ingredientAmount: ingredientAmount,
-                        ),
-                      ),
-                    );
-
-                    onChange(edited);
-                  },
-                ),
               if (ingredient != null)
                 WithConfirmationDialog(
                   title: ingredient.name,

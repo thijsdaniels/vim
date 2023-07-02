@@ -7,7 +7,6 @@ import 'package:vim/models/food/ingredient_consumption.dart';
 import 'package:vim/models/food/recipe_consumption.dart';
 import 'package:vim/services/consumptions_service.dart';
 import 'package:vim/widgets/atoms/icons8_icon.dart';
-import 'package:vim/widgets/atoms/secondary_text.dart';
 import 'package:vim/widgets/atoms/standard_list.dart';
 import 'package:vim/widgets/atoms/stats_table.dart';
 import 'package:vim/widgets/molecules/list_surface.dart';
@@ -158,10 +157,9 @@ class _ConsumptionViewState extends State<ConsumptionView> {
                         icon: ingredientAmount.ingredient.icon != null
                             ? Icons8Icon(ingredientAmount.ingredient.icon!)
                             : null,
-                        title: Text(ingredientAmount.ingredient.name),
-                        subtitle: SecondaryText(
-                          '${ingredientAmount.amount.decimals(2).toString()} grams',
-                        ),
+                        title: ingredientAmount.ingredient.name,
+                        subtitle:
+                            '${ingredientAmount.amount.decimals(2).toString()} grams',
                       ),
                     )
                     .toList(),

@@ -3,7 +3,6 @@ import 'package:provider/provider.dart';
 import 'package:vim/models/exercise/routine.dart';
 import 'package:vim/widgets/atoms/floating_action_surface.dart';
 import 'package:vim/widgets/atoms/routine_icon.dart';
-import 'package:vim/widgets/atoms/secondary_text.dart';
 import 'package:vim/widgets/atoms/standard_list.dart';
 import 'package:vim/widgets/molecules/list_surface.dart';
 import 'package:vim/widgets/views/home/exercise/routines/create_routine_view.dart';
@@ -34,12 +33,10 @@ class RoutinesView extends StatelessWidget {
 
               return ListSurface(
                 icon: RoutineIcon(routine: routine),
-                title: Text(routine.name),
-                subtitle: SecondaryText(
-                  [
-                    '${routine.exerciseReferences.length} exercises',
-                  ].join(" • "),
-                ),
+                title: routine.name,
+                subtitle: [
+                  '${routine.exerciseReferences.length} exercises',
+                ].join(" • "),
                 onTap: () {
                   Navigator.of(context).push(
                     MaterialPageRoute(

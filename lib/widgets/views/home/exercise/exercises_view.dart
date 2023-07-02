@@ -4,7 +4,6 @@ import 'package:vim/extensions/string.dart';
 import 'package:vim/models/exercise/exercise.dart';
 import 'package:vim/widgets/atoms/floating_action_surface.dart';
 import 'package:vim/widgets/atoms/muscle_groups_focus_icon.dart';
-import 'package:vim/widgets/atoms/secondary_text.dart';
 import 'package:vim/widgets/atoms/standard_list.dart';
 import 'package:vim/widgets/molecules/list_surface.dart';
 import 'package:vim/widgets/views/home/exercise/exercises/create_exercise_view.dart';
@@ -44,8 +43,8 @@ class ExercisesView extends StatelessWidget {
                   primary: exercise.muscleGroups.primary,
                   secondary: exercise.muscleGroups.secondary,
                 ),
-                title: Text(exercise.name),
-                subtitle: SecondaryText(exercise.type.name.toTitleCase()),
+                title: exercise.name,
+                subtitle: exercise.type.name.toTitleCase(),
                 onTap: () {
                   Navigator.of(context).push(
                     MaterialPageRoute(
