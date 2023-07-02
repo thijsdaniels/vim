@@ -31,27 +31,24 @@ class Vim extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return StateProviders(
-      child: Consumer<SettingsModel>(
-        builder: (context, settingsModel, _) {
-          return MaterialApp(
-            debugShowCheckedModeBanner: false,
-            title: 'Vim',
-            theme: lightTheme(settingsModel.color),
-            darkTheme: darkTheme(settingsModel.color),
-            themeMode: settingsModel.themeMode,
-            home: WithAuthentication(
-              // TODO: registrationBuilder: (context) => const RegisterView(),
-              loginBuilder: (context) => const LoginView(),
-              onboardingBuilder: (context, completeOnboarding) =>
-                  OnboardingView(onComplete: completeOnboarding),
-              authenticatedBuilder: (context) => const ServiceProviders(
-                child: DataProviders(
-                  child: HomeView(),
-                ),
-              ),
+      child: WithAuthentication(
+        builder: (context, isAuthenticated, isOnboarded, completeOnboarding) =>
+            ServiceProviders(
+          child: Consumer<SettingsModel>(
+            builder: (context, settingsModel, _) => MaterialApp(
+              debugShowCheckedModeBanner: false,
+              title: 'Vim',
+              theme: lightTheme(settingsModel.color),
+              darkTheme: darkTheme(settingsModel.color),
+              themeMode: settingsModel.themeMode,
+              home: !isAuthenticated
+                  ? const LoginView()
+                  : !isOnboarded
+                      ? OnboardingView(onComplete: completeOnboarding)
+                      : const HomeView(),
             ),
-          );
-        },
+          ),
+        ),
       ),
     );
   }
@@ -123,23 +120,15 @@ var theme = ({
 class WithAuthentication extends StatefulWidget {
   const WithAuthentication({
     super.key,
-    required this.loginBuilder,
-    required this.onboardingBuilder,
-    required this.authenticatedBuilder,
+    required this.builder,
   });
 
   final Widget Function(
     BuildContext context,
-  ) loginBuilder;
-
-  final Widget Function(
-    BuildContext context,
+    bool isAuthenticated,
+    bool isOnboarded,
     void Function(User user) completeOnboarding,
-  ) onboardingBuilder;
-
-  final Widget Function(
-    BuildContext context,
-  ) authenticatedBuilder;
+  ) builder;
 
   @override
   State<WithAuthentication> createState() => _WithAuthenticationState();
@@ -154,7 +143,7 @@ class _WithAuthenticationState extends State<WithAuthentication> {
       stream: firebase_auth.FirebaseAuth.instance.authStateChanges(),
       builder: (context, firebaseUserSnapshot) {
         if (!firebaseUserSnapshot.hasData) {
-          return widget.loginBuilder(context);
+          return widget.builder(context, false, false, (user) => {});
         }
 
         return FutureBuilder(
@@ -166,8 +155,10 @@ class _WithAuthenticationState extends State<WithAuthentication> {
             }
 
             if (userSnapshot.data == null) {
-              return widget.onboardingBuilder(
+              return widget.builder(
                 context,
+                true,
+                false,
                 (user) async {
                   await UsersService.instance
                       .createForFirebaseUser(firebaseUserSnapshot.data!, user);
@@ -180,7 +171,7 @@ class _WithAuthenticationState extends State<WithAuthentication> {
               initialData: userSnapshot.data,
               value:
                   UsersService.instance.get(userSnapshot.data!.reference!.id),
-              child: widget.authenticatedBuilder(context),
+              child: widget.builder(context, true, true, (user) => {}),
             );
           },
         );
@@ -202,7 +193,7 @@ class ServiceProviders extends StatelessWidget {
     return Consumer<User?>(
       builder: (context, user, _) {
         if (user == null) {
-          return const Center(child: CircularProgressIndicator());
+          return child;
         }
 
         return MultiProvider(
@@ -214,7 +205,7 @@ class ServiceProviders extends StatelessWidget {
               value: PerformancesService(user),
             ),
           ],
-          child: child,
+          child: DataProviders(child: child),
         );
       },
     );

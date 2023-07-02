@@ -9,6 +9,7 @@ class ListSurface extends StatelessWidget {
   final String? subtitle;
   final Widget? actions;
   final double? elevation;
+  final bool dense;
 
   const ListSurface({
     super.key,
@@ -18,6 +19,7 @@ class ListSurface extends StatelessWidget {
     this.subtitle,
     this.actions,
     this.elevation,
+    this.dense = false,
   });
 
   @override
@@ -32,13 +34,14 @@ class ListSurface extends StatelessWidget {
             Surface(
               elevation: (elevation ?? 0) + 4,
               child: SizedBox(
-                width: 72,
-                height: 72,
+                width: dense ? 56 : 72,
+                height: dense ? 56 : 72,
                 child: Center(child: icon),
               ),
             ),
             Expanded(
               child: ListTile(
+                dense: dense,
                 title: Text(
                   title,
                   overflow: TextOverflow.ellipsis,
