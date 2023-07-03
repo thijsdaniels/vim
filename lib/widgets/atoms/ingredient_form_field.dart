@@ -4,7 +4,6 @@ import 'package:vim/models/food/ingredient.dart';
 import 'package:vim/widgets/atoms/icons8_icon.dart';
 import 'package:vim/widgets/atoms/search_form_field.dart';
 
-/// TODO: This widget isn't being used anymore for some reason?
 class IngredientFormField extends StatelessWidget {
   final Ingredient? selection;
   final void Function(Ingredient? ingredient)? onSelected;
