@@ -6,18 +6,21 @@ class SimpleCard extends StatelessWidget {
   final String? title;
   final List<Widget>? actions;
   final Widget child;
+  final double? elevation;
 
   const SimpleCard({
     super.key,
     this.primary = false,
     this.title,
     this.actions,
+    this.elevation,
     required this.child,
   });
 
   @override
   Widget build(BuildContext context) {
     return Surface(
+      elevation: elevation,
       isPrimary: primary,
       child: Padding(
         padding: const EdgeInsets.all(16.0),

@@ -1,17 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:vim/widgets/atoms/number_form_field.dart';
 import 'package:vim/widgets/atoms/standard_list.dart';
+import 'package:vim/widgets/molecules/simple_card.dart';
 
 class SetsFormFields extends StatefulWidget {
   final List<({num? repetitions, num? weight})> sets;
   final void Function(List<({num? repetitions, num? weight})> sets) onChanged;
-  final double elevation;
 
   const SetsFormFields({
     super.key,
     required this.sets,
     required this.onChanged,
-    this.elevation = 1,
   });
 
   @override
@@ -30,17 +29,55 @@ class _SetsFormFieldsState extends State<SetsFormFields> {
 
   @override
   Widget build(BuildContext context) {
-    return StandardList(
-      padding: EdgeInsets.zero,
-      children: [
-        ..._sets.asMap().entries.map(
-          (entry) {
-            var (:repetitions, :weight) = entry.value;
+    return SimpleCard(
+      title: 'Sets',
+      actions: [
+        IconButton(
+          icon: const Icon(Icons.add),
+          onPressed: () {
+            setState(() {
+              _sets.add((repetitions: null, weight: null));
+              widget.onChanged(_sets);
+            });
+          },
+        ),
+      ],
+      child: StandardList(
+        physics: const NeverScrollableScrollPhysics(),
+        padding: EdgeInsets.zero,
+        children: [
+          ..._sets.asMap().entries.map(
+            (entry) {
+              var (:repetitions, :weight) = entry.value;
 
-            return Card(
-              elevation: widget.elevation,
-              child: Padding(
-                padding: const EdgeInsets.all(16.0),
+              return SimpleCard(
+                elevation: 4,
+                key: Key(entry.toString()),
+                title: 'Set ${entry.key + 1}',
+                actions: [
+                  IconButton(
+                      icon: const Icon(Icons.copy),
+                      onPressed: () {
+                        setState(() {
+                          _sets.insert(entry.key + 1, (
+                            repetitions: entry.value.repetitions,
+                            weight: entry.value.weight,
+                          ));
+                          widget.onChanged(_sets);
+                        });
+                      }),
+                  IconButton(
+                    icon: const Icon(Icons.clear),
+                    onPressed: _sets.length > 1
+                        ? () {
+                            setState(() {
+                              _sets.removeAt(entry.key);
+                              widget.onChanged(_sets);
+                            });
+                          }
+                        : null,
+                  ),
+                ],
                 child: Row(
                   children: [
                     Expanded(
@@ -89,40 +126,13 @@ class _SetsFormFieldsState extends State<SetsFormFields> {
                         },
                       ),
                     ),
-                    const SizedBox(width: 16),
-                    IconButton(
-                      icon: const Icon(Icons.clear),
-                      onPressed: _sets.length > 1
-                          ? () {
-                              setState(() {
-                                _sets.removeAt(entry.key);
-                                widget.onChanged(_sets);
-                              });
-                            }
-                          : null,
-                    ),
                   ],
                 ),
-              ),
-            );
-          },
-        ),
-        Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: TextButton(
-            child: const Text('Add Set'),
-            onPressed: () {
-              setState(() {
-                _sets.add((
-                  repetitions: _sets.isNotEmpty ? _sets.last.repetitions : null,
-                  weight: _sets.isNotEmpty ? _sets.last.weight : null,
-                ));
-                widget.onChanged(_sets);
-              });
+              );
             },
           ),
-        ),
-      ],
+        ],
+      ),
     );
   }
 }

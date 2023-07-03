@@ -200,15 +200,11 @@ class _CreateExercisePerformanceViewState
                 ),
               ),
             if (exerciseType == ExerciseType.weights)
-              SimpleCard(
-                title: 'Sets',
-                child: SetsFormFields(
-                  sets: _sets,
-                  elevation: 4,
-                  onChanged: (sets) => setState(() {
-                    _sets = sets;
-                  }),
-                ),
+              SetsFormFields(
+                sets: _sets,
+                onChanged: (sets) => setState(() {
+                  _sets = sets;
+                }),
               ),
           ],
         ),
