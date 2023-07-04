@@ -92,8 +92,10 @@ class IngredientView extends StatelessWidget {
                     ingredient.nutritionPerServing ? '1 Serving' : '100 Grams',
                   )
                 ],
-                child: NutritionTable(
-                  nutrition: ingredient.nutrition,
+                child: Center(
+                  child: NutritionTable(
+                    nutrition: ingredient.nutrition,
+                  ),
                 ),
               ),
             ],

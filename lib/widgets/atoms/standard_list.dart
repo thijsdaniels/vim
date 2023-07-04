@@ -13,7 +13,11 @@ class StandardList extends StatelessWidget {
     this.children,
     this.itemCount,
     this.itemBuilder,
+
+    /// TODO: Default to `const NeverScrollableScrollPhysics()`.
     this.physics,
+
+    /// TODO: Default to `EdgeInsets.zero`.
     this.padding = const EdgeInsets.all(16),
     this.spacing = 12,
   }) : assert(itemCount != null && itemBuilder != null || children != null);

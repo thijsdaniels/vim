@@ -24,7 +24,16 @@ class NutritionTable extends StatelessWidget {
         NutritionRow('Sugars', nutrition.carbohydrates.sugars, indented: true),
         NutritionRow('Fibers', nutrition.carbohydrates.fibers, indented: true),
         NutritionRow('Proteins', nutrition.proteins.total),
-        NutritionRow('Salt', nutrition.minerals.salt),
+        NutritionRow('Minerals', null),
+        NutritionRow('Calcium', nutrition.minerals.calcium, indented: true),
+        NutritionRow('Sodium', nutrition.minerals.sodium, indented: true),
+        NutritionRow('Vitamins', null),
+        NutritionRow('A', nutrition.vitamins.a, indented: true),
+        NutritionRow('B1', nutrition.vitamins.b1, indented: true),
+        NutritionRow('B2', nutrition.vitamins.b2, indented: true),
+        NutritionRow('Water', nutrition.water),
+        NutritionRow('Alcohol', nutrition.alcohol),
+        NutritionRow('Caffeine', nutrition.caffeine),
       ],
     );
   }
