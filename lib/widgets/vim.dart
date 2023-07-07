@@ -198,9 +198,9 @@ class ServiceProviders extends StatelessWidget {
 
         return MultiProvider(
           providers: [
-            // Provider<IngredientsService>.value(
-            //   value: IngredientsService(user),
-            // ),
+            Provider<IngredientsService>.value(
+              value: IngredientsService(user),
+            ),
             Provider<RecipesService>.value(
               value: RecipesService(user),
             ),
@@ -238,7 +238,7 @@ class DataProviders extends StatelessWidget {
       builder: (context, dateModel, _) => MultiProvider(
         providers: [
           StreamProvider<List<Ingredient>>.value(
-            value: IngredientsService.instance.all(),
+            value: IngredientsService.of(context).all(),
             initialData: const [],
           ),
           StreamProvider<List<Recipe>>.value(

@@ -75,7 +75,7 @@ class _CreateIngredientAmountViewState
                 children: [
                   StreamBuilder(
                     stream: _ingredient != null
-                        ? IngredientsService.instance.get(_ingredient!.id)
+                        ? IngredientsService.of(context).get(_ingredient!.id)
                         : null,
                     builder: (context, snapshot) => IngredientFormField(
                       selection: snapshot.data,

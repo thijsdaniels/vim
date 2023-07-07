@@ -84,7 +84,7 @@ class _CreateIngredientViewState extends State<CreateIngredientView> {
                   ingredient.nutritionPerServing = _nutritionPerServing;
                   ingredient.nutrition = nutrition;
 
-                  IngredientsService.instance.update(ingredient);
+                  IngredientsService.of(context).update(ingredient);
                 } else {
                   ingredient = Ingredient(
                     icon: _icon,
@@ -95,7 +95,7 @@ class _CreateIngredientViewState extends State<CreateIngredientView> {
                     nutritionPerServing: _nutritionPerServing,
                   );
 
-                  IngredientsService.instance.create(ingredient);
+                  IngredientsService.of(context).create(ingredient);
                 }
 
                 Navigator.of(context).pop(ingredient);

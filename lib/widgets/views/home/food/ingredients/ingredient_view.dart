@@ -21,7 +21,7 @@ class IngredientView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return StreamBuilder<Ingredient?>(
-      stream: IngredientsService.instance.get(ingredientId),
+      stream: IngredientsService.of(context).get(ingredientId),
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
           return const LoadingView();
@@ -57,7 +57,7 @@ class IngredientView extends StatelessWidget {
                   onPressed: () async {
                     var navigator = Navigator.of(context);
                     if (await confirm()) {
-                      IngredientsService.instance.delete(ingredient);
+                      IngredientsService.of(context).delete(ingredient);
                       navigator.pop();
                     }
                   },

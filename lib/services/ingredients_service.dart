@@ -1,19 +1,19 @@
+import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:vim/models/food/ingredient.dart';
+import 'package:vim/models/user/user.dart';
 import 'package:vim/services/service.dart';
 
-/// TODO: Filter all operations by the currently authenticated user. It might be
-/// a good idea to apply this generally to the entire service:
-/// ```
-///   instance
-///     .collection('users')
-///     .document(user.uid)
-///     .collection('ingredients')
-///     ...
-/// ```
 class IngredientsService extends Service<Ingredient> {
-  static final instance = IngredientsService();
+  static IngredientsService of(BuildContext context) {
+    return Provider.of<IngredientsService>(context, listen: false);
+  }
 
-  IngredientsService() : super(path: 'ingredients');
+  IngredientsService(User? user)
+      : super(
+            path: user != null
+                ? 'users/${user.reference!.id}/ingredients'
+                : 'ingredients');
 
   @override
   Ingredient fromFirestore(snapshot, options) {
