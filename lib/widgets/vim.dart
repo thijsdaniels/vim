@@ -198,6 +198,9 @@ class ServiceProviders extends StatelessWidget {
 
         return MultiProvider(
           providers: [
+            Provider<RecipesService>.value(
+              value: RecipesService(user),
+            ),
             Provider<ConsumptionsService>.value(
               value: ConsumptionsService(user),
             ),

@@ -27,7 +27,7 @@ class RecipeView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return StreamBuilder<Recipe?>(
-      stream: RecipesService.instance.get(recipeId),
+      stream: RecipesService.of(context).get(recipeId),
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
           return const LoadingView();
@@ -63,7 +63,7 @@ class RecipeView extends StatelessWidget {
                   onPressed: () async {
                     var navigator = Navigator.of(context);
                     if (await confirm()) {
-                      RecipesService.instance.delete(recipe);
+                      RecipesService.of(context).delete(recipe);
                       navigator.pop();
                     }
                   },
@@ -109,7 +109,7 @@ class RecipeView extends StatelessWidget {
 
                       if (ingredientAmount != null) {
                         recipe.ingredientAmounts.add(ingredientAmount);
-                        RecipesService.instance.update(recipe);
+                        RecipesService.of(context).update(recipe);
                       }
                     },
                   ),
@@ -125,11 +125,11 @@ class RecipeView extends StatelessWidget {
                       ingredientAmount,
                       onChange: (value) {
                         recipe.ingredientAmounts.replace(index, value);
-                        RecipesService.instance.update(recipe);
+                        RecipesService.of(context).update(recipe);
                       },
                       onDelete: () {
                         recipe.ingredientAmounts.removeAt(index);
-                        RecipesService.instance.update(recipe);
+                        RecipesService.of(context).update(recipe);
                       },
                     );
                   },
