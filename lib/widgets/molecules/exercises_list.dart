@@ -30,7 +30,7 @@ class ExercisesList extends StatelessWidget {
 
         return StreamBuilder<Exercise?>(
           key: Key(index.toString()),
-          stream: ExercisesService.instance.get(id),
+          stream: ExercisesService.of(context).get(id),
           builder: (context, snapshot) {
             Exercise? exercise = snapshot.data;
 

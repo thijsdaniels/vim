@@ -66,9 +66,9 @@ class _CreateExerciseViewState extends State<CreateExerciseView> {
                     secondary: _secondaryMuscleGroups,
                   );
 
-                  ExercisesService.instance.update(exercise);
+                  ExercisesService.of(context).update(exercise);
                 } else {
-                  ExercisesService.instance.create(Exercise(
+                  ExercisesService.of(context).create(Exercise(
                     name: _name!,
                     type: _type!,
                     muscleGroups: (

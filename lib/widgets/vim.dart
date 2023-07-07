@@ -204,9 +204,9 @@ class ServiceProviders extends StatelessWidget {
             Provider<RecipesService>.value(
               value: RecipesService(user),
             ),
-            // Provider<ExercisesService>.value(
-            //   value: ExercisesService(user),
-            // ),
+            Provider<ExercisesService>.value(
+              value: ExercisesService(user),
+            ),
             Provider<RoutinesService>.value(
               value: RoutinesService(user),
             ),
@@ -246,7 +246,7 @@ class DataProviders extends StatelessWidget {
             initialData: const [],
           ),
           StreamProvider<List<Exercise>>.value(
-            value: ExercisesService.instance.all(),
+            value: ExercisesService.of(context).all(),
             initialData: const [],
           ),
           StreamProvider<List<Routine>>.value(

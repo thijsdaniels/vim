@@ -24,7 +24,7 @@ class ExerciseView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return StreamBuilder<Exercise?>(
-      stream: ExercisesService.instance.get(exerciseId),
+      stream: ExercisesService.of(context).get(exerciseId),
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
           return const LoadingView();
@@ -60,7 +60,7 @@ class ExerciseView extends StatelessWidget {
                   onPressed: () async {
                     var navigator = Navigator.of(context);
                     if (await confirm()) {
-                      ExercisesService.instance.delete(exercise);
+                      ExercisesService.of(context).delete(exercise);
                       navigator.pop();
                     }
                   },
