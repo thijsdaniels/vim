@@ -198,8 +198,17 @@ class ServiceProviders extends StatelessWidget {
 
         return MultiProvider(
           providers: [
+            // Provider<IngredientsService>.value(
+            //   value: IngredientsService(user),
+            // ),
             Provider<RecipesService>.value(
               value: RecipesService(user),
+            ),
+            // Provider<ExercisesService>.value(
+            //   value: ExercisesService(user),
+            // ),
+            Provider<RoutinesService>.value(
+              value: RoutinesService(user),
             ),
             Provider<ConsumptionsService>.value(
               value: ConsumptionsService(user),
@@ -233,7 +242,7 @@ class DataProviders extends StatelessWidget {
             initialData: const [],
           ),
           StreamProvider<List<Recipe>>.value(
-            value: RecipesService.instance.all(),
+            value: RecipesService.of(context).all(),
             initialData: const [],
           ),
           StreamProvider<List<Exercise>>.value(
@@ -241,7 +250,7 @@ class DataProviders extends StatelessWidget {
             initialData: const [],
           ),
           StreamProvider<List<Routine>>.value(
-            value: RoutinesService.instance.all(),
+            value: RoutinesService.of(context).all(),
             initialData: const [],
           ),
           StreamProvider<List<Consumption>>.value(

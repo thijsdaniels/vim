@@ -24,7 +24,7 @@ class RoutineView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return StreamBuilder<Routine?>(
-      stream: RoutinesService.instance.get(routineId),
+      stream: RoutinesService.of(context).get(routineId),
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
           return const LoadingView();
@@ -60,7 +60,7 @@ class RoutineView extends StatelessWidget {
                   onPressed: () async {
                     var navigator = Navigator.of(context);
                     if (await confirm()) {
-                      RoutinesService.instance.delete(routine);
+                      RoutinesService.of(context).delete(routine);
                       navigator.pop();
                     }
                   },
@@ -103,7 +103,7 @@ class RoutineView extends StatelessWidget {
                       );
 
                       routine.exerciseReferences.add(exercise.reference!);
-                      await RoutinesService.instance.update(routine);
+                      await RoutinesService.of(context).update(routine);
                     },
                   )
                 ],
@@ -111,7 +111,7 @@ class RoutineView extends StatelessWidget {
                   exerciseReferences: routine.exerciseReferences,
                   onChanged: (exerciseReferences) {
                     routine.exerciseReferences = exerciseReferences;
-                    RoutinesService.instance.update(routine);
+                    RoutinesService.of(context).update(routine);
                   },
                 ),
               ),

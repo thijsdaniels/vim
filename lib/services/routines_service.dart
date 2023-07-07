@@ -1,19 +1,19 @@
+import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:vim/models/exercise/routine.dart';
+import 'package:vim/models/user/user.dart';
 import 'package:vim/services/service.dart';
 
-/// TODO: Filter all operations by the currently authenticated user. It might be
-/// a good idea to apply this generally to the entire service:
-/// ```
-///   instance
-///     .collection('users')
-///     .document(user.uid)
-///     .collection('routines')
-///     ...
-/// ```
 class RoutinesService extends Service<Routine> {
-  static final instance = RoutinesService();
+  static RoutinesService of(BuildContext context) {
+    return Provider.of<RoutinesService>(context, listen: false);
+  }
 
-  RoutinesService() : super(path: 'routines');
+  RoutinesService(User? user)
+      : super(
+            path: user != null
+                ? 'users/${user.reference!.id}/routines'
+                : 'routines');
 
   @override
   Routine fromFirestore(snapshot, options) {
