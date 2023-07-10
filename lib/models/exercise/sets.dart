@@ -1,3 +1,4 @@
+import 'package:flutter/material.dart';
 import 'package:vim/models/collection.dart';
 import 'package:vim/models/exercise/set.dart';
 
@@ -10,7 +11,8 @@ class Sets extends Collection<Set> {
     );
   }
 
-  static Sets fromRecords(Iterable<({num? weight, num? repetitions})> records) {
+  static Sets fromRecords(
+      Iterable<({Key key, num? weight, num? repetitions})> records) {
     return Sets(
       records.map((record) => Set.fromRecord(record)).toList(),
     );

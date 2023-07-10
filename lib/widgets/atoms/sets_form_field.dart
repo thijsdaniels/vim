@@ -4,8 +4,9 @@ import 'package:vim/widgets/atoms/standard_list.dart';
 import 'package:vim/widgets/molecules/simple_card.dart';
 
 class SetsFormFields extends StatefulWidget {
-  final List<({num? repetitions, num? weight})> sets;
-  final void Function(List<({num? repetitions, num? weight})> sets) onChanged;
+  final List<({Key key, num? repetitions, num? weight})> sets;
+  final void Function(List<({Key key, num? repetitions, num? weight})> sets)
+      onChanged;
 
   const SetsFormFields({
     super.key,
@@ -18,15 +19,6 @@ class SetsFormFields extends StatefulWidget {
 }
 
 class _SetsFormFieldsState extends State<SetsFormFields> {
-  late List<({num? repetitions, num? weight})> _sets;
-
-  @override
-  void initState() {
-    super.initState();
-
-    _sets = widget.sets;
-  }
-
   @override
   Widget build(BuildContext context) {
     return SimpleCard(
@@ -35,10 +27,10 @@ class _SetsFormFieldsState extends State<SetsFormFields> {
         IconButton(
           icon: const Icon(Icons.add),
           onPressed: () {
-            setState(() {
-              _sets.add((repetitions: null, weight: null));
-              widget.onChanged(_sets);
-            });
+            widget.onChanged(
+              widget.sets
+                ..add((key: UniqueKey(), repetitions: null, weight: null)),
+            );
           },
         ),
       ],
@@ -46,93 +38,134 @@ class _SetsFormFieldsState extends State<SetsFormFields> {
         physics: const NeverScrollableScrollPhysics(),
         padding: EdgeInsets.zero,
         children: [
-          ..._sets.asMap().entries.map(
+          ...widget.sets.asMap().entries.map(
             (entry) {
-              var (:repetitions, :weight) = entry.value;
-
               return SimpleCard(
+                key: entry.value.key,
                 elevation: 4,
-                key: Key(entry.toString()),
                 title: 'Set ${entry.key + 1}',
                 actions: [
                   IconButton(
-                      icon: const Icon(Icons.copy),
-                      onPressed: () {
-                        setState(() {
-                          _sets.insert(entry.key + 1, (
-                            repetitions: entry.value.repetitions,
+                    icon: const Icon(Icons.copy),
+                    onPressed: () {
+                      widget.onChanged(
+                        widget.sets
+                          ..insert(entry.key, (
+                            key: UniqueKey(),
                             weight: entry.value.weight,
-                          ));
-                          widget.onChanged(_sets);
-                        });
-                      }),
+                            repetitions: entry.value.repetitions,
+                          )),
+                      );
+                    },
+                  ),
                   IconButton(
                     icon: const Icon(Icons.clear),
-                    onPressed: _sets.length > 1
+                    onPressed: widget.sets.length > 1
                         ? () {
-                            setState(() {
-                              _sets.removeAt(entry.key);
-                              widget.onChanged(_sets);
-                            });
+                            widget.onChanged(widget.sets..removeAt(entry.key));
                           }
                         : null,
                   ),
                 ],
-                child: Row(
-                  children: [
-                    Expanded(
-                      child: NumberFormField(
-                        initialValue: weight,
-                        onChanged: (value) => setState(() {
-                          _sets[entry.key] = (
-                            weight: value,
-                            repetitions: entry.value.repetitions,
-                          );
-                          widget.onChanged(_sets);
-                        }),
-                        decoration: const InputDecoration(
-                          labelText: 'Weight',
-                          hintText: 'Kilograms',
-                        ),
-                        textInputAction: TextInputAction.next,
-                        validator: (value) {
-                          if (value == null) {
-                            return 'Please enter an amount.';
-                          }
-                          return null;
-                        },
-                      ),
-                    ),
-                    const SizedBox(width: 16),
-                    Expanded(
-                      child: NumberFormField(
-                        initialValue: repetitions,
-                        onChanged: (value) => setState(() {
-                          _sets[entry.key] = (
-                            weight: entry.value.weight,
-                            repetitions: value,
-                          );
-                          widget.onChanged(_sets);
-                        }),
-                        decoration: const InputDecoration(
-                          labelText: 'Repetitions',
-                        ),
-                        textInputAction: TextInputAction.next,
-                        validator: (value) {
-                          if (value == null) {
-                            return 'Please enter an amount.';
-                          }
-                          return null;
-                        },
-                      ),
-                    ),
-                  ],
-                ),
+                child: SetFormFields(
+                    set: entry.value,
+                    onChanged: (set) {
+                      widget.onChanged(
+                        widget.sets
+                          ..replaceRange(entry.key, entry.key + 1, [set]),
+                      );
+                    }),
               );
             },
           ),
         ],
       ),
+    );
+  }
+}
+
+class SetFormFields extends StatefulWidget {
+  final ({Key key, num? repetitions, num? weight}) set;
+  final void Function(({Key key, num? repetitions, num? weight}) set) onChanged;
+
+  const SetFormFields({
+    super.key,
+    required this.set,
+    required this.onChanged,
+  });
+
+  @override
+  State<SetFormFields> createState() => _SetFormFieldsState();
+}
+
+class _SetFormFieldsState extends State<SetFormFields> {
+  TextEditingController? _weightController;
+  TextEditingController? _repetitionsController;
+
+  @override
+  void initState() {
+    super.initState();
+
+    _weightController = TextEditingController(
+      text: widget.set.weight?.toString(),
+    );
+
+    _repetitionsController = TextEditingController(
+      text: widget.set.repetitions?.toString(),
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      children: [
+        Expanded(
+          child: NumberFormField(
+            controller: _weightController,
+            onChanged: (weight) {
+              widget.onChanged((
+                key: widget.set.key,
+                weight: weight,
+                repetitions: widget.set.repetitions,
+              ));
+            },
+            decoration: const InputDecoration(
+              labelText: 'Weight',
+              hintText: 'Kilograms',
+            ),
+            textInputAction: TextInputAction.next,
+            validator: (value) {
+              if (value == null) {
+                return 'Please enter an amount.';
+              }
+              return null;
+            },
+          ),
+        ),
+        const SizedBox(width: 16),
+        Expanded(
+          child: NumberFormField(
+            controller: _repetitionsController,
+            onChanged: (repetitions) {
+              widget.onChanged((
+                key: widget.set.key,
+                weight: widget.set.weight,
+                repetitions: repetitions,
+              ));
+            },
+            decoration: const InputDecoration(
+              labelText: 'Repetitions',
+            ),
+            textInputAction: TextInputAction.next,
+            validator: (value) {
+              if (value == null) {
+                return 'Please enter an amount.';
+              }
+              return null;
+            },
+          ),
+        ),
+      ],
     );
   }
 }

@@ -31,8 +31,8 @@ class _CreateExercisePerformanceViewState
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
   num? _calories;
-  List<({num? repetitions, num? weight})> _sets = [
-    (repetitions: null, weight: null)
+  List<({Key key, num? repetitions, num? weight})> _sets = [
+    (key: UniqueKey(), repetitions: null, weight: null)
   ];
   int? _minutes;
   num? _watts;
@@ -48,7 +48,11 @@ class _CreateExercisePerformanceViewState
 
       if (exercisePerformance is WeightsExercisePerformance) {
         _sets = exercisePerformance.sets
-            .map((set) => (repetitions: set.repetitions, weight: set.weight))
+            .map((set) => (
+                  key: UniqueKey(),
+                  repetitions: set.repetitions,
+                  weight: set.weight
+                ))
             .toList();
       }
 
