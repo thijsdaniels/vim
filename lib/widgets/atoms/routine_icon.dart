@@ -15,8 +15,8 @@ class RoutineIcon extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return StreamBuilder(
-      stream: routine.exercises,
+    return FutureBuilder(
+      future: routine.exercises,
       builder: (context, snapshot) {
         return MuscleGroupsIcon(
           elevation: elevation,

@@ -1,7 +1,4 @@
-import 'dart:math';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:collection/collection.dart';
 import 'package:vim/models/document.dart';
 
 /// TODO: Rename to Collection to reflect that this represents a Firestore
@@ -47,23 +44,6 @@ abstract class Service<D extends Document> {
 
   Stream<D?> get(String id) {
     return collection.doc(id).snapshots().map((snapshot) => snapshot.data());
-  }
-
-  /// TODO: Support more than 10 IDs.
-  /// TODO: The `"nonExistantId"` is because Firestore doesn't allow `whereIn`
-  /// on an empty array...
-  Stream<List<D>> some(List<String> ids) {
-    return collection
-        .where(
-          FieldPath.documentId,
-          whereIn: ids.isNotEmpty
-              ? ids.slice(0, min(ids.length, 10))
-              : ["nonExistantId"],
-        )
-        .snapshots()
-        .map(
-          (snapshot) => snapshot.docs.map((doc) => doc.data()).toList(),
-        );
   }
 
   Future<void> create(D document) async {

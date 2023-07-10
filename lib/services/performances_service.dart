@@ -22,6 +22,7 @@ class PerformancesService extends Service<Performance> {
   Performance fromFirestore(snapshot, options) {
     Map<String, dynamic> data = snapshot.data()!;
 
+    /// TODO: Move this logic into the `Performance.fromSnapshot` function?
     if (data['exercise'] != null) {
       switch (
           ExerciseType.values.byName(data['exercise']['snapshot']['type'])) {

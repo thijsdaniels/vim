@@ -14,8 +14,8 @@ class RoutineMuscleGroups extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return StreamBuilder(
-      stream: routine.exercises,
+    return FutureBuilder(
+      future: routine.exercises,
       builder: (context, snapshot) {
         var primary = snapshot.data
                 ?.map((exercise) => exercise.muscleGroups.primary)

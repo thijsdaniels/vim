@@ -73,6 +73,13 @@ class RoutineExercisePerformances extends StatelessWidget {
                     return ListSurface(
                       elevation: 4,
                       icon: ExerciseIcon(exercise, elevation: 8),
+                      title: exercise?.name ?? '',
+                      // TODO: Try to change this into Chip widgets.
+                      subtitle: performance != null
+                          ? _performanceSubtitle(performance)
+                          : latest != null
+                              ? _performanceSubtitle(latest)
+                              : '--',
                       onTap: performance != null
                           ? () async {
                               ExercisePerformance edited =
@@ -101,13 +108,6 @@ class RoutineExercisePerformances extends StatelessWidget {
                             ),
                         ],
                       ),
-                      title: exercise?.name ?? '',
-                      // TODO: Try to change this into Chip widgets.
-                      subtitle: performance != null
-                          ? _performanceSubtitle(performance)
-                          : latest != null
-                              ? _performanceSubtitle(latest)
-                              : '--',
                     );
                   },
                 );

@@ -13,6 +13,7 @@ class PerformancesCollectionGroup extends CollectionGroup<Performance> {
   PerformancesCollectionGroup() : super(path: 'performances');
 
   /// TODO: This duplicates code from the `PerformancesService` class.
+  /// TODO: Move this logic into the `Performance.fromSnapshot` function?
   @override
   Performance fromFirestore(snapshot, options) {
     Map<String, dynamic> data = snapshot.data()!;

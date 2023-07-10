@@ -11,27 +11,24 @@ class RoutinePerformance extends Performance {
 
   Routine routine;
 
-  // TODO: Move this to a service.
-  CollectionReference<ExercisePerformance>? get _performances => _reference !=
-          null
-      ? FirebaseFirestore.instance
-          .collection('${_reference!.path}/performances')
-          .withConverter(
-              fromFirestore: (snapshot, _) {
-                Map<String, dynamic> data = snapshot.data()!;
+  // TODO: Move this to a service?
+  CollectionReference<ExercisePerformance>? get performancesCollection =>
+      _reference?.collection('performances').withConverter(
+            fromFirestore: (snapshot, _) {
+              Map<String, dynamic> data = snapshot.data()!;
 
-                switch (ExerciseType.values
-                    .byName(data['exercise']['snapshot']['type'])) {
-                  case ExerciseType.manual:
-                    return ExercisePerformance.fromSnapshot(snapshot);
-                  case ExerciseType.resistance:
-                    return ResistanceExercisePerformance.fromSnapshot(snapshot);
-                  case ExerciseType.weights:
-                    return WeightsExercisePerformance.fromSnapshot(snapshot);
-                }
-              },
-              toFirestore: (performance, options) => performance.toMap())
-      : null;
+              switch (ExerciseType.values
+                  .byName(data['exercise']['snapshot']['type'])) {
+                case ExerciseType.manual:
+                  return ExercisePerformance.fromSnapshot(snapshot);
+                case ExerciseType.resistance:
+                  return ResistanceExercisePerformance.fromSnapshot(snapshot);
+                case ExerciseType.weights:
+                  return WeightsExercisePerformance.fromSnapshot(snapshot);
+              }
+            },
+            toFirestore: (performance, options) => performance.toMap(),
+          );
 
   @override
   DocumentReference? get reference => _reference;
@@ -42,7 +39,7 @@ class RoutinePerformance extends Performance {
   Map<String, DocumentReference> performanceReferences;
 
   Stream<List<ExercisePerformance>>? get performances {
-    return _performances?.snapshots().map(
+    return performancesCollection?.snapshots().map(
       (snapshot) {
         return snapshot.docs.map((doc) => doc.data()).toList();
       },
@@ -103,7 +100,8 @@ class RoutinePerformance extends Performance {
     int exerciseIndex,
     ExercisePerformance performance,
   ) async {
-    DocumentReference reference = await _performances!.add(performance);
+    DocumentReference reference =
+        await performancesCollection!.add(performance);
 
     performanceReferences[exerciseIndex.toString()] = reference;
     _reference?.update(toMap());
@@ -113,13 +111,15 @@ class RoutinePerformance extends Performance {
 
   Future<void> updatePerformance(ExercisePerformance performance) async {
     assert(performance.reference != null);
-    return _performances!.doc(performance.reference!.id).set(performance);
+    return performancesCollection!
+        .doc(performance.reference!.id)
+        .set(performance);
   }
 
   Future<void> deletePerformance(ExercisePerformance performance) async {
     assert(performance.reference != null);
 
-    await _performances!.doc(performance.reference!.id).delete();
+    await performancesCollection!.doc(performance.reference!.id).delete();
     performanceReferences.removeWhere(
       (key, value) => value.id == performance.reference!.id,
     );
