@@ -129,22 +129,3 @@ class RoutinePerformance extends Performance {
     return;
   }
 }
-
-DocumentReference routineReference(String name) {
-  switch (name) {
-    case 'Full Body at Home':
-      return FirebaseFirestore.instance.doc(
-        'users/ZSBLclXCH8euEBERCPSNltS4Yvl2/routines/Aoz8evs70MT3GwsniKHw',
-      );
-    case 'Full Body Weights':
-      return FirebaseFirestore.instance.doc(
-        'users/ZSBLclXCH8euEBERCPSNltS4Yvl2/routines/gg5UlMgws0zcJf5TdtDD',
-      );
-    case 'Full Body Machines':
-      return FirebaseFirestore.instance.doc(
-        'users/ZSBLclXCH8euEBERCPSNltS4Yvl2/routines/qooJt02dDWz5OkLmsxGk',
-      );
-    default:
-      throw Exception('Routine $name not found');
-  }
-}
