@@ -29,7 +29,7 @@ class ExerciseView extends StatelessWidget {
             EquipmentsView(),
             ExercisesView(),
             RoutinesView(),
-            PlanssView(),
+            PlansView(),
           ],
         ),
       ),

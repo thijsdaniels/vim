@@ -9,7 +9,7 @@ import 'package:vim/models/exercise/weights_exercise_performance.dart';
 class RoutinePerformance extends Performance {
   DocumentReference? _reference;
 
-  Routine routine;
+  RoutineSnapshot routine;
 
   // TODO: Move this to a service?
   CollectionReference<ExercisePerformance>? get performancesCollection =>
@@ -34,7 +34,7 @@ class RoutinePerformance extends Performance {
   DocumentReference? get reference => _reference;
 
   @override
-  String get name => routine.name;
+  String get name => routine.snapshot.name;
 
   Map<String, DocumentReference> performanceReferences;
 
@@ -81,7 +81,7 @@ class RoutinePerformance extends Performance {
   static RoutinePerformance fromMap(Map<String, dynamic> map) {
     return RoutinePerformance(
       timestamp: map['timestamp'],
-      routine: Routine.fromMap(map['routine']),
+      routine: RoutineSnapshot.fromMap(map['routine']),
       performanceReferences:
           map['performances'].cast<String, DocumentReference>(),
     );
@@ -127,5 +127,24 @@ class RoutinePerformance extends Performance {
     _reference?.update(toMap());
 
     return;
+  }
+}
+
+DocumentReference routineReference(String name) {
+  switch (name) {
+    case 'Full Body at Home':
+      return FirebaseFirestore.instance.doc(
+        'users/ZSBLclXCH8euEBERCPSNltS4Yvl2/routines/Aoz8evs70MT3GwsniKHw',
+      );
+    case 'Full Body Weights':
+      return FirebaseFirestore.instance.doc(
+        'users/ZSBLclXCH8euEBERCPSNltS4Yvl2/routines/gg5UlMgws0zcJf5TdtDD',
+      );
+    case 'Full Body Machines':
+      return FirebaseFirestore.instance.doc(
+        'users/ZSBLclXCH8euEBERCPSNltS4Yvl2/routines/qooJt02dDWz5OkLmsxGk',
+      );
+    default:
+      throw Exception('Routine $name not found');
   }
 }

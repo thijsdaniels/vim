@@ -128,7 +128,7 @@ class _PerformanceViewState extends State<PerformanceView> {
                       if (performance is RoutinePerformance)
                         StatsRow(
                           'Routine',
-                          performance.routine.name,
+                          performance.routine.snapshot.name,
                         ),
                       StatsRow(
                         'Calories',

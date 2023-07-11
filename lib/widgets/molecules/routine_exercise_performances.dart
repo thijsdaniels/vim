@@ -38,10 +38,11 @@ class RoutineExercisePerformances extends StatelessWidget {
             return StandardList(
               physics: const NeverScrollableScrollPhysics(),
               padding: EdgeInsets.zero,
-              itemCount: routinePerformance.routine.exerciseReferences.length,
+              itemCount:
+                  routinePerformance.routine.snapshot.exerciseReferences.length,
               itemBuilder: (context, index) {
-                DocumentReference exerciseReference =
-                    routinePerformance.routine.exerciseReferences[index];
+                DocumentReference exerciseReference = routinePerformance
+                    .routine.snapshot.exerciseReferences[index];
                 String exerciseId = exerciseReference.id;
 
                 Exercise? exercise = exercises.firstWhereOrNull(
@@ -76,9 +77,9 @@ class RoutineExercisePerformances extends StatelessWidget {
                       title: exercise?.name ?? '',
                       // TODO: Try to change this into Chip widgets.
                       subtitle: performance != null
-                          ? _performanceSubtitle(performance)
+                          ? _performanceSubtitle(performance, latest)
                           : latest != null
-                              ? _performanceSubtitle(latest)
+                              ? _performanceSubtitle(latest, null)
                               : '--',
                       onTap: performance != null
                           ? () async {
@@ -119,7 +120,7 @@ class RoutineExercisePerformances extends StatelessWidget {
     );
   }
 
-  String _performanceSubtitle(Performance performance) {
+  String _performanceSubtitle(Performance performance, Performance? latest) {
     return [
       // TODO: Re-enable this.
       // if (performance is! WeightsExercisePerformance &&

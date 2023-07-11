@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:vim/models/exercise/exercise.dart';
 import 'package:vim/models/exercise/exercise_performance.dart';
 import 'package:vim/models/exercise/routine_performance.dart';
 import 'package:vim/models/food/ingredient_amount_reference.dart';
@@ -35,6 +36,8 @@ class MigrateButton extends StatelessWidget {
           if (!(await confirm())) {
             return;
           }
+
+          await updateRoutinePerformances(context);
         },
         child: const Text('Migrate'),
       ),
@@ -51,6 +54,25 @@ class MigrateButton extends StatelessWidget {
     for (var i = 0; i < documents.length; i++) {
       await visit(documents[i], i, documents.length);
     }
+  }
+
+  Future<void> updateRoutinePerformances(BuildContext context) async {
+    var myPerformances = PerformancesService.of(context).collection;
+
+    print('traversing myPerformances...');
+    await traverse(
+      myPerformances,
+      (performance, index, length) async {
+        print(
+            '  updating performance ${performance.reference!.id} (${index + 1} of $length)...');
+        if (performance is RoutinePerformance) {
+          print('    updating routinePerformance...');
+          myPerformances.doc(performance.reference!.id).set(performance);
+        } else {
+          print('    nothing to do...');
+        }
+      },
+    );
   }
 
   /// TODO: Add proper support to move an ingredient from the public scope to
@@ -148,8 +170,8 @@ class MigrateButton extends StatelessWidget {
           print('    done.');
         } else if (performance is RoutinePerformance) {
           print('    updating routinePerformance...');
-          performance.routine.exerciseReferences =
-              performance.routine.exerciseReferences
+          performance.routine.snapshot.exerciseReferences =
+              performance.routine.snapshot.exerciseReferences
                   .map(
                     (exerciseReference) =>
                         myExercises.doc(exerciseReference.id),

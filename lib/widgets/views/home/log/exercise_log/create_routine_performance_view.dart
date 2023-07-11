@@ -47,7 +47,7 @@ class _CreateRoutinePerformanceViewState
                       widget.routinePerformance;
 
                   if (routinePerformance != null) {
-                    routinePerformance.routine = _routine!;
+                    routinePerformance.routine = _routine!.toSnapshot();
                   } else {
                     routinePerformance = _routine!.performance(
                       timestamp: dateModel.timestamp,

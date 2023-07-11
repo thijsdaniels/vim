@@ -1,8 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:vim/models/document.dart';
 import 'package:vim/models/exercise/exercise.dart';
 import 'package:vim/models/exercise/performance.dart';
-import 'package:vim/models/model.dart';
 
 class ExercisePerformance extends Performance {
   DocumentReference? _reference;
@@ -48,40 +46,6 @@ class ExercisePerformance extends Performance {
       'timestamp': timestamp,
       'exercise': exercise.toMap(),
       'calories': calories,
-    };
-  }
-}
-
-class ExerciseSnapshot extends Snapshot<Exercise> {
-  ExerciseSnapshot(
-    super.snapshot, {
-    super.reference,
-  });
-
-  static ExerciseSnapshot fromMap(Map<String, dynamic> map) {
-    return ExerciseSnapshot(
-      Exercise.fromMap(map['snapshot']),
-      reference: map['reference'],
-    );
-  }
-}
-
-class Snapshot<T extends Document> extends Model {
-  final T snapshot;
-  late final DocumentReference reference;
-
-  Snapshot(
-    this.snapshot, {
-    DocumentReference? reference,
-  }) : assert(reference != null || snapshot.reference != null) {
-    this.reference = (reference ?? snapshot.reference)!;
-  }
-
-  @override
-  Map<String, dynamic> toMap() {
-    return {
-      'reference': reference,
-      'snapshot': snapshot.toMap(),
     };
   }
 }

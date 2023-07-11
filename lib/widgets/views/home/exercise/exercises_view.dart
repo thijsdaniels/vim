@@ -15,20 +15,15 @@ class ExercisesView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      floatingActionButton: Row(
-        mainAxisAlignment: MainAxisAlignment.end,
-        children: [
-          FloatingActionSurface(
-            onPressed: () {
-              Navigator.of(context).push(
-                MaterialPageRoute(
-                  builder: (context) => const CreateExerciseView(),
-                ),
-              );
-            },
-            child: const Icon(Icons.add),
-          ),
-        ],
+      floatingActionButton: FloatingActionSurface(
+        onPressed: () {
+          Navigator.of(context).push(
+            MaterialPageRoute(
+              builder: (context) => const CreateExerciseView(),
+            ),
+          );
+        },
+        child: const Icon(Icons.add),
       ),
       body: SafeArea(
         child: Consumer<List<Exercise>>(

@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:vim/models/exercise/energy.dart';
+import 'package:vim/models/exercise/exercise.dart';
 import 'package:vim/models/exercise/exercise_performance.dart';
 
 /// TODO: Rename this class to `CardioExercisePerformance`.

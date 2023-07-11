@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:vim/models/document.dart';
 import 'package:vim/models/exercise/exercise.dart';
 import 'package:vim/models/exercise/routine_performance.dart';
+import 'package:vim/models/snapshot.dart';
 
 class Routine extends Document {
   DocumentReference? _reference;
@@ -64,7 +65,25 @@ class Routine extends Document {
   }) {
     return RoutinePerformance(
       timestamp: timestamp,
-      routine: this,
+      routine: RoutineSnapshot(this),
+    );
+  }
+
+  RoutineSnapshot toSnapshot() {
+    return RoutineSnapshot(this);
+  }
+}
+
+class RoutineSnapshot extends Snapshot<Routine> {
+  RoutineSnapshot(
+    super.snapshot, {
+    super.reference,
+  });
+
+  static RoutineSnapshot fromMap(Map<String, dynamic> map) {
+    return RoutineSnapshot(
+      Routine.fromMap(map['snapshot']),
+      reference: map['reference'],
     );
   }
 }
