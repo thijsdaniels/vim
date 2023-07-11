@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:vim/models/exercise/exercise.dart';
 import 'package:vim/models/exercise/routine.dart';
+import 'package:vim/services/performances_collection_group.dart';
 import 'package:vim/services/routines_service.dart';
 import 'package:vim/widgets/atoms/routine_muscle_groups.dart';
 import 'package:vim/widgets/atoms/standard_list.dart';
 import 'package:vim/widgets/atoms/stats_table.dart';
 import 'package:vim/widgets/molecules/exercises_list.dart';
+import 'package:vim/widgets/molecules/performances_list.dart';
 import 'package:vim/widgets/molecules/simple_card.dart';
 import 'package:vim/widgets/molecules/with_confirmation_dialog.dart';
 import 'package:vim/widgets/views/home/exercise/routines/create_routine_view.dart';
@@ -113,6 +115,19 @@ class RoutineView extends StatelessWidget {
                     routine.exerciseReferences = exerciseReferences;
                     RoutinesService.of(context).update(routine);
                   },
+                ),
+              ),
+              StreamBuilder(
+                stream:
+                    PerformancesCollectionGroup.instance.forRoutine(routine),
+                builder: (context, snapshot) => SimpleCard(
+                  title: "History",
+                  child: PerformancesList(
+                    performances: snapshot.data ?? [],
+                    padding: EdgeInsets.zero,
+                    physics: const NeverScrollableScrollPhysics(),
+                    elevation: 4,
+                  ),
                 ),
               ),
             ],
