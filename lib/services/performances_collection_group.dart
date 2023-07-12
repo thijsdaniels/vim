@@ -3,7 +3,6 @@ import 'package:vim/models/exercise/exercise.dart';
 import 'package:vim/models/exercise/exercise_performance.dart';
 import 'package:vim/models/exercise/performance.dart';
 import 'package:vim/models/exercise/resistance_exercise_performance.dart';
-import 'package:vim/models/exercise/routine.dart';
 import 'package:vim/models/exercise/routine_performance.dart';
 import 'package:vim/models/exercise/weights_exercise_performance.dart';
 import 'package:vim/services/collection_group.dart';
@@ -36,6 +35,8 @@ class PerformancesCollectionGroup extends CollectionGroup<Performance> {
     }
   }
 
+  /// TODO: This query will include exercise performances from other users. It
+  /// should be limited to the current user.
   Stream<List<ExercisePerformance>> forExercise(
     Exercise exercise, {
     Timestamp? before,
@@ -53,27 +54,6 @@ class PerformancesCollectionGroup extends CollectionGroup<Performance> {
     return query.snapshots().map(
           (snapshot) => snapshot.docs
               .map((doc) => doc.data() as ExercisePerformance)
-              .toList(),
-        );
-  }
-
-  Stream<List<RoutinePerformance>> forRoutine(
-    Routine routine, {
-    Timestamp? before,
-    int? limit,
-  }) {
-    var query = collectionGroup
-        .where('routine.reference', isEqualTo: routine.reference)
-        .where('timestamp', isLessThan: before)
-        .orderBy('timestamp', descending: true);
-
-    if (limit != null) {
-      query = query.limit(limit);
-    }
-
-    return query.snapshots().map(
-          (snapshot) => snapshot.docs
-              .map((doc) => doc.data() as RoutinePerformance)
               .toList(),
         );
   }

@@ -1,10 +1,13 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:vim/models/document.dart';
 import 'package:vim/models/exercise/exercise.dart';
 import 'package:vim/models/exercise/exercise_performance.dart';
 import 'package:vim/models/exercise/routine_performance.dart';
 import 'package:vim/models/food/ingredient_amount_reference.dart';
 import 'package:vim/models/food/ingredient_amounts_reference.dart';
+import 'package:vim/models/food/ingredient_consumption.dart';
+import 'package:vim/services/consumptions_service.dart';
 import 'package:vim/services/exercises_service.dart';
 import 'package:vim/services/performances_service.dart';
 import 'package:vim/services/recipes_service.dart';
@@ -37,40 +40,57 @@ class MigrateButton extends StatelessWidget {
             return;
           }
 
-          await updateRoutinePerformances(context);
+          var myConsumptions = ConsumptionsService.of(context).collection;
+
+          await traverseDocuments(
+            myConsumptions,
+            (document, index, length) async {
+              print(
+                  'document ${document.reference!.id} (${index + 1} of $length)');
+              if (document is IngredientConsumption) {
+                print('  saving ingredientConsumption...');
+                myConsumptions.doc(document.reference!.id).set(document);
+              } else {
+                print('  nothing to do...');
+              }
+            },
+          );
         },
         child: const Text('Migrate'),
       ),
     );
   }
 
-  Future<void> traverse<D>(
+  Future<void> traverseSnapshots<D>(
     CollectionReference<D> collection,
-    Future<void> Function(D document, int index, int length) visit,
+    Future<void> Function(
+            QueryDocumentSnapshot<D> snapshot, int index, int length)
+        visit,
   ) async {
     var snapshots = (await collection.get()).docs;
-    var documents = snapshots.map((doc) => doc.data()).toList();
 
-    for (var i = 0; i < documents.length; i++) {
-      await visit(documents[i], i, documents.length);
+    for (var i = 0; i < snapshots.length; i++) {
+      await visit(snapshots[i], i, snapshots.length);
     }
   }
 
-  Future<void> updateRoutinePerformances(BuildContext context) async {
-    var myPerformances = PerformancesService.of(context).collection;
+  Future<void> traverseDocuments<D extends Document>(
+    CollectionReference<D> collection,
+    Future<void> Function(D document, int index, int length) visit,
+  ) async {
+    await traverseSnapshots(collection, (snapshot, index, length) {
+      return visit(snapshot.data(), index, length);
+    });
+  }
 
-    print('traversing myPerformances...');
-    await traverse(
-      myPerformances,
-      (performance, index, length) async {
-        print(
-            '  updating performance ${performance.reference!.id} (${index + 1} of $length)...');
-        if (performance is RoutinePerformance) {
-          print('    updating routinePerformance...');
-          myPerformances.doc(performance.reference!.id).set(performance);
-        } else {
-          print('    nothing to do...');
-        }
+  Future<void> saveDocuments<D extends Document>(
+    CollectionReference<D> collection,
+  ) async {
+    await traverseDocuments(
+      collection,
+      (document, index, length) async {
+        print('saving document ${index + 1} of $length...');
+        collection.doc(document.reference!.id).set(document);
       },
     );
   }
@@ -85,7 +105,7 @@ class MigrateButton extends StatelessWidget {
     var myRecipes = RecipesService.of(context).collection;
 
     print('copying ingredients...');
-    await traverse(ingredients, (ingredient, index, length) async {
+    await traverseDocuments(ingredients, (ingredient, index, length) async {
       print('  copying ingredient ${index + 1} of $length...');
       await myIngredients.doc(ingredient.reference!.id).set(ingredient);
       print('  done.');
@@ -93,7 +113,7 @@ class MigrateButton extends StatelessWidget {
     print('done.');
 
     print('traversing myRecipes...');
-    await traverse(
+    await traverseDocuments(
       myRecipes,
       (recipe, index, length) async {
         print('  updating recipe ${index + 1} of $length...');
@@ -127,7 +147,7 @@ class MigrateButton extends StatelessWidget {
     var myPerformances = PerformancesService.of(context).collection;
 
     print('copying exercises...');
-    await traverse(exercises, (exercise, index, length) async {
+    await traverseDocuments(exercises, (exercise, index, length) async {
       print('  copying exercise ${index + 1} of $length...');
       await myExercises.doc(exercise.reference!.id).set(exercise);
       print('  done.');
@@ -135,7 +155,7 @@ class MigrateButton extends StatelessWidget {
     print('done.');
 
     print('traversing myRoutines...');
-    await traverse(
+    await traverseDocuments(
       myRoutines,
       (routine, index, length) async {
         print('  updating routine ${index + 1} of $length...');
@@ -152,7 +172,7 @@ class MigrateButton extends StatelessWidget {
     print('done.');
 
     print('traversing myPerformances...');
-    await traverse(
+    await traverseDocuments(
       myPerformances,
       (performance, index, length) async {
         print(
@@ -182,7 +202,7 @@ class MigrateButton extends StatelessWidget {
           print('    done.');
 
           print('    traversing routinePerformancePerformances...');
-          await traverse(
+          await traverseDocuments(
             performance.performancesCollection!,
             (subPerformance, index, length) async {
               print(

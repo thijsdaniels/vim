@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:vim/models/food/ingredient.dart';
+import 'package:vim/services/consumptions_service.dart';
 import 'package:vim/services/ingredients_service.dart';
 import 'package:vim/widgets/atoms/standard_list.dart';
 import 'package:vim/widgets/atoms/stats_table.dart';
+import 'package:vim/widgets/molecules/consumptions_list.dart';
 import 'package:vim/widgets/molecules/nutrition_table.dart';
 import 'package:vim/widgets/molecules/simple_card.dart';
 import 'package:vim/widgets/molecules/with_confirmation_dialog.dart';
@@ -75,7 +77,7 @@ class IngredientView extends StatelessWidget {
                     StatsRow('Brand', ingredient.brand),
                     StatsRow(
                       'Serving',
-                      ingredient.serving.toString(),
+                      ingredient.serving?.toString(),
                       unit: 'g',
                     ),
                   ],
@@ -97,6 +99,21 @@ class IngredientView extends StatelessWidget {
                     nutrition: ingredient.nutrition,
                   ),
                 ),
+              ),
+              StreamBuilder(
+                stream:
+                    ConsumptionsService.of(context).forIngredient(ingredient),
+                builder: (context, snapshot) {
+                  return SimpleCard(
+                    title: "History",
+                    child: ConsumptionsList(
+                      consumptions: snapshot.data ?? [],
+                      padding: EdgeInsets.zero,
+                      physics: const NeverScrollableScrollPhysics(),
+                      elevation: 4,
+                    ),
+                  );
+                },
               ),
             ],
           ),

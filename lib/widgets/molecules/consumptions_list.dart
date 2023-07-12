@@ -45,8 +45,8 @@ class ConsumptionsList extends StatelessWidget {
         return ListSurface(
           elevation: elevation,
           icon: consumption is IngredientConsumption &&
-                  consumption.ingredient.icon != null
-              ? Icons8Icon(consumption.ingredient.icon!)
+                  consumption.ingredient.snapshot.icon != null
+              ? Icons8Icon(consumption.ingredient.snapshot.icon!)
               : consumption is RecipeConsumption
                   ? Icons8IconStack(
                       icons: consumption.recipe.ingredientAmounts

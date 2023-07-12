@@ -38,7 +38,7 @@ class StatsRow extends TableRow {
       Row(
         children: [
           value != null ? Text(value!) : const SecondaryText('--'),
-          if (unit != null) ...[
+          if (value != null && unit != null) ...[
             const SizedBox(width: 4),
             SecondaryText(unit!),
           ]

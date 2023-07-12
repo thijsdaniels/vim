@@ -65,7 +65,7 @@ class Nutrition extends NutrientGroup<Nutrition> {
       minerals: Minerals.fromMap(map['minerals']),
       vitamins: map['vitamins'] != null
           ? Vitamins.fromMap(map['vitamins'])
-          : Vitamins.zero,
+          : const Vitamins(),
       water: map['water'],
       alcohol: map['alcohol'],
       caffeine: map['caffeine'],
@@ -79,9 +79,9 @@ class Nutrition extends NutrientGroup<Nutrition> {
     fats: Fats.zero,
     minerals: Minerals.zero,
     vitamins: Vitamins.zero,
-    water: null,
-    alcohol: null,
-    caffeine: null,
+    water: 0,
+    alcohol: 0,
+    caffeine: 0,
   );
 
   @override

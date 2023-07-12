@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:vim/models/exercise/exercise.dart';
 import 'package:vim/models/exercise/routine.dart';
-import 'package:vim/services/performances_collection_group.dart';
+import 'package:vim/services/performances_service.dart';
 import 'package:vim/services/routines_service.dart';
 import 'package:vim/widgets/atoms/routine_muscle_groups.dart';
 import 'package:vim/widgets/atoms/standard_list.dart';
@@ -118,8 +118,7 @@ class RoutineView extends StatelessWidget {
                 ),
               ),
               StreamBuilder(
-                stream:
-                    PerformancesCollectionGroup.instance.forRoutine(routine),
+                stream: PerformancesService.of(context).forRoutine(routine),
                 builder: (context, snapshot) => SimpleCard(
                   title: "History",
                   child: PerformancesList(

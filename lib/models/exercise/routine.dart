@@ -65,7 +65,7 @@ class Routine extends Document {
   }) {
     return RoutinePerformance(
       timestamp: timestamp,
-      routine: RoutineSnapshot(this),
+      routine: toSnapshot(),
     );
   }
 

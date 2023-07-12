@@ -3,6 +3,7 @@ import 'package:vim/models/document.dart';
 import 'package:vim/models/food/amount.dart';
 import 'package:vim/models/food/ingredient_consumption.dart';
 import 'package:vim/models/food/nutrition.dart';
+import 'package:vim/models/snapshot.dart';
 
 class Ingredient extends Document {
   DocumentReference? _reference;
@@ -66,9 +67,13 @@ class Ingredient extends Document {
   }) {
     return IngredientConsumption(
       timestamp: timestamp,
-      ingredient: this,
+      ingredient: toSnapshot(),
       amount: amount,
     );
+  }
+
+  IngredientSnapshot toSnapshot() {
+    return IngredientSnapshot(this);
   }
 
   Nutrition nutritionForAmount(Amount amount) {
@@ -87,5 +92,19 @@ class Ingredient extends Document {
         }
         return amount.value * serving!;
     }
+  }
+}
+
+class IngredientSnapshot extends Snapshot<Ingredient> {
+  IngredientSnapshot(
+    super.snapshot, {
+    super.reference,
+  });
+
+  static IngredientSnapshot fromMap(Map<String, dynamic> map) {
+    return IngredientSnapshot(
+      Ingredient.fromMap(map['snapshot']),
+      reference: map['reference'],
+    );
   }
 }

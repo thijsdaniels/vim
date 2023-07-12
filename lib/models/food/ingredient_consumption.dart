@@ -17,26 +17,26 @@ class IngredientConsumption implements Consumption {
   DocumentReference? _reference;
   @override
   Timestamp timestamp;
-  Ingredient ingredient;
+  IngredientSnapshot ingredient;
   Amount amount;
 
   @override
   DocumentReference? get reference => _reference;
 
   @override
-  String get name => ingredient.name;
+  String get name => ingredient.snapshot.name;
 
   @override
-  Nutrition get nutrition => ingredient.nutritionForAmount(amount);
+  Nutrition get nutrition => ingredient.snapshot.nutritionForAmount(amount);
 
   @override
   set name(String name) {
-    ingredient.name = name;
+    ingredient.snapshot.name = name;
   }
 
   @override
   set nutrition(Nutrition nutrition) {
-    ingredient.nutrition = nutrition;
+    ingredient.snapshot.nutrition = nutrition;
   }
 
   IngredientConsumption({
@@ -68,12 +68,8 @@ class IngredientConsumption implements Consumption {
   static IngredientConsumption fromMap(Map<String, dynamic> map) {
     return IngredientConsumption(
       timestamp: map['timestamp'],
-      ingredient: Ingredient.fromMap(map['ingredient']),
-
-      /// TODO: Remove legacy num parsing.
-      amount: map['amount'] is num
-          ? Amount.grams(map['amount'])
-          : Amount.fromMap(map['amount']),
+      ingredient: IngredientSnapshot.fromMap(map['ingredient']),
+      amount: Amount.fromMap(map['amount']),
     );
   }
 }

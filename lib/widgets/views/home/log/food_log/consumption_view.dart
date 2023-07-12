@@ -1,5 +1,6 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:vim/extensions/date_time.dart';
 import 'package:vim/extensions/num.dart';
 import 'package:vim/models/food/amount.dart';
 import 'package:vim/models/food/consumption.dart';
@@ -100,8 +101,8 @@ class _ConsumptionViewState extends State<ConsumptionView> {
                     consumption is! RecipeConsumption)
                   StatsRow('Name', consumption.name),
                 if (consumption is IngredientConsumption) ...[
-                  StatsRow('Ingredient', consumption.ingredient.name),
-                  StatsRow('Brand', consumption.ingredient.brand),
+                  StatsRow('Ingredient', consumption.ingredient.snapshot.name),
+                  StatsRow('Brand', consumption.ingredient.snapshot.brand),
                   StatsRow(
                     'Amount',
                     consumption.amount.value.toString(),
@@ -111,7 +112,7 @@ class _ConsumptionViewState extends State<ConsumptionView> {
                     StatsRow(
                       '',
                       (consumption.amount.value *
-                              consumption.ingredient.serving!)
+                              consumption.ingredient.snapshot.serving!)
                           .toString(),
                       unit: 'grams',
                     ),
@@ -133,6 +134,10 @@ class _ConsumptionViewState extends State<ConsumptionView> {
                       unit: 'grams',
                     ),
                 ],
+                StatsRow(
+                  'Consumed At',
+                  consumption.timestamp.toDate().toDateTimeString(),
+                ),
               ],
             ),
           ),
