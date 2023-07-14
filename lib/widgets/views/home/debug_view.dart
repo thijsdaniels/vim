@@ -6,7 +6,7 @@ import 'package:vim/models/exercise/exercise_performance.dart';
 import 'package:vim/models/exercise/routine_performance.dart';
 import 'package:vim/models/food/ingredient_amount_reference.dart';
 import 'package:vim/models/food/ingredient_amounts_reference.dart';
-import 'package:vim/models/food/ingredient_consumption.dart';
+import 'package:vim/models/food/recipe_consumption.dart';
 import 'package:vim/services/consumptions_service.dart';
 import 'package:vim/services/exercises_service.dart';
 import 'package:vim/services/performances_service.dart';
@@ -44,12 +44,14 @@ class MigrateButton extends StatelessWidget {
 
           await traverseDocuments(
             myConsumptions,
-            (document, index, length) async {
+            (consumption, index, length) async {
               print(
-                  'document ${document.reference!.id} (${index + 1} of $length)');
-              if (document is IngredientConsumption) {
-                print('  saving ingredientConsumption...');
-                myConsumptions.doc(document.reference!.id).set(document);
+                'consumption ${consumption.reference!.id} (${index + 1} of $length)',
+              );
+
+              if (consumption is RecipeConsumption) {
+                print('  saving recipeConsumption...');
+                myConsumptions.doc(consumption.reference!.id).set(consumption);
               } else {
                 print('  nothing to do...');
               }

@@ -68,13 +68,12 @@ class _SetsFormFieldsState extends State<SetsFormFields> {
                   ),
                 ],
                 child: SetFormFields(
-                    set: entry.value,
-                    onChanged: (set) {
-                      widget.onChanged(
-                        widget.sets
-                          ..replaceRange(entry.key, entry.key + 1, [set]),
-                      );
-                    }),
+                  set: entry.value,
+                  onChanged: (set) {
+                    widget.sets[entry.key] = set;
+                    widget.onChanged(widget.sets);
+                  },
+                ),
               );
             },
           ),
