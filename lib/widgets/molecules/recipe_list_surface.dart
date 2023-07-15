@@ -4,11 +4,11 @@ import 'package:vim/models/food/recipe.dart';
 import 'package:vim/widgets/atoms/recipe_icon.dart';
 import 'package:vim/widgets/molecules/list_surface.dart';
 
-class RecipeListItem extends StatelessWidget {
+class RecipeListSurface extends StatelessWidget {
   final void Function()? onTap;
   final double? elevation;
 
-  const RecipeListItem({
+  const RecipeListSurface({
     super.key,
     required this.recipe,
     this.onTap,

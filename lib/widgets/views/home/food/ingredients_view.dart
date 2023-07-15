@@ -3,7 +3,7 @@ import 'package:provider/provider.dart';
 import 'package:vim/models/food/ingredient.dart';
 import 'package:vim/widgets/atoms/floating_action_surface.dart';
 import 'package:vim/widgets/atoms/standard_list.dart';
-import 'package:vim/widgets/molecules/ingredient_list_tile.dart';
+import 'package:vim/widgets/molecules/ingredient_list_surface.dart';
 import 'package:vim/widgets/views/home/food/ingredients/create_ingredient_view.dart';
 import 'package:vim/widgets/views/home/food/ingredients/ingredient_view.dart';
 
@@ -30,7 +30,7 @@ class IngredientsView extends StatelessWidget {
             itemBuilder: (context, index) {
               Ingredient ingredient = ingredients[index];
 
-              return IngredientListTile(
+              return IngredientListSurface(
                 ingredient: ingredient,
                 onTap: () {
                   Navigator.of(context).push(

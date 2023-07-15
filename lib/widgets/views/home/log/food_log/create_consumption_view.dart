@@ -5,8 +5,8 @@ import 'package:vim/models/food/ingredient.dart';
 import 'package:vim/models/food/ingredient_consumption.dart';
 import 'package:vim/models/food/recipe.dart';
 import 'package:vim/models/food/recipe_consumption.dart';
-import 'package:vim/widgets/molecules/ingredient_list_tile.dart';
-import 'package:vim/widgets/molecules/recipe_list_item.dart';
+import 'package:vim/widgets/molecules/ingredient_list_surface.dart';
+import 'package:vim/widgets/molecules/recipe_list_surface.dart';
 import 'package:vim/widgets/views/home/log/food_log/create_ingredient_consumption_view.dart';
 import 'package:vim/widgets/views/home/log/food_log/create_quick_track_consumption_view.dart';
 import 'package:vim/widgets/views/home/log/food_log/create_recipe_consumption_view.dart';
@@ -100,7 +100,7 @@ class RecipeSearchResult extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return RecipeListItem(
+    return RecipeListSurface(
       elevation: 8,
       recipe: recipe,
       onTap: () async {
@@ -133,7 +133,7 @@ class IngredientSearchResult extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return IngredientListTile(
+    return IngredientListSurface(
       elevation: 8,
       ingredient: ingredient,
       onTap: () async {

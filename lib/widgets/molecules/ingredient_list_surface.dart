@@ -3,11 +3,11 @@ import 'package:vim/models/food/ingredient.dart';
 import 'package:vim/widgets/atoms/icons8_icon.dart';
 import 'package:vim/widgets/molecules/list_surface.dart';
 
-class IngredientListTile extends StatelessWidget {
+class IngredientListSurface extends StatelessWidget {
   final void Function()? onTap;
   final double? elevation;
 
-  const IngredientListTile({
+  const IngredientListSurface({
     super.key,
     required this.ingredient,
     this.onTap,
