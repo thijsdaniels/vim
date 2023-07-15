@@ -183,6 +183,9 @@ class _CreateIngredientConsumptionViewState
                           },
                           validator: (unit) {
                             if (unit == Unit.servings &&
+                                widget.ingredientConsumption?.ingredient
+                                        .snapshot.serving ==
+                                    null &&
                                 widget.ingredient?.serving == null) {
                               return "Serving size not defined.";
                             }
