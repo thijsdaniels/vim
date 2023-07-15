@@ -6,11 +6,11 @@ import 'package:vim/models/food/recipe_consumption.dart';
 import 'package:vim/widgets/atoms/consumption_icon.dart';
 import 'package:vim/widgets/atoms/secondary_text.dart';
 import 'package:vim/widgets/molecules/list_surface.dart';
+import 'package:vim/widgets/views/home/log/food_log/consumption_view.dart';
 
 class ConsumptionListSurface extends StatelessWidget {
   final Consumption consumption;
   final double? elevation;
-  final void Function()? onTap;
   final bool showCalories;
   final bool showMacros;
   final bool showTime;
@@ -19,7 +19,6 @@ class ConsumptionListSurface extends StatelessWidget {
     this.consumption, {
     super.key,
     this.elevation,
-    this.onTap,
     this.showCalories = true,
     this.showMacros = true,
     this.showTime = true,
@@ -49,7 +48,13 @@ class ConsumptionListSurface extends StatelessWidget {
               '${nutritionSnapshot.data?.fats.total?.round() ?? 0}',
             ].join("/")
         ].join(" • "),
-        onTap: onTap,
+        onTap: () {
+          Navigator.of(context).push(
+            MaterialPageRoute(builder: (context) {
+              return ConsumptionView(path: consumption.reference!.path);
+            }),
+          );
+        },
         actions: showTime
             ? SecondaryText(
                 consumption.timestamp.toDate().toTimeString(),

@@ -49,58 +49,67 @@ class _ConsumptionViewState extends State<ConsumptionView> {
 
         Consumption consumption = snapshot.requireData!;
 
+        /// TODO: There _must_ be a better way to do this than hardcoding what
+        /// the expected path is... Right?
+        bool isReadOnly =
+            consumption.reference!.parent.parent?.parent.id != 'users';
+
         return Scaffold(
           appBar: AppBar(
             title: Text(consumption.name),
-            actions: [
-              IconButton(
-                icon: const Icon(Icons.edit),
-                onPressed: () async {
-                  if (consumption is QuickConsumption) {
-                    Navigator.of(context).push(
-                      MaterialPageRoute(
-                        builder: (context) => CreateQuickTrackConsumptionView(
-                          consumption: consumption,
-                        ),
-                      ),
-                    );
-                  } else if (consumption is IngredientConsumption) {
-                    Navigator.of(context).push(
-                      MaterialPageRoute(
-                        builder: (context) => CreateIngredientConsumptionView(
-                          ingredientConsumption: consumption,
-                        ),
-                      ),
-                    );
-                  } else if (consumption is RecipeConsumption) {
-                    Navigator.of(context).push(
-                      MaterialPageRoute(
-                        builder: (context) => CreateRecipeConsumptionView(
-                          recipeConsumption: consumption,
-                        ),
-                      ),
-                    );
-                  }
-                },
-              ),
-              WithConfirmationDialog(
-                title: consumption.name,
-                description:
-                    'Are you sure you want to delete this consumption?',
-                builder: (context, confirm) => IconButton(
-                  icon: const Icon(Icons.delete_rounded),
-                  onPressed: () async {
-                    if (await confirm()) {
-                      ConsumptionsService.of(context).delete(consumption);
+            actions: isReadOnly
+                ? null
+                : [
+                    IconButton(
+                      icon: const Icon(Icons.edit),
+                      onPressed: () async {
+                        if (consumption is QuickConsumption) {
+                          Navigator.of(context).push(
+                            MaterialPageRoute(
+                              builder: (context) =>
+                                  CreateQuickTrackConsumptionView(
+                                consumption: consumption,
+                              ),
+                            ),
+                          );
+                        } else if (consumption is IngredientConsumption) {
+                          Navigator.of(context).push(
+                            MaterialPageRoute(
+                              builder: (context) =>
+                                  CreateIngredientConsumptionView(
+                                ingredientConsumption: consumption,
+                              ),
+                            ),
+                          );
+                        } else if (consumption is RecipeConsumption) {
+                          Navigator.of(context).push(
+                            MaterialPageRoute(
+                              builder: (context) => CreateRecipeConsumptionView(
+                                recipeConsumption: consumption,
+                              ),
+                            ),
+                          );
+                        }
+                      },
+                    ),
+                    WithConfirmationDialog(
+                      title: consumption.name,
+                      description:
+                          'Are you sure you want to delete this consumption?',
+                      builder: (context, confirm) => IconButton(
+                        icon: const Icon(Icons.delete_rounded),
+                        onPressed: () async {
+                          if (await confirm()) {
+                            ConsumptionsService.of(context).delete(consumption);
 
-                      if (mounted) {
-                        Navigator.of(context).pop();
-                      }
-                    }
-                  },
-                ),
-              ),
-            ],
+                            if (mounted) {
+                              Navigator.of(context).pop();
+                            }
+                          }
+                        },
+                      ),
+                    ),
+                  ],
           ),
 
           /// TODO: Split this body into three separate widgets, one for each of

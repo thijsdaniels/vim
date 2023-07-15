@@ -8,7 +8,6 @@ class ConsumptionsList extends StatelessWidget {
   final ScrollPhysics? physics;
   final EdgeInsets padding;
   final double? elevation;
-  final void Function(Consumption)? onTap;
   final bool showCalories;
   final bool showMacros;
   final bool showTime;
@@ -19,7 +18,6 @@ class ConsumptionsList extends StatelessWidget {
     this.physics,
     this.padding = const EdgeInsets.all(16.0),
     this.elevation,
-    this.onTap,
     this.showCalories = true,
     this.showMacros = true,
     this.showTime = true,
@@ -46,7 +44,6 @@ class ConsumptionsList extends StatelessWidget {
         return ConsumptionListSurface(
           consumption,
           elevation: elevation,
-          onTap: onTap != null ? () => onTap!(consumption) : null,
           showCalories: showCalories,
           showMacros: showMacros,
           showTime: showTime,
