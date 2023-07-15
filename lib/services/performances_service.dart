@@ -2,7 +2,6 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:vim/models/exercise/exercise.dart';
-import 'package:vim/models/exercise/exercise_performance.dart';
 import 'package:vim/models/exercise/manual_exercise_performance.dart';
 import 'package:vim/models/exercise/performance.dart';
 import 'package:vim/models/exercise/quick_performance.dart';
@@ -55,27 +54,6 @@ class PerformancesService<D extends Performance> extends Service<D> {
         .snapshots()
         .map(
           (snapshot) => snapshot.docs.map((doc) => doc.data()).toList(),
-        );
-  }
-
-  Stream<List<ExercisePerformance>> forExercise(
-    Exercise exercise, {
-    Timestamp? before,
-    int? limit,
-  }) {
-    var query = collection
-        .where('exercise.reference', isEqualTo: exercise.reference)
-        .where('timestamp', isLessThan: before)
-        .orderBy('timestamp', descending: true);
-
-    if (limit != null) {
-      query = query.limit(limit);
-    }
-
-    return query.snapshots().map(
-          (snapshot) => snapshot.docs
-              .map((doc) => doc.data() as ExercisePerformance)
-              .toList(),
         );
   }
 

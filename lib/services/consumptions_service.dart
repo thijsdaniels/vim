@@ -2,9 +2,9 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:vim/models/food/consumption.dart';
-import 'package:vim/models/food/ingredient.dart';
 import 'package:vim/models/food/ingredient_consumption.dart';
 import 'package:vim/models/food/quick_consumption.dart';
+import 'package:vim/models/food/recipe.dart';
 import 'package:vim/models/food/recipe_consumption.dart';
 import 'package:vim/services/service.dart';
 
@@ -43,13 +43,13 @@ class ConsumptionsService<D extends Consumption> extends Service<D> {
         .map((snapshot) => snapshot.docs.map((doc) => doc.data()).toList());
   }
 
-  Stream<List<IngredientConsumption>> forIngredient(
-    Ingredient ingredient, {
+  Stream<List<RecipeConsumption>> forRecipe(
+    Recipe recipe, {
     Timestamp? before,
     int? limit,
   }) {
     var query = collection
-        .where('ingredient.reference', isEqualTo: ingredient.reference)
+        .where('recipe.reference', isEqualTo: recipe.reference)
         .where('timestamp', isLessThan: before)
         .orderBy('timestamp', descending: true);
 
@@ -59,7 +59,7 @@ class ConsumptionsService<D extends Consumption> extends Service<D> {
 
     return query.snapshots().map(
           (snapshot) => snapshot.docs
-              .map((doc) => doc.data() as IngredientConsumption)
+              .map((doc) => doc.data() as RecipeConsumption)
               .toList(),
         );
   }

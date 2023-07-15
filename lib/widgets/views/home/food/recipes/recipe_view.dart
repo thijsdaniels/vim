@@ -3,10 +3,12 @@ import 'package:vim/extensions/num.dart';
 import 'package:vim/models/food/ingredient.dart';
 import 'package:vim/models/food/ingredient_amount.dart';
 import 'package:vim/models/food/recipe.dart';
+import 'package:vim/services/consumptions_service.dart';
 import 'package:vim/services/recipes_service.dart';
 import 'package:vim/widgets/atoms/icons8_icon.dart';
 import 'package:vim/widgets/atoms/standard_list.dart';
 import 'package:vim/widgets/atoms/stats_table.dart';
+import 'package:vim/widgets/molecules/consumptions_list.dart';
 import 'package:vim/widgets/molecules/list_surface.dart';
 import 'package:vim/widgets/molecules/nutrition_table.dart';
 import 'package:vim/widgets/molecules/simple_card.dart';
@@ -134,6 +136,20 @@ class RecipeView extends StatelessWidget {
                     );
                   },
                 ),
+              ),
+              StreamBuilder(
+                stream: ConsumptionsService.of(context).forRecipe(recipe),
+                builder: (context, snapshot) {
+                  return SimpleCard(
+                    title: "History",
+                    child: ConsumptionsList(
+                      snapshot.data ?? [],
+                      padding: EdgeInsets.zero,
+                      physics: const NeverScrollableScrollPhysics(),
+                      elevation: 4,
+                    ),
+                  );
+                },
               ),
             ],
           ),

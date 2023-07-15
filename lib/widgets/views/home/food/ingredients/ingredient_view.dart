@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:vim/models/food/ingredient.dart';
-import 'package:vim/services/consumptions_service.dart';
+import 'package:vim/services/consumptions_collection_group.dart';
 import 'package:vim/services/ingredients_service.dart';
 import 'package:vim/widgets/atoms/standard_list.dart';
 import 'package:vim/widgets/atoms/stats_table.dart';
@@ -101,8 +101,8 @@ class IngredientView extends StatelessWidget {
                 ),
               ),
               StreamBuilder(
-                stream:
-                    ConsumptionsService.of(context).forIngredient(ingredient),
+                stream: ConsumptionsCollectionGroup.instance
+                    .forIngredient(ingredient),
                 builder: (context, snapshot) {
                   return SimpleCard(
                     title: "History",
