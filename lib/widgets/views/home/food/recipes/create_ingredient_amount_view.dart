@@ -1,6 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:vim/models/food/ingredient_amount_reference.dart';
+import 'package:vim/models/food/ingredient_amount.dart';
 import 'package:vim/services/ingredients_service.dart';
 import 'package:vim/widgets/atoms/ingredient_form_field.dart';
 import 'package:vim/widgets/atoms/number_form_field.dart';
@@ -8,7 +8,7 @@ import 'package:vim/widgets/atoms/standard_list.dart';
 import 'package:vim/widgets/molecules/simple_card.dart';
 
 class CreateIngredientAmountView extends StatefulWidget {
-  final IngredientAmountReference? ingredientAmount;
+  final IngredientAmount? ingredientAmount;
 
   const CreateIngredientAmountView({
     super.key,
@@ -31,7 +31,7 @@ class _CreateIngredientAmountViewState
   void initState() {
     super.initState();
 
-    IngredientAmountReference? ingredientAmount = widget.ingredientAmount;
+    IngredientAmount? ingredientAmount = widget.ingredientAmount;
 
     if (ingredientAmount != null) {
       _ingredient = ingredientAmount.ingredientReference;
@@ -54,7 +54,7 @@ class _CreateIngredientAmountViewState
                 formState.save();
 
                 Navigator.of(context).pop(
-                  IngredientAmountReference(
+                  IngredientAmount(
                     ingredientReference: _ingredient!,
                     amount: _amount!,
                   ),

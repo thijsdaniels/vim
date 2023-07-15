@@ -1,17 +1,17 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:vim/extensions/ingredient_amounts.dart';
 import 'package:vim/models/document.dart';
 import 'package:vim/models/food/amount.dart';
-import 'package:vim/models/food/ingredient_amounts.dart';
-import 'package:vim/models/food/ingredient_amounts_reference.dart';
+import 'package:vim/models/food/ingredient_amount.dart';
 import 'package:vim/models/food/nutrition.dart';
 import 'package:vim/models/food/recipe_consumption.dart';
-import 'package:vim/models/model.dart';
+import 'package:vim/models/snapshot.dart';
 
 class Recipe extends Document {
   DocumentReference? _reference;
   String name;
   num servings;
-  IngredientAmountsReference ingredientAmounts;
+  List<IngredientAmount> ingredientAmounts;
 
   @override
   DocumentReference? get reference => _reference;
@@ -23,8 +23,8 @@ class Recipe extends Document {
   Recipe({
     required this.name,
     this.servings = 1,
-    IngredientAmountsReference? ingredientAmounts,
-  }) : ingredientAmounts = ingredientAmounts ?? IngredientAmountsReference([]);
+    List<IngredientAmount>? ingredientAmounts,
+  }) : ingredientAmounts = ingredientAmounts ?? [];
 
   @override
   Map<String, dynamic> toMap() {
@@ -50,19 +50,7 @@ class Recipe extends Document {
     return Recipe(
       name: map['name'],
       servings: map['servings'],
-      ingredientAmounts:
-          IngredientAmountsReference.fromMap(map['ingredientAmounts']),
-    );
-  }
-
-  Future<RecipeConsumption> consumption({
-    required Timestamp timestamp,
-    required Amount amount,
-  }) async {
-    return RecipeConsumption(
-      timestamp: timestamp,
-      recipe: await resolve(),
-      amount: amount,
+      ingredientAmounts: IngredientAmounts.fromMap(map['ingredientAmounts']),
     );
   }
 
@@ -76,33 +64,7 @@ class Recipe extends Document {
     }
   }
 
-  Future<ResolvedRecipe> resolve() async {
-    return ResolvedRecipe(
-      name: name,
-      servings: servings,
-      ingredientAmounts: await ingredientAmounts.resolve(),
-    );
-  }
-}
-
-class ResolvedRecipe extends Model {
-  String name;
-  num servings;
-  IngredientAmounts ingredientAmounts;
-
-  ResolvedRecipe({
-    required this.name,
-    this.servings = 1,
-    required this.ingredientAmounts,
-  });
-
-  Nutrition get nutrition => ingredientAmounts.nutrition;
-
-  Nutrition nutritionForAmount(Amount amount) {
-    return ingredientAmountsForAmount(amount).nutrition;
-  }
-
-  IngredientAmounts ingredientAmountsForAmount(Amount amount) {
+  List<IngredientAmount> ingredientAmountsForAmount(Amount amount) {
     switch (amount.unit) {
       case Unit.grams:
         return ingredientAmounts.forAmount(amount.value);
@@ -112,20 +74,32 @@ class ResolvedRecipe extends Model {
     }
   }
 
-  @override
-  Map<String, dynamic> toMap() {
-    return {
-      'name': name,
-      'servings': servings,
-      'ingredientAmounts': ingredientAmounts.toMap(),
-    };
+  Future<RecipeConsumption> consumption({
+    required Timestamp timestamp,
+    required Amount amount,
+  }) async {
+    return RecipeConsumption(
+      timestamp: timestamp,
+      recipe: toSnapshot(),
+      amount: amount,
+    );
   }
 
-  static ResolvedRecipe fromMap(Map<String, dynamic> map) {
-    return ResolvedRecipe(
-      name: map['name'],
-      servings: map['servings'],
-      ingredientAmounts: IngredientAmounts.fromMap(map['ingredientAmounts']),
+  RecipeSnapshot toSnapshot() {
+    return RecipeSnapshot(this);
+  }
+}
+
+class RecipeSnapshot extends Snapshot<Recipe> {
+  RecipeSnapshot(
+    super.snapshot, {
+    super.reference,
+  });
+
+  static RecipeSnapshot fromMap(Map<String, dynamic> map) {
+    return RecipeSnapshot(
+      Recipe.fromMap(map['snapshot']),
+      reference: map['reference'],
     );
   }
 }

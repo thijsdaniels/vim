@@ -40,7 +40,7 @@ class ExercisesView extends StatelessWidget {
                   Navigator.of(context).push(
                     MaterialPageRoute(
                       builder: (context) =>
-                          ExerciseView(exercise.reference!.id),
+                          ExerciseView(id: exercise.reference!.id),
                     ),
                   );
                 },

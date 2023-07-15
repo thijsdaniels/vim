@@ -3,8 +3,9 @@ import 'package:provider/provider.dart';
 import 'package:vim/models/date_model.dart';
 import 'package:vim/models/exercise/exercise.dart';
 import 'package:vim/models/exercise/exercise_performance.dart';
+import 'package:vim/models/exercise/manual_exercise_performance.dart';
 import 'package:vim/models/exercise/resistance_exercise_performance.dart';
-import 'package:vim/models/exercise/sets.dart';
+import 'package:vim/extensions/sets.dart';
 import 'package:vim/models/exercise/weights_exercise_performance.dart';
 import 'package:vim/widgets/atoms/number_form_field.dart';
 import 'package:vim/widgets/atoms/sets_form_field.dart';
@@ -93,13 +94,14 @@ class _CreateExercisePerformanceViewState
                     } else if (exercisePerformance
                         is WeightsExercisePerformance) {
                       exercisePerformance.sets = Sets.fromRecords(_sets);
-                    } else {
-                      exercisePerformance.setCalories(_calories!);
+                    } else if (exercisePerformance
+                        is ManualExercisePerformance) {
+                      exercisePerformance.calories = _calories!;
                     }
                   } else {
                     switch (widget.exercise!.type) {
                       case ExerciseType.manual:
-                        exercisePerformance = ExercisePerformance(
+                        exercisePerformance = ManualExercisePerformance(
                           timestamp: dateModel.timestamp,
                           exercise: widget.exercise!.toSnapshot(),
                           calories: _calories!,

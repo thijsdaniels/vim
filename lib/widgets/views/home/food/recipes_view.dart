@@ -35,7 +35,8 @@ class RecipesView extends StatelessWidget {
                 onTap: () {
                   Navigator.of(context).push(
                     MaterialPageRoute(
-                      builder: (context) => RecipeView(recipe.reference!.id),
+                      builder: (context) =>
+                          RecipeView(id: recipe.reference!.id),
                     ),
                   );
                 },

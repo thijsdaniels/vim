@@ -36,7 +36,7 @@ class IngredientsView extends StatelessWidget {
                   Navigator.of(context).push(
                     MaterialPageRoute(
                       builder: (context) =>
-                          IngredientView(ingredient.reference!.id),
+                          IngredientView(id: ingredient.reference!.id),
                     ),
                   );
                 },

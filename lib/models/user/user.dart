@@ -1,5 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:vim/extensions/performances_list.dart';
+import 'package:vim/extensions/performances.dart';
 import 'package:vim/models/document.dart';
 import 'package:vim/models/exercise/performance.dart';
 import 'package:vim/models/food/nutrition.dart';
@@ -7,6 +7,7 @@ import 'package:vim/models/user/body.dart';
 import 'package:vim/models/user/target.dart';
 
 /// TODO: Rename to `UserProfile` or even just `Profile`?
+/// TODO: Add the various user-scoped subcollections to this class.
 class User extends Document {
   User({
     required this.body,

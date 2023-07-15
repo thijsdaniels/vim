@@ -28,9 +28,9 @@ abstract class CollectionGroup<D extends Document> {
         );
   }
 
-  Stream<D?> get(String id) {
+  Stream<D?> get(String path) {
     return collectionGroup
-        .where(FieldPath.documentId, isEqualTo: id)
+        .where(FieldPath.documentId, isEqualTo: path)
         .limit(1)
         .snapshots()
         .map((snapshot) => snapshot.docs.firstOrNull?.data());

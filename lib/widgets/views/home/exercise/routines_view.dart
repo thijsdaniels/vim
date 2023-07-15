@@ -40,7 +40,8 @@ class RoutinesView extends StatelessWidget {
                 onTap: () {
                   Navigator.of(context).push(
                     MaterialPageRoute(
-                      builder: (context) => RoutineView(routine.reference!.id),
+                      builder: (context) =>
+                          RoutineView(id: routine.reference!.id),
                     ),
                   );
                 },

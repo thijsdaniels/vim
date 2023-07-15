@@ -2,11 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 import 'package:vim/models/date_model.dart';
-import 'package:vim/models/exercise/performance.dart';
+import 'package:vim/models/exercise/quick_performance.dart';
 import 'package:vim/widgets/molecules/simple_card.dart';
 
 class CreateQuickTrackPerformanceView extends StatefulWidget {
-  final Performance? performance;
+  final QuickPerformance? performance;
 
   const CreateQuickTrackPerformanceView({super.key, this.performance});
 
@@ -34,7 +34,7 @@ class _CreateQuickTrackPerformanceViewState
 
   @override
   Widget build(BuildContext context) {
-    Performance? performance = widget.performance;
+    QuickPerformance? performance = widget.performance;
 
     return Scaffold(
       appBar: AppBar(
@@ -54,13 +54,13 @@ class _CreateQuickTrackPerformanceViewState
                   String name = _nameController.value.text;
                   int calories = int.parse(_caloriesController.value.text);
 
-                  Performance? performance = widget.performance;
+                  QuickPerformance? performance = widget.performance;
 
                   if (performance != null) {
                     performance.name = name;
-                    performance.setCalories(calories);
+                    performance.calories = calories;
                   } else {
-                    performance = Performance(
+                    performance = QuickPerformance(
                       timestamp: dateModel.timestamp,
                       name: name,
                       calories: calories,

@@ -13,17 +13,17 @@ import 'package:vim/widgets/views/loading_view.dart';
 import 'package:vim/widgets/views/not_found_view.dart';
 
 class IngredientView extends StatelessWidget {
-  final String ingredientId;
+  final String id;
 
-  const IngredientView(
-    this.ingredientId, {
+  const IngredientView({
     super.key,
+    required this.id,
   });
 
   @override
   Widget build(BuildContext context) {
     return StreamBuilder<Ingredient?>(
-      stream: IngredientsService.of(context).get(ingredientId),
+      stream: IngredientsService.of(context).get(id),
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
           return const LoadingView();
@@ -107,7 +107,7 @@ class IngredientView extends StatelessWidget {
                   return SimpleCard(
                     title: "History",
                     child: ConsumptionsList(
-                      consumptions: snapshot.data ?? [],
+                      snapshot.data ?? [],
                       padding: EdgeInsets.zero,
                       physics: const NeverScrollableScrollPhysics(),
                       elevation: 4,

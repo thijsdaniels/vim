@@ -19,9 +19,9 @@ import 'package:vim/services/performances_service.dart';
 import 'package:vim/services/recipes_service.dart';
 import 'package:vim/services/routines_service.dart';
 import 'package:vim/services/users_service.dart';
-import 'package:vim/widgets/views/onboarding_view.dart';
 import 'package:vim/widgets/views/home_view.dart';
 import 'package:vim/widgets/views/login_view.dart';
+import 'package:vim/widgets/views/onboarding_view.dart';
 
 class Vim extends StatelessWidget {
   const Vim({
@@ -199,22 +199,34 @@ class ServiceProviders extends StatelessWidget {
         return MultiProvider(
           providers: [
             Provider<IngredientsService>.value(
-              value: IngredientsService(user),
+              value: IngredientsService(
+                path: 'users/${user.reference!.id}/ingredients',
+              ),
             ),
             Provider<RecipesService>.value(
-              value: RecipesService(user),
+              value: RecipesService(
+                path: 'users/${user.reference!.id}/recipes',
+              ),
             ),
             Provider<ExercisesService>.value(
-              value: ExercisesService(user),
+              value: ExercisesService(
+                path: 'users/${user.reference!.id}/exercises',
+              ),
             ),
             Provider<RoutinesService>.value(
-              value: RoutinesService(user),
+              value: RoutinesService(
+                path: 'users/${user.reference!.id}/routines',
+              ),
             ),
             Provider<ConsumptionsService>.value(
-              value: ConsumptionsService(user),
+              value: ConsumptionsService(
+                path: 'users/${user.reference!.id}/consumptions',
+              ),
             ),
             Provider<PerformancesService>.value(
-              value: PerformancesService(user),
+              value: PerformancesService(
+                path: 'users/${user.reference!.id}/performances',
+              ),
             ),
           ],
           child: DataProviders(child: child),

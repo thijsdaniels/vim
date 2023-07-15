@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:vim/extensions/consumptions_list.dart';
-import 'package:vim/extensions/performances_list.dart';
+import 'package:vim/extensions/consumptions.dart';
+import 'package:vim/extensions/performances.dart';
 import 'package:vim/models/exercise/performance.dart';
 import 'package:vim/models/food/consumption.dart';
 import 'package:vim/models/food/nutrition.dart';
@@ -43,11 +43,14 @@ class CaloriesCard extends StatelessWidget {
           children: [
             FutureBuilder(
               future: user?.targetConsumption(performances),
-              builder: (context, snapshot) => TargetProgress(
-                title: 'Consumed',
-                progress: consumptions.nutrition.calories,
-                target: snapshot.hasData ? snapshot.data! : null,
-                barSize: TargetProgressBarSize.large,
+              builder: (context, targetSnapshot) => FutureBuilder(
+                future: Future.value(consumptions.nutrition),
+                builder: (context, nutritionSnapshot) => TargetProgress(
+                  title: 'Consumed',
+                  progress: nutritionSnapshot.data?.calories ?? 0,
+                  target: targetSnapshot.data,
+                  barSize: TargetProgressBarSize.large,
+                ),
               ),
             ),
             FutureBuilder(
@@ -78,44 +81,48 @@ class MacrosCard extends StatelessWidget {
       builder: (context, user, _) => SimpleCard(
         title: 'Macros',
         child: FutureBuilder(
-          future: user?.targetConsumption(performances),
-          builder: (context, snapshot) => Row(
-            mainAxisAlignment: MainAxisAlignment.spaceAround,
-            children: [
-              TargetProgress(
-                title: 'Carbs',
-                progress: snapshot.hasData
-                    ? consumptions.nutrition.carbohydrates.total ?? 0
-                    : 0,
-                target: snapshot.hasData
-                    ? Carbohydrates.grams(
-                        snapshot.data! *
-                            (user?.targetCarbohydrateConsumption ?? 0),
-                      )
-                    : null,
-              ),
-              TargetProgress(
-                title: 'Proteins',
-                progress: snapshot.hasData
-                    ? consumptions.nutrition.proteins.total ?? 0
-                    : 0,
-                target: snapshot.hasData
-                    ? Proteins.grams(
-                        snapshot.data! * (user?.targetProteinConsumption ?? 0),
-                      )
-                    : null,
-              ),
-              TargetProgress(
-                title: 'Fats',
-                progress: snapshot.hasData
-                    ? consumptions.nutrition.fats.total ?? 0
-                    : 0,
-                target: snapshot.hasData
-                    ? Fats.grams(
-                        snapshot.data! * (user?.targetFatConsumption ?? 0))
-                    : null,
-              ),
-            ],
+          future: Future.value(consumptions.nutrition),
+          builder: (context, nutritionSnapshot) => FutureBuilder(
+            future: user?.targetConsumption(performances),
+            builder: (context, targetSnapshot) => Row(
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              children: [
+                TargetProgress(
+                  title: 'Carbs',
+                  progress: targetSnapshot.hasData
+                      ? nutritionSnapshot.data?.carbohydrates.total ?? 0
+                      : 0,
+                  target: targetSnapshot.hasData
+                      ? Carbohydrates.grams(
+                          targetSnapshot.data! *
+                              (user?.targetCarbohydrateConsumption ?? 0),
+                        )
+                      : null,
+                ),
+                TargetProgress(
+                  title: 'Proteins',
+                  progress: targetSnapshot.hasData
+                      ? nutritionSnapshot.data?.proteins.total ?? 0
+                      : 0,
+                  target: targetSnapshot.hasData
+                      ? Proteins.grams(
+                          targetSnapshot.data! *
+                              (user?.targetProteinConsumption ?? 0),
+                        )
+                      : null,
+                ),
+                TargetProgress(
+                  title: 'Fats',
+                  progress: targetSnapshot.hasData
+                      ? nutritionSnapshot.data?.fats.total ?? 0
+                      : 0,
+                  target: targetSnapshot.hasData
+                      ? Fats.grams(targetSnapshot.data! *
+                          (user?.targetFatConsumption ?? 0))
+                      : null,
+                ),
+              ],
+            ),
           ),
         ),
       ),
@@ -133,8 +140,11 @@ class NutritionCard extends StatelessWidget {
     return SimpleCard(
       title: 'Nutrition',
       child: Center(
-        child: NutritionTable(
-          nutrition: consumptions.nutrition,
+        child: FutureBuilder(
+          future: Future.value(consumptions.nutrition),
+          builder: (context, snapshot) => NutritionTable(
+            nutrition: snapshot.data,
+          ),
         ),
       ),
     );

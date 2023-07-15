@@ -8,10 +8,10 @@ class RoutinePerformanceIcon extends StatelessWidget {
   final double elevation;
   final RoutinePerformance performance;
 
-  const RoutinePerformanceIcon({
+  const RoutinePerformanceIcon(
+    this.performance, {
     super.key,
     this.elevation = 0,
-    required this.performance,
   });
 
   @override

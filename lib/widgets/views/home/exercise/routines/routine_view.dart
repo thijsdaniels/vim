@@ -16,17 +16,17 @@ import 'package:vim/widgets/views/loading_view.dart';
 import 'package:vim/widgets/views/not_found_view.dart';
 
 class RoutineView extends StatelessWidget {
-  final String routineId;
+  final String id;
 
-  const RoutineView(
-    this.routineId, {
+  const RoutineView({
     super.key,
+    required this.id,
   });
 
   @override
   Widget build(BuildContext context) {
     return StreamBuilder<Routine?>(
-      stream: RoutinesService.of(context).get(routineId),
+      stream: RoutinesService.of(context).get(id),
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
           return const LoadingView();

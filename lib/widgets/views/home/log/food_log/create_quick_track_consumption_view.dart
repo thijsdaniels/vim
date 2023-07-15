@@ -3,12 +3,13 @@ import 'package:provider/provider.dart';
 import 'package:vim/models/food/consumption.dart';
 import 'package:vim/models/date_model.dart';
 import 'package:vim/models/food/nutrition.dart';
+import 'package:vim/models/food/quick_consumption.dart';
 import 'package:vim/services/consumptions_service.dart';
 import 'package:vim/widgets/molecules/nutrition_form_fields.dart';
 import 'package:vim/widgets/molecules/simple_card.dart';
 
 class CreateQuickTrackConsumptionView extends StatefulWidget {
-  final Consumption? consumption;
+  final QuickConsumption? consumption;
 
   const CreateQuickTrackConsumptionView({super.key, this.consumption});
 
@@ -29,11 +30,9 @@ class _CreateQuickTrackConsumptionViewState
   void initState() {
     super.initState();
 
-    Consumption? consumption = widget.consumption;
-
-    if (consumption != null) {
-      _nameController.text = consumption.name;
-      _nutritionController.nutrition = consumption.nutrition;
+    if (widget.consumption != null) {
+      _nameController.text = widget.consumption!.name;
+      _nutritionController.nutrition = widget.consumption!.nutrition;
     }
   }
 
@@ -59,7 +58,7 @@ class _CreateQuickTrackConsumptionViewState
                   String name = _nameController.value.text;
                   Nutrition nutrition = _nutritionController.nutrition;
 
-                  Consumption? consumption = widget.consumption;
+                  QuickConsumption? consumption = widget.consumption;
 
                   if (consumption != null) {
                     consumption.name = name;
@@ -67,7 +66,7 @@ class _CreateQuickTrackConsumptionViewState
 
                     ConsumptionsService.of(context).update(consumption);
                   } else {
-                    consumption = Consumption(
+                    consumption = QuickConsumption(
                       timestamp: dateModel.timestamp,
                       name: name,
                       nutrition: nutrition,

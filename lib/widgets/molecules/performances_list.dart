@@ -1,13 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:vim/extensions/date_time.dart';
 import 'package:vim/extensions/num.dart';
-import 'package:vim/models/exercise/exercise_performance.dart';
+import 'package:vim/extensions/sets.dart';
 import 'package:vim/models/exercise/performance.dart';
 import 'package:vim/models/exercise/resistance_exercise_performance.dart';
-import 'package:vim/models/exercise/routine_performance.dart';
 import 'package:vim/models/exercise/weights_exercise_performance.dart';
-import 'package:vim/widgets/atoms/exercise_performance_icon.dart';
-import 'package:vim/widgets/atoms/routine_performance_icon.dart';
+import 'package:vim/widgets/atoms/performance_icon.dart';
 import 'package:vim/widgets/atoms/secondary_text.dart';
 import 'package:vim/widgets/atoms/standard_list.dart';
 import 'package:vim/widgets/molecules/list_surface.dart';
@@ -46,14 +44,14 @@ class PerformancesList extends StatelessWidget {
         Performance performance = performances[index];
 
         return FutureBuilder(
-          future: performance.calories,
-          builder: (context, snapshot) => ListSurface(
+          future: Future.value(performance.calories),
+          builder: (context, caloriesSnapshot) => ListSurface(
             elevation: elevation,
-            icon: getIcon(performance),
+            icon: PerformanceIcon(performance),
             title: performance.name,
             // TODO: Try to change this into Chip widgets.
             subtitle: [
-              '${snapshot.data?.round()} cal',
+              '${caloriesSnapshot.data?.round()} cal',
               if (performance is WeightsExercisePerformance) ...[
                 '${(performance.sets.weight / performance.sets.length).decimals(2)} kg',
                 performance.sets
@@ -83,19 +81,5 @@ class PerformancesList extends StatelessWidget {
         );
       },
     );
-  }
-
-  Widget? getIcon(Performance performance) {
-    if (performance is RoutinePerformance) {
-      return RoutinePerformanceIcon(
-        performance: performance,
-      );
-    } else if (performance is ExercisePerformance) {
-      return ExercisePerformanceIcon(
-        performance: performance,
-      );
-    }
-
-    return null;
   }
 }

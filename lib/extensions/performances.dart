@@ -1,6 +1,6 @@
 import 'package:vim/models/exercise/performance.dart';
 
-extension PerformancesListExtension on List<Performance> {
+extension Performances on List<Performance> {
   Future<num> get calories async {
     return isNotEmpty
         ? map((performance) => performance.calories)

@@ -19,7 +19,7 @@ abstract class NutrientGroup<T extends NutrientGroup<T>> extends Model {
 }
 
 class Nutrition extends NutrientGroup<Nutrition> {
-  final num calories;
+  final num? calories;
   final Carbohydrates carbohydrates;
   final Proteins proteins;
   final Fats fats;
@@ -30,7 +30,7 @@ class Nutrition extends NutrientGroup<Nutrition> {
   final num? caffeine;
 
   const Nutrition({
-    this.calories = 0,
+    this.calories,
     this.carbohydrates = const Carbohydrates(null),
     this.proteins = const Proteins(null),
     this.fats = const Fats(null),
@@ -72,22 +72,22 @@ class Nutrition extends NutrientGroup<Nutrition> {
     );
   }
 
-  static const Nutrition zero = Nutrition(
-    calories: 0,
-    carbohydrates: Carbohydrates.zero,
-    proteins: Proteins.zero,
-    fats: Fats.zero,
-    minerals: Minerals.zero,
-    vitamins: Vitamins.zero,
-    water: 0,
-    alcohol: 0,
-    caffeine: 0,
+  static const Nutrition empty = Nutrition(
+    calories: null,
+    carbohydrates: Carbohydrates.empty,
+    proteins: Proteins.empty,
+    fats: Fats.empty,
+    minerals: Minerals.empty,
+    vitamins: Vitamins.empty,
+    water: null,
+    alcohol: null,
+    caffeine: null,
   );
 
   @override
   Nutrition operator +(Nutrition other) {
     return Nutrition(
-      calories: calories + other.calories,
+      calories: _addNutrient(calories, other.calories),
       carbohydrates: carbohydrates + other.carbohydrates,
       proteins: proteins + other.proteins,
       fats: fats + other.fats,
@@ -102,7 +102,7 @@ class Nutrition extends NutrientGroup<Nutrition> {
   @override
   Nutrition operator *(num factor) {
     return Nutrition(
-      calories: calories * factor,
+      calories: _multiplyNutrient(calories, factor),
       carbohydrates: carbohydrates * factor,
       proteins: proteins * factor,
       fats: fats * factor,
@@ -163,7 +163,11 @@ class Carbohydrates extends NutrientGroup<Carbohydrates> {
     );
   }
 
-  static const Carbohydrates zero = Carbohydrates(0, sugars: 0, fibers: 0);
+  static const Carbohydrates empty = Carbohydrates(
+    null,
+    sugars: null,
+    fibers: null,
+  );
 
   @override
   Carbohydrates operator +(Carbohydrates other) {
@@ -221,7 +225,10 @@ class Fats extends NutrientGroup<Fats> {
     );
   }
 
-  static const Fats zero = Fats(0, saturates: 0);
+  static const Fats empty = Fats(
+    null,
+    saturates: null,
+  );
 
   @override
   Fats operator +(Fats other) {
@@ -271,7 +278,7 @@ class Proteins extends NutrientGroup<Proteins> {
     );
   }
 
-  static const Proteins zero = Proteins(0);
+  static const Proteins empty = Proteins(null);
 
   @override
   Proteins operator +(Proteins other) {
@@ -387,26 +394,26 @@ class Minerals extends NutrientGroup<Minerals> {
     );
   }
 
-  static const Minerals zero = Minerals(
-    boron: 0,
-    calcium: 0,
-    chromium: 0,
-    cobalt: 0,
-    copper: 0,
-    fluoride: 0,
-    iodine: 0,
-    iron: 0,
-    magnesium: 0,
-    manganese: 0,
-    molybdenum: 0,
-    nickel: 0,
-    phosphorus: 0,
-    potassium: 0,
-    selenium: 0,
-    silicon: 0,
-    sodium: 0,
-    vanadium: 0,
-    zinc: 0,
+  static const Minerals empty = Minerals(
+    boron: null,
+    calcium: null,
+    chromium: null,
+    cobalt: null,
+    copper: null,
+    fluoride: null,
+    iodine: null,
+    iron: null,
+    magnesium: null,
+    manganese: null,
+    molybdenum: null,
+    nickel: null,
+    phosphorus: null,
+    potassium: null,
+    selenium: null,
+    silicon: null,
+    sodium: null,
+    vanadium: null,
+    zinc: null,
   );
 
   static num? saltToSodium(num? grams) => grams != null ? grams * 0.4 : null;
@@ -554,20 +561,20 @@ class Vitamins extends NutrientGroup<Vitamins> {
     );
   }
 
-  static const Vitamins zero = Vitamins(
-    a: 0,
-    b1: 0,
-    b2: 0,
-    b3: 0,
-    b5: 0,
-    b6: 0,
-    b7: 0,
-    b9: 0,
-    b12: 0,
-    c: 0,
-    d: 0,
-    e: 0,
-    k: 0,
+  static const Vitamins empty = Vitamins(
+    a: null,
+    b1: null,
+    b2: null,
+    b3: null,
+    b5: null,
+    b6: null,
+    b7: null,
+    b9: null,
+    b12: null,
+    c: null,
+    d: null,
+    e: null,
+    k: null,
   );
 
   @override

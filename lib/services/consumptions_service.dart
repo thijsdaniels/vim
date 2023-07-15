@@ -4,32 +4,31 @@ import 'package:provider/provider.dart';
 import 'package:vim/models/food/consumption.dart';
 import 'package:vim/models/food/ingredient.dart';
 import 'package:vim/models/food/ingredient_consumption.dart';
+import 'package:vim/models/food/quick_consumption.dart';
 import 'package:vim/models/food/recipe_consumption.dart';
-import 'package:vim/models/user/user.dart';
 import 'package:vim/services/service.dart';
 
-class ConsumptionsService extends Service<Consumption> {
+class ConsumptionsService<D extends Consumption> extends Service<D> {
   static ConsumptionsService of(BuildContext context) {
     return Provider.of<ConsumptionsService>(context, listen: false);
   }
 
-  ConsumptionsService(User user)
-      : super(path: 'users/${user.reference!.id}/consumptions');
+  ConsumptionsService({required super.path});
 
   @override
-  Consumption fromFirestore(snapshot, options) {
+  D fromFirestore(snapshot, options) {
     Map<String, dynamic> data = snapshot.data()!;
 
     if (data['recipe'] != null) {
-      return RecipeConsumption.fromSnapshot(snapshot);
+      return RecipeConsumption.fromSnapshot(snapshot) as D;
     } else if (data['ingredient'] != null) {
-      return IngredientConsumption.fromSnapshot(snapshot);
+      return IngredientConsumption.fromSnapshot(snapshot) as D;
     } else {
-      return Consumption.fromSnapshot(snapshot);
+      return QuickConsumption.fromSnapshot(snapshot) as D;
     }
   }
 
-  Stream<List<Consumption>> forDate(DateTime date) {
+  Stream<List<D>> forDate(DateTime date) {
     DateTime today = DateTime(date.year, date.month, date.day);
     DateTime tomorrow = today.add(const Duration(days: 1));
 

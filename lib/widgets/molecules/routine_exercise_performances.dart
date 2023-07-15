@@ -5,11 +5,12 @@ import 'package:provider/provider.dart';
 import 'package:vim/extensions/num.dart';
 import 'package:vim/models/exercise/exercise.dart';
 import 'package:vim/models/exercise/exercise_performance.dart';
+import 'package:vim/models/exercise/manual_exercise_performance.dart';
 import 'package:vim/models/exercise/performance.dart';
 import 'package:vim/models/exercise/resistance_exercise_performance.dart';
 import 'package:vim/models/exercise/routine_performance.dart';
 import 'package:vim/models/exercise/set.dart';
-import 'package:vim/models/exercise/sets.dart';
+import 'package:vim/extensions/sets.dart';
 import 'package:vim/models/exercise/weights_exercise_performance.dart';
 import 'package:vim/services/performances_collection_group.dart';
 import 'package:vim/widgets/atoms/exercise_icon.dart';
@@ -167,7 +168,7 @@ class PerformedCheckbox extends StatelessWidget {
 
           switch (exercise.type) {
             case ExerciseType.manual:
-              exercisePerformance = ExercisePerformance(
+              exercisePerformance = ManualExercisePerformance(
                 timestamp: Timestamp.now(),
                 exercise: exercise.toSnapshot(),
                 calories: await previousExercisePerformance?.calories ?? 0,
@@ -191,18 +192,10 @@ class PerformedCheckbox extends StatelessWidget {
               exercisePerformance = WeightsExercisePerformance(
                 timestamp: Timestamp.now(),
                 exercise: exercise.toSnapshot(),
-                sets: Sets(
-                  (previousExercisePerformance as WeightsExercisePerformance?)
-                          ?.sets
-                          .map(
-                            (set) => Set(
-                              weight: set.weight,
-                              repetitions: set.repetitions,
-                            ),
-                          )
-                          .toList() ??
-                      [const Set(weight: 0, repetitions: 0)],
-                ),
+                sets:
+                    (previousExercisePerformance as WeightsExercisePerformance?)
+                            ?.sets ??
+                        [const Set(weight: 0, repetitions: 0)],
               );
               break;
           }

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:vim/extensions/num.dart';
 import 'package:vim/models/food/ingredient.dart';
-import 'package:vim/models/food/ingredient_amount_reference.dart';
+import 'package:vim/models/food/ingredient_amount.dart';
 import 'package:vim/models/food/recipe.dart';
 import 'package:vim/services/recipes_service.dart';
 import 'package:vim/widgets/atoms/icons8_icon.dart';
@@ -17,17 +17,17 @@ import 'package:vim/widgets/views/loading_view.dart';
 import 'package:vim/widgets/views/not_found_view.dart';
 
 class RecipeView extends StatelessWidget {
-  final String recipeId;
+  final String id;
 
-  const RecipeView(
-    this.recipeId, {
+  const RecipeView({
     super.key,
+    required this.id,
   });
 
   @override
   Widget build(BuildContext context) {
     return StreamBuilder<Recipe?>(
-      stream: RecipesService.of(context).get(recipeId),
+      stream: RecipesService.of(context).get(id),
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
           return const LoadingView();
@@ -99,7 +99,7 @@ class RecipeView extends StatelessWidget {
                   IconButton(
                     icon: const Icon(Icons.add),
                     onPressed: () async {
-                      IngredientAmountReference? ingredientAmount =
+                      IngredientAmount? ingredientAmount =
                           await Navigator.of(context).push(
                         MaterialPageRoute(
                           builder: (context) =>
@@ -119,12 +119,12 @@ class RecipeView extends StatelessWidget {
                   padding: EdgeInsets.zero,
                   itemCount: recipe.ingredientAmounts.length,
                   itemBuilder: (context, index) {
-                    var ingredientAmount = recipe.ingredientAmounts.get(index);
+                    var ingredientAmount = recipe.ingredientAmounts[index];
 
                     return IngredientAmountListSurface(
                       ingredientAmount,
                       onChange: (value) {
-                        recipe.ingredientAmounts.replace(index, value);
+                        recipe.ingredientAmounts[index] = value;
                         RecipesService.of(context).update(recipe);
                       },
                       onDelete: () {
@@ -144,8 +144,8 @@ class RecipeView extends StatelessWidget {
 }
 
 class IngredientAmountListSurface extends StatelessWidget {
-  final IngredientAmountReference ingredientAmount;
-  final void Function(IngredientAmountReference value) onChange;
+  final IngredientAmount ingredientAmount;
+  final void Function(IngredientAmount value) onChange;
   final void Function() onDelete;
 
   const IngredientAmountListSurface(
@@ -170,7 +170,7 @@ class IngredientAmountListSurface extends StatelessWidget {
           title: ingredient?.name ?? '...',
           subtitle: '${ingredientAmount.amount.decimals(2).toString()} grams',
           onTap: () async {
-            IngredientAmountReference edited = await Navigator.of(context).push(
+            IngredientAmount edited = await Navigator.of(context).push(
               MaterialPageRoute(
                 builder: (context) => CreateIngredientAmountView(
                   ingredientAmount: ingredientAmount,

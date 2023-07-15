@@ -1,34 +1,21 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:vim/models/exercise/exercise.dart';
 import 'package:vim/models/exercise/exercise_performance.dart';
 import 'package:vim/models/exercise/performance.dart';
-import 'package:vim/models/exercise/resistance_exercise_performance.dart';
 import 'package:vim/models/exercise/routine.dart';
-import 'package:vim/models/exercise/weights_exercise_performance.dart';
+import 'package:vim/services/performances_service.dart';
 
 class RoutinePerformance extends Performance {
   DocumentReference? _reference;
 
   RoutineSnapshot routine;
+  Map<String, DocumentReference> performanceReferences;
 
-  // TODO: Move this to a service?
-  CollectionReference<ExercisePerformance>? get performancesCollection =>
-      _reference?.collection('performances').withConverter(
-            fromFirestore: (snapshot, _) {
-              Map<String, dynamic> data = snapshot.data()!;
-
-              switch (ExerciseType.values
-                  .byName(data['exercise']['snapshot']['type'])) {
-                case ExerciseType.manual:
-                  return ExercisePerformance.fromSnapshot(snapshot);
-                case ExerciseType.resistance:
-                  return ResistanceExercisePerformance.fromSnapshot(snapshot);
-                case ExerciseType.weights:
-                  return WeightsExercisePerformance.fromSnapshot(snapshot);
-              }
-            },
-            toFirestore: (performance, options) => performance.toMap(),
-          );
+  PerformancesService<ExercisePerformance>? get performancesService =>
+      _reference != null
+          ? PerformancesService(
+              path: '${_reference!.path}/performances',
+            )
+          : null;
 
   @override
   DocumentReference? get reference => _reference;
@@ -36,14 +23,8 @@ class RoutinePerformance extends Performance {
   @override
   String get name => routine.snapshot.name;
 
-  Map<String, DocumentReference> performanceReferences;
-
   Stream<List<ExercisePerformance>>? get performances {
-    return performancesCollection?.snapshots().map(
-      (snapshot) {
-        return snapshot.docs.map((doc) => doc.data()).toList();
-      },
-    );
+    return performancesService?.all();
   }
 
   @override
@@ -53,7 +34,7 @@ class RoutinePerformance extends Performance {
           (performances) => [
             /// TODO: I prepend a 0, because .reduce() throws an error when
             /// there are no entries. Find a prettier solution to this.
-            Future(() => 0),
+            Future.value(0),
             ...performances.map((performance) => performance.calories)
           ].reduce((total, calories) async => await total + await calories),
         )
@@ -64,8 +45,16 @@ class RoutinePerformance extends Performance {
     required super.timestamp,
     required this.routine,
     Map<String, DocumentReference>? performanceReferences,
-  })  : performanceReferences = performanceReferences ?? {},
-        super(name: "", calories: 0);
+  }) : performanceReferences = performanceReferences ?? {};
+
+  @override
+  Future<void> onDelete() async {
+    /// Delete a `RoutinePerformance`'s nested performances.
+    await Future.wait(
+      (await performancesService!.all().first)
+          .map((performance) => performance.reference!.delete()),
+    );
+  }
 
   static RoutinePerformance fromSnapshot(
     DocumentSnapshot<Map<String, dynamic>> snapshot,
@@ -90,7 +79,7 @@ class RoutinePerformance extends Performance {
   @override
   Map<String, dynamic> toMap() {
     return {
-      'timestamp': timestamp,
+      ...super.toMap(),
       'routine': routine.toMap(),
       'performances': performanceReferences,
     };
@@ -100,8 +89,10 @@ class RoutinePerformance extends Performance {
     int exerciseIndex,
     ExercisePerformance performance,
   ) async {
+    assert(performancesService != null);
+
     DocumentReference reference =
-        await performancesCollection!.add(performance);
+        await performancesService!.create(performance);
 
     performanceReferences[exerciseIndex.toString()] = reference;
     _reference?.update(toMap());
@@ -110,20 +101,18 @@ class RoutinePerformance extends Performance {
   }
 
   Future<void> updatePerformance(ExercisePerformance performance) async {
-    assert(performance.reference != null);
-    return performancesCollection!
-        .doc(performance.reference!.id)
-        .set(performance);
+    assert(performancesService != null);
+    return performancesService!.update(performance);
   }
 
   Future<void> deletePerformance(ExercisePerformance performance) async {
-    assert(performance.reference != null);
+    assert(performancesService != null);
 
-    await performancesCollection!.doc(performance.reference!.id).delete();
+    await performancesService!.delete(performance);
+
     performanceReferences.removeWhere(
       (key, value) => value.id == performance.reference!.id,
     );
-
     _reference?.update(toMap());
 
     return;

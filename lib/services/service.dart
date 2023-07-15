@@ -37,7 +37,7 @@ abstract class Service<D extends Document> {
   // }
 
   Stream<List<D>> all() {
-    return collection.orderBy('name').snapshots().map(
+    return collection.snapshots().map(
           (snapshot) => snapshot.docs.map((doc) => doc.data()).toList(),
         );
   }
@@ -46,29 +46,33 @@ abstract class Service<D extends Document> {
     return collection.doc(id).snapshots().map((snapshot) => snapshot.data());
   }
 
-  Future<void> create(D document) async {
+  Future<DocumentReference<D>> create(D document) async {
     assert(document.reference == null);
-    return collection.doc().set(document);
+
+    var reference = await collection.add(document);
+    await document.onCreate(reference);
+
+    return reference;
   }
 
+  /// TODO: Make the Document classes use properly typed DocumentReferences so
+  /// that updating them is just a matter of document.reference.set(document).
+  /// That way, we could move this method to the Document class.
   Future<void> update(D document) async {
     assert(document.reference != null);
 
-    /// TODO: Test if the `withConverter` is required, or if the reference
-    /// contains references to those already. If so, the `update` method could
-    /// be moved to the `Document` class.
-    document.reference!
-        .withConverter(
-          fromFirestore: fromFirestore,
-          toFirestore: toFirestore,
-        )
-        .set(document);
+    await collection.doc(document.reference!.id).set(document);
+
+    await document.onUpdate();
   }
 
   /// TODO: This could be moved to the `Document` class, since it doesn't matter
-  /// whhich collection the document is stored in.
+  /// which collection the document is stored in.
   Future<void> delete(D document) async {
     assert(document.reference != null);
-    return document.reference!.delete();
+
+    await document.reference!.delete();
+
+    await document.onDelete();
   }
 }

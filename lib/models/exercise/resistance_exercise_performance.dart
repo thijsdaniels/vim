@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:vim/models/exercise/energy.dart';
 import 'package:vim/models/exercise/exercise.dart';
@@ -26,18 +28,15 @@ class ResistanceExercisePerformance extends ExercisePerformance {
   Energy get energy => Energy.watts(watts, duration);
 
   @override
-  Future<num> get calories => Future(
-        () => energy.kiloCalories / ResistanceExercisePerformance.efficiency,
-      );
+  FutureOr<num> get calories =>
+      energy.kiloCalories / ResistanceExercisePerformance.efficiency;
 
   ResistanceExercisePerformance({
     required super.timestamp,
     required super.exercise,
     required this.duration,
     required this.watts,
-  }) : super(
-          calories: 0,
-        );
+  });
 
   static ResistanceExercisePerformance fromSnapshot(
     DocumentSnapshot<Map<String, dynamic>> snapshot,
@@ -62,8 +61,7 @@ class ResistanceExercisePerformance extends ExercisePerformance {
   @override
   Map<String, dynamic> toMap() {
     return {
-      'timestamp': timestamp,
-      'exercise': exercise.toMap(),
+      ...super.toMap(),
       'duration': duration.inSeconds,
       'watts': watts,
     };

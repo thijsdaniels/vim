@@ -1,37 +1,55 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:vim/models/food/amount.dart';
 import 'package:vim/models/food/ingredient.dart';
 import 'package:vim/models/food/nutrition.dart';
 import 'package:vim/models/model.dart';
 
 class IngredientAmount extends Model {
-  final Ingredient ingredient;
-  final num amount; // TODO: Turn into an instance of Amount.
+  Ingredient? _ingredient;
 
-  Nutrition get nutrition {
-    return ingredient.nutritionForAmount(Amount.grams(amount));
+  final DocumentReference ingredientReference;
+  final num amount;
+
+  /// TODO: Turn this into a Stream<Ingredient?> for real-time updates.
+  Future<Ingredient> get ingredient async {
+    _ingredient ??= (await ingredientReference
+            .withConverter(
+              fromFirestore: (snapshot, _) => Ingredient.fromSnapshot(snapshot),
+              toFirestore: (ingredient, _) => ingredient.toMap(),
+            )
+            .get())
+        .data();
+    return _ingredient!;
+  }
+
+  Future<Nutrition> get nutrition async {
+    return (await ingredient).nutritionForAmount(Amount.grams(amount));
   }
 
   IngredientAmount({
-    required this.ingredient,
+    required this.ingredientReference,
     required this.amount,
   });
 
   @override
   Map<String, dynamic> toMap() {
     return {
-      'ingredient': ingredient.toMap(),
+      'ingredient': ingredientReference,
       'amount': amount,
     };
   }
 
   static IngredientAmount fromMap(Map<String, dynamic> map) {
     return IngredientAmount(
-      ingredient: Ingredient.fromMap(map['ingredient']),
+      ingredientReference: map['ingredient'],
       amount: map['amount'],
     );
   }
 
   IngredientAmount operator *(num factor) {
-    return IngredientAmount(ingredient: ingredient, amount: amount * factor);
+    return IngredientAmount(
+      ingredientReference: ingredientReference,
+      amount: amount * factor,
+    );
   }
 }

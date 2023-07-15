@@ -14,17 +14,17 @@ import 'package:vim/widgets/views/loading_view.dart';
 import 'package:vim/widgets/views/not_found_view.dart';
 
 class ExerciseView extends StatelessWidget {
-  final String exerciseId;
+  final String id;
 
-  const ExerciseView(
-    this.exerciseId, {
+  const ExerciseView({
     super.key,
+    required this.id,
   });
 
   @override
   Widget build(BuildContext context) {
     return StreamBuilder<Exercise?>(
-      stream: ExercisesService.of(context).get(exerciseId),
+      stream: ExercisesService.of(context).get(id),
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
           return const LoadingView();

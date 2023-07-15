@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:vim/extensions/date_time.dart';
 import 'package:vim/models/exercise/exercise_performance.dart';
 import 'package:vim/models/exercise/performance.dart';
+import 'package:vim/models/exercise/quick_performance.dart';
 import 'package:vim/models/exercise/resistance_exercise_performance.dart';
 import 'package:vim/models/exercise/routine_performance.dart';
 import 'package:vim/models/exercise/weights_exercise_performance.dart';
@@ -69,10 +70,12 @@ class _PerformanceViewState extends State<PerformanceView> {
                             return CreateExercisePerformanceView(
                               exercisePerformance: performance,
                             );
-                          } else {
+                          } else if (performance is QuickPerformance) {
                             return CreateQuickTrackPerformanceView(
                               performance: performance,
                             );
+                          } else {
+                            throw Exception("Unsupported performance type");
                           }
                         },
                       ),
@@ -111,11 +114,10 @@ class _PerformanceViewState extends State<PerformanceView> {
               SimpleCard(
                 title: 'Details',
                 child: FutureBuilder(
-                  future: performance.calories,
+                  future: Future.value(performance.calories),
                   builder: (context, snapshot) => StatsTable(
                     children: [
-                      if (performance is! ExercisePerformance &&
-                          performance is! RoutinePerformance)
+                      if (performance is QuickPerformance)
                         StatsRow(
                           'Name',
                           performance.name,
