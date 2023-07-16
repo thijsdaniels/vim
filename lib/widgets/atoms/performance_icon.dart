@@ -17,13 +17,12 @@ class PerformanceIcon extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    switch (performance.runtimeType) {
-      case ExercisePerformance:
-        return ExercisePerformanceIcon(performance as ExercisePerformance);
-      case RoutinePerformance:
-        return RoutinePerformanceIcon(performance as RoutinePerformance);
-      default:
-        return Container();
+    if (performance is ExercisePerformance) {
+      return ExercisePerformanceIcon(performance as ExercisePerformance);
+    } else if (performance is RoutinePerformance) {
+      return RoutinePerformanceIcon(performance as RoutinePerformance);
+    } else {
+      return Container();
     }
   }
 }
