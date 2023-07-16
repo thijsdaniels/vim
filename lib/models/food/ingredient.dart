@@ -6,16 +6,12 @@ import 'package:vim/models/food/nutrition.dart';
 import 'package:vim/models/snapshot.dart';
 
 class Ingredient extends Document {
-  DocumentReference? _reference;
   String? icon;
   String name;
   String? brand;
   num? serving;
   Nutrition nutrition;
   bool nutritionPerServing;
-
-  @override
-  DocumentReference? get reference => _reference;
 
   Ingredient({
     this.icon,
@@ -27,6 +23,28 @@ class Ingredient extends Document {
   }) : assert(!nutritionPerServing || serving != null,
             "A serving size must be provided if the nutrition is provided per serving.");
 
+  factory Ingredient.fromFirestore(
+    DocumentSnapshot<Map<String, dynamic>> snapshot,
+    SnapshotOptions? options,
+  ) {
+    return Ingredient.fromMap(snapshot.data()!)
+      ..reference = snapshot.reference.withConverter<Ingredient>(
+        fromFirestore: Ingredient.fromFirestore,
+        toFirestore: (exercise, _) => exercise.toMap(),
+      );
+  }
+
+  factory Ingredient.fromMap(Map<String, dynamic> map) {
+    return Ingredient(
+      icon: map['icon'],
+      name: map['name'],
+      brand: map['brand'],
+      serving: map['serving'],
+      nutrition: Nutrition.fromMap(map['nutrition']),
+      nutritionPerServing: map['nutritionPerServing'] ?? false,
+    );
+  }
+
   @override
   Map<String, dynamic> toMap() {
     return {
@@ -37,28 +55,6 @@ class Ingredient extends Document {
       'nutrition': nutrition.toMap(),
       'nutritionPerServing': nutritionPerServing,
     };
-  }
-
-  static Ingredient fromSnapshot(
-    DocumentSnapshot<Map<String, dynamic>> snapshot,
-  ) {
-    Map<String, dynamic> map = snapshot.data()!;
-
-    Ingredient ingredient = fromMap(map);
-    ingredient._reference = snapshot.reference;
-
-    return ingredient;
-  }
-
-  static Ingredient fromMap(Map<String, dynamic> map) {
-    return Ingredient(
-      icon: map['icon'],
-      name: map['name'],
-      brand: map['brand'],
-      serving: map['serving'],
-      nutrition: Nutrition.fromMap(map['nutrition']),
-      nutritionPerServing: map['nutritionPerServing'] ?? false,
-    );
   }
 
   IngredientConsumption consumption({

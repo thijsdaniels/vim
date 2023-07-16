@@ -58,7 +58,7 @@ class RoutineExercisePerformances extends StatelessWidget {
                           .performanceReferences[index.toString()]?.id,
                 );
 
-                return StreamBuilder<Iterable<Performance>>(
+                return StreamBuilder(
                   stream: exercise != null
                       ? PerformancesCollectionGroup.instance.forExercise(
                           exercise,
@@ -69,7 +69,7 @@ class RoutineExercisePerformances extends StatelessWidget {
                   builder: (context, snapshot) {
                     ExercisePerformance? latest =
                         snapshot.data != null && snapshot.data!.isNotEmpty
-                            ? snapshot.data!.first as ExercisePerformance
+                            ? snapshot.data!.first
                             : null;
 
                     return ListSurface(
@@ -84,7 +84,7 @@ class RoutineExercisePerformances extends StatelessWidget {
                               : '--',
                       onTap: performance != null
                           ? () async {
-                              ExercisePerformance edited =
+                              ExercisePerformance? edited =
                                   await Navigator.of(context).push(
                                 MaterialPageRoute(
                                   builder: (context) =>
@@ -94,7 +94,9 @@ class RoutineExercisePerformances extends StatelessWidget {
                                 ),
                               );
 
-                              routinePerformance.updatePerformance(edited);
+                              if (edited != null) {
+                                routinePerformance.updatePerformance(edited);
+                              }
                             }
                           : null,
                       actions: Row(

@@ -7,18 +7,22 @@ import 'package:vim/models/model.dart';
 class IngredientAmount extends Model {
   Ingredient? _ingredient;
 
+  // TODO: Turn this into a `DocumentReference<Ingredient>`.
   final DocumentReference ingredientReference;
   final num amount;
 
-  /// TODO: Turn this into a Stream<Ingredient?> for real-time updates.
+  /// TODO: Find a more sustainable way to do this, ideally via the
+  /// `IngredientsCollection`.
+  /// TODO: Turn this into a `Stream<Ingredient?>` for real-time updates.
   Future<Ingredient> get ingredient async {
     _ingredient ??= (await ingredientReference
-            .withConverter(
-              fromFirestore: (snapshot, _) => Ingredient.fromSnapshot(snapshot),
+            .withConverter<Ingredient>(
+              fromFirestore: Ingredient.fromFirestore,
               toFirestore: (ingredient, _) => ingredient.toMap(),
             )
             .get())
         .data();
+
     return _ingredient!;
   }
 

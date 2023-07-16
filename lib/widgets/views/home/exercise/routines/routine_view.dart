@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:vim/models/exercise/exercise.dart';
 import 'package:vim/models/exercise/routine.dart';
-import 'package:vim/services/performances_service.dart';
-import 'package:vim/services/routines_service.dart';
+import 'package:vim/services/performances_collection.dart';
+import 'package:vim/services/routines_collection.dart';
 import 'package:vim/widgets/atoms/routine_muscle_groups.dart';
 import 'package:vim/widgets/atoms/standard_list.dart';
 import 'package:vim/widgets/atoms/stats_table.dart';
@@ -26,7 +26,7 @@ class RoutineView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return StreamBuilder<Routine?>(
-      stream: RoutinesService.of(context).get(id),
+      stream: RoutinesCollection.of(context).get(id),
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
           return const LoadingView();
@@ -62,7 +62,7 @@ class RoutineView extends StatelessWidget {
                   onPressed: () async {
                     var navigator = Navigator.of(context);
                     if (await confirm()) {
-                      RoutinesService.of(context).delete(routine);
+                      RoutinesCollection.of(context).delete(routine);
                       navigator.pop();
                     }
                   },
@@ -105,7 +105,7 @@ class RoutineView extends StatelessWidget {
                       );
 
                       routine.exerciseReferences.add(exercise.reference!);
-                      await RoutinesService.of(context).update(routine);
+                      await RoutinesCollection.of(context).update(routine);
                     },
                   )
                 ],
@@ -113,12 +113,12 @@ class RoutineView extends StatelessWidget {
                   exerciseReferences: routine.exerciseReferences,
                   onChanged: (exerciseReferences) {
                     routine.exerciseReferences = exerciseReferences;
-                    RoutinesService.of(context).update(routine);
+                    RoutinesCollection.of(context).update(routine);
                   },
                 ),
               ),
               StreamBuilder(
-                stream: PerformancesService.of(context).forRoutine(routine),
+                stream: PerformancesCollection.of(context).forRoutine(routine),
                 builder: (context, snapshot) => SimpleCard(
                   title: "History",
                   child: PerformancesList(

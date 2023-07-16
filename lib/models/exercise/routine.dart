@@ -5,27 +5,30 @@ import 'package:vim/models/exercise/routine_performance.dart';
 import 'package:vim/models/snapshot.dart';
 
 class Routine extends Document {
-  DocumentReference? _reference;
+  List<Exercise>? _exercises;
 
   String name;
+  // TODO: Turn this into a `List<DocumentReference<Exercise>>`.
   List<DocumentReference> exerciseReferences;
 
-  @override
-  DocumentReference? get reference => _reference;
-
+  /// TODO: Find a more sustainable way to do this, ideally via the
+  /// `ExercisesCollection`.
+  /// TODO: Turn this into a `Stream<List<Exercise>>` for real-time updates.
   Future<List<Exercise>> get exercises async {
-    return (await Future.wait(
+    _exercises ??= (await Future.wait(
       exerciseReferences.map(
-        (reference) => reference
-            .withConverter<Exercise>(
-              fromFirestore: (snapshot, _) => Exercise.fromSnapshot(snapshot),
-              toFirestore: (Exercise exercise, _) => exercise.toMap(),
-            )
-            .get(),
+        (reference) async => (await reference
+                .withConverter(
+                  fromFirestore: Exercise.fromFirestore,
+                  toFirestore: (exercise, _) => exercise.toMap(),
+                )
+                .get())
+            .data()!,
       ),
     ))
-        .map((doc) => doc.data()!)
         .toList();
+
+    return Future.value(_exercises);
   }
 
   Routine({
@@ -33,31 +36,31 @@ class Routine extends Document {
     required this.exerciseReferences,
   });
 
+  factory Routine.fromFirestore(
+    DocumentSnapshot<Map<String, dynamic>> snapshot,
+    SnapshotOptions? options,
+  ) {
+    return Routine.fromMap(snapshot.data()!)
+      ..reference = snapshot.reference.withConverter<Routine>(
+        fromFirestore: Routine.fromFirestore,
+        toFirestore: (exercise, _) => exercise.toMap(),
+      );
+  }
+
+  factory Routine.fromMap(Map<String, dynamic> map) {
+    return Routine(
+      name: map['name'],
+      exerciseReferences:
+          List.castFrom<dynamic, DocumentReference>(map['exercises']),
+    );
+  }
+
   @override
   Map<String, dynamic> toMap() {
     return {
       'name': name,
       'exercises': exerciseReferences,
     };
-  }
-
-  static Routine fromSnapshot(
-    DocumentSnapshot<Map<String, dynamic>> snapshot,
-  ) {
-    Map<String, dynamic> map = snapshot.data()!;
-
-    Routine routine = fromMap(map);
-    routine._reference = snapshot.reference;
-
-    return routine;
-  }
-
-  static Routine fromMap(Map<String, dynamic> map) {
-    return Routine(
-      name: map['name'],
-      exerciseReferences:
-          List.castFrom<dynamic, DocumentReference>(map['exercises']),
-    );
   }
 
   RoutinePerformance performance({

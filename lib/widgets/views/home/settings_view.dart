@@ -6,7 +6,7 @@ import 'package:vim/extensions/string.dart';
 import 'package:vim/models/settings_model.dart';
 import 'package:vim/models/user/body.dart';
 import 'package:vim/models/user/user.dart';
-import 'package:vim/services/users_service.dart';
+import 'package:vim/services/users_collection.dart';
 import 'package:vim/widgets/atoms/icons8_icon.dart';
 import 'package:vim/widgets/atoms/number_form_field.dart';
 import 'package:vim/widgets/atoms/standard_list.dart';
@@ -149,7 +149,7 @@ class BodySettings extends StatelessWidget {
                 onChanged: (value) {
                   if (value != null) {
                     user.body.gender = value;
-                    UsersService.instance.update(user);
+                    UsersCollection.instance.update(user);
                   }
                 },
               ),
@@ -162,7 +162,7 @@ class BodySettings extends StatelessWidget {
                 onChanged: (value) {
                   if (value != null) {
                     user.body.age = value.toInt();
-                    UsersService.instance.update(user);
+                    UsersCollection.instance.update(user);
                   }
                 },
               ),
@@ -176,7 +176,7 @@ class BodySettings extends StatelessWidget {
                 onChanged: (value) {
                   if (value != null) {
                     user.body.length = value.toInt();
-                    UsersService.instance.update(user);
+                    UsersCollection.instance.update(user);
                   }
                 },
               ),
@@ -190,7 +190,7 @@ class BodySettings extends StatelessWidget {
                 onChanged: (value) {
                   if (value != null) {
                     user.body.weight = value.toDouble();
-                    UsersService.instance.update(user);
+                    UsersCollection.instance.update(user);
                   }
                 },
               ),
@@ -206,7 +206,7 @@ class BodySettings extends StatelessWidget {
                 onChanged: (value) {
                   if (value != null) {
                     user.body.composition.lean = (value / 100).toDouble();
-                    UsersService.instance.update(user);
+                    UsersCollection.instance.update(user);
                   }
                 },
               ),
@@ -222,7 +222,7 @@ class BodySettings extends StatelessWidget {
                 onChanged: (value) {
                   if (value != null) {
                     user.body.composition.fat = (value / 100).toDouble();
-                    UsersService.instance.update(user);
+                    UsersCollection.instance.update(user);
                   }
                 },
               ),
@@ -238,7 +238,7 @@ class BodySettings extends StatelessWidget {
                 onChanged: (value) {
                   if (value != null) {
                     user.body.composition.bone = (value / 100).toDouble();
-                    UsersService.instance.update(user);
+                    UsersCollection.instance.update(user);
                   }
                 },
               ),
@@ -275,7 +275,7 @@ class PerformanceSettings extends StatelessWidget {
                 onChanged: (value) {
                   if (value != null) {
                     user.neat = value.toDouble();
-                    UsersService.instance.update(user);
+                    UsersCollection.instance.update(user);
                   }
                 },
               ),
@@ -288,7 +288,7 @@ class PerformanceSettings extends StatelessWidget {
                 onChanged: (value) {
                   if (value != null) {
                     user.target.performance.calories = value.toInt();
-                    UsersService.instance.update(user);
+                    UsersCollection.instance.update(user);
                   }
                 },
               ),
@@ -298,7 +298,7 @@ class PerformanceSettings extends StatelessWidget {
                 value: user.target.performance.adjustTargetConsumption,
                 onChanged: (value) {
                   user.target.performance.adjustTargetConsumption = value;
-                  UsersService.instance.update(user);
+                  UsersCollection.instance.update(user);
                 },
               ),
             ],
@@ -337,7 +337,7 @@ class ConsumptionSettings extends StatelessWidget {
                 value: user.target.consumption.surplus,
                 onChanged: (value) {
                   user.target.consumption.surplus = value.decimals(2);
-                  UsersService.instance.update(user);
+                  UsersCollection.instance.update(user);
                 },
               ),
               const SizedBox(height: 16),
@@ -364,7 +364,7 @@ class ConsumptionSettings extends StatelessWidget {
                 divisions: 30,
                 onChanged: (value) {
                   user.target.consumption.proteins = value.decimals(1);
-                  UsersService.instance.update(user);
+                  UsersCollection.instance.update(user);
                 },
               ),
               const SizedBox(height: 16),
@@ -377,7 +377,7 @@ class ConsumptionSettings extends StatelessWidget {
                 onChanged: (value) {
                   // if (settings.body.carbohydrates + settings.body.proteins + value <= 1) {
                   user.target.consumption.fats = value.decimals(2);
-                  UsersService.instance.update(user);
+                  UsersCollection.instance.update(user);
                   // }
                 },
               ),

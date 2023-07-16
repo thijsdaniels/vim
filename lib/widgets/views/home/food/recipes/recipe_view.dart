@@ -3,8 +3,8 @@ import 'package:vim/extensions/num.dart';
 import 'package:vim/models/food/ingredient.dart';
 import 'package:vim/models/food/ingredient_amount.dart';
 import 'package:vim/models/food/recipe.dart';
-import 'package:vim/services/consumptions_service.dart';
-import 'package:vim/services/recipes_service.dart';
+import 'package:vim/services/consumptions_collection.dart';
+import 'package:vim/services/recipes_collection.dart';
 import 'package:vim/widgets/atoms/icons8_icon.dart';
 import 'package:vim/widgets/atoms/standard_list.dart';
 import 'package:vim/widgets/atoms/stats_table.dart';
@@ -29,7 +29,7 @@ class RecipeView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return StreamBuilder<Recipe?>(
-      stream: RecipesService.of(context).get(id),
+      stream: RecipesCollection.of(context).get(id),
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
           return const LoadingView();
@@ -65,7 +65,7 @@ class RecipeView extends StatelessWidget {
                   onPressed: () async {
                     var navigator = Navigator.of(context);
                     if (await confirm()) {
-                      RecipesService.of(context).delete(recipe);
+                      RecipesCollection.of(context).delete(recipe);
                       navigator.pop();
                     }
                   },
@@ -111,7 +111,7 @@ class RecipeView extends StatelessWidget {
 
                       if (ingredientAmount != null) {
                         recipe.ingredientAmounts.add(ingredientAmount);
-                        RecipesService.of(context).update(recipe);
+                        RecipesCollection.of(context).update(recipe);
                       }
                     },
                   ),
@@ -127,18 +127,18 @@ class RecipeView extends StatelessWidget {
                       ingredientAmount,
                       onChange: (value) {
                         recipe.ingredientAmounts[index] = value;
-                        RecipesService.of(context).update(recipe);
+                        RecipesCollection.of(context).update(recipe);
                       },
                       onDelete: () {
                         recipe.ingredientAmounts.removeAt(index);
-                        RecipesService.of(context).update(recipe);
+                        RecipesCollection.of(context).update(recipe);
                       },
                     );
                   },
                 ),
               ),
               StreamBuilder(
-                stream: ConsumptionsService.of(context).forRecipe(recipe),
+                stream: ConsumptionsCollection.of(context).forRecipe(recipe),
                 builder: (context, snapshot) {
                   return SimpleCard(
                     title: "History",

@@ -2,33 +2,23 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:vim/models/food/consumption.dart';
-import 'package:vim/models/food/ingredient_consumption.dart';
-import 'package:vim/models/food/quick_consumption.dart';
 import 'package:vim/models/food/recipe.dart';
 import 'package:vim/models/food/recipe_consumption.dart';
-import 'package:vim/services/service.dart';
+import 'package:vim/services/collection.dart';
 
-class ConsumptionsService<D extends Consumption> extends Service<D> {
-  static ConsumptionsService of(BuildContext context) {
-    return Provider.of<ConsumptionsService>(context, listen: false);
+class ConsumptionsCollection<T extends Consumption> extends Collection<T> {
+  static ConsumptionsCollection of(BuildContext context) {
+    return Provider.of<ConsumptionsCollection>(context, listen: false);
   }
 
-  ConsumptionsService({required super.path});
+  ConsumptionsCollection({required super.path});
 
   @override
-  D fromFirestore(snapshot, options) {
-    Map<String, dynamic> data = snapshot.data()!;
-
-    if (data['recipe'] != null) {
-      return RecipeConsumption.fromSnapshot(snapshot) as D;
-    } else if (data['ingredient'] != null) {
-      return IngredientConsumption.fromSnapshot(snapshot) as D;
-    } else {
-      return QuickConsumption.fromSnapshot(snapshot) as D;
-    }
+  T fromFirestore(snapshot, options) {
+    return Consumption.fromFirestore(snapshot, options) as T;
   }
 
-  Stream<List<D>> forDate(DateTime date) {
+  Stream<List<T>> forDate(DateTime date) {
     DateTime today = DateTime(date.year, date.month, date.day);
     DateTime tomorrow = today.add(const Duration(days: 1));
 
@@ -57,10 +47,7 @@ class ConsumptionsService<D extends Consumption> extends Service<D> {
       query = query.limit(limit);
     }
 
-    return query.snapshots().map(
-          (snapshot) => snapshot.docs
-              .map((doc) => doc.data() as RecipeConsumption)
-              .toList(),
-        );
+    return query.snapshots().map((snapshot) =>
+        snapshot.docs.map((doc) => doc.data() as RecipeConsumption).toList());
   }
 }

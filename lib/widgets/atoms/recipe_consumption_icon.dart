@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:vim/models/food/ingredient_consumption.dart';
 import 'package:vim/models/food/recipe_consumption.dart';
 import 'package:vim/widgets/atoms/icons8_icons_stack.dart';
 
@@ -21,7 +20,7 @@ class RecipeConsumptionIcon extends StatelessWidget {
     /// better to use the ingredients instead. I suppose it might be a good
     /// thing that changing the consumed ingredients will be reflected in the
     /// icon stack, even if the recipe itself was not changed.
-    return StreamBuilder<List<IngredientConsumption>>(
+    return StreamBuilder(
       stream: consumption.consumptions,
       builder: (context, snapshot) {
         return Icons8IconStack(

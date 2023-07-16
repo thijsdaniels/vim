@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:vim/models/food/ingredient.dart';
 import 'package:vim/models/food/nutrition.dart';
-import 'package:vim/services/ingredients_service.dart';
+import 'package:vim/services/ingredients_collection.dart';
 import 'package:vim/widgets/atoms/icons8_icon_form_field.dart';
 import 'package:vim/widgets/atoms/standard_list.dart';
 import 'package:vim/widgets/atoms/switch_form_field.dart';
@@ -84,7 +84,7 @@ class _CreateIngredientViewState extends State<CreateIngredientView> {
                   ingredient.nutritionPerServing = _nutritionPerServing;
                   ingredient.nutrition = nutrition;
 
-                  IngredientsService.of(context).update(ingredient);
+                  IngredientsCollection.of(context).update(ingredient);
                 } else {
                   ingredient = Ingredient(
                     icon: _icon,
@@ -95,7 +95,7 @@ class _CreateIngredientViewState extends State<CreateIngredientView> {
                     nutritionPerServing: _nutritionPerServing,
                   );
 
-                  IngredientsService.of(context).create(ingredient);
+                  IngredientsCollection.of(context).create(ingredient);
                 }
 
                 Navigator.of(context).pop(ingredient);

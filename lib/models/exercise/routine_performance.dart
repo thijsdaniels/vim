@@ -2,29 +2,25 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:vim/models/exercise/exercise_performance.dart';
 import 'package:vim/models/exercise/performance.dart';
 import 'package:vim/models/exercise/routine.dart';
-import 'package:vim/services/performances_service.dart';
+import 'package:vim/services/performances_collection.dart';
 
 class RoutinePerformance extends Performance {
-  DocumentReference? _reference;
-
   RoutineSnapshot routine;
+  // TODO: Turn this into a `Map<String, DocumentReference<ExercisePerformance>>`.
   Map<String, DocumentReference> performanceReferences;
 
-  PerformancesService<ExercisePerformance>? get performancesService =>
-      _reference != null
-          ? PerformancesService(
-              path: '${_reference!.path}/performances',
+  PerformancesCollection<ExercisePerformance>? get performancesCollection =>
+      reference != null
+          ? PerformancesCollection<ExercisePerformance>(
+              path: '${reference!.path}/performances',
             )
           : null;
-
-  @override
-  DocumentReference? get reference => _reference;
 
   @override
   String get name => routine.snapshot.name;
 
   Stream<List<ExercisePerformance>>? get performances {
-    return performancesService?.all();
+    return performancesCollection?.all();
   }
 
   @override
@@ -51,20 +47,9 @@ class RoutinePerformance extends Performance {
   Future<void> onDelete() async {
     /// Delete a `RoutinePerformance`'s nested performances.
     await Future.wait(
-      (await performancesService!.all().first)
+      (await performancesCollection!.all().first)
           .map((performance) => performance.reference!.delete()),
     );
-  }
-
-  static RoutinePerformance fromSnapshot(
-    DocumentSnapshot<Map<String, dynamic>> snapshot,
-  ) {
-    Map<String, dynamic> map = snapshot.data()!;
-
-    RoutinePerformance routinePerformance = fromMap(map);
-    routinePerformance._reference = snapshot.reference;
-
-    return routinePerformance;
   }
 
   static RoutinePerformance fromMap(Map<String, dynamic> map) {
@@ -89,31 +74,33 @@ class RoutinePerformance extends Performance {
     int exerciseIndex,
     ExercisePerformance performance,
   ) async {
-    assert(performancesService != null);
+    assert(performancesCollection != null);
 
-    DocumentReference reference =
-        await performancesService!.create(performance);
+    DocumentReference exercisePerformanceReference =
+        await performancesCollection!.create(performance);
 
-    performanceReferences[exerciseIndex.toString()] = reference;
-    _reference?.update(toMap());
+    performanceReferences[exerciseIndex.toString()] =
+        exercisePerformanceReference;
 
-    return reference;
+    reference?.update(toMap());
+
+    return exercisePerformanceReference;
   }
 
   Future<void> updatePerformance(ExercisePerformance performance) async {
-    assert(performancesService != null);
-    return performancesService!.update(performance);
+    assert(performancesCollection != null);
+    return performancesCollection!.update(performance);
   }
 
   Future<void> deletePerformance(ExercisePerformance performance) async {
-    assert(performancesService != null);
+    assert(performancesCollection != null);
 
-    await performancesService!.delete(performance);
+    await performancesCollection!.delete(performance);
 
     performanceReferences.removeWhere(
       (key, value) => value.id == performance.reference!.id,
     );
-    _reference?.update(toMap());
+    reference?.update(toMap());
 
     return;
   }

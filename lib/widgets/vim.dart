@@ -12,13 +12,13 @@ import 'package:vim/models/food/ingredient.dart';
 import 'package:vim/models/food/recipe.dart';
 import 'package:vim/models/settings_model.dart';
 import 'package:vim/models/user/user.dart';
-import 'package:vim/services/consumptions_service.dart';
-import 'package:vim/services/exercises_service.dart';
-import 'package:vim/services/ingredients_service.dart';
-import 'package:vim/services/performances_service.dart';
-import 'package:vim/services/recipes_service.dart';
-import 'package:vim/services/routines_service.dart';
-import 'package:vim/services/users_service.dart';
+import 'package:vim/services/consumptions_collection.dart';
+import 'package:vim/services/exercises_collection.dart';
+import 'package:vim/services/ingredients_collection.dart';
+import 'package:vim/services/performances_collection.dart';
+import 'package:vim/services/recipes_collection.dart';
+import 'package:vim/services/routines_collection.dart';
+import 'package:vim/services/users_collection.dart';
 import 'package:vim/widgets/views/home_view.dart';
 import 'package:vim/widgets/views/login_view.dart';
 import 'package:vim/widgets/views/onboarding_view.dart';
@@ -147,8 +147,9 @@ class _WithAuthenticationState extends State<WithAuthentication> {
         }
 
         return FutureBuilder(
-          future:
-              UsersService.instance.get(firebaseUserSnapshot.data!.uid).first,
+          future: UsersCollection.instance
+              .get(firebaseUserSnapshot.data!.uid)
+              .first,
           builder: (context, userSnapshot) {
             if (userSnapshot.connectionState == ConnectionState.waiting) {
               return const Center(child: CircularProgressIndicator());
@@ -160,8 +161,11 @@ class _WithAuthenticationState extends State<WithAuthentication> {
                 true,
                 false,
                 (user) async {
-                  await UsersService.instance
-                      .createForFirebaseUser(firebaseUserSnapshot.data!, user);
+                  await UsersCollection.instance.create(
+                    user,
+                    id: firebaseUserSnapshot.data!.uid,
+                  );
+
                   setState(() => onboardingCompleted = true);
                 },
               );
@@ -169,8 +173,8 @@ class _WithAuthenticationState extends State<WithAuthentication> {
 
             return StreamProvider<User?>.value(
               initialData: userSnapshot.data,
-              value:
-                  UsersService.instance.get(userSnapshot.data!.reference!.id),
+              value: UsersCollection.instance
+                  .get(userSnapshot.data!.reference!.id),
               child: widget.builder(context, true, true, (user) => {}),
             );
           },
@@ -198,33 +202,33 @@ class ServiceProviders extends StatelessWidget {
 
         return MultiProvider(
           providers: [
-            Provider<IngredientsService>.value(
-              value: IngredientsService(
+            Provider<IngredientsCollection>.value(
+              value: IngredientsCollection(
                 path: 'users/${user.reference!.id}/ingredients',
               ),
             ),
-            Provider<RecipesService>.value(
-              value: RecipesService(
+            Provider<RecipesCollection>.value(
+              value: RecipesCollection(
                 path: 'users/${user.reference!.id}/recipes',
               ),
             ),
-            Provider<ExercisesService>.value(
-              value: ExercisesService(
+            Provider<ExercisesCollection>.value(
+              value: ExercisesCollection(
                 path: 'users/${user.reference!.id}/exercises',
               ),
             ),
-            Provider<RoutinesService>.value(
-              value: RoutinesService(
+            Provider<RoutinesCollection>.value(
+              value: RoutinesCollection(
                 path: 'users/${user.reference!.id}/routines',
               ),
             ),
-            Provider<ConsumptionsService>.value(
-              value: ConsumptionsService(
+            Provider<ConsumptionsCollection>.value(
+              value: ConsumptionsCollection(
                 path: 'users/${user.reference!.id}/consumptions',
               ),
             ),
-            Provider<PerformancesService>.value(
-              value: PerformancesService(
+            Provider<PerformancesCollection>.value(
+              value: PerformancesCollection(
                 path: 'users/${user.reference!.id}/performances',
               ),
             ),
@@ -250,27 +254,27 @@ class DataProviders extends StatelessWidget {
       builder: (context, dateModel, _) => MultiProvider(
         providers: [
           StreamProvider<List<Ingredient>>.value(
-            value: IngredientsService.of(context).all(),
+            value: IngredientsCollection.of(context).all(),
             initialData: const [],
           ),
           StreamProvider<List<Recipe>>.value(
-            value: RecipesService.of(context).all(),
+            value: RecipesCollection.of(context).all(),
             initialData: const [],
           ),
           StreamProvider<List<Exercise>>.value(
-            value: ExercisesService.of(context).all(),
+            value: ExercisesCollection.of(context).all(),
             initialData: const [],
           ),
           StreamProvider<List<Routine>>.value(
-            value: RoutinesService.of(context).all(),
+            value: RoutinesCollection.of(context).all(),
             initialData: const [],
           ),
           StreamProvider<List<Consumption>>.value(
-            value: ConsumptionsService.of(context).forDate(dateModel.date),
+            value: ConsumptionsCollection.of(context).forDate(dateModel.date),
             initialData: const [],
           ),
           StreamProvider<List<Performance>>.value(
-            value: PerformancesService.of(context).forDate(dateModel.date),
+            value: PerformancesCollection.of(context).forDate(dateModel.date),
             initialData: const [],
           ),
         ],

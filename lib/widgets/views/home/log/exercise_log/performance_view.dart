@@ -7,7 +7,7 @@ import 'package:vim/models/exercise/resistance_exercise_performance.dart';
 import 'package:vim/models/exercise/routine_performance.dart';
 import 'package:vim/models/exercise/weights_exercise_performance.dart';
 import 'package:vim/services/performances_collection_group.dart';
-import 'package:vim/services/performances_service.dart';
+import 'package:vim/services/performances_collection.dart';
 import 'package:vim/widgets/atoms/exercise_performance_muscle_groups.dart';
 import 'package:vim/widgets/atoms/routine_performance_muscle_groups.dart';
 import 'package:vim/widgets/atoms/standard_list.dart';
@@ -82,7 +82,7 @@ class _PerformanceViewState extends State<PerformanceView> {
                     );
 
                     if (edited != null) {
-                      PerformancesService.of(context).update(edited);
+                      PerformancesCollection.of(context).update(edited);
                     }
                   },
                 ),
@@ -94,7 +94,7 @@ class _PerformanceViewState extends State<PerformanceView> {
                   icon: const Icon(Icons.delete_rounded),
                   onPressed: () async {
                     if (await confirm()) {
-                      PerformancesService.of(context).delete(performance);
+                      PerformancesCollection.of(context).delete(performance);
 
                       if (mounted) {
                         Navigator.of(context).pop();

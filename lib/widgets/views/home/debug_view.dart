@@ -5,11 +5,11 @@ import 'package:vim/models/exercise/exercise.dart';
 import 'package:vim/models/exercise/exercise_performance.dart';
 import 'package:vim/models/exercise/routine_performance.dart';
 import 'package:vim/models/food/ingredient_amount.dart';
-import 'package:vim/services/exercises_service.dart';
-import 'package:vim/services/ingredients_service.dart';
-import 'package:vim/services/performances_service.dart';
-import 'package:vim/services/recipes_service.dart';
-import 'package:vim/services/routines_service.dart';
+import 'package:vim/services/exercises_collection.dart';
+import 'package:vim/services/ingredients_collection.dart';
+import 'package:vim/services/performances_collection.dart';
+import 'package:vim/services/recipes_collection.dart';
+import 'package:vim/services/routines_collection.dart';
 import 'package:vim/widgets/molecules/with_confirmation_dialog.dart';
 
 class DebugView extends StatelessWidget {
@@ -142,7 +142,7 @@ class MigrateButton extends StatelessWidget {
           'Saving document "${document.reference!.path}" (${index + 1} of $length)...',
         );
 
-        document.reference!.set(document.toMap());
+        document.reference!.set(document);
       },
     );
   }
@@ -152,9 +152,9 @@ class MigrateButton extends StatelessWidget {
   /// traverse through _all_ recipes (and consumptions), but specifically update
   /// only those documents that contain references to the moved ingredient.
   Future<void> moveIngredients(BuildContext context) async {
-    var ingredients = IngredientsService(path: 'ingredients').collection;
-    var myIngredients = IngredientsService.of(context).collection;
-    var myRecipes = RecipesService.of(context).collection;
+    var ingredients = IngredientsCollection(path: 'ingredients').collection;
+    var myIngredients = IngredientsCollection.of(context).collection;
+    var myRecipes = RecipesCollection.of(context).collection;
 
     print('copying ingredients...');
     await traverseDocuments(ingredients, (ingredient, index, length) async {
@@ -191,10 +191,10 @@ class MigrateButton extends StatelessWidget {
   /// traverse through _all_ routines and performances, but specifically update
   /// only those documents that contain references to the moved exercise.
   Future<void> moveExercises(BuildContext context) async {
-    var exercises = ExercisesService(path: 'exercises').collection;
-    var myExercises = ExercisesService.of(context).collection;
-    var myRoutines = RoutinesService.of(context).collection;
-    var myPerformances = PerformancesService.of(context).collection;
+    var exercises = ExercisesCollection(path: 'exercises').collection;
+    var myExercises = ExercisesCollection.of(context).collection;
+    var myRoutines = RoutinesCollection.of(context).collection;
+    var myPerformances = PerformancesCollection.of(context).collection;
 
     print('copying exercises...');
     await traverseDocuments(exercises, (exercise, index, length) async {
@@ -253,18 +253,19 @@ class MigrateButton extends StatelessWidget {
 
           print('    traversing routinePerformancePerformances...');
           await traverseDocuments(
-            performance.performancesService!.collection,
+            performance.performancesCollection!.collection,
             (subPerformance, index, length) async {
               print(
                   '      updating exercisePerformance ${subPerformance.reference!.id} (${index + 1} of $length)...');
-              subPerformance.exercise = ExerciseSnapshot(
-                subPerformance.exercise.snapshot,
+              (subPerformance as ExercisePerformance).exercise =
+                  ExerciseSnapshot(
+                (subPerformance).exercise.snapshot,
                 reference: myExercises.doc(
-                  subPerformance.exercise.reference.id,
+                  (subPerformance).exercise.reference.id,
                 ),
               );
 
-              performance.performancesService!.collection
+              performance.performancesCollection!.collection
                   .doc(subPerformance.reference!.id)
                   .set(subPerformance);
               print('      done.');

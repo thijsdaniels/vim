@@ -5,10 +5,10 @@ import 'package:vim/models/document.dart';
 /// collection. If I have other non-Firestore services, I should make a Service
 /// super class or interface for that, but this class is tightly coupled to
 /// Firestore.
-abstract class Service<D extends Document> {
+abstract class Collection<D extends Document> {
   final String path;
 
-  Service({
+  Collection({
     required this.path,
   });
 
@@ -37,42 +37,42 @@ abstract class Service<D extends Document> {
   // }
 
   Stream<List<D>> all() {
-    return collection.snapshots().map(
-          (snapshot) => snapshot.docs.map((doc) => doc.data()).toList(),
-        );
+    return collection
+        .snapshots()
+        .map((snapshot) => snapshot.docs.map((doc) => doc.data()).toList());
   }
 
   Stream<D?> get(String id) {
-    return collection.doc(id).snapshots().map((snapshot) => snapshot.data());
+    return collection.doc(id).snapshots().map((doc) => doc.data());
   }
 
-  Future<DocumentReference<D>> create(D document) async {
+  Future<DocumentReference<D>> create(
+    D document, {
+    String? id,
+  }) async {
     assert(document.reference == null);
 
-    var reference = await collection.add(document);
-    await document.onCreate(reference);
+    DocumentReference<D> reference;
+
+    if (id != null) {
+      reference = collection.doc(id);
+      reference.set(document);
+    } else {
+      reference = await collection.add(document);
+    }
+
+    document.reference = reference;
+
+    await document.onCreate();
 
     return reference;
   }
 
-  /// TODO: Make the Document classes use properly typed DocumentReferences so
-  /// that updating them is just a matter of document.reference.set(document).
-  /// That way, we could move this method to the Document class.
   Future<void> update(D document) async {
-    assert(document.reference != null);
-
-    await collection.doc(document.reference!.id).set(document);
-
-    await document.onUpdate();
+    await document.update();
   }
 
-  /// TODO: This could be moved to the `Document` class, since it doesn't matter
-  /// which collection the document is stored in.
   Future<void> delete(D document) async {
-    assert(document.reference != null);
-
-    await document.reference!.delete();
-
-    await document.onDelete();
+    await document.delete();
   }
 }

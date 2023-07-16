@@ -9,29 +9,12 @@ import 'package:vim/models/user/target.dart';
 /// TODO: Rename to `UserProfile` or even just `Profile`?
 /// TODO: Add the various user-scoped subcollections to this class.
 class User extends Document {
-  User({
-    required this.body,
-    required this.target,
-    required this.neat,
-  });
-
-  DocumentReference? _reference;
-
   Body body;
   Target target;
   double neat;
 
-  @override
-  DocumentReference? get reference => _reference;
-
   double get _unadjustedTargetConsumption =>
       (body.bmr + neat) * (1 + target.consumption.surplus);
-
-  Future<double> targetConsumption(List<Performance> performances) async {
-    return target.performance.adjustTargetConsumption
-        ? _unadjustedTargetConsumption + await performances.calories
-        : _unadjustedTargetConsumption;
-  }
 
   // TODO: Shouldn't I divide by `targetConsumption(performances)`?
   double get targetProteinConsumption =>
@@ -43,18 +26,24 @@ class User extends Document {
 
   double get targetFatConsumption => target.consumption.fats;
 
-  static User fromSnapshot(
+  User({
+    required this.body,
+    required this.target,
+    required this.neat,
+  });
+
+  factory User.fromFirestore(
     DocumentSnapshot<Map<String, dynamic>> snapshot,
+    SnapshotOptions? options,
   ) {
-    Map<String, dynamic> map = snapshot.data()!;
-
-    User user = fromMap(map);
-    user._reference = snapshot.reference;
-
-    return user;
+    return User.fromMap(snapshot.data()!)
+      ..reference = snapshot.reference.withConverter<User>(
+        fromFirestore: User.fromFirestore,
+        toFirestore: (exercise, _) => exercise.toMap(),
+      );
   }
 
-  static User fromMap(Map<String, dynamic> map) {
+  factory User.fromMap(Map<String, dynamic> map) {
     return User(
       body: Body.fromMap(map['body']),
       target: Target.fromMap(map['target']),
@@ -69,5 +58,11 @@ class User extends Document {
       'target': target.toMap(),
       'neat': neat,
     };
+  }
+
+  Future<double> targetConsumption(List<Performance> performances) async {
+    return target.performance.adjustTargetConsumption
+        ? _unadjustedTargetConsumption + await performances.calories
+        : _unadjustedTargetConsumption;
   }
 }

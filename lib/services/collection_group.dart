@@ -33,7 +33,10 @@ abstract class CollectionGroup<D extends Document> {
         .where(FieldPath.documentId, isEqualTo: path)
         .limit(1)
         .snapshots()
-        .map((snapshot) => snapshot.docs.firstOrNull?.data());
+        .map((snapshot) {
+      var doc = snapshot.docs.firstOrNull;
+      return doc?.data();
+    });
   }
 
   /// TODO: Support more than 10 IDs.
@@ -49,7 +52,9 @@ abstract class CollectionGroup<D extends Document> {
   //       )
   //       .snapshots()
   //       .map(
-  //         (snapshot) => snapshot.docs.map((doc) => doc.data()).toList(),
+  //         (snapshot) => snapshot.docs
+  //             .map((doc) => doc.data())
+  //             .toList(),
   //       );
   // }
 }

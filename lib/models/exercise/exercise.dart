@@ -12,7 +12,6 @@ enum ExerciseType {
 }
 
 class Exercise extends Document {
-  DocumentReference? _reference;
   ExerciseType type;
   String name;
   // List<Equipment> equipment;
@@ -20,9 +19,6 @@ class Exercise extends Document {
     MuscleGroup? primary,
     List<MuscleGroup> secondary,
   }) muscleGroups;
-
-  @override
-  DocumentReference? get reference => _reference;
 
   Exercise({
     required this.type,
@@ -33,18 +29,18 @@ class Exercise extends Document {
     ),
   });
 
-  static Exercise fromSnapshot(
+  factory Exercise.fromFirestore(
     DocumentSnapshot<Map<String, dynamic>> snapshot,
+    SnapshotOptions? options,
   ) {
-    Map<String, dynamic> map = snapshot.data()!;
-
-    Exercise exercise = fromMap(map);
-    exercise._reference = snapshot.reference;
-
-    return exercise;
+    return Exercise.fromMap(snapshot.data()!)
+      ..reference = snapshot.reference.withConverter<Exercise>(
+        fromFirestore: Exercise.fromFirestore,
+        toFirestore: (exercise, _) => exercise.toMap(),
+      );
   }
 
-  static Exercise fromMap(Map<String, dynamic> map) {
+  factory Exercise.fromMap(Map<String, dynamic> map) {
     return Exercise(
       type: ExerciseType.values.byName(map['type']),
       name: map['name'],

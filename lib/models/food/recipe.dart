@@ -8,13 +8,9 @@ import 'package:vim/models/food/recipe_consumption.dart';
 import 'package:vim/models/snapshot.dart';
 
 class Recipe extends Document {
-  DocumentReference? _reference;
   String name;
   num servings;
   List<IngredientAmount> ingredientAmounts;
-
-  @override
-  DocumentReference? get reference => _reference;
 
   Future<Nutrition> get nutrition async {
     return ingredientAmounts.nutrition;
@@ -26,6 +22,25 @@ class Recipe extends Document {
     List<IngredientAmount>? ingredientAmounts,
   }) : ingredientAmounts = ingredientAmounts ?? [];
 
+  factory Recipe.fromFirestore(
+    DocumentSnapshot<Map<String, dynamic>> snapshot,
+    SnapshotOptions? options,
+  ) {
+    return Recipe.fromMap(snapshot.data()!)
+      ..reference = snapshot.reference.withConverter<Recipe>(
+        fromFirestore: Recipe.fromFirestore,
+        toFirestore: (exercise, _) => exercise.toMap(),
+      );
+  }
+
+  factory Recipe.fromMap(Map<String, dynamic> map) {
+    return Recipe(
+      name: map['name'],
+      servings: map['servings'],
+      ingredientAmounts: IngredientAmounts.fromMap(map['ingredientAmounts']),
+    );
+  }
+
   @override
   Map<String, dynamic> toMap() {
     return {
@@ -33,25 +48,6 @@ class Recipe extends Document {
       'servings': servings,
       'ingredientAmounts': ingredientAmounts.toMap(),
     };
-  }
-
-  static Recipe fromSnapshot(
-    DocumentSnapshot<Map<String, dynamic>> snapshot,
-  ) {
-    Map<String, dynamic> map = snapshot.data()!;
-
-    Recipe recipe = fromMap(map);
-    recipe._reference = snapshot.reference;
-
-    return recipe;
-  }
-
-  static Recipe fromMap(Map<String, dynamic> map) {
-    return Recipe(
-      name: map['name'],
-      servings: map['servings'],
-      ingredientAmounts: IngredientAmounts.fromMap(map['ingredientAmounts']),
-    );
   }
 
   Future<Nutrition> nutritionForAmount(Amount amount) {

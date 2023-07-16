@@ -4,7 +4,7 @@ import 'package:vim/models/food/consumption.dart';
 import 'package:vim/models/date_model.dart';
 import 'package:vim/models/food/nutrition.dart';
 import 'package:vim/models/food/quick_consumption.dart';
-import 'package:vim/services/consumptions_service.dart';
+import 'package:vim/services/consumptions_collection.dart';
 import 'package:vim/widgets/molecules/nutrition_form_fields.dart';
 import 'package:vim/widgets/molecules/simple_card.dart';
 
@@ -64,7 +64,7 @@ class _CreateQuickTrackConsumptionViewState
                     consumption.name = name;
                     consumption.nutrition = nutrition;
 
-                    ConsumptionsService.of(context).update(consumption);
+                    ConsumptionsCollection.of(context).update(consumption);
                   } else {
                     consumption = QuickConsumption(
                       timestamp: dateModel.timestamp,
@@ -72,7 +72,7 @@ class _CreateQuickTrackConsumptionViewState
                       nutrition: nutrition,
                     );
 
-                    ConsumptionsService.of(context).create(consumption);
+                    ConsumptionsCollection.of(context).create(consumption);
                   }
 
                   Navigator.of(context).pop(consumption);

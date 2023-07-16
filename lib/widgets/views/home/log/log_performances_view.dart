@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:vim/models/exercise/performance.dart';
-import 'package:vim/services/performances_service.dart';
+import 'package:vim/services/performances_collection.dart';
 import 'package:vim/widgets/atoms/floating_action_surface.dart';
 import 'package:vim/widgets/molecules/performances_list.dart';
 import 'package:vim/widgets/views/home/log/exercise_log/create_performance_view.dart';
@@ -25,7 +25,7 @@ class LogPerformancesView extends StatelessWidget {
           );
 
           if (performance != null) {
-            PerformancesService.of(context).create(performance);
+            PerformancesCollection.of(context).create(performance);
           }
         },
         child: const Icon(Icons.add),

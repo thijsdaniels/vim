@@ -1,19 +1,13 @@
 import 'dart:async';
 
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:vim/models/exercise/performance.dart';
 
 class QuickPerformance extends Performance {
-  DocumentReference? _reference;
-
   @override
   String name;
 
   @override
   FutureOr<num> calories;
-
-  @override
-  DocumentReference? get reference => _reference;
 
   QuickPerformance({
     required super.timestamp,
@@ -28,17 +22,6 @@ class QuickPerformance extends Performance {
       'name': name,
       'calories': calories,
     };
-  }
-
-  static QuickPerformance fromSnapshot(
-    DocumentSnapshot<Map<String, dynamic>> snapshot,
-  ) {
-    Map<String, dynamic> map = snapshot.data()!;
-
-    QuickPerformance performance = fromMap(map);
-    performance._reference = snapshot.reference;
-
-    return performance;
   }
 
   static QuickPerformance fromMap(Map<String, dynamic> map) {

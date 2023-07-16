@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:vim/extensions/string.dart';
 import 'package:vim/models/exercise/exercise.dart';
-import 'package:vim/services/exercises_service.dart';
+import 'package:vim/services/exercises_collection.dart';
 import 'package:vim/services/performances_collection_group.dart';
 import 'package:vim/widgets/atoms/exercise_muscle_groups.dart';
 import 'package:vim/widgets/atoms/standard_list.dart';
@@ -24,7 +24,7 @@ class ExerciseView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return StreamBuilder<Exercise?>(
-      stream: ExercisesService.of(context).get(id),
+      stream: ExercisesCollection.of(context).get(id),
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
           return const LoadingView();
@@ -60,7 +60,7 @@ class ExerciseView extends StatelessWidget {
                   onPressed: () async {
                     var navigator = Navigator.of(context);
                     if (await confirm()) {
-                      ExercisesService.of(context).delete(exercise);
+                      ExercisesCollection.of(context).delete(exercise);
                       navigator.pop();
                     }
                   },

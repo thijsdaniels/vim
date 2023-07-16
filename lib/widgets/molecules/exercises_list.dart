@@ -1,7 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:vim/models/exercise/exercise.dart';
-import 'package:vim/services/exercises_service.dart';
+import 'package:vim/services/exercises_collection.dart';
 import 'package:vim/widgets/atoms/exercise_icon.dart';
 import 'package:vim/widgets/molecules/list_surface.dart';
 import 'package:vim/widgets/molecules/with_confirmation_dialog.dart';
@@ -13,6 +13,7 @@ class ExercisesList extends StatelessWidget {
     this.onChanged,
   });
 
+  // TODO: Turn this into a `List<DocumentReference<Exercise>>`.
   final List<DocumentReference> exerciseReferences;
   final void Function(List<DocumentReference> exercises)? onChanged;
 
@@ -30,7 +31,7 @@ class ExercisesList extends StatelessWidget {
 
         return StreamBuilder<Exercise?>(
           key: Key(index.toString()),
-          stream: ExercisesService.of(context).get(id),
+          stream: ExercisesCollection.of(context).get(id),
           builder: (context, snapshot) {
             Exercise? exercise = snapshot.data;
 

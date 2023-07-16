@@ -3,12 +3,12 @@ import 'package:vim/models/exercise/exercise_performance.dart';
 import 'package:vim/widgets/atoms/muscle_groups_focus_icon.dart';
 
 class ExercisePerformanceIcon extends StatelessWidget {
+  final ExercisePerformance performance;
+
   const ExercisePerformanceIcon(
     this.performance, {
     super.key,
   });
-
-  final ExercisePerformance performance;
 
   @override
   Widget build(BuildContext context) {

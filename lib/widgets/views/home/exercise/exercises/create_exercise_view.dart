@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:vim/extensions/string.dart';
 import 'package:vim/models/exercise/exercise.dart';
-import 'package:vim/services/exercises_service.dart';
+import 'package:vim/services/exercises_collection.dart';
 import 'package:vim/widgets/atoms/multiselect_dropdown.dart';
 import 'package:vim/widgets/atoms/muscle_map/muscle_map.dart';
 import 'package:vim/widgets/atoms/standard_list.dart';
@@ -66,9 +66,9 @@ class _CreateExerciseViewState extends State<CreateExerciseView> {
                     secondary: _secondaryMuscleGroups,
                   );
 
-                  ExercisesService.of(context).update(exercise);
+                  ExercisesCollection.of(context).update(exercise);
                 } else {
-                  ExercisesService.of(context).create(Exercise(
+                  ExercisesCollection.of(context).create(Exercise(
                     name: _name!,
                     type: _type!,
                     muscleGroups: (

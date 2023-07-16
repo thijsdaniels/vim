@@ -1,6 +1,5 @@
 import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
-import 'package:vim/models/exercise/exercise_performance.dart';
 import 'package:vim/models/exercise/routine_performance.dart';
 import 'package:vim/widgets/atoms/muscle_groups_icon.dart';
 
@@ -16,7 +15,7 @@ class RoutinePerformanceIcon extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return StreamBuilder<List<ExercisePerformance>>(
+    return StreamBuilder(
       stream: performance.performances,
       builder: (context, snapshot) {
         return MuscleGroupsIcon(

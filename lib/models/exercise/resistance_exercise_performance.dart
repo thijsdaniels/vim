@@ -1,21 +1,15 @@
 import 'dart:async';
 
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:vim/models/exercise/energy.dart';
 import 'package:vim/models/exercise/exercise.dart';
 import 'package:vim/models/exercise/exercise_performance.dart';
 
-/// TODO: Rename this class to `CardioExercisePerformance`.
-/// TODO: Delete this class in favor of relating `Equipment` to an
+/// TODO: Rename this class to `EnduranceExercisePerformance`.
+/// TODO: If possible, delete this class in favor of relating `Equipment` to an
 /// `ExercisePerformance`.
 class ResistanceExercisePerformance extends ExercisePerformance {
-  DocumentReference? _reference;
-
   Duration duration;
   num watts;
-
-  @override
-  DocumentReference? get reference => _reference;
 
   /// The average energy efficiency of our muscles. Studies show that the body
   /// spends about 4 joules for every joule of output. The rest is lost as heat.
@@ -37,17 +31,6 @@ class ResistanceExercisePerformance extends ExercisePerformance {
     required this.duration,
     required this.watts,
   });
-
-  static ResistanceExercisePerformance fromSnapshot(
-    DocumentSnapshot<Map<String, dynamic>> snapshot,
-  ) {
-    Map<String, dynamic> map = snapshot.data()!;
-
-    ResistanceExercisePerformance exercisePerformance = fromMap(map);
-    exercisePerformance._reference = snapshot.reference;
-
-    return exercisePerformance;
-  }
 
   static ResistanceExercisePerformance fromMap(Map<String, dynamic> map) {
     return ResistanceExercisePerformance(

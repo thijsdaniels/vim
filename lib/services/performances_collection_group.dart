@@ -1,12 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:vim/models/exercise/exercise.dart';
 import 'package:vim/models/exercise/exercise_performance.dart';
-import 'package:vim/models/exercise/manual_exercise_performance.dart';
 import 'package:vim/models/exercise/performance.dart';
-import 'package:vim/models/exercise/quick_performance.dart';
-import 'package:vim/models/exercise/resistance_exercise_performance.dart';
-import 'package:vim/models/exercise/routine_performance.dart';
-import 'package:vim/models/exercise/weights_exercise_performance.dart';
 import 'package:vim/services/collection_group.dart';
 
 class PerformancesCollectionGroup extends CollectionGroup<Performance> {
@@ -14,27 +9,9 @@ class PerformancesCollectionGroup extends CollectionGroup<Performance> {
 
   PerformancesCollectionGroup() : super(path: 'performances');
 
-  /// TODO: This duplicates code from the `PerformancesService` class.
-  /// TODO: Move this logic into the `Performance.fromSnapshot` function?
   @override
   Performance fromFirestore(snapshot, options) {
-    Map<String, dynamic> data = snapshot.data()!;
-
-    if (data['exercise'] != null) {
-      switch (
-          ExerciseType.values.byName(data['exercise']['snapshot']['type'])) {
-        case ExerciseType.manual:
-          return ManualExercisePerformance.fromSnapshot(snapshot);
-        case ExerciseType.resistance:
-          return ResistanceExercisePerformance.fromSnapshot(snapshot);
-        case ExerciseType.weights:
-          return WeightsExercisePerformance.fromSnapshot(snapshot);
-      }
-    } else if (data['routine'] != null) {
-      return RoutinePerformance.fromSnapshot(snapshot);
-    } else {
-      return QuickPerformance.fromSnapshot(snapshot);
-    }
+    return Performance.fromFirestore(snapshot, options);
   }
 
   /// TODO: This query will include exercise performances from other users. It
@@ -53,10 +30,7 @@ class PerformancesCollectionGroup extends CollectionGroup<Performance> {
       query = query.limit(limit);
     }
 
-    return query.snapshots().map(
-          (snapshot) => snapshot.docs
-              .map((doc) => doc.data() as ExercisePerformance)
-              .toList(),
-        );
+    return query.snapshots().map((snapshot) =>
+        snapshot.docs.map((doc) => doc.data() as ExercisePerformance).toList());
   }
 }

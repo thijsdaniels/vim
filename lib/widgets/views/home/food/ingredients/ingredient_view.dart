@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:vim/models/food/ingredient.dart';
 import 'package:vim/services/consumptions_collection_group.dart';
-import 'package:vim/services/ingredients_service.dart';
+import 'package:vim/services/ingredients_collection.dart';
 import 'package:vim/widgets/atoms/standard_list.dart';
 import 'package:vim/widgets/atoms/stats_table.dart';
 import 'package:vim/widgets/molecules/consumptions_list.dart';
@@ -23,7 +23,7 @@ class IngredientView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return StreamBuilder<Ingredient?>(
-      stream: IngredientsService.of(context).get(id),
+      stream: IngredientsCollection.of(context).get(id),
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
           return const LoadingView();
@@ -59,7 +59,7 @@ class IngredientView extends StatelessWidget {
                   onPressed: () async {
                     var navigator = Navigator.of(context);
                     if (await confirm()) {
-                      IngredientsService.of(context).delete(ingredient);
+                      IngredientsCollection.of(context).delete(ingredient);
                       navigator.pop();
                     }
                   },

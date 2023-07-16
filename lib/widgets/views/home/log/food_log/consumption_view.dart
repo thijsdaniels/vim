@@ -8,7 +8,7 @@ import 'package:vim/models/food/ingredient_consumption.dart';
 import 'package:vim/models/food/quick_consumption.dart';
 import 'package:vim/models/food/recipe_consumption.dart';
 import 'package:vim/services/consumptions_collection_group.dart';
-import 'package:vim/services/consumptions_service.dart';
+import 'package:vim/services/consumptions_collection.dart';
 import 'package:vim/widgets/atoms/standard_list.dart';
 import 'package:vim/widgets/atoms/stats_table.dart';
 import 'package:vim/widgets/molecules/consumptions_list.dart';
@@ -100,7 +100,8 @@ class _ConsumptionViewState extends State<ConsumptionView> {
                         icon: const Icon(Icons.delete_rounded),
                         onPressed: () async {
                           if (await confirm()) {
-                            ConsumptionsService.of(context).delete(consumption);
+                            ConsumptionsCollection.of(context)
+                                .delete(consumption);
 
                             if (mounted) {
                               Navigator.of(context).pop();

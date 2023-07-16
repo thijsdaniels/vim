@@ -1,6 +1,5 @@
 import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
-import 'package:vim/models/exercise/exercise_performance.dart';
 import 'package:vim/models/exercise/routine_performance.dart';
 import 'package:vim/widgets/atoms/muscle_groups_surface.dart';
 import 'package:vim/widgets/atoms/muscle_map/muscle_map.dart';
@@ -15,7 +14,7 @@ class RoutinePerformanceMuscleGroups extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return StreamBuilder<List<ExercisePerformance>>(
+    return StreamBuilder(
       stream: performance.performances,
       builder: (context, snapshot) {
         var primary = snapshot.data

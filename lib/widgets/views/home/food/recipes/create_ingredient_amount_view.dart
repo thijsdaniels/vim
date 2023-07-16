@@ -1,7 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:vim/models/food/ingredient_amount.dart';
-import 'package:vim/services/ingredients_service.dart';
+import 'package:vim/services/ingredients_collection.dart';
 import 'package:vim/widgets/atoms/ingredient_form_field.dart';
 import 'package:vim/widgets/atoms/number_form_field.dart';
 import 'package:vim/widgets/atoms/standard_list.dart';
@@ -24,6 +24,7 @@ class _CreateIngredientAmountViewState
     extends State<CreateIngredientAmountView> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
+  // TODO: Turn this into a `DocumentReference<Ingredient>`.
   DocumentReference? _ingredient;
   num? _amount;
 
@@ -75,7 +76,7 @@ class _CreateIngredientAmountViewState
                 children: [
                   StreamBuilder(
                     stream: _ingredient != null
-                        ? IngredientsService.of(context).get(_ingredient!.id)
+                        ? IngredientsCollection.of(context).get(_ingredient!.id)
                         : null,
                     builder: (context, snapshot) => IngredientFormField(
                       selection: snapshot.data,
