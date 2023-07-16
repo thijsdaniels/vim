@@ -2,9 +2,9 @@ name: Dart
 
 on:
   push:
-    branches: [ "main" ]
+    branches: ["main"]
   pull_request:
-    branches: [ "main" ]
+    branches: ["main"]
 
 jobs:
   build:
@@ -15,7 +15,7 @@ jobs:
       - uses: dart-lang/setup-dart@v1
 
       - name: Install
-        run: dart pub get
+        run: flutter pub get
 
       - name: Format
         run: dart format --output=none --set-exit-if-changed .
@@ -23,7 +23,5 @@ jobs:
       - name: Analyze
         run: dart analyze
 
-      # Your project will need to have tests in test/ and a dependency on
-      # package:test for this step to succeed.
-      # - name: Test
-      #   run: flutter test
+      - name: Test
+        run: flutter test
