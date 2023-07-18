@@ -13,6 +13,7 @@ import 'package:vim/models/food/recipe.dart';
 import 'package:vim/models/settings_model.dart';
 import 'package:vim/models/user/user.dart';
 import 'package:vim/services/consumptions_collection.dart';
+import 'package:vim/services/equipments_collection.dart';
 import 'package:vim/services/exercises_collection.dart';
 import 'package:vim/services/ingredients_collection.dart';
 import 'package:vim/services/performances_collection.dart';
@@ -22,6 +23,8 @@ import 'package:vim/services/users_collection.dart';
 import 'package:vim/widgets/views/home_view.dart';
 import 'package:vim/widgets/views/login_view.dart';
 import 'package:vim/widgets/views/onboarding_view.dart';
+
+import '../models/exercise/equipment.dart';
 
 class Vim extends StatelessWidget {
   const Vim({
@@ -212,6 +215,11 @@ class ServiceProviders extends StatelessWidget {
                 path: 'users/${user.reference!.id}/recipes',
               ),
             ),
+            Provider<EquipmentsCollection>.value(
+              value: EquipmentsCollection(
+                path: 'users/${user.reference!.id}/equipments',
+              ),
+            ),
             Provider<ExercisesCollection>.value(
               value: ExercisesCollection(
                 path: 'users/${user.reference!.id}/exercises',
@@ -259,6 +267,10 @@ class DataProviders extends StatelessWidget {
           ),
           StreamProvider<List<Recipe>>.value(
             value: RecipesCollection.of(context).all(),
+            initialData: const [],
+          ),
+          StreamProvider<List<Equipment>>.value(
+            value: EquipmentsCollection.of(context).all(),
             initialData: const [],
           ),
           StreamProvider<List<Exercise>>.value(

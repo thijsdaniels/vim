@@ -3,8 +3,8 @@ import 'package:vim/extensions/date_time.dart';
 import 'package:vim/extensions/num.dart';
 import 'package:vim/extensions/sets.dart';
 import 'package:vim/models/exercise/performance.dart';
+import 'package:vim/models/exercise/endurance_exercise_performance.dart';
 import 'package:vim/models/exercise/resistance_exercise_performance.dart';
-import 'package:vim/models/exercise/weights_exercise_performance.dart';
 import 'package:vim/widgets/atoms/performance_icon.dart';
 import 'package:vim/widgets/atoms/secondary_text.dart';
 import 'package:vim/widgets/atoms/standard_list.dart';
@@ -52,7 +52,7 @@ class PerformancesList extends StatelessWidget {
             // TODO: Try to change this into Chip widgets.
             subtitle: [
               '${caloriesSnapshot.data?.round()} cal',
-              if (performance is WeightsExercisePerformance) ...[
+              if (performance is ResistanceExercisePerformance) ...[
                 '${(performance.sets.weight / performance.sets.length).decimals(2)} kg',
                 performance.sets
                     .map(
@@ -60,7 +60,7 @@ class PerformancesList extends StatelessWidget {
                     )
                     .join("/"),
               ],
-              if (performance is ResistanceExercisePerformance) ...[
+              if (performance is EnduranceExercisePerformance) ...[
                 '${performance.watts} watts',
                 '${performance.duration.inMinutes} m',
               ],

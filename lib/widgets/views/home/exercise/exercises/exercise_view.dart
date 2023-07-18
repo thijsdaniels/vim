@@ -100,6 +100,21 @@ class ExerciseView extends StatelessWidget {
                   ],
                 ),
               ),
+              SimpleCard(
+                title: 'Method',
+                child: StatsTable(
+                  children: [
+                    StatsRow(
+                      'Equipment',
+                      exercise.equipments.isNotEmpty
+                          ? exercise.equipments
+                              .map((equipment) => equipment.name)
+                              .join(', ')
+                          : null,
+                    ),
+                  ],
+                ),
+              ),
               StreamBuilder(
                 stream:
                     PerformancesCollectionGroup.instance.forExercise(exercise),

@@ -3,9 +3,9 @@ import 'package:vim/extensions/date_time.dart';
 import 'package:vim/models/exercise/exercise_performance.dart';
 import 'package:vim/models/exercise/performance.dart';
 import 'package:vim/models/exercise/quick_performance.dart';
-import 'package:vim/models/exercise/resistance_exercise_performance.dart';
+import 'package:vim/models/exercise/endurance_exercise_performance.dart';
 import 'package:vim/models/exercise/routine_performance.dart';
-import 'package:vim/models/exercise/weights_exercise_performance.dart';
+import 'package:vim/models/exercise/resistance_exercise_performance.dart';
 import 'package:vim/services/performances_collection_group.dart';
 import 'package:vim/services/performances_collection.dart';
 import 'package:vim/widgets/atoms/exercise_performance_muscle_groups.dart';
@@ -152,7 +152,7 @@ class _PerformanceViewState extends State<PerformanceView> {
                 ExercisePerformanceMuscleGroups(
                   performance: performance,
                 ),
-              if (performance is ResistanceExercisePerformance)
+              if (performance is EnduranceExercisePerformance)
                 SimpleCard(
                   title: 'Performance',
                   child: StatsTable(
@@ -170,7 +170,7 @@ class _PerformanceViewState extends State<PerformanceView> {
                     ],
                   ),
                 ),
-              if (performance is WeightsExercisePerformance)
+              if (performance is ResistanceExercisePerformance)
 
                 /// TODO: Add, edit and remove sets here instead of having to
                 /// navigate to an edit view.

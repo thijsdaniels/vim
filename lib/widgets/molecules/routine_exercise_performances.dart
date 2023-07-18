@@ -7,11 +7,11 @@ import 'package:vim/models/exercise/exercise.dart';
 import 'package:vim/models/exercise/exercise_performance.dart';
 import 'package:vim/models/exercise/manual_exercise_performance.dart';
 import 'package:vim/models/exercise/performance.dart';
-import 'package:vim/models/exercise/resistance_exercise_performance.dart';
+import 'package:vim/models/exercise/endurance_exercise_performance.dart';
 import 'package:vim/models/exercise/routine_performance.dart';
 import 'package:vim/models/exercise/set.dart';
 import 'package:vim/extensions/sets.dart';
-import 'package:vim/models/exercise/weights_exercise_performance.dart';
+import 'package:vim/models/exercise/resistance_exercise_performance.dart';
 import 'package:vim/services/performances_collection_group.dart';
 import 'package:vim/widgets/atoms/exercise_icon.dart';
 import 'package:vim/widgets/atoms/standard_list.dart';
@@ -129,11 +129,11 @@ class RoutineExercisePerformances extends StatelessWidget {
       // if (performance is! WeightsExercisePerformance &&
       //     performance is! ResistanceExercisePerformance)
       //   '${performance.calories} kcal',
-      if (performance is WeightsExercisePerformance) ...[
+      if (performance is ResistanceExercisePerformance) ...[
         '${(performance.sets.weight / performance.sets.length).decimals(2)} kg',
         performance.sets.map((set) => '${set.repetitions}').join("/"),
       ],
-      if (performance is ResistanceExercisePerformance) ...[
+      if (performance is EnduranceExercisePerformance) ...[
         '${performance.watts} watts',
         '${performance.duration.inMinutes} m',
       ],
@@ -177,27 +177,27 @@ class PerformedCheckbox extends StatelessWidget {
               );
               break;
             case ExerciseType.resistance:
-              exercisePerformance = ResistanceExercisePerformance(
+              exercisePerformance = EnduranceExercisePerformance(
                 timestamp: Timestamp.now(),
                 exercise: exercise.toSnapshot(),
                 duration: (previousExercisePerformance
-                            as ResistanceExercisePerformance?)
+                            as EnduranceExercisePerformance?)
                         ?.duration ??
                     Duration.zero,
                 watts: (previousExercisePerformance
-                            as ResistanceExercisePerformance?)
+                            as EnduranceExercisePerformance?)
                         ?.watts ??
                     0,
               );
               break;
             case ExerciseType.weights:
-              exercisePerformance = WeightsExercisePerformance(
+              exercisePerformance = ResistanceExercisePerformance(
                 timestamp: Timestamp.now(),
                 exercise: exercise.toSnapshot(),
-                sets:
-                    (previousExercisePerformance as WeightsExercisePerformance?)
-                            ?.sets ??
-                        [const Set(weight: 0, repetitions: 0)],
+                sets: (previousExercisePerformance
+                            as ResistanceExercisePerformance?)
+                        ?.sets ??
+                    [const Set(weight: 0, repetitions: 0)],
               );
               break;
           }

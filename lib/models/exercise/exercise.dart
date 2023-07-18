@@ -1,20 +1,30 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/foundation.dart';
+import 'package:vim/extensions/equipments.dart';
 import 'package:vim/models/document.dart';
 import 'package:vim/models/snapshot.dart';
 import 'package:vim/widgets/atoms/muscle_map/muscle_map.dart';
 
-// TODO: Remove in favor of relating an exercise to a set of Equipment.
+import 'equipment.dart';
+
+/// TODO: Remove in favor of relating an exercise to a set of Equipment? On
+/// second thought, I no longer agree entirely. For example, take a `WeightVest`
+/// as an example. This could be used both during resistance training, such as
+/// dips, and during endurance training, such as running. In the case of dips,
+/// you would log sets, but in the case of running, you would log a duration.
+/// So, I think the `ExerciseType` is still necessary, but the `manual` type
+/// should not support equipment, since the equipment is not used to calculate
+/// calories.
 enum ExerciseType {
   manual,
-  resistance,
-  weights,
+  resistance, // endurance,
+  weights, // resistance,
 }
 
 class Exercise extends Document {
   ExerciseType type;
   String name;
-  // List<Equipment> equipment;
+  List<Equipment> equipments = [];
   ({
     MuscleGroup? primary,
     List<MuscleGroup> secondary,
@@ -27,6 +37,7 @@ class Exercise extends Document {
       primary: null,
       secondary: [],
     ),
+    this.equipments = const [],
   });
 
   factory Exercise.fromFirestore(
@@ -54,6 +65,9 @@ class Exercise extends Document {
               .toList(),
         )
       ),
+      equipments: map['equipments'] != null
+          ? Equipments.fromMap(map['equipments'])
+          : [],
     );
   }
 
@@ -69,6 +83,7 @@ class Exercise extends Document {
         'secondary': muscleGroups.secondary
             .map((muscleGroup) => describeEnum(muscleGroup)),
       },
+      'equipments': equipments.toMap(),
     };
   }
 

@@ -4,9 +4,9 @@ import 'package:vim/models/date_model.dart';
 import 'package:vim/models/exercise/exercise.dart';
 import 'package:vim/models/exercise/exercise_performance.dart';
 import 'package:vim/models/exercise/manual_exercise_performance.dart';
-import 'package:vim/models/exercise/resistance_exercise_performance.dart';
+import 'package:vim/models/exercise/endurance_exercise_performance.dart';
 import 'package:vim/extensions/sets.dart';
-import 'package:vim/models/exercise/weights_exercise_performance.dart';
+import 'package:vim/models/exercise/resistance_exercise_performance.dart';
 import 'package:vim/widgets/atoms/number_form_field.dart';
 import 'package:vim/widgets/atoms/sets_form_field.dart';
 import 'package:vim/widgets/atoms/standard_list.dart';
@@ -47,7 +47,7 @@ class _CreateExercisePerformanceViewState
     if (exercisePerformance != null) {
       _calories = 0; // exercisePerformance.calories; // TODO: Fix this
 
-      if (exercisePerformance is WeightsExercisePerformance) {
+      if (exercisePerformance is ResistanceExercisePerformance) {
         _sets = exercisePerformance.sets
             .map((set) => (
                   key: UniqueKey(),
@@ -57,7 +57,7 @@ class _CreateExercisePerformanceViewState
             .toList();
       }
 
-      if (exercisePerformance is ResistanceExercisePerformance) {
+      if (exercisePerformance is EnduranceExercisePerformance) {
         _minutes = exercisePerformance.duration.inMinutes;
         _watts = exercisePerformance.watts;
       }
@@ -87,12 +87,12 @@ class _CreateExercisePerformanceViewState
                       widget.exercisePerformance;
 
                   if (exercisePerformance != null) {
-                    if (exercisePerformance is ResistanceExercisePerformance) {
+                    if (exercisePerformance is EnduranceExercisePerformance) {
                       exercisePerformance.duration =
                           Duration(minutes: _minutes!);
                       exercisePerformance.watts = _watts!;
                     } else if (exercisePerformance
-                        is WeightsExercisePerformance) {
+                        is ResistanceExercisePerformance) {
                       exercisePerformance.sets = Sets.fromRecords(_sets);
                     } else if (exercisePerformance
                         is ManualExercisePerformance) {
@@ -108,7 +108,7 @@ class _CreateExercisePerformanceViewState
                         );
                         break;
                       case ExerciseType.resistance:
-                        exercisePerformance = ResistanceExercisePerformance(
+                        exercisePerformance = EnduranceExercisePerformance(
                           timestamp: dateModel.timestamp,
                           exercise: widget.exercise!.toSnapshot(),
                           duration: Duration(minutes: _minutes!),
@@ -116,7 +116,7 @@ class _CreateExercisePerformanceViewState
                         );
                         break;
                       case ExerciseType.weights:
-                        exercisePerformance = WeightsExercisePerformance(
+                        exercisePerformance = ResistanceExercisePerformance(
                           timestamp: dateModel.timestamp,
                           exercise: widget.exercise!.toSnapshot(),
                           sets: Sets.fromRecords(_sets),

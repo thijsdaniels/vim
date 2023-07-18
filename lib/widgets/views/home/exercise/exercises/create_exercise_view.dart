@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:vim/extensions/string.dart';
+import 'package:vim/models/exercise/equipment.dart';
 import 'package:vim/models/exercise/exercise.dart';
 import 'package:vim/services/exercises_collection.dart';
 import 'package:vim/widgets/atoms/multiselect_dropdown.dart';
@@ -23,6 +25,7 @@ class _CreateExerciseViewState extends State<CreateExerciseView> {
   ExerciseType? _type;
   MuscleGroup? _primaryMuscleGroup;
   List<MuscleGroup> _secondaryMuscleGroups = [];
+  List<Equipment> _equipments = [];
 
   @override
   void initState() {
@@ -35,6 +38,7 @@ class _CreateExerciseViewState extends State<CreateExerciseView> {
       _type = exercise.type;
       _primaryMuscleGroup = exercise.muscleGroups.primary;
       _secondaryMuscleGroups = exercise.muscleGroups.secondary;
+      _equipments = exercise.equipments;
     }
   }
 
@@ -65,6 +69,7 @@ class _CreateExerciseViewState extends State<CreateExerciseView> {
                     primary: _primaryMuscleGroup,
                     secondary: _secondaryMuscleGroups,
                   );
+                  exercise.equipments = _equipments;
 
                   ExercisesCollection.of(context).update(exercise);
                 } else {
@@ -75,6 +80,7 @@ class _CreateExerciseViewState extends State<CreateExerciseView> {
                       primary: _primaryMuscleGroup,
                       secondary: _secondaryMuscleGroups,
                     ),
+                    equipments: _equipments,
                   ));
                 }
 
@@ -131,9 +137,6 @@ class _CreateExerciseViewState extends State<CreateExerciseView> {
                     }),
                   ),
                   const SizedBox(height: 16),
-
-                  /// TODO: Improve this UX and get rid of the `multiselect`
-                  /// package.
                   MultiselectDropdown<MuscleGroup>(
                     decoration: const InputDecoration(
                       label: Text('Secondary'),
@@ -150,6 +153,33 @@ class _CreateExerciseViewState extends State<CreateExerciseView> {
                         _secondaryMuscleGroups = muscleGroups;
                       });
                     },
+                  ),
+                ],
+              ),
+            ),
+            SimpleCard(
+              title: 'Method',
+              child: Column(
+                children: [
+                  Consumer<List<Equipment>>(
+                    builder: (context, equipments, _) =>
+                        MultiselectDropdown<Equipment>(
+                      decoration: const InputDecoration(
+                        label: Text('Equipment'),
+                      ),
+                      items: equipments
+                          .map((equipment) => (
+                                value: equipment,
+                                name: equipment.name,
+                              ))
+                          .toList(),
+                      selected: _equipments,
+                      onChanged: (equipments) {
+                        setState(() {
+                          _equipments = equipments;
+                        });
+                      },
+                    ),
                   ),
                 ],
               ),
