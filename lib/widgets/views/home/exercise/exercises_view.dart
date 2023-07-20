@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:vim/extensions/string.dart';
 import 'package:vim/models/exercise/exercise.dart';
 import 'package:vim/widgets/atoms/exercise_icon.dart';
 import 'package:vim/widgets/atoms/floating_action_surface.dart';
@@ -32,16 +31,21 @@ class ExercisesView extends StatelessWidget {
             itemBuilder: (context, index) {
               Exercise exercise = exercises[index];
 
-              return ListSurface(
-                icon: ExerciseIcon(exercise),
-                title: exercise.name,
-                subtitle: exercise.type.name.toTitleCase(),
-                onTap: () {
-                  Navigator.of(context).push(
-                    MaterialPageRoute(
-                      builder: (context) =>
-                          ExerciseView(id: exercise.reference!.id),
-                    ),
+              return StreamBuilder(
+                stream: exercise.equipment,
+                builder: (context, equipment) {
+                  return ListSurface(
+                    icon: ExerciseIcon(exercise),
+                    title: exercise.name,
+                    subtitle: equipment.data?.name,
+                    onTap: () {
+                      Navigator.of(context).push(
+                        MaterialPageRoute(
+                          builder: (context) =>
+                              ExerciseView(id: exercise.reference!.id),
+                        ),
+                      );
+                    },
                   );
                 },
               );

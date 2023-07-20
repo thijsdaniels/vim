@@ -72,14 +72,41 @@ class ExerciseView extends StatelessWidget {
             children: [
               SimpleCard(
                 title: 'Details',
-                child: StatsTable(
-                  children: [
-                    StatsRow('Name', exercise.name),
-                    StatsRow('Type', exercise.type.name.toTitleCase()),
-                  ],
+                child: StreamBuilder(
+                  stream: exercise.equipment,
+                  builder: (context, equipment) {
+                    return StatsTable(
+                      children: [
+                        StatsRow('Name', exercise.name),
+                        StatsRow('Type', exercise.type.name.toTitleCase()),
+                      ],
+                    );
+                  },
                 ),
               ),
-              ExerciseMuscleGroups(exercise: exercise),
+              SimpleCard(
+                title: 'Method',
+                child: StreamBuilder(
+                  stream: exercise.equipment,
+                  builder: (context, equipment) {
+                    return StatsTable(
+                      children: [
+                        StatsRow('Equipment', equipment.data?.name),
+                        StatsRow(
+                            'Bodyweight',
+                            (exercise.bodyweightFactor * 100)
+                                .round()
+                                .toString(),
+                            unit: '%'),
+                        StatsRow(
+                          'Unilateral',
+                          exercise.isUnilateral ? 'Yes' : 'No',
+                        ),
+                      ],
+                    );
+                  },
+                ),
+              ),
               SimpleCard(
                 title: 'Muscle Groups',
                 child: StatsTable(
@@ -100,21 +127,7 @@ class ExerciseView extends StatelessWidget {
                   ],
                 ),
               ),
-              SimpleCard(
-                title: 'Method',
-                child: StatsTable(
-                  children: [
-                    StatsRow(
-                      'Equipment',
-                      exercise.equipments.isNotEmpty
-                          ? exercise.equipments
-                              .map((equipment) => equipment.name)
-                              .join(', ')
-                          : null,
-                    ),
-                  ],
-                ),
-              ),
+              ExerciseMuscleGroups(exercise: exercise),
               StreamBuilder(
                 stream:
                     PerformancesCollectionGroup.instance.forExercise(exercise),

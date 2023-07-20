@@ -8,7 +8,7 @@ class Equipment extends Document {
   String name;
   Mass baseWeight;
   Mass weightIncrement;
-  double loadFactor;
+  num loadFactor;
 
   Equipment({
     required this.name,
@@ -47,69 +47,3 @@ class Equipment extends Document {
     };
   }
 }
-
-var isolationMachine = Equipment(
-  name: "Isolation Machine",
-  weightIncrement: const Mass.kilograms(0.5),
-);
-
-var cableMachine = Equipment(
-  name: "Cable Machine",
-  weightIncrement: const Mass.kilograms(0.5),
-);
-
-var kettleBell = Equipment(
-  name: "Kettlebell",
-  baseWeight: const Mass.kilograms(1),
-  weightIncrement: const Mass.kilograms(1),
-);
-
-var dippingBelt = Equipment(
-  name: "Dipping Belt",
-  baseWeight: const Mass.kilograms(1),
-  weightIncrement: const Mass.kilograms(1),
-);
-
-var weightVest = Equipment(
-  name: "Weight Vest",
-  baseWeight: const Mass.kilograms(1),
-  weightIncrement: const Mass.kilograms(1),
-);
-
-var dumbbell = Equipment(
-  name: "Dumbbell",
-  baseWeight: const Mass.kilograms(2),
-  weightIncrement: const Mass.kilograms(1),
-);
-
-var dumbbells = Equipment(
-  name: "Dumbbells",
-  baseWeight: const Mass.kilograms(2),
-  weightIncrement: const Mass.kilograms(1),
-  loadFactor: 2,
-);
-
-var barbell = Equipment(
-  name: "Barbell",
-  baseWeight: const Mass.kilograms(20),
-  weightIncrement: const Mass.kilograms(1),
-);
-
-var landmine = Equipment(
-  name: "Landmine",
-  baseWeight: const Mass.kilograms(20),
-  weightIncrement: const Mass.kilograms(0.5),
-  loadFactor: 0.5,
-);
-
-var ezBar = Equipment(
-  name: "EZ Bar",
-  baseWeight: const Mass.kilograms(10),
-  weightIncrement: const Mass.kilograms(1),
-);
-
-var trapBar = Equipment(
-  name: "Trap Bar",
-  baseWeight: const Mass.kilograms(30),
-  weightIncrement: const Mass.kilograms(1),
-);

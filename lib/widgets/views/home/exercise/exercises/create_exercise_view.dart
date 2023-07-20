@@ -1,12 +1,15 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 import 'package:vim/extensions/string.dart';
 import 'package:vim/models/exercise/equipment.dart';
 import 'package:vim/models/exercise/exercise.dart';
+import 'package:vim/services/equipments_collection_group.dart';
 import 'package:vim/services/exercises_collection.dart';
 import 'package:vim/widgets/atoms/multiselect_dropdown.dart';
 import 'package:vim/widgets/atoms/muscle_map/muscle_map.dart';
+import 'package:vim/widgets/atoms/slider_form_field.dart';
 import 'package:vim/widgets/atoms/standard_list.dart';
+import 'package:vim/widgets/atoms/switch_form_field.dart';
 import 'package:vim/widgets/molecules/simple_card.dart';
 
 class CreateExerciseView extends StatefulWidget {
@@ -23,9 +26,11 @@ class _CreateExerciseViewState extends State<CreateExerciseView> {
 
   String? _name;
   ExerciseType? _type;
+  DocumentReference? _equipmentReference;
+  double _bodyweightFactor = 0;
+  bool _isUnilateral = false;
   MuscleGroup? _primaryMuscleGroup;
   List<MuscleGroup> _secondaryMuscleGroups = [];
-  List<Equipment> _equipments = [];
 
   @override
   void initState() {
@@ -36,9 +41,11 @@ class _CreateExerciseViewState extends State<CreateExerciseView> {
     if (exercise != null) {
       _name = exercise.name;
       _type = exercise.type;
+      _equipmentReference = exercise.equipmentReference;
+      _bodyweightFactor = exercise.bodyweightFactor;
+      _isUnilateral = exercise.isUnilateral;
       _primaryMuscleGroup = exercise.muscleGroups.primary;
       _secondaryMuscleGroups = exercise.muscleGroups.secondary;
-      _equipments = exercise.equipments;
     }
   }
 
@@ -65,22 +72,26 @@ class _CreateExerciseViewState extends State<CreateExerciseView> {
                 if (exercise != null) {
                   exercise.name = _name!;
                   exercise.type = _type!;
+                  exercise.equipmentReference = _equipmentReference;
+                  exercise.bodyweightFactor = _bodyweightFactor;
+                  exercise.isUnilateral = _isUnilateral;
                   exercise.muscleGroups = (
                     primary: _primaryMuscleGroup,
                     secondary: _secondaryMuscleGroups,
                   );
-                  exercise.equipments = _equipments;
 
                   ExercisesCollection.of(context).update(exercise);
                 } else {
                   ExercisesCollection.of(context).create(Exercise(
                     name: _name!,
                     type: _type!,
+                    equipmentReference: _equipmentReference,
+                    bodyweightFactor: _bodyweightFactor,
+                    isUnilateral: _isUnilateral,
                     muscleGroups: (
                       primary: _primaryMuscleGroup,
                       secondary: _secondaryMuscleGroups,
                     ),
-                    equipments: _equipments,
                   ));
                 }
 
@@ -96,7 +107,9 @@ class _CreateExerciseViewState extends State<CreateExerciseView> {
           children: [
             SimpleCard(
               title: 'Details',
-              child: Column(
+              child: StandardList(
+                padding: EdgeInsets.zero,
+                physics: const NeverScrollableScrollPhysics(),
                 children: [
                   TextFormField(
                     autofocus: true,
@@ -127,8 +140,62 @@ class _CreateExerciseViewState extends State<CreateExerciseView> {
               ),
             ),
             SimpleCard(
+              title: 'Method',
+              child: StandardList(
+                padding: EdgeInsets.zero,
+                physics: const NeverScrollableScrollPhysics(),
+                children: [
+                  StreamBuilder(
+                    stream: EquipmentsCollectionGroup.instance.all(),
+                    builder: (context, equipments) {
+                      return DropdownButtonFormField<Equipment>(
+                        decoration: const InputDecoration(
+                          label: Text('Equipment'),
+                        ),
+                        items: (equipments.data ?? [])
+                            .map((equipment) => DropdownMenuItem<Equipment>(
+                                  value: equipment,
+                                  child: Text(equipment.name),
+                                ))
+                            .toList(),
+                        value: (equipments.data ?? [])
+                            .where((equipment) =>
+                                equipment.reference?.path ==
+                                _equipmentReference?.path)
+                            .firstOrNull,
+                        onChanged: (equipment) {
+                          setState(() {
+                            _equipmentReference = equipment?.reference;
+                          });
+                        },
+                      );
+                    },
+                  ),
+                  SliderFormField(
+                    value: _bodyweightFactor,
+                    onChanged: (bodyweightFactor) => setState(() {
+                      _bodyweightFactor = bodyweightFactor;
+                    }),
+                    label: const Text('Bodyweight Factor'),
+                    divisions: 20,
+                    valueLabel:
+                        '${(_bodyweightFactor * 100).round().toString()}%',
+                  ),
+                  SwitchFormField(
+                    value: _isUnilateral,
+                    onChanged: (isUnilateral) => setState(() {
+                      _isUnilateral = isUnilateral;
+                    }),
+                    label: const Text('Unilateral'),
+                  ),
+                ],
+              ),
+            ),
+            SimpleCard(
               title: 'Muscle Groups',
-              child: Column(
+              child: StandardList(
+                padding: EdgeInsets.zero,
+                physics: const NeverScrollableScrollPhysics(),
                 children: [
                   MuscleGroupDropdown(
                     value: _primaryMuscleGroup,
@@ -153,33 +220,6 @@ class _CreateExerciseViewState extends State<CreateExerciseView> {
                         _secondaryMuscleGroups = muscleGroups;
                       });
                     },
-                  ),
-                ],
-              ),
-            ),
-            SimpleCard(
-              title: 'Method',
-              child: Column(
-                children: [
-                  Consumer<List<Equipment>>(
-                    builder: (context, equipments, _) =>
-                        MultiselectDropdown<Equipment>(
-                      decoration: const InputDecoration(
-                        label: Text('Equipment'),
-                      ),
-                      items: equipments
-                          .map((equipment) => (
-                                value: equipment,
-                                name: equipment.name,
-                              ))
-                          .toList(),
-                      selected: _equipments,
-                      onChanged: (equipments) {
-                        setState(() {
-                          _equipments = equipments;
-                        });
-                      },
-                    ),
                   ),
                 ],
               ),

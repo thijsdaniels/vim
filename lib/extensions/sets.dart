@@ -1,4 +1,3 @@
-import 'package:flutter/material.dart';
 import 'package:vim/models/exercise/set.dart';
 
 extension Sets on List<Set> {
@@ -7,7 +6,7 @@ extension Sets on List<Set> {
   }
 
   static List<Set> fromRecords(
-    Iterable<({Key key, num? weight, num? repetitions})> records,
+    Iterable<SetRecord> records,
   ) {
     return records.map((record) => Set.fromRecord(record)).toList();
   }

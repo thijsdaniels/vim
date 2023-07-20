@@ -7,6 +7,7 @@ import 'package:vim/models/exercise/manual_exercise_performance.dart';
 import 'package:vim/models/exercise/endurance_exercise_performance.dart';
 import 'package:vim/extensions/sets.dart';
 import 'package:vim/models/exercise/resistance_exercise_performance.dart';
+import 'package:vim/models/exercise/set.dart';
 import 'package:vim/widgets/atoms/number_form_field.dart';
 import 'package:vim/widgets/atoms/sets_form_field.dart';
 import 'package:vim/widgets/atoms/standard_list.dart';
@@ -32,9 +33,7 @@ class _CreateExercisePerformanceViewState
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
   num? _calories;
-  List<({Key key, num? repetitions, num? weight})> _sets = [
-    (key: UniqueKey(), repetitions: null, weight: null)
-  ];
+  List<SetRecord> _sets = [(key: UniqueKey(), repetitions: null, weight: null)];
   int? _minutes;
   num? _watts;
 
@@ -45,7 +44,9 @@ class _CreateExercisePerformanceViewState
     ExercisePerformance? exercisePerformance = widget.exercisePerformance;
 
     if (exercisePerformance != null) {
-      _calories = 0; // exercisePerformance.calories; // TODO: Fix this
+      if (exercisePerformance is ManualExercisePerformance) {
+        _calories = exercisePerformance.calories;
+      }
 
       if (exercisePerformance is ResistanceExercisePerformance) {
         _sets = exercisePerformance.sets

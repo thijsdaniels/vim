@@ -28,15 +28,18 @@ abstract class CollectionGroup<D extends Document> {
         );
   }
 
+  Stream<List<D>> all() {
+    return collectionGroup
+        .snapshots()
+        .map((snapshot) => snapshot.docs.map((doc) => doc.data()).toList());
+  }
+
   Stream<D?> get(String path) {
     return collectionGroup
         .where(FieldPath.documentId, isEqualTo: path)
         .limit(1)
         .snapshots()
-        .map((snapshot) {
-      var doc = snapshot.docs.firstOrNull;
-      return doc?.data();
-    });
+        .map((snapshot) => snapshot.docs.firstOrNull?.data());
   }
 
   /// TODO: Support more than 10 IDs.

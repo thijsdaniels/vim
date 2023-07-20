@@ -1,11 +1,9 @@
-import 'dart:async';
-
 import 'package:vim/models/exercise/exercise.dart';
 import 'package:vim/models/exercise/exercise_performance.dart';
 
 class ManualExercisePerformance extends ExercisePerformance {
   @override
-  FutureOr<num> calories;
+  num calories;
 
   @override
   String get name => exercise.snapshot.name;

@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 import 'package:vim/models/food/consumption.dart';
 import 'package:vim/models/food/ingredient.dart';
 import 'package:vim/models/food/ingredient_consumption.dart';
 import 'package:vim/models/food/recipe.dart';
 import 'package:vim/models/food/recipe_consumption.dart';
+import 'package:vim/services/ingredients_collection_group.dart';
+import 'package:vim/services/recipes_collection_group.dart';
 import 'package:vim/widgets/molecules/ingredient_list_surface.dart';
 import 'package:vim/widgets/molecules/recipe_list_surface.dart';
 import 'package:vim/widgets/views/home/log/food_log/create_ingredient_consumption_view.dart';
@@ -42,16 +43,18 @@ class CreateConsumptionView extends StatelessWidget {
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
-        child: Consumer<List<Recipe>>(
-          builder: (context, recipes, _) => Consumer<List<Ingredient>>(
-            builder: (context, ingredients, _) => SearchAnchor.bar(
+        child: StreamBuilder(
+          stream: RecipesCollectionGroup.instance.all(),
+          builder: (context, recipes) => StreamBuilder(
+            stream: IngredientsCollectionGroup.instance.all(),
+            builder: (context, ingredients) => SearchAnchor.bar(
               viewElevation: 4,
               isFullScreen: true,
               barHintText: "Search",
               suggestionsBuilder: (context, controller) {
                 return [
                   const SizedBox(height: 6),
-                  ...recipes
+                  ...(recipes.data ?? [])
                       .where((recipe) => isMatch(recipe.name, controller))
                       .map(
                         (recipe) => Padding(
@@ -62,7 +65,7 @@ class CreateConsumptionView extends StatelessWidget {
                           child: RecipeSearchResult(recipe),
                         ),
                       ),
-                  ...ingredients
+                  ...(ingredients.data ?? [])
                       .where(
                         (ingredient) => isMatch(ingredient.name, controller),
                       )

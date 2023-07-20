@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:vim/models/model.dart';
 
+typedef SetRecord = ({Key key, num? weight, num? repetitions});
+
 class Set extends Model {
   final num repetitions;
   final num weight;
@@ -22,7 +24,7 @@ class Set extends Model {
     );
   }
 
-  static Set fromRecord(({Key key, num? weight, num? repetitions}) record) {
+  static Set fromRecord(SetRecord record) {
     return Set(
       weight: record.weight ?? 0,
       repetitions: record.repetitions ?? 0,

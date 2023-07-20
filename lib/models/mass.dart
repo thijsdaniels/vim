@@ -5,20 +5,20 @@ class Mass extends Model {
   static const gramsPerKilogram = 1000;
   static const gramsPerPound = 453.592;
 
-  final double grams;
+  final num grams;
 
   const Mass.grams(this.grams);
 
-  const Mass.milligrams(double milligrams)
+  const Mass.milligrams(num milligrams)
       : grams = milligrams * gramsPerMilligram;
 
-  const Mass.kilograms(double kilograms) : grams = kilograms * gramsPerKilogram;
+  const Mass.kilograms(num kilograms) : grams = kilograms * gramsPerKilogram;
 
-  const Mass.pounds(double pounds) : grams = pounds * gramsPerPound;
+  const Mass.pounds(num pounds) : grams = pounds * gramsPerPound;
 
-  double get milligrams => grams / gramsPerMilligram;
-  double get kilograms => grams / gramsPerKilogram;
-  double get pounds => grams / gramsPerPound;
+  num get milligrams => grams / gramsPerMilligram;
+  num get kilograms => grams / gramsPerKilogram;
+  num get pounds => grams / gramsPerPound;
 
   @override
   Map<String, dynamic> toMap() {

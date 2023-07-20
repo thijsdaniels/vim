@@ -1,11 +1,10 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/foundation.dart';
-import 'package:vim/extensions/equipments.dart';
 import 'package:vim/models/document.dart';
+import 'package:vim/models/exercise/equipment.dart';
 import 'package:vim/models/snapshot.dart';
+import 'package:vim/services/equipments_collection_group.dart';
 import 'package:vim/widgets/atoms/muscle_map/muscle_map.dart';
-
-import 'equipment.dart';
 
 /// TODO: Remove in favor of relating an exercise to a set of Equipment? On
 /// second thought, I no longer agree entirely. For example, take a `WeightVest`
@@ -24,20 +23,30 @@ enum ExerciseType {
 class Exercise extends Document {
   ExerciseType type;
   String name;
-  List<Equipment> equipments = [];
+  DocumentReference? equipmentReference;
+  double bodyweightFactor;
+  bool isUnilateral;
   ({
     MuscleGroup? primary,
     List<MuscleGroup> secondary,
   }) muscleGroups;
 
+  Stream<Equipment?>? get equipment {
+    return equipmentReference != null
+        ? EquipmentsCollectionGroup.instance.get(equipmentReference!.path)
+        : null;
+  }
+
   Exercise({
     required this.type,
     required this.name,
+    this.equipmentReference,
+    this.bodyweightFactor = 0,
+    this.isUnilateral = false,
     this.muscleGroups = const (
       primary: null,
       secondary: [],
     ),
-    this.equipments = const [],
   });
 
   factory Exercise.fromFirestore(
@@ -55,6 +64,9 @@ class Exercise extends Document {
     return Exercise(
       type: ExerciseType.values.byName(map['type']),
       name: map['name'],
+      equipmentReference: map['equipment'],
+      bodyweightFactor: map['bodyweightFactor'] ?? 0,
+      isUnilateral: map['isUnilateral'] ?? false,
       muscleGroups: (
         primary: map['muscleGroups']?['primary'] != null
             ? MuscleGroup.values.byName(map['muscleGroups']?['primary'])
@@ -65,9 +77,6 @@ class Exercise extends Document {
               .toList(),
         )
       ),
-      equipments: map['equipments'] != null
-          ? Equipments.fromMap(map['equipments'])
-          : [],
     );
   }
 
@@ -76,6 +85,9 @@ class Exercise extends Document {
     return {
       'type': type.name,
       'name': name,
+      'equipment': equipmentReference,
+      'bodyweightFactor': bodyweightFactor,
+      'isUnilateral': isUnilateral,
       'muscleGroups': {
         'primary': muscleGroups.primary != null
             ? describeEnum(muscleGroups.primary!)
@@ -83,7 +95,6 @@ class Exercise extends Document {
         'secondary': muscleGroups.secondary
             .map((muscleGroup) => describeEnum(muscleGroup)),
       },
-      'equipments': equipments.toMap(),
     };
   }
 

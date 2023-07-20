@@ -3,9 +3,9 @@ import 'package:vim/models/exercise/equipment.dart';
 import 'package:vim/models/mass.dart';
 import 'package:vim/services/equipments_collection.dart';
 import 'package:vim/widgets/atoms/number_form_field.dart';
+import 'package:vim/widgets/atoms/slider_form_field.dart';
 import 'package:vim/widgets/atoms/standard_list.dart';
 import 'package:vim/widgets/molecules/simple_card.dart';
-import 'package:vim/widgets/views/onboarding_view.dart';
 
 class CreateEquipmentView extends StatefulWidget {
   final Equipment? equipment;
@@ -20,9 +20,9 @@ class _CreateEquipmentViewState extends State<CreateEquipmentView> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
   String? _name;
-  double? _baseWeight = 0;
-  double? _weightIncrement = 0;
-  double _loadFactor = 1;
+  num? _baseWeight = 0;
+  num? _weightIncrement = 0;
+  num _loadFactor = 1;
 
   @override
   void initState() {
@@ -142,7 +142,7 @@ class _CreateEquipmentViewState extends State<CreateEquipmentView> {
                     },
                   ),
                   SliderFormField(
-                    value: _loadFactor,
+                    value: _loadFactor.toDouble(),
                     onChanged: (loadFactor) => setState(() {
                       _loadFactor = loadFactor;
                     }),

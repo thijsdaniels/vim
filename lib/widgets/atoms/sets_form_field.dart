@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:vim/models/exercise/set.dart';
 import 'package:vim/widgets/atoms/number_form_field.dart';
 import 'package:vim/widgets/atoms/standard_list.dart';
 import 'package:vim/widgets/molecules/simple_card.dart';
 
 class SetsFormFields extends StatefulWidget {
-  final List<({Key key, num? repetitions, num? weight})> sets;
-  final void Function(List<({Key key, num? repetitions, num? weight})> sets)
-      onChanged;
+  final List<SetRecord> sets;
+  final void Function(List<SetRecord> sets) onChanged;
 
   const SetsFormFields({
     super.key,
@@ -84,8 +84,8 @@ class _SetsFormFieldsState extends State<SetsFormFields> {
 }
 
 class SetFormFields extends StatefulWidget {
-  final ({Key key, num? repetitions, num? weight}) set;
-  final void Function(({Key key, num? repetitions, num? weight}) set) onChanged;
+  final SetRecord set;
+  final void Function(SetRecord set) onChanged;
 
   const SetFormFields({
     super.key,
