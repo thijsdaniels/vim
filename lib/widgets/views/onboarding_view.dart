@@ -76,7 +76,6 @@ class _OnboardingViewState extends State<OnboardingView> {
         ],
       ),
       body: StandardList(
-        spacing: 16,
         children: [
           const ProfileSettings(),
           BodySettings(user: _user, onChanged: onUserChanged),

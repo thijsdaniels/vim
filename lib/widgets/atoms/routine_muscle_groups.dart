@@ -37,7 +37,7 @@ class RoutineMuscleGroups extends StatelessWidget {
                 secondary: secondary,
               ),
             ),
-            const SizedBox(width: 12),
+            const SizedBox(width: 16),
             Flexible(
               child: MuscleGroupsSurface(
                 view: MuscleMapView.back,

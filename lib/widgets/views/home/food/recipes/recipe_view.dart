@@ -119,6 +119,7 @@ class RecipeView extends StatelessWidget {
                 child: StandardList(
                   physics: const NeverScrollableScrollPhysics(),
                   padding: EdgeInsets.zero,
+                  spacing: 12,
                   itemCount: recipe.ingredientAmounts.length,
                   itemBuilder: (context, index) {
                     var ingredientAmount = recipe.ingredientAmounts[index];

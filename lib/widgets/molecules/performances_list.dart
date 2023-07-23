@@ -39,6 +39,7 @@ class PerformancesList extends StatelessWidget {
     return StandardList(
       physics: physics,
       padding: padding,
+      spacing: 12,
       itemCount: performances.length,
       itemBuilder: (context, index) {
         Performance performance = performances[index];

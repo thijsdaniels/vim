@@ -37,6 +37,7 @@ class ConsumptionsList extends StatelessWidget {
     return StandardList(
       physics: physics,
       padding: padding,
+      spacing: 12,
       itemCount: consumptions.length,
       itemBuilder: (context, index) {
         Consumption consumption = consumptions[index];

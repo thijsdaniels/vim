@@ -6,7 +6,7 @@ import 'package:vim/services/routines_collection.dart';
 import 'package:vim/widgets/atoms/routine_muscle_groups.dart';
 import 'package:vim/widgets/atoms/standard_list.dart';
 import 'package:vim/widgets/atoms/stats_table.dart';
-import 'package:vim/widgets/molecules/exercises_list.dart';
+import 'package:vim/widgets/molecules/routine_exercises_list.dart';
 import 'package:vim/widgets/molecules/performances_list.dart';
 import 'package:vim/widgets/molecules/simple_card.dart';
 import 'package:vim/widgets/molecules/with_confirmation_dialog.dart';
@@ -98,18 +98,20 @@ class RoutineView extends StatelessWidget {
                     /// to show search results, I should just open the
                     /// `SearchAnchor` directly from here.
                     onPressed: () async {
-                      Exercise exercise = await Navigator.of(context).push(
+                      Exercise? exercise = await Navigator.of(context).push(
                         MaterialPageRoute(
                           builder: (context) => const SelectExerciseView(),
                         ),
                       );
 
-                      routine.exerciseReferences.add(exercise.reference!);
-                      await RoutinesCollection.of(context).update(routine);
+                      if (exercise != null) {
+                        routine.exerciseReferences.add(exercise.reference!);
+                        await RoutinesCollection.of(context).update(routine);
+                      }
                     },
                   )
                 ],
-                child: ExercisesList(
+                child: RoutineExercisesList(
                   exerciseReferences: routine.exerciseReferences,
                   onChanged: (exerciseReferences) {
                     routine.exerciseReferences = exerciseReferences;

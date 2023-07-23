@@ -179,6 +179,7 @@ class _PerformanceViewState extends State<PerformanceView> {
                   child: StandardList(
                     physics: const NeverScrollableScrollPhysics(),
                     padding: EdgeInsets.zero,
+                    spacing: 12,
                     children: performance.sets
                         .asMap()
                         .entries

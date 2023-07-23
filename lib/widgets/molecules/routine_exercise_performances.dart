@@ -32,6 +32,7 @@ class RoutineExercisePerformances extends StatelessWidget {
             return StandardList(
               physics: const NeverScrollableScrollPhysics(),
               padding: EdgeInsets.zero,
+              spacing: 12,
               itemCount:
                   routinePerformance.routine.snapshot.exerciseReferences.length,
               itemBuilder: (context, index) {

@@ -17,7 +17,6 @@ class LogProgressView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return const StandardList(
-      spacing: 16,
       children: [
         CaloriesCard(),
         MacrosCard(),
