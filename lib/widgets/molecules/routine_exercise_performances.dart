@@ -72,7 +72,11 @@ class RoutineExercisePerformances extends StatelessWidget {
                         );
 
                         if (edited != null) {
-                          routinePerformance.updatePerformance(edited);
+                          if (edited.reference != null) {
+                            routinePerformance.updatePerformance(edited);
+                          } else {
+                            routinePerformance.addPerformance(index, edited);
+                          }
                         }
                       },
                       actions: Row(

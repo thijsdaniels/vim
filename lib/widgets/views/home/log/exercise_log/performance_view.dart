@@ -115,32 +115,44 @@ class _PerformanceViewState extends State<PerformanceView> {
                 title: 'Details',
                 child: FutureBuilder(
                   future: Future.value(performance.calories),
-                  builder: (context, snapshot) => StatsTable(
-                    children: [
-                      if (performance is QuickPerformance)
-                        StatsRow(
-                          'Name',
-                          performance.name,
-                        ),
-                      if (performance is ExercisePerformance)
-                        StatsRow(
-                          'Exercise',
-                          performance.exercise.snapshot.name,
-                        ),
-                      if (performance is RoutinePerformance)
-                        StatsRow(
-                          'Routine',
-                          performance.routine.snapshot.name,
-                        ),
-                      StatsRow(
-                        'Calories',
-                        '${snapshot.data?.round()} cal',
-                      ),
-                      StatsRow(
-                        'Performed At',
-                        performance.timestamp.toDate().toDateTimeString(),
-                      ),
-                    ],
+                  builder: (context, calories) => StreamBuilder(
+                    stream: performance is ExercisePerformance
+                        ? performance.exercise.snapshot.equipment
+                        : null,
+                    builder: (context, equipment) {
+                      return StatsTable(
+                        children: [
+                          if (performance is QuickPerformance)
+                            StatsRow(
+                              'Name',
+                              performance.name,
+                            ),
+                          if (performance is ExercisePerformance) ...[
+                            StatsRow(
+                              'Exercise',
+                              performance.exercise.snapshot.name,
+                            ),
+                            StatsRow(
+                              'Equipment',
+                              equipment.data?.name,
+                            )
+                          ],
+                          if (performance is RoutinePerformance)
+                            StatsRow(
+                              'Routine',
+                              performance.routine.snapshot.name,
+                            ),
+                          StatsRow(
+                            'Calories',
+                            '${calories.data?.round()} cal',
+                          ),
+                          StatsRow(
+                            'Performed At',
+                            performance.timestamp.toDate().toDateTimeString(),
+                          ),
+                        ],
+                      );
+                    },
                   ),
                 ),
               ),
