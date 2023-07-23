@@ -13,13 +13,13 @@ class User extends Document {
   Target target;
   double neat;
 
-  double get _unadjustedTargetConsumption =>
+  double get targetConsumption =>
       (body.bmr + neat) * (1 + target.consumption.surplus);
 
-  // TODO: Shouldn't I divide by `targetConsumption(performances)`?
+  // TODO: Shouldn't I divide by `adjustedTargetConsumption(performances)`?
   double get targetProteinConsumption =>
-      Proteins.calories(target.consumption.proteins * body.weight) /
-      _unadjustedTargetConsumption;
+      Proteins.calories(target.consumption.proteins * body.weight.kilograms) /
+      targetConsumption;
 
   double get targetCarbohydrateConsumption =>
       1 - target.consumption.fats - targetProteinConsumption;
@@ -60,9 +60,10 @@ class User extends Document {
     };
   }
 
-  Future<double> targetConsumption(List<Performance> performances) async {
+  Future<double> adjustedTargetConsumption(
+      List<Performance> performances) async {
     return target.performance.adjustTargetConsumption
-        ? _unadjustedTargetConsumption + await performances.calories
-        : _unadjustedTargetConsumption;
+        ? targetConsumption + await performances.calories
+        : targetConsumption;
   }
 }

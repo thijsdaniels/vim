@@ -24,13 +24,18 @@ class NutritionTable extends StatelessWidget {
         NutritionRow('Sugars', nutrition?.carbohydrates.sugars, indented: true),
         NutritionRow('Fibers', nutrition?.carbohydrates.fibers, indented: true),
         NutritionRow('Proteins', nutrition?.proteins.total),
-        NutritionRow('Minerals', null),
-        NutritionRow('Calcium', nutrition?.minerals.calcium, indented: true),
+        NutritionRow('Minerals', null, unit: null),
         NutritionRow('Sodium', nutrition?.minerals.sodium, indented: true),
-        NutritionRow('Vitamins', null),
-        NutritionRow('A', nutrition?.vitamins.a, indented: true),
-        NutritionRow('B1', nutrition?.vitamins.b1, indented: true),
-        NutritionRow('B2', nutrition?.vitamins.b2, indented: true),
+        NutritionRow('Calcium', nutrition?.minerals.calcium, indented: true),
+        NutritionRow(
+          'Potassium',
+          nutrition?.minerals.potassium,
+          indented: true,
+        ),
+        // NutritionRow('Vitamins', null, unit: null),
+        // NutritionRow('A', nutrition?.vitamins.a, indented: true),
+        // NutritionRow('B1', nutrition?.vitamins.b1, indented: true),
+        // NutritionRow('B2', nutrition?.vitamins.b2, indented: true),
         NutritionRow('Water', nutrition?.water),
         NutritionRow('Alcohol', nutrition?.alcohol),
         NutritionRow('Caffeine', nutrition?.caffeine),
@@ -48,7 +53,7 @@ class NutritionRow extends StatsRow {
     this.indented = false,
   }) : super(
           label,
-          (amount ?? 0).decimals(2).toString(),
+          amount?.decimals(2).toString(),
         );
 
   final bool indented;
@@ -63,9 +68,9 @@ class NutritionRow extends StatsRow {
         ],
       ),
       const SizedBox(width: 32),
-      Text(value!, textAlign: TextAlign.end),
+      Text(value ?? (unit != null ? '--' : ''), textAlign: TextAlign.end),
       const SizedBox(width: 4),
-      SecondaryText(unit!),
+      SecondaryText(unit ?? ''),
     ];
   }
 }

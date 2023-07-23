@@ -15,11 +15,6 @@ extension Sets on List<Set> {
     return map((set) => set.toMap()).toList();
   }
 
-  num get calories {
-    return map((set) => set.calories)
-        .reduce((total, calories) => total + calories);
-  }
-
   num get repetitions {
     return map((set) => set.repetitions)
         .reduce((total, repetitions) => total + repetitions);

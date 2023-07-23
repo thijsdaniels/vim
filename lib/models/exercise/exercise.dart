@@ -24,7 +24,7 @@ class Exercise extends Document {
   ExerciseType type;
   String name;
   DocumentReference? equipmentReference;
-  double bodyweightFactor;
+  num bodyweightFactor;
   bool isUnilateral;
   ({
     MuscleGroup? primary,

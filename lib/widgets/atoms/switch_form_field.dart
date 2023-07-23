@@ -3,13 +3,13 @@ import 'package:flutter/material.dart';
 class SwitchFormField extends StatelessWidget {
   final Widget label;
   final bool value;
-  final Function(bool value) onChanged;
+  final Function(bool value)? onChanged;
 
   const SwitchFormField({
     super.key,
     required this.label,
     required this.value,
-    required this.onChanged,
+    this.onChanged,
   });
 
   @override

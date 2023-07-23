@@ -37,7 +37,9 @@ class StatsRow extends TableRow {
       const SizedBox(width: 32),
       Row(
         children: [
-          value != null ? Text(value!) : const SecondaryText('--'),
+          value != null
+              ? Text(value!, overflow: TextOverflow.ellipsis)
+              : const SecondaryText('--'),
           if (value != null && unit != null) ...[
             const SizedBox(width: 4),
             SecondaryText(unit!),

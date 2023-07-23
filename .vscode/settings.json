@@ -1,13 +1,14 @@
 {
 	"conventionalCommits.scopes": [
-		"log",
-		"recipes",
 		"theme",
+		"auth",
 		"dashboard",
+		"consumptions",
 		"ingredients",
+		"recipes",
+		"performances",
 		"exercises",
 		"routines",
-		"auth",
 		"settings"
 	]
 }

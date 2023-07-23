@@ -111,6 +111,9 @@ var theme = ({
         border: OutlineInputBorder(),
       ),
       cardColor: Colors.black,
+      sliderTheme: SliderThemeData(
+        overlayShape: SliderComponentShape.noOverlay,
+      ),
     );
 
 /// TODO: I'm currently setting an onboardingCompleted state just to make the

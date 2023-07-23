@@ -71,17 +71,17 @@ class EquipmentView extends StatelessWidget {
                 child: StatsTable(
                   children: [
                     StatsRow('Name', equipment.name),
-                    StatsRow(
-                      'Base Weight',
-                      equipment.baseWeight.kilograms.toString(),
-                      unit: 'kg',
-                    ),
+                    // StatsRow(
+                    //   'Base Weight',
+                    //   equipment.baseWeight.kilograms.toString(),
+                    //   unit: 'kg',
+                    // ),
                     StatsRow(
                       'Weight Increment',
                       equipment.weightIncrement.kilograms.toString(),
                       unit: 'kg',
                     ),
-                    StatsRow('Load Factor', equipment.loadFactor.toString()),
+                    // StatsRow('Load Factor', equipment.loadFactor.toString()),
                   ],
                 ),
               ),

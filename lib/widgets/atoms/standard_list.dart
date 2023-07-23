@@ -19,7 +19,7 @@ class StandardList extends StatelessWidget {
 
     /// TODO: Default to `EdgeInsets.zero`.
     this.padding = const EdgeInsets.all(16),
-    this.spacing = 12,
+    this.spacing = 16,
   }) : assert(itemCount != null && itemBuilder != null || children != null);
 
   @override

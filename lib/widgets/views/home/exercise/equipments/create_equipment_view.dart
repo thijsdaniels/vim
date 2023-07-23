@@ -3,7 +3,6 @@ import 'package:vim/models/exercise/equipment.dart';
 import 'package:vim/models/mass.dart';
 import 'package:vim/services/equipments_collection.dart';
 import 'package:vim/widgets/atoms/number_form_field.dart';
-import 'package:vim/widgets/atoms/slider_form_field.dart';
 import 'package:vim/widgets/atoms/standard_list.dart';
 import 'package:vim/widgets/molecules/simple_card.dart';
 
@@ -20,9 +19,9 @@ class _CreateEquipmentViewState extends State<CreateEquipmentView> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
   String? _name;
-  num? _baseWeight = 0;
+  // num? _baseWeight = 0;
   num? _weightIncrement = 0;
-  num _loadFactor = 1;
+  // num _loadFactor = 1;
 
   @override
   void initState() {
@@ -32,9 +31,9 @@ class _CreateEquipmentViewState extends State<CreateEquipmentView> {
 
     if (equipment != null) {
       _name = equipment.name;
-      _baseWeight = equipment.baseWeight.kilograms;
+      // _baseWeight = equipment.baseWeight.kilograms;
       _weightIncrement = equipment.weightIncrement.kilograms;
-      _loadFactor = equipment.loadFactor;
+      // _loadFactor = equipment.loadFactor;
     }
   }
 
@@ -60,17 +59,17 @@ class _CreateEquipmentViewState extends State<CreateEquipmentView> {
 
                 if (equipment != null) {
                   equipment.name = _name!;
-                  equipment.baseWeight = Mass.kilograms(_baseWeight!);
+                  // equipment.baseWeight = Mass.kilograms(_baseWeight!);
                   equipment.weightIncrement = Mass.kilograms(_weightIncrement!);
-                  equipment.loadFactor = _loadFactor;
+                  // equipment.loadFactor = _loadFactor;
 
                   EquipmentsCollection.of(context).update(equipment);
                 } else {
                   EquipmentsCollection.of(context).create(Equipment(
                     name: _name!,
-                    baseWeight: Mass.kilograms(_baseWeight!),
+                    // baseWeight: Mass.kilograms(_baseWeight!),
                     weightIncrement: Mass.kilograms(_weightIncrement!),
-                    loadFactor: _loadFactor,
+                    // loadFactor: _loadFactor,
                   ));
                 }
 
@@ -109,22 +108,22 @@ class _CreateEquipmentViewState extends State<CreateEquipmentView> {
                       return null;
                     },
                   ),
-                  NumberFormField(
-                    initialValue: _baseWeight,
-                    onChanged: (baseWeight) => setState(() {
-                      _baseWeight = baseWeight?.toDouble();
-                    }),
-                    decoration: const InputDecoration(
-                      labelText: 'Base Weight',
-                    ),
-                    textInputAction: TextInputAction.next,
-                    validator: (value) {
-                      if (value == null) {
-                        return 'Please enter a base weight.';
-                      }
-                      return null;
-                    },
-                  ),
+                  // NumberFormField(
+                  //   initialValue: _baseWeight,
+                  //   onChanged: (baseWeight) => setState(() {
+                  //     _baseWeight = baseWeight?.toDouble();
+                  //   }),
+                  //   decoration: const InputDecoration(
+                  //     labelText: 'Base Weight',
+                  //   ),
+                  //   textInputAction: TextInputAction.next,
+                  //   validator: (value) {
+                  //     if (value == null) {
+                  //       return 'Please enter a base weight.';
+                  //     }
+                  //     return null;
+                  //   },
+                  // ),
                   NumberFormField(
                     initialValue: _weightIncrement,
                     onChanged: (weightIncrement) => setState(() {
@@ -138,19 +137,24 @@ class _CreateEquipmentViewState extends State<CreateEquipmentView> {
                       if (value == null) {
                         return 'Please enter a weight increment.';
                       }
+
+                      if (value <= 0) {
+                        return 'Please enter a positive weight increment.';
+                      }
+
                       return null;
                     },
                   ),
-                  SliderFormField(
-                    value: _loadFactor.toDouble(),
-                    onChanged: (loadFactor) => setState(() {
-                      _loadFactor = loadFactor;
-                    }),
-                    label: const Text('Load Factor'),
-                    max: 2.0,
-                    divisions: 40,
-                    valueLabel: _loadFactor.toStringAsFixed(2),
-                  ),
+                  // SliderFormField(
+                  //   value: _loadFactor.toDouble(),
+                  //   onChanged: (loadFactor) => setState(() {
+                  //     _loadFactor = loadFactor;
+                  //   }),
+                  //   label: const Text('Load Factor'),
+                  //   max: 2.0,
+                  //   divisions: 40,
+                  //   valueLabel: _loadFactor.toStringAsFixed(2),
+                  // ),
                 ],
               ),
             ),

@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:vim/extensions/num.dart';
 import 'package:vim/extensions/string.dart';
+import 'package:vim/models/distance.dart';
+import 'package:vim/models/mass.dart';
 import 'package:vim/models/settings_model.dart';
 import 'package:vim/models/user/body.dart';
 import 'package:vim/models/user/target.dart';
@@ -34,16 +36,21 @@ class OnboardingView extends StatefulWidget {
 class _OnboardingViewState extends State<OnboardingView> {
   User _user = User(
     body: Body(
-      weight: 70,
+      weight: const Mass.kilograms(70),
+      length: const Distance.centimeters(175),
       composition: BodyComposition(
         lean: 0.8,
         fat: 0.15,
         bone: 0.5,
       ),
     ),
-    neat: 400,
+    neat: 592.35,
     target: Target(
-      consumption: ConsumptionTarget(surplus: 0, proteins: 1.6, fats: 0.25),
+      consumption: ConsumptionTarget(
+        surplus: 0,
+        proteins: 1.6,
+        fats: 0.25,
+      ),
       performance: PerformanceTarget(
         calories: 400,
         adjustTargetConsumption: true,
@@ -202,10 +209,10 @@ class BodySettings extends StatelessWidget {
               label: Text('Length'),
               hintText: 'Centimeters',
             ),
-            initialValue: user.body.length,
+            initialValue: user.body.length?.centimeters,
             onChanged: (value) {
               if (value != null) {
-                user.body.length = value.toInt();
+                user.body.length = Distance.centimeters(value.toInt());
                 onChanged(user);
               }
             },
@@ -216,10 +223,10 @@ class BodySettings extends StatelessWidget {
               label: Text('Weight'),
               hintText: 'Kilograms',
             ),
-            initialValue: user.body.weight,
+            initialValue: user.body.weight.kilograms,
             onChanged: (value) {
               if (value != null) {
-                user.body.weight = value.toDouble();
+                user.body.weight = Mass.kilograms(value.toDouble());
                 onChanged(user);
               }
             },
@@ -374,7 +381,6 @@ class ConsumptionSettings extends StatelessWidget {
                     user.targetProteinConsumption -
                     user.target.consumption.fats)
                 .clamp(0, 1),
-            enabled: false,
           ),
           const SizedBox(height: 16),
           SliderFormField(

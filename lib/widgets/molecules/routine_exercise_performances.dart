@@ -2,14 +2,10 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:vim/models/exercise/endurance_exercise_performance.dart';
 import 'package:vim/models/exercise/exercise.dart';
 import 'package:vim/models/exercise/exercise_performance.dart';
-import 'package:vim/models/exercise/manual_exercise_performance.dart';
-import 'package:vim/models/exercise/resistance_exercise_performance.dart';
 import 'package:vim/models/exercise/routine_performance.dart';
-import 'package:vim/models/exercise/set.dart';
-import 'package:vim/services/performances_collection_group.dart';
+import 'package:vim/models/user/user.dart';
 import 'package:vim/widgets/atoms/exercise_icon.dart';
 import 'package:vim/widgets/atoms/standard_list.dart';
 import 'package:vim/widgets/molecules/list_surface.dart';
@@ -56,60 +52,40 @@ class RoutineExercisePerformances extends StatelessWidget {
                 );
 
                 return StreamBuilder(
-                  stream: exercise != null
-                      ? PerformancesCollectionGroup.instance.forExercise(
-                          exercise,
-                          before: routinePerformance.timestamp,
-                          limit: 1,
-                        )
-                      : null,
-                  builder: (context, snapshot) {
-                    ExercisePerformance? latest =
-                        snapshot.data != null && snapshot.data!.isNotEmpty
-                            ? snapshot.data!.first
-                            : null;
-
-                    return StreamBuilder(
-                      stream: exercise?.equipment,
-                      builder: (context, equipment) {
-                        return ListSurface(
-                          elevation: 4,
-                          icon: ExerciseIcon(exercise, elevation: 8),
-                          title: exercise?.name ?? '',
-                          subtitle: equipment.data?.name,
-                          onTap: performance != null
-                              ? () async {
-                                  ExercisePerformance? edited =
-                                      await Navigator.of(context).push(
-                                    MaterialPageRoute(
-                                      builder: (context) =>
-                                          CreateExercisePerformanceView(
-                                        exercisePerformance: performance,
-                                      ),
-                                    ),
-                                  );
-
-                                  if (edited != null) {
-                                    routinePerformance
-                                        .updatePerformance(edited);
-                                  }
-                                }
-                              : null,
-                          actions: Row(
-                            mainAxisSize: MainAxisSize.min,
-                            children: [
-                              if (exercise != null)
-                                PerformedCheckbox(
-                                  index: index,
-                                  exercise: exercise,
-                                  exercisePerformance: performance,
-                                  previousExercisePerformance: latest,
-                                  routinePerformance: routinePerformance,
-                                ),
-                            ],
+                  stream: exercise?.equipment,
+                  builder: (context, equipment) {
+                    return ListSurface(
+                      elevation: 4,
+                      icon: ExerciseIcon(exercise, elevation: 8),
+                      title: exercise?.name ?? '',
+                      subtitle: equipment.data?.name,
+                      onTap: () async {
+                        ExercisePerformance? edited =
+                            await Navigator.of(context).push(
+                          MaterialPageRoute(
+                            builder: (context) => CreateExercisePerformanceView(
+                              exercise: performance == null ? exercise : null,
+                              exercisePerformance: performance,
+                            ),
                           ),
                         );
+
+                        if (edited != null) {
+                          routinePerformance.updatePerformance(edited);
+                        }
                       },
+                      actions: Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          if (exercise != null)
+                            PerformedCheckbox(
+                              routinePerformance: routinePerformance,
+                              index: index,
+                              exercise: exercise,
+                              exercisePerformance: performance,
+                            ),
+                        ],
+                      ),
                     );
                   },
                 );
@@ -125,66 +101,40 @@ class RoutineExercisePerformances extends StatelessWidget {
 class PerformedCheckbox extends StatelessWidget {
   const PerformedCheckbox({
     super.key,
+    required this.routinePerformance,
     required this.index,
     required this.exercise,
     required this.exercisePerformance,
-    required this.previousExercisePerformance,
-    required this.routinePerformance,
   });
 
+  final RoutinePerformance routinePerformance;
   final int index;
   final Exercise exercise;
   final ExercisePerformance? exercisePerformance;
-  final ExercisePerformance? previousExercisePerformance;
-  final RoutinePerformance routinePerformance;
 
   @override
   Widget build(BuildContext context) {
-    return Checkbox(
-      value: exercisePerformance != null,
-      onChanged: (value) async {
-        if (value!) {
-          ExercisePerformance exercisePerformance;
+    return Consumer<User>(
+      builder: (context, user, _) => Checkbox(
+        value: exercisePerformance != null,
+        onChanged: (value) async {
+          if (value!) {
+            ExercisePerformance? performance = await Navigator.of(context).push(
+              MaterialPageRoute(
+                builder: (context) => CreateExercisePerformanceView(
+                  exercise: exercise,
+                ),
+              ),
+            );
 
-          switch (exercise.type) {
-            case ExerciseType.manual:
-              exercisePerformance = ManualExercisePerformance(
-                timestamp: Timestamp.now(),
-                exercise: exercise.toSnapshot(),
-                calories: await previousExercisePerformance?.calories ?? 0,
-              );
-              break;
-            case ExerciseType.resistance:
-              exercisePerformance = EnduranceExercisePerformance(
-                timestamp: Timestamp.now(),
-                exercise: exercise.toSnapshot(),
-                duration: (previousExercisePerformance
-                            as EnduranceExercisePerformance?)
-                        ?.duration ??
-                    Duration.zero,
-                watts: (previousExercisePerformance
-                            as EnduranceExercisePerformance?)
-                        ?.watts ??
-                    0,
-              );
-              break;
-            case ExerciseType.weights:
-              exercisePerformance = ResistanceExercisePerformance(
-                timestamp: Timestamp.now(),
-                exercise: exercise.toSnapshot(),
-                sets: (previousExercisePerformance
-                            as ResistanceExercisePerformance?)
-                        ?.sets ??
-                    [const Set(weight: 0, repetitions: 0)],
-              );
-              break;
+            if (performance != null) {
+              routinePerformance.addPerformance(index, performance);
+            }
+          } else {
+            routinePerformance.deletePerformance(exercisePerformance!);
           }
-
-          routinePerformance.addPerformance(index, exercisePerformance);
-        } else {
-          routinePerformance.deletePerformance(exercisePerformance!);
-        }
-      },
+        },
+      ),
     );
   }
 }

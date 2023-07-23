@@ -6,14 +6,14 @@ import 'package:vim/models/mass.dart';
 /// and weight increment.
 class Equipment extends Document {
   String name;
-  Mass baseWeight;
+  // Mass baseWeight;
   Mass weightIncrement;
-  num loadFactor;
+  // num loadFactor;
 
   Equipment({
     required this.name,
-    this.baseWeight = const Mass.kilograms(0),
-    this.loadFactor = 1,
+    // this.baseWeight = const Mass.kilograms(0),
+    // this.loadFactor = 1,
     this.weightIncrement = const Mass.kilograms(0),
   });
 
@@ -31,9 +31,9 @@ class Equipment extends Document {
   factory Equipment.fromMap(Map<String, dynamic> map) {
     return Equipment(
       name: map['name'],
-      baseWeight: Mass.fromMap(map['baseWeight']),
+      // baseWeight: Mass.fromMap(map['baseWeight']),
       weightIncrement: Mass.fromMap(map['weightIncrement']),
-      loadFactor: map['loadFactor'],
+      // loadFactor: map['loadFactor'],
     );
   }
 
@@ -41,9 +41,9 @@ class Equipment extends Document {
   Map<String, dynamic> toMap() {
     return {
       'name': name,
-      'baseWeight': baseWeight.toMap(),
+      // 'baseWeight': baseWeight.toMap(),
       'weightIncrement': weightIncrement.toMap(),
-      'loadFactor': loadFactor,
+      // 'loadFactor': loadFactor,
     };
   }
 }

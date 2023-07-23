@@ -1,26 +1,25 @@
 import 'package:flutter/material.dart';
 import 'package:vim/models/model.dart';
 
-typedef SetRecord = ({Key key, num? weight, num? repetitions});
+typedef SetRecord = ({
+  Key key,
+  num? weight,
+  num? repetitions,
+});
 
 class Set extends Model {
-  final num repetitions;
   final num weight;
-
-  /// This calculation is derived from the values presented by the MyWellness
-  /// app developed by TechnoGym. It is undoubtedly inaccuracte, but it is a
-  /// decent starting point if nothing else.
-  num get calories => 5 + repetitions * 0.05 * weight * 0.225;
+  final num repetitions;
 
   const Set({
-    required this.repetitions,
     required this.weight,
+    required this.repetitions,
   });
 
   static Set fromMap(Map<String, dynamic> map) {
     return Set(
-      repetitions: map['repetitions'],
       weight: map['weight'],
+      repetitions: map['repetitions'],
     );
   }
 
@@ -34,8 +33,8 @@ class Set extends Model {
   @override
   Map<String, dynamic> toMap() {
     return {
-      'repetitions': repetitions,
       'weight': weight,
+      'repetitions': repetitions,
     };
   }
 }
@@ -46,28 +45,28 @@ class Set extends Model {
 // class SetInput extends Model {
 //   num? repetitions;
 //   num? weight;
-
+//
 //   SetInput({
 //     this.repetitions,
 //     this.weight,
 //   });
-
+//
 //   factory SetInput.fromModel(Set set) {
 //     return SetInput(
 //       repetitions: set.repetitions,
 //       weight: set.weight,
 //     );
 //   }
-
+//
 //   Set toModel() {
 //     assert(repetitions != null && weight != null);
-
+//
 //     return Set(
 //       repetitions: repetitions!,
 //       weight: weight!,
 //     );
 //   }
-
+//
 //   @override
 //   Map<String, dynamic> toMap() {
 //     return {

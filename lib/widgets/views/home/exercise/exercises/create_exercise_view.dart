@@ -27,7 +27,7 @@ class _CreateExerciseViewState extends State<CreateExerciseView> {
   String? _name;
   ExerciseType? _type;
   DocumentReference? _equipmentReference;
-  double _bodyweightFactor = 0;
+  num _bodyweightFactor = 0;
   bool _isUnilateral = false;
   MuscleGroup? _primaryMuscleGroup;
   List<MuscleGroup> _secondaryMuscleGroups = [];
@@ -129,7 +129,6 @@ class _CreateExerciseViewState extends State<CreateExerciseView> {
                       return null;
                     },
                   ),
-                  const SizedBox(height: 16),
                   ExerciseTypeDropdown(
                     value: _type,
                     onChanged: (type) => setState(() {
@@ -139,58 +138,59 @@ class _CreateExerciseViewState extends State<CreateExerciseView> {
                 ],
               ),
             ),
-            SimpleCard(
-              title: 'Method',
-              child: StandardList(
-                padding: EdgeInsets.zero,
-                physics: const NeverScrollableScrollPhysics(),
-                children: [
-                  StreamBuilder(
-                    stream: EquipmentsCollectionGroup.instance.all(),
-                    builder: (context, equipments) {
-                      return DropdownButtonFormField<Equipment>(
-                        decoration: const InputDecoration(
-                          label: Text('Equipment'),
-                        ),
-                        items: (equipments.data ?? [])
-                            .map((equipment) => DropdownMenuItem<Equipment>(
-                                  value: equipment,
-                                  child: Text(equipment.name),
-                                ))
-                            .toList(),
-                        value: (equipments.data ?? [])
-                            .where((equipment) =>
-                                equipment.reference?.path ==
-                                _equipmentReference?.path)
-                            .firstOrNull,
-                        onChanged: (equipment) {
-                          setState(() {
-                            _equipmentReference = equipment?.reference;
-                          });
-                        },
-                      );
-                    },
-                  ),
-                  SliderFormField(
-                    value: _bodyweightFactor,
-                    onChanged: (bodyweightFactor) => setState(() {
-                      _bodyweightFactor = bodyweightFactor;
-                    }),
-                    label: const Text('Bodyweight Factor'),
-                    divisions: 20,
-                    valueLabel:
-                        '${(_bodyweightFactor * 100).round().toString()}%',
-                  ),
-                  SwitchFormField(
-                    value: _isUnilateral,
-                    onChanged: (isUnilateral) => setState(() {
-                      _isUnilateral = isUnilateral;
-                    }),
-                    label: const Text('Unilateral'),
-                  ),
-                ],
+            if (_type == ExerciseType.weights)
+              SimpleCard(
+                title: 'Method',
+                child: StandardList(
+                  padding: EdgeInsets.zero,
+                  physics: const NeverScrollableScrollPhysics(),
+                  children: [
+                    StreamBuilder(
+                      stream: EquipmentsCollectionGroup.instance.all(),
+                      builder: (context, equipments) {
+                        return DropdownButtonFormField<Equipment>(
+                          decoration: const InputDecoration(
+                            label: Text('Equipment'),
+                          ),
+                          items: (equipments.data ?? [])
+                              .map((equipment) => DropdownMenuItem<Equipment>(
+                                    value: equipment,
+                                    child: Text(equipment.name),
+                                  ))
+                              .toList(),
+                          value: (equipments.data ?? [])
+                              .where((equipment) =>
+                                  equipment.reference?.path ==
+                                  _equipmentReference?.path)
+                              .firstOrNull,
+                          onChanged: (equipment) {
+                            setState(() {
+                              _equipmentReference = equipment?.reference;
+                            });
+                          },
+                        );
+                      },
+                    ),
+                    SliderFormField(
+                      value: _bodyweightFactor.toDouble(),
+                      onChanged: (bodyweightFactor) => setState(() {
+                        _bodyweightFactor = bodyweightFactor;
+                      }),
+                      label: const Text('Bodyweight'),
+                      divisions: 20,
+                      valueLabel:
+                          '${(_bodyweightFactor * 100).round().toString()}%',
+                    ),
+                    SwitchFormField(
+                      value: _isUnilateral,
+                      onChanged: (isUnilateral) => setState(() {
+                        _isUnilateral = isUnilateral;
+                      }),
+                      label: const Text('Unilateral'),
+                    ),
+                  ],
+                ),
               ),
-            ),
             SimpleCard(
               title: 'Muscle Groups',
               child: StandardList(
@@ -203,7 +203,6 @@ class _CreateExerciseViewState extends State<CreateExerciseView> {
                       _primaryMuscleGroup = muscleGroup;
                     }),
                   ),
-                  const SizedBox(height: 16),
                   MultiselectDropdown<MuscleGroup>(
                     decoration: const InputDecoration(
                       label: Text('Secondary'),
@@ -252,9 +251,11 @@ class ExerciseTypeDropdown extends StatelessWidget {
           .map(
             (type) => DropdownMenuItem<ExerciseType>(
               value: type,
-              child: Text(
-                type.name.toTitleCase(),
-              ),
+              child: Text(switch (type) {
+                ExerciseType.manual => 'Manual',
+                ExerciseType.resistance => 'Endurance',
+                ExerciseType.weights => 'Resistance',
+              }),
             ),
           )
           .toList(),

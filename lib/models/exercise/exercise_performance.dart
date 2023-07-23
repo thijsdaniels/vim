@@ -1,7 +1,7 @@
+import 'package:vim/models/exercise/endurance_exercise_performance.dart';
 import 'package:vim/models/exercise/exercise.dart';
 import 'package:vim/models/exercise/manual_exercise_performance.dart';
 import 'package:vim/models/exercise/performance.dart';
-import 'package:vim/models/exercise/endurance_exercise_performance.dart';
 import 'package:vim/models/exercise/resistance_exercise_performance.dart';
 
 abstract class ExercisePerformance extends Performance {

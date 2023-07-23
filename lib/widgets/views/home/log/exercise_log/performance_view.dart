@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:vim/extensions/date_time.dart';
+import 'package:vim/models/exercise/endurance_exercise_performance.dart';
 import 'package:vim/models/exercise/exercise_performance.dart';
 import 'package:vim/models/exercise/performance.dart';
 import 'package:vim/models/exercise/quick_performance.dart';
-import 'package:vim/models/exercise/endurance_exercise_performance.dart';
-import 'package:vim/models/exercise/routine_performance.dart';
 import 'package:vim/models/exercise/resistance_exercise_performance.dart';
-import 'package:vim/services/performances_collection_group.dart';
+import 'package:vim/models/exercise/routine_performance.dart';
 import 'package:vim/services/performances_collection.dart';
+import 'package:vim/services/performances_collection_group.dart';
 import 'package:vim/widgets/atoms/exercise_performance_muscle_groups.dart';
 import 'package:vim/widgets/atoms/routine_performance_muscle_groups.dart';
 import 'package:vim/widgets/atoms/standard_list.dart';
@@ -180,10 +180,14 @@ class _PerformanceViewState extends State<PerformanceView> {
                     physics: const NeverScrollableScrollPhysics(),
                     padding: EdgeInsets.zero,
                     children: performance.sets
+                        .asMap()
+                        .entries
                         .map(
-                          (set) => ListSurface(
+                          (entry) => ListSurface(
                             elevation: 4,
-                            title: '${set.repetitions} x ${set.weight} kg',
+                            title: 'Set ${entry.key + 1}',
+                            subtitle:
+                                '${entry.value.repetitions} x ${entry.value.weight} kg',
                           ),
                         )
                         .toList(),

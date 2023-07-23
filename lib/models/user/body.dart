@@ -1,3 +1,5 @@
+import 'package:vim/models/distance.dart';
+import 'package:vim/models/mass.dart';
 import 'package:vim/models/model.dart';
 
 enum Gender {
@@ -8,8 +10,9 @@ enum Gender {
 class Body extends Model {
   Gender? gender;
   int? age;
-  int? length;
-  double weight;
+
+  Distance? length;
+  Mass weight;
   final BodyComposition composition;
 
   Body({
@@ -27,25 +30,26 @@ class Body extends Model {
 
   double get leanMass {
     if (composition.lean != null) {
-      return weight * (composition.lean!);
+      return weight.kilograms * (composition.lean!);
     }
 
     if (composition.fat != null && composition.bone != null) {
-      return weight * (1 - (composition.fat!) - (composition.bone!));
+      return weight.kilograms * (1 - (composition.fat!) - (composition.bone!));
     }
 
     if (gender != null && length != null) {
       switch (gender!) {
         case Gender.male:
-          return 0.407 * weight + 0.267 * length! - 19.2;
+          return 0.407 * weight.kilograms + 0.267 * length!.centimeters - 19.2;
         case Gender.female:
-          return 0.252 * weight + 0.473 * length! - 48.3;
+          return 0.252 * weight.kilograms + 0.473 * length!.centimeters - 48.3;
       }
     }
 
     throw Exception('Unable to determine lean mass.');
   }
 
+  /// Calculates the BMR using the Katch-McArdle formula.
   double get bmr => 370 + (21.6 * leanMass);
 
   static Body fromMap(Map<String, dynamic> map) {
@@ -53,8 +57,8 @@ class Body extends Model {
       age: map['age'],
       gender:
           map['gender'] != null ? Gender.values.byName(map['gender']) : null,
-      length: map['length'],
-      weight: map['weight'],
+      length: map['length'] != null ? Distance.fromMap(map['length']) : null,
+      weight: Mass.fromMap(map['weight']),
       composition: BodyComposition.fromMap(map['composition']),
     );
   }
@@ -64,8 +68,8 @@ class Body extends Model {
     return {
       'age': age,
       'gender': gender?.name,
-      'length': length,
-      'weight': weight,
+      'length': length?.toMap(),
+      'weight': weight.toMap(),
       'composition': composition.toMap(),
     };
   }
@@ -99,33 +103,3 @@ class BodyComposition extends Model {
     };
   }
 }
-
-// Body copyWith({
-//   Gender? gender,
-//   double? age,
-//   double? length,
-//   double? weight,
-//   double? muscle,
-//   double? fat,
-//   double? neat,
-//   double? surplus,
-//   int? exercise,
-//   double? proteinGramsPerKilo,
-//   double? fats,
-//   bool? adjustIntake,
-// }) {
-//   return Body(
-//     gender: gender ?? this.gender,
-//     age: age ?? this.age,
-//     length: length ?? this.length,
-//     weight: weight ?? this.weight,
-//     muscle: muscle ?? this.muscle,
-//     fat: fat ?? this.fat,
-//     neat: neat ?? this.neat,
-//     surplus: surplus ?? this.surplus,
-//     exercise: exercise ?? this.exercise,
-//     proteinGramsPerKilo: proteinGramsPerKilo ?? this.proteinGramsPerKilo,
-//     fats: fats ?? this.fats,
-//     adjustIntake: adjustIntake ?? this.adjustIntake,
-//   );
-// }

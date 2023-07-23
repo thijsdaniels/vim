@@ -3,6 +3,9 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:vim/extensions/num.dart';
 import 'package:vim/extensions/string.dart';
+import 'package:vim/models/distance.dart';
+import 'package:vim/models/food/nutrition.dart';
+import 'package:vim/models/mass.dart';
 import 'package:vim/models/settings_model.dart';
 import 'package:vim/models/user/body.dart';
 import 'package:vim/models/user/user.dart';
@@ -73,7 +76,9 @@ class ProfileSettings extends StatelessWidget {
   Widget build(BuildContext context) {
     return SimpleCard(
       title: 'Profile',
-      child: Column(
+      child: StandardList(
+        padding: EdgeInsets.zero,
+        physics: const NeverScrollableScrollPhysics(),
         children: [
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
@@ -95,7 +100,6 @@ class ProfileSettings extends StatelessWidget {
               ),
             ],
           ),
-          const SizedBox(height: 16),
           TextFormField(
             decoration: const InputDecoration(
               label: Text('Email'),
@@ -103,7 +107,6 @@ class ProfileSettings extends StatelessWidget {
             initialValue: FirebaseAuth.instance.currentUser!.email!,
             enabled: false,
           ),
-          const SizedBox(height: 16),
           TextFormField(
             decoration: const InputDecoration(
               label: Text('Password'),
@@ -132,7 +135,9 @@ class BodySettings extends StatelessWidget {
 
         return SimpleCard(
           title: 'Body',
-          child: Column(
+          child: StandardList(
+            padding: EdgeInsets.zero,
+            physics: const NeverScrollableScrollPhysics(),
             children: [
               DropdownButtonFormField(
                 decoration: const InputDecoration(
@@ -154,7 +159,6 @@ class BodySettings extends StatelessWidget {
                   }
                 },
               ),
-              const SizedBox(height: 16),
               NumberFormField(
                 decoration: const InputDecoration(
                   label: Text('Age'),
@@ -167,35 +171,32 @@ class BodySettings extends StatelessWidget {
                   }
                 },
               ),
-              const SizedBox(height: 16),
               NumberFormField(
                 decoration: const InputDecoration(
                   label: Text('Length'),
                   hintText: 'Centimeters',
                 ),
-                initialValue: user.body.length,
+                initialValue: user.body.length?.centimeters,
                 onChanged: (value) {
                   if (value != null) {
-                    user.body.length = value.toInt();
+                    user.body.length = Distance.centimeters(value.toInt());
                     UsersCollection.instance.update(user);
                   }
                 },
               ),
-              const SizedBox(height: 16),
               NumberFormField(
                 decoration: const InputDecoration(
                   label: Text('Weight'),
                   hintText: 'Kilograms',
                 ),
-                initialValue: user.body.weight,
+                initialValue: user.body.weight.kilograms,
                 onChanged: (value) {
                   if (value != null) {
-                    user.body.weight = value.toDouble();
+                    user.body.weight = Mass.kilograms(value.toDouble());
                     UsersCollection.instance.update(user);
                   }
                 },
               ),
-              const SizedBox(height: 16),
               NumberFormField(
                 decoration: const InputDecoration(
                   label: Text('Lean Mass'),
@@ -211,7 +212,6 @@ class BodySettings extends StatelessWidget {
                   }
                 },
               ),
-              const SizedBox(height: 16),
               NumberFormField(
                 decoration: const InputDecoration(
                   label: Text('Fat Mass'),
@@ -227,7 +227,6 @@ class BodySettings extends StatelessWidget {
                   }
                 },
               ),
-              const SizedBox(height: 16),
               NumberFormField(
                 decoration: const InputDecoration(
                   label: Text('Bone Mass'),
@@ -266,7 +265,9 @@ class PerformanceSettings extends StatelessWidget {
 
         return SimpleCard(
           title: 'Performance',
-          child: Column(
+          child: StandardList(
+            padding: EdgeInsets.zero,
+            physics: const NeverScrollableScrollPhysics(),
             children: [
               NumberFormField(
                 decoration: const InputDecoration(
@@ -280,7 +281,6 @@ class PerformanceSettings extends StatelessWidget {
                   }
                 },
               ),
-              const SizedBox(height: 16),
               NumberFormField(
                 decoration: const InputDecoration(
                   label: Text('Target Exercise'),
@@ -293,7 +293,6 @@ class PerformanceSettings extends StatelessWidget {
                   }
                 },
               ),
-              const SizedBox(height: 16),
               SwitchFormField(
                 label: const Text('Adjust Target Consumption'),
                 value: user.target.performance.adjustTargetConsumption,
@@ -310,6 +309,8 @@ class PerformanceSettings extends StatelessWidget {
   }
 }
 
+/// TODO: Don't save the `User` every time a value changes. Instead, only save
+/// the `User` in the `onChangeEnd` handler of the `SliderFormField`.
 class ConsumptionSettings extends StatelessWidget {
   const ConsumptionSettings({
     super.key,
@@ -323,11 +324,21 @@ class ConsumptionSettings extends StatelessWidget {
           return const CircularProgressIndicator();
         }
 
+        // In grams of protein per kilograms of bodyweight.
+        double maxProteins = ((1 - user.target.consumption.fats) *
+            user.targetConsumption /
+            Proteins.caloriesPerGram /
+            user.body.weight.kilograms);
+
+        // As a fraction of the total target calorie consumption.
+        double maxFats = 1 - user.targetProteinConsumption;
+
         return SimpleCard(
           title: 'Consumption',
-          child: Column(
+          child: StandardList(
+            padding: EdgeInsets.zero,
+            physics: const NeverScrollableScrollPhysics(),
             children: [
-              const SizedBox(height: 16),
               SliderFormField(
                 label: const Text('Surplus'),
                 valueLabel:
@@ -341,7 +352,6 @@ class ConsumptionSettings extends StatelessWidget {
                   UsersCollection.instance.update(user);
                 },
               ),
-              const SizedBox(height: 16),
               SliderFormField(
                 label: const Text('Carbs'),
                 valueLabel:
@@ -352,9 +362,7 @@ class ConsumptionSettings extends StatelessWidget {
                         user.targetProteinConsumption -
                         user.target.consumption.fats)
                     .clamp(0, 1),
-                enabled: false,
               ),
-              const SizedBox(height: 16),
               SliderFormField(
                 label: const Text('Proteins'),
                 valueLabel:
@@ -363,23 +371,25 @@ class ConsumptionSettings extends StatelessWidget {
                 min: 0,
                 max: 3,
                 divisions: 30,
+                secondaryTrackValue: maxProteins.clamp(0, 3),
                 onChanged: (value) {
-                  user.target.consumption.proteins = value.decimals(1);
-                  UsersCollection.instance.update(user);
+                  if (value < maxProteins) {
+                    user.target.consumption.proteins = value.decimals(1);
+                    UsersCollection.instance.update(user);
+                  }
                 },
               ),
-              const SizedBox(height: 16),
               SliderFormField(
                 label: const Text('Fats'),
                 valueLabel: '${(user.target.consumption.fats * 100).round()}%',
                 value: user.target.consumption.fats,
                 divisions: 100,
-                // secondaryTrackValue: (1 - settings.body.carbohydrates - settings.body.proteins).clamp(0, 1),
+                secondaryTrackValue: maxFats.clamp(0, 1),
                 onChanged: (value) {
-                  // if (settings.body.carbohydrates + settings.body.proteins + value <= 1) {
-                  user.target.consumption.fats = value.decimals(2);
-                  UsersCollection.instance.update(user);
-                  // }
+                  if (value < maxFats) {
+                    user.target.consumption.fats = value.decimals(2);
+                    UsersCollection.instance.update(user);
+                  }
                 },
               ),
             ],
@@ -400,7 +410,9 @@ class AppearanceSettings extends StatelessWidget {
     return Consumer<SettingsModel>(
       builder: (context, settings, _) => SimpleCard(
         title: 'Appearance',
-        child: Column(
+        child: StandardList(
+          padding: EdgeInsets.zero,
+          physics: const NeverScrollableScrollPhysics(),
           children: [
             DropdownButtonFormField<ThemeMode>(
               decoration: const InputDecoration(
@@ -421,7 +433,6 @@ class AppearanceSettings extends StatelessWidget {
                 }
               },
             ),
-            const SizedBox(height: 16),
             DropdownButtonFormField<Color>(
               decoration: const InputDecoration(
                 label: Text('Color'),
@@ -445,7 +456,6 @@ class AppearanceSettings extends StatelessWidget {
                 }
               },
             ),
-            const SizedBox(height: 16),
             DropdownButtonFormField<Icons8Style>(
               decoration: const InputDecoration(
                 label: Text('Icon Set'),

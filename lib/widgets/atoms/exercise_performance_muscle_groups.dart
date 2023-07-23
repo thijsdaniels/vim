@@ -23,7 +23,7 @@ class ExercisePerformanceMuscleGroups extends StatelessWidget {
             secondary: performance.exercise.snapshot.muscleGroups.secondary,
           ),
         ),
-        const SizedBox(width: 12),
+        const SizedBox(width: 16),
         Flexible(
           child: MuscleGroupsSurface(
             view: MuscleMapView.back,

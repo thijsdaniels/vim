@@ -52,6 +52,8 @@ class PerformancesList extends StatelessWidget {
             // TODO: Try to change this into Chip widgets.
             subtitle: [
               '${caloriesSnapshot.data?.round()} cal',
+
+              /// TODO: Display the `Equipment` name instead of the sets.
               if (performance is ResistanceExercisePerformance) ...[
                 '${(performance.sets.weight / performance.sets.length).decimals(2)} kg',
                 performance.sets

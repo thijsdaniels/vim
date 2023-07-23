@@ -42,7 +42,7 @@ class CaloriesCard extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.spaceAround,
           children: [
             FutureBuilder(
-              future: user?.targetConsumption(performances),
+              future: user?.adjustedTargetConsumption(performances),
               builder: (context, targetSnapshot) => FutureBuilder(
                 future: Future.value(consumptions.nutrition),
                 builder: (context, nutritionSnapshot) => TargetProgress(
@@ -83,7 +83,7 @@ class MacrosCard extends StatelessWidget {
         child: FutureBuilder(
           future: Future.value(consumptions.nutrition),
           builder: (context, nutritionSnapshot) => FutureBuilder(
-            future: user?.targetConsumption(performances),
+            future: user?.adjustedTargetConsumption(performances),
             builder: (context, targetSnapshot) => Row(
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: [
