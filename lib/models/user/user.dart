@@ -1,4 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:vim/extensions/performances.dart';
 import 'package:vim/models/document.dart';
 import 'package:vim/models/exercise/performance.dart';
@@ -31,6 +33,10 @@ class User extends Document {
     required this.target,
     required this.neat,
   });
+
+  factory User.of(BuildContext context) {
+    return Provider.of<User>(context, listen: false);
+  }
 
   factory User.fromFirestore(
     DocumentSnapshot<Map<String, dynamic>> snapshot,

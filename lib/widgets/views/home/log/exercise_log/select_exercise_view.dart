@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:vim/models/date_model.dart';
 import 'package:vim/models/exercise/exercise.dart';
+import 'package:vim/services/exercises_collection_group.dart';
 import 'package:vim/widgets/atoms/exercise_form_field.dart';
 import 'package:vim/widgets/molecules/simple_card.dart';
 
@@ -69,13 +70,23 @@ class _SelectExerciseViewState extends State<SelectExerciseView> {
                     child: Column(
                       mainAxisSize: MainAxisSize.min,
                       children: [
-                        ExerciseFormField(
-                          selection: _exercise,
-                          onSelected: (Exercise? exercise) {
-                            setState(() {
-                              _exercise = exercise;
-                            });
-                          },
+                        StreamBuilder(
+                          stream: ExercisesCollectionGroup.instance.all(),
+
+                          /// TODO: Figure out a way to get rid of the
+                          /// `CircularProgressIndicator`. Doing so currently causes
+                          /// an assertion error.
+                          builder: (context, exercises) => exercises.hasData
+                              ? ExerciseFormField(
+                                  exercises: exercises.data!,
+                                  selection: _exercise,
+                                  onSelected: (exercise) {
+                                    setState(() {
+                                      _exercise = exercise;
+                                    });
+                                  },
+                                )
+                              : const CircularProgressIndicator(),
                         ),
                       ],
                     ),

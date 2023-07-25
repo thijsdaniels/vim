@@ -10,4 +10,12 @@ class RecipesCollectionGroup extends CollectionGroup<Recipe> {
   Recipe fromFirestore(snapshot, options) {
     return Recipe.fromFirestore(snapshot, options);
   }
+
+  @override
+  Stream<List<Recipe>> all() {
+    return collectionGroup
+        .orderBy('name')
+        .snapshots()
+        .map((snapshot) => snapshot.docs.map((doc) => doc.data()).toList());
+  }
 }

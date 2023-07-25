@@ -10,4 +10,12 @@ class RoutinesCollectionGroup extends CollectionGroup<Routine> {
   Routine fromFirestore(snapshot, options) {
     return Routine.fromFirestore(snapshot, options);
   }
+
+  @override
+  Stream<List<Routine>> all() {
+    return collectionGroup
+        .orderBy('name')
+        .snapshots()
+        .map((snapshot) => snapshot.docs.map((doc) => doc.data()).toList());
+  }
 }

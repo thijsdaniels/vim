@@ -48,7 +48,7 @@ class CreateConsumptionView extends StatelessWidget {
           builder: (context, recipes) => StreamBuilder(
             stream: IngredientsCollectionGroup.instance.all(),
             builder: (context, ingredients) => SearchAnchor.bar(
-              viewElevation: 4,
+              viewElevation: 1,
               isFullScreen: true,
               barHintText: "Search",
               suggestionsBuilder: (context, controller) {
@@ -104,7 +104,7 @@ class RecipeSearchResult extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return RecipeListSurface(
-      elevation: 8,
+      elevation: 4,
       recipe: recipe,
       onTap: () async {
         var navigator = Navigator.of(context);
@@ -137,7 +137,7 @@ class IngredientSearchResult extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return IngredientListSurface(
-      elevation: 8,
+      elevation: 4,
       ingredient: ingredient,
       onTap: () async {
         var navigator = Navigator.of(context);

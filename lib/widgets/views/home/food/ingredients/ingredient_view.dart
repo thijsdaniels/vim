@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:vim/models/food/ingredient.dart';
+import 'package:vim/models/user/user.dart';
 import 'package:vim/services/consumptions_collection_group.dart';
 import 'package:vim/services/ingredients_collection.dart';
 import 'package:vim/widgets/atoms/standard_list.dart';
@@ -100,20 +102,24 @@ class IngredientView extends StatelessWidget {
                   ),
                 ),
               ),
-              StreamBuilder(
-                stream: ConsumptionsCollectionGroup.instance
-                    .forIngredient(ingredient),
-                builder: (context, snapshot) {
-                  return SimpleCard(
-                    title: "History",
-                    child: ConsumptionsList(
-                      snapshot.data ?? [],
-                      padding: EdgeInsets.zero,
-                      physics: const NeverScrollableScrollPhysics(),
-                      elevation: 4,
-                    ),
-                  );
-                },
+              Consumer<User>(
+                builder: (context, user, _) => StreamBuilder(
+                  stream: ConsumptionsCollectionGroup.instance.forIngredient(
+                    ingredient,
+                    user: user,
+                  ),
+                  builder: (context, snapshot) {
+                    return SimpleCard(
+                      title: "History",
+                      child: ConsumptionsList(
+                        snapshot.data ?? [],
+                        padding: EdgeInsets.zero,
+                        physics: const NeverScrollableScrollPhysics(),
+                        elevation: 4,
+                      ),
+                    );
+                  },
+                ),
               ),
             ],
           ),

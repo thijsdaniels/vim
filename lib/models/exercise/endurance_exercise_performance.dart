@@ -25,6 +25,7 @@ class EnduranceExercisePerformance extends ExercisePerformance {
       energy.kiloCalories / EnduranceExercisePerformance.efficiency;
 
   EnduranceExercisePerformance({
+    required super.user,
     required super.timestamp,
     required super.exercise,
     required this.duration,
@@ -33,6 +34,7 @@ class EnduranceExercisePerformance extends ExercisePerformance {
 
   static EnduranceExercisePerformance fromMap(Map<String, dynamic> map) {
     return EnduranceExercisePerformance(
+      user: map['user'],
       timestamp: map['timestamp'],
       exercise: ExerciseSnapshot.fromMap(map['exercise']),
       duration: Duration(seconds: map['duration']),

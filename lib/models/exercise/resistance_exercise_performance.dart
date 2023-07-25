@@ -36,6 +36,7 @@ class ResistanceExercisePerformance extends ExercisePerformance {
   }
 
   ResistanceExercisePerformance({
+    required super.user,
     required super.timestamp,
     required super.exercise,
     required this.bodyweight,
@@ -44,6 +45,7 @@ class ResistanceExercisePerformance extends ExercisePerformance {
 
   static ResistanceExercisePerformance fromMap(Map<String, dynamic> map) {
     return ResistanceExercisePerformance(
+      user: map['user'],
       timestamp: map['timestamp'],
       exercise: ExerciseSnapshot.fromMap(map['exercise']),
       bodyweight:

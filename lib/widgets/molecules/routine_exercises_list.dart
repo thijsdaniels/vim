@@ -1,7 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:vim/models/exercise/exercise.dart';
-import 'package:vim/services/exercises_collection.dart';
+import 'package:vim/services/exercises_collection_group.dart';
 import 'package:vim/widgets/atoms/exercise_icon.dart';
 import 'package:vim/widgets/molecules/list_surface.dart';
 import 'package:vim/widgets/molecules/with_confirmation_dialog.dart';
@@ -27,44 +27,48 @@ class RoutineExercisesList extends StatelessWidget {
       itemCount: exerciseReferences.length,
       itemBuilder: (context, index) {
         var exerciseReference = exerciseReferences[index];
-        String id = exerciseReference.id;
 
         return StreamBuilder<Exercise?>(
           key: Key(index.toString()),
-          stream: ExercisesCollection.of(context).get(id),
+          stream: ExercisesCollectionGroup.instance.get(exerciseReference.path),
           builder: (context, snapshot) {
             Exercise? exercise = snapshot.data;
 
             return Padding(
               padding: const EdgeInsets.symmetric(vertical: 6),
-              child: ListSurface(
-                elevation: 4,
-                icon: ExerciseIcon(exercise, elevation: 8),
-                title: exercise?.name ?? '...',
-                actions: Row(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    WithConfirmationDialog(
-                      title: exercise?.name,
-                      description:
-                          'Are you sure you want to remove this exercise?',
-                      builder: (context, confirm) => IconButton(
-                        icon: const Icon(Icons.remove),
-                        onPressed: () async {
-                          if (await confirm()) {
-                            exerciseReferences.remove(exerciseReference);
-                            onChanged!(exerciseReferences);
-                          }
-                        },
+              child: FutureBuilder(
+                  future: exercise?.equipment?.first,
+                  builder: (context, equipment) {
+                    return ListSurface(
+                      elevation: 4,
+                      icon: ExerciseIcon(exercise, elevation: 8),
+                      title: exercise?.name ?? '...',
+                      subtitle: equipment.data?.name ?? '--',
+                      actions: Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          WithConfirmationDialog(
+                            title: exercise?.name,
+                            description:
+                                'Are you sure you want to remove this exercise?',
+                            builder: (context, confirm) => IconButton(
+                              icon: const Icon(Icons.remove),
+                              onPressed: () async {
+                                if (await confirm()) {
+                                  exerciseReferences.remove(exerciseReference);
+                                  onChanged!(exerciseReferences);
+                                }
+                              },
+                            ),
+                          ),
+                          ReorderableDragStartListener(
+                            index: index,
+                            child: const Icon(Icons.drag_handle),
+                          ),
+                        ],
                       ),
-                    ),
-                    ReorderableDragStartListener(
-                      index: index,
-                      child: const Icon(Icons.drag_handle),
-                    ),
-                  ],
-                ),
-              ),
+                    );
+                  }),
             );
           },
         );

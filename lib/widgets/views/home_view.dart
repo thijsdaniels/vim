@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:vim/widgets/views/home/exercise_view.dart';
 import 'package:vim/widgets/views/home/food_view.dart';
 import 'package:vim/widgets/views/home/log_view.dart';
-import 'package:vim/widgets/views/home/settings_view.dart';
 
 class HomeView extends StatefulWidget {
   const HomeView({super.key});
@@ -27,7 +26,7 @@ class _HomeViewState extends State<HomeView> {
         const LogView(),
         const FoodView(),
         const ExerciseView(),
-        const SettingsView(),
+        // const SettingsView(),
       ][_selectedIndex],
       bottomNavigationBar: NavigationBar(
         destinations: const [
@@ -42,10 +41,6 @@ class _HomeViewState extends State<HomeView> {
           NavigationDestination(
             icon: Icon(Icons.fitness_center),
             label: 'Exercise',
-          ),
-          NavigationDestination(
-            icon: Icon(Icons.settings),
-            label: 'Settings',
           ),
         ],
         selectedIndex: _selectedIndex,

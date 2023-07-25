@@ -3,6 +3,7 @@ import 'package:vim/models/food/amount.dart';
 import 'package:vim/models/food/ingredient.dart';
 import 'package:vim/models/food/nutrition.dart';
 import 'package:vim/models/model.dart';
+import 'package:vim/services/ingredients_collection_group.dart';
 
 class IngredientAmount extends Model {
   Ingredient? _ingredient;
@@ -11,17 +12,11 @@ class IngredientAmount extends Model {
   final DocumentReference ingredientReference;
   final num amount;
 
-  /// TODO: Find a more sustainable way to do this, ideally via the
-  /// `IngredientsCollection`.
   /// TODO: Turn this into a `Stream<Ingredient?>` for real-time updates.
   Future<Ingredient> get ingredient async {
-    _ingredient ??= (await ingredientReference
-            .withConverter<Ingredient>(
-              fromFirestore: Ingredient.fromFirestore,
-              toFirestore: (ingredient, _) => ingredient.toMap(),
-            )
-            .get())
-        .data();
+    _ingredient ??= await IngredientsCollectionGroup.instance
+        .get(ingredientReference.path)
+        .first;
 
     return _ingredient!;
   }
@@ -48,6 +43,10 @@ class IngredientAmount extends Model {
       ingredientReference: map['ingredient'],
       amount: map['amount'],
     );
+  }
+
+  int compareTo(IngredientAmount other) {
+    return (amount - other.amount).toInt();
   }
 
   IngredientAmount operator *(num factor) {

@@ -1,5 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:vim/widgets/atoms/user_avatar.dart';
 import 'package:vim/widgets/molecules/simple_card.dart';
 
 class ProfileSettings extends StatelessWidget {
@@ -13,24 +14,10 @@ class ProfileSettings extends StatelessWidget {
       title: 'Profile',
       child: Column(
         children: [
-          Row(
+          const Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              CircleAvatar(
-                radius: 64,
-                backgroundImage:
-                    FirebaseAuth.instance.currentUser!.photoURL != null
-                        ? NetworkImage(
-                            FirebaseAuth.instance.currentUser!.photoURL!,
-                          )
-                        : null,
-                child: Text(
-                  FirebaseAuth.instance.currentUser!.email!
-                      .substring(0, 2)
-                      .toUpperCase(),
-                  style: Theme.of(context).textTheme.headlineLarge,
-                ),
-              ),
+              UserAvatar(radius: 64),
             ],
           ),
           const SizedBox(height: 16),

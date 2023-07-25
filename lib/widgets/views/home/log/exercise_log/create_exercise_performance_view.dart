@@ -65,56 +65,57 @@ class _CreateExercisePerformanceViewState
   Widget build(BuildContext context) {
     ExercisePerformance? exercisePerformance = widget.exercisePerformance;
 
-    return Consumer<DateModel>(
-      builder: (context, dateModel, _) => StreamBuilder(
-          stream: widget.exercise != null
-              ? PerformancesCollectionGroup.instance.forExercise(
-                  widget.exercise!,
-                  limit: 1,
-                  before: dateModel.timestamp,
-                )
-              : null,
-          builder: (context, latestPerformances) {
-            if (widget.exercise != null && !latestPerformances.hasData) {
-              return const Center(child: CircularProgressIndicator());
-            }
+    return Consumer<User>(
+      builder: (context, user, _) => Consumer<DateModel>(
+        builder: (context, dateModel, _) => StreamBuilder(
+            stream: widget.exercise != null
+                ? PerformancesCollectionGroup.instance.forExercise(
+                    widget.exercise!,
+                    user: user,
+                    limit: 1,
+                    before: dateModel.timestamp,
+                  )
+                : null,
+            builder: (context, latestPerformances) {
+              if (widget.exercise != null && !latestPerformances.hasData) {
+                return const Center(child: CircularProgressIndicator());
+              }
 
-            var latestPerformance = latestPerformances.data?[0];
+              var latestPerformance = latestPerformances.data?.firstOrNull;
 
-            var calories = _calories ??
-                (latestPerformance is ManualExercisePerformance
-                    ? latestPerformance.calories
-                    : null);
+              var calories = _calories ??
+                  (latestPerformance is ManualExercisePerformance
+                      ? latestPerformance.calories
+                      : null);
 
-            var minutes = _minutes ??
-                (latestPerformance is EnduranceExercisePerformance
-                    ? latestPerformance.duration.inMinutes
-                    : null);
+              var minutes = _minutes ??
+                  (latestPerformance is EnduranceExercisePerformance
+                      ? latestPerformance.duration.inMinutes
+                      : null);
 
-            var watts = _watts ??
-                (latestPerformance is EnduranceExercisePerformance
-                    ? latestPerformance.watts
-                    : null);
+              var watts = _watts ??
+                  (latestPerformance is EnduranceExercisePerformance
+                      ? latestPerformance.watts
+                      : null);
 
-            var sets = _sets ??
-                (latestPerformance is ResistanceExercisePerformance
-                    ? latestPerformance.sets
-                        .map((set) => (
-                              key: UniqueKey(),
-                              weight: set.weight,
-                              repetitions: set.repetitions,
-                            ))
-                        .toList()
-                    : [(key: UniqueKey(), weight: null, repetitions: 10)]);
+              var sets = _sets ??
+                  (latestPerformance is ResistanceExercisePerformance
+                      ? latestPerformance.sets
+                          .map((set) => (
+                                key: UniqueKey(),
+                                weight: set.weight,
+                                repetitions: set.repetitions,
+                              ))
+                          .toList()
+                      : [(key: UniqueKey(), weight: null, repetitions: 10)]);
 
-            return Scaffold(
-              appBar: AppBar(
-                title: exercisePerformance == null
-                    ? Text(widget.exercise!.name)
-                    : Text(exercisePerformance.name),
-                actions: [
-                  Consumer<User>(
-                    builder: (context, user, _) => IconButton(
+              return Scaffold(
+                appBar: AppBar(
+                  title: exercisePerformance == null
+                      ? Text(widget.exercise!.name)
+                      : Text(exercisePerformance.name),
+                  actions: [
+                    IconButton(
                       icon: const Icon(Icons.check),
                       onPressed: () {
                         FormState formState = _formKey.currentState!;
@@ -142,6 +143,7 @@ class _CreateExercisePerformanceViewState
                             switch (widget.exercise!.type) {
                               case ExerciseType.manual:
                                 exercisePerformance = ManualExercisePerformance(
+                                  user: user.reference!,
                                   timestamp: dateModel.timestamp,
                                   exercise: widget.exercise!.toSnapshot(),
                                   calories: calories!,
@@ -150,6 +152,7 @@ class _CreateExercisePerformanceViewState
                               case ExerciseType.resistance:
                                 exercisePerformance =
                                     EnduranceExercisePerformance(
+                                  user: user.reference!,
                                   timestamp: dateModel.timestamp,
                                   exercise: widget.exercise!.toSnapshot(),
                                   duration: Duration(minutes: minutes!),
@@ -159,6 +162,7 @@ class _CreateExercisePerformanceViewState
                               case ExerciseType.weights:
                                 exercisePerformance =
                                     ResistanceExercisePerformance(
+                                  user: user.reference!,
                                   timestamp: dateModel.timestamp,
                                   exercise: widget.exercise!.toSnapshot(),
                                   bodyweight: user.body.weight,
@@ -172,96 +176,96 @@ class _CreateExercisePerformanceViewState
                         }
                       },
                     ),
-                  ),
-                ],
-              ),
-              body: Form(
-                key: _formKey,
-                child: StandardList(
-                  children: [
-                    if (exerciseType == ExerciseType.manual)
-                      SimpleCard(
-                        title: 'Effort',
-                        child: Column(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            NumberFormField(
-                              initialValue: calories,
-                              onChanged: (calories) => setState(() {
-                                _calories = calories;
-                              }),
-                              decoration: const InputDecoration(
-                                labelText: 'Calories',
-                              ),
-                              textInputAction: TextInputAction.done,
-                              validator: (value) {
-                                if (value == null) {
-                                  return 'Please enter an amount.';
-                                }
-                                return null;
-                              },
-                            ),
-                          ],
-                        ),
-                      ),
-                    if (exerciseType == ExerciseType.resistance)
-                      SimpleCard(
-                        title: 'Effort',
-                        child: Column(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            NumberFormField(
-                              initialValue: minutes,
-                              onChanged: (minutes) => setState(() {
-                                _minutes = minutes?.toInt();
-                              }),
-                              decoration: const InputDecoration(
-                                labelText: 'Duration',
-                                hintText: 'Minutes',
-                              ),
-                              textInputAction: TextInputAction.next,
-                              validator: (value) {
-                                if (value == null) {
-                                  return 'Please enter a duration.';
-                                }
-                                return null;
-                              },
-                            ),
-                            const SizedBox(height: 16),
-                            NumberFormField(
-                              initialValue: watts,
-                              onChanged: (watts) => setState(() {
-                                _watts = watts?.toInt();
-                              }),
-                              decoration: const InputDecoration(
-                                labelText: 'Power',
-                                hintText: 'Watts',
-                              ),
-                              textInputAction: TextInputAction.done,
-                              validator: (value) {
-                                if (value == null) {
-                                  return 'Please enter a wattage.';
-                                }
-                                return null;
-                              },
-                            ),
-                          ],
-                        ),
-                      ),
-                    if (exerciseType == ExerciseType.weights)
-                      SetsFormFields(
-                        exercise: (widget.exercise ??
-                            widget.exercisePerformance?.exercise.snapshot)!,
-                        sets: sets,
-                        onChanged: (sets) => setState(() {
-                          _sets = sets;
-                        }),
-                      ),
                   ],
                 ),
-              ),
-            );
-          }),
+                body: Form(
+                  key: _formKey,
+                  child: StandardList(
+                    children: [
+                      if (exerciseType == ExerciseType.manual)
+                        SimpleCard(
+                          title: 'Effort',
+                          child: Column(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              NumberFormField(
+                                initialValue: calories,
+                                onChanged: (calories) => setState(() {
+                                  _calories = calories;
+                                }),
+                                decoration: const InputDecoration(
+                                  labelText: 'Calories',
+                                ),
+                                textInputAction: TextInputAction.done,
+                                validator: (value) {
+                                  if (value == null) {
+                                    return 'Please enter an amount.';
+                                  }
+                                  return null;
+                                },
+                              ),
+                            ],
+                          ),
+                        ),
+                      if (exerciseType == ExerciseType.resistance)
+                        SimpleCard(
+                          title: 'Effort',
+                          child: Column(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              NumberFormField(
+                                initialValue: minutes,
+                                onChanged: (minutes) => setState(() {
+                                  _minutes = minutes?.toInt();
+                                }),
+                                decoration: const InputDecoration(
+                                  labelText: 'Duration',
+                                  hintText: 'Minutes',
+                                ),
+                                textInputAction: TextInputAction.next,
+                                validator: (value) {
+                                  if (value == null) {
+                                    return 'Please enter a duration.';
+                                  }
+                                  return null;
+                                },
+                              ),
+                              const SizedBox(height: 16),
+                              NumberFormField(
+                                initialValue: watts,
+                                onChanged: (watts) => setState(() {
+                                  _watts = watts?.toInt();
+                                }),
+                                decoration: const InputDecoration(
+                                  labelText: 'Power',
+                                  hintText: 'Watts',
+                                ),
+                                textInputAction: TextInputAction.done,
+                                validator: (value) {
+                                  if (value == null) {
+                                    return 'Please enter a wattage.';
+                                  }
+                                  return null;
+                                },
+                              ),
+                            ],
+                          ),
+                        ),
+                      if (exerciseType == ExerciseType.weights)
+                        SetsFormFields(
+                          exercise: (widget.exercise ??
+                              widget.exercisePerformance?.exercise.snapshot)!,
+                          sets: sets,
+                          onChanged: (sets) => setState(() {
+                            _sets = sets;
+                          }),
+                        ),
+                    ],
+                  ),
+                ),
+              );
+            }),
+      ),
     );
   }
 

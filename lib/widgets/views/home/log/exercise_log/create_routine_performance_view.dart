@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 import 'package:vim/models/date_model.dart';
 import 'package:vim/models/exercise/routine.dart';
 import 'package:vim/models/exercise/routine_performance.dart';
+import 'package:vim/models/user/user.dart';
 import 'package:vim/widgets/atoms/routine_dropdown_menu.dart';
 import 'package:vim/widgets/molecules/simple_card.dart';
 
@@ -32,31 +33,34 @@ class _CreateRoutinePerformanceViewState
             ? Text(routinePerformance.name)
             : const Text('Perform Routine'),
         actions: [
-          Consumer<DateModel>(
-            builder: (context, dateModel, child) => IconButton(
-              icon: const Icon(Icons.check),
-              onPressed: () {
-                final navigator = Navigator.of(context);
+          Consumer<User>(
+            builder: (context, user, _) => Consumer<DateModel>(
+              builder: (context, dateModel, child) => IconButton(
+                icon: const Icon(Icons.check),
+                onPressed: () {
+                  final navigator = Navigator.of(context);
 
-                FormState formState = _formKey.currentState!;
+                  FormState formState = _formKey.currentState!;
 
-                if (formState.validate()) {
-                  formState.save();
+                  if (formState.validate()) {
+                    formState.save();
 
-                  RoutinePerformance? routinePerformance =
-                      widget.routinePerformance;
+                    RoutinePerformance? routinePerformance =
+                        widget.routinePerformance;
 
-                  if (routinePerformance != null) {
-                    routinePerformance.routine = _routine!.toSnapshot();
-                  } else {
-                    routinePerformance = _routine!.performance(
-                      timestamp: dateModel.timestamp,
-                    );
+                    if (routinePerformance != null) {
+                      routinePerformance.routine = _routine!.toSnapshot();
+                    } else {
+                      routinePerformance = _routine!.performance(
+                        user: user,
+                        timestamp: dateModel.timestamp,
+                      );
+                    }
+
+                    navigator.pop(routinePerformance);
                   }
-
-                  navigator.pop(routinePerformance);
-                }
-              },
+                },
+              ),
             ),
           )
         ],

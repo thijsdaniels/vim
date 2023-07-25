@@ -19,16 +19,6 @@ class SettingsView extends StatelessWidget {
       appBar: AppBar(
         title: const Text('Settings'),
         actions: [
-          // IconButton(
-          //   onPressed: () {
-          //     Navigator.of(context).push(
-          //       MaterialPageRoute(
-          //         builder: (context) => const DebugView(),
-          //       ),
-          //     );
-          //   },
-          //   icon: const Icon(Icons.developer_mode),
-          // ),
           PopupMenuButton(
             tooltip: '',
             itemBuilder: (context) => [

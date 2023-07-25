@@ -11,6 +11,7 @@ abstract class ExercisePerformance extends Performance {
   String get name => exercise.snapshot.name;
 
   ExercisePerformance({
+    required super.user,
     required super.timestamp,
     required this.exercise,
   });

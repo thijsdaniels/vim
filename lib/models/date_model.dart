@@ -47,7 +47,9 @@ class DateModel extends ChangeNotifier {
     add(1);
   }
 
-  static DateModel of(BuildContext context) {
+  DateModel();
+
+  factory DateModel.of(BuildContext context) {
     return Provider.of<DateModel>(context, listen: false);
   }
 }

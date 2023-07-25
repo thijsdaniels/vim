@@ -1,7 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:vim/models/food/ingredient_amount.dart';
-import 'package:vim/services/ingredients_collection.dart';
+import 'package:vim/services/ingredients_collection_group.dart';
 import 'package:vim/widgets/atoms/ingredient_form_field.dart';
 import 'package:vim/widgets/atoms/number_form_field.dart';
 import 'package:vim/widgets/atoms/standard_list.dart';
@@ -75,17 +76,26 @@ class _CreateIngredientAmountViewState
                 mainAxisSize: MainAxisSize.min,
                 children: [
                   StreamBuilder(
-                    stream: _ingredient != null
-                        ? IngredientsCollection.of(context).get(_ingredient!.id)
-                        : null,
-                    builder: (context, snapshot) => IngredientFormField(
-                      selection: snapshot.data,
-                      onSelected: (ingredient) {
-                        setState(() {
-                          _ingredient = ingredient?.reference;
-                        });
-                      },
-                    ),
+                    stream: IngredientsCollectionGroup.instance.all(),
+
+                    /// TODO: Figure out a way to get rid of the
+                    /// `CircularProgressIndicator`. Doing so currently causes
+                    /// an assertion error.
+                    builder: (context, ingredients) => ingredients.hasData
+                        ? IngredientFormField(
+                            ingredients: ingredients.data!,
+                            selection: ingredients.data?.firstWhereOrNull(
+                              (ingredient) =>
+                                  ingredient.reference?.path ==
+                                  _ingredient?.path,
+                            ),
+                            onSelected: (ingredient) {
+                              setState(() {
+                                _ingredient = ingredient?.reference;
+                              });
+                            },
+                          )
+                        : const CircularProgressIndicator(),
                   ),
                   const SizedBox(height: 16),
                   NumberFormField(

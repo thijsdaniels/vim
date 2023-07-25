@@ -38,6 +38,7 @@ class RoutinePerformance extends Performance {
   }
 
   RoutinePerformance({
+    required super.user,
     required super.timestamp,
     required this.routine,
     Map<String, DocumentReference>? performanceReferences,
@@ -54,6 +55,7 @@ class RoutinePerformance extends Performance {
 
   static RoutinePerformance fromMap(Map<String, dynamic> map) {
     return RoutinePerformance(
+      user: map['user'],
       timestamp: map['timestamp'],
       routine: RoutineSnapshot.fromMap(map['routine']),
       performanceReferences:

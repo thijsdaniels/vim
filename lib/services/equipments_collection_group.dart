@@ -10,4 +10,12 @@ class EquipmentsCollectionGroup extends CollectionGroup<Equipment> {
   Equipment fromFirestore(snapshot, options) {
     return Equipment.fromFirestore(snapshot, options);
   }
+
+  @override
+  Stream<List<Equipment>> all() {
+    return collectionGroup
+        .orderBy('name')
+        .snapshots()
+        .map((snapshot) => snapshot.docs.map((doc) => doc.data()).toList());
+  }
 }

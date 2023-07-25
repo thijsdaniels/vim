@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:vim/widgets/molecules/list_surface.dart';
 
@@ -10,8 +12,8 @@ class SearchFormField<T> extends StatelessWidget {
   final void Function(T? icon)? onSelected;
   final InputDecoration? decoration;
   final List<T> options;
-  final String? Function(T option)? subtitleBuilder;
-  final Widget? Function(T option)? iconBuilder;
+  final FutureOr<String?> Function(T option)? subtitleBuilder;
+  final FutureOr<Widget?> Function(T option)? iconBuilder;
 
   SearchFormField({
     super.key,
@@ -46,11 +48,11 @@ class SearchFormField<T> extends StatelessWidget {
         decoration: decoration,
         onTap: controller.openView,
       ),
-      viewElevation: 4,
+      viewElevation: 1,
       isFullScreen: true,
       suggestionsBuilder: (context, controller) {
         return [
-          const SizedBox(height: 6),
+          const SizedBox(height: 16),
           ...options
               .where((option) => _filter(option, controller.value.text))
               .map(
@@ -59,24 +61,32 @@ class SearchFormField<T> extends StatelessWidget {
                     horizontal: 12,
                     vertical: 6,
                   ),
-                  child: ListSurface(
-                    elevation: 8,
-                    icon: iconBuilder != null ? iconBuilder!(option) : null,
-                    title: _titleBuilder(option),
-                    subtitle: subtitleBuilder != null
-                        ? subtitleBuilder!(option)
+                  child: FutureBuilder(
+                    future: iconBuilder != null
+                        ? Future.value(iconBuilder!(option))
                         : null,
-                    onTap: () {
-                      if (onSelected != null) {
-                        onSelected!(option);
-                      }
-                      controller.text = _titleBuilder(option);
-                      Navigator.of(context).pop();
-                    },
+                    builder: (context, icon) => FutureBuilder(
+                      future: subtitleBuilder != null
+                          ? Future.value(subtitleBuilder!(option))
+                          : null,
+                      builder: (context, subtitle) => ListSurface(
+                        elevation: 4,
+                        icon: icon.data,
+                        title: _titleBuilder(option),
+                        subtitle: subtitle.data,
+                        onTap: () {
+                          if (onSelected != null) {
+                            onSelected!(option);
+                          }
+                          controller.text = _titleBuilder(option);
+                          Navigator.of(context).pop();
+                        },
+                      ),
+                    ),
                   ),
                 ),
               ),
-          const SizedBox(height: 6),
+          const SizedBox(height: 16),
         ];
       },
     );

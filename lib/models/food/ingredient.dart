@@ -3,7 +3,9 @@ import 'package:vim/models/document.dart';
 import 'package:vim/models/food/amount.dart';
 import 'package:vim/models/food/ingredient_consumption.dart';
 import 'package:vim/models/food/nutrition.dart';
+import 'package:vim/models/mass.dart';
 import 'package:vim/models/snapshot.dart';
+import 'package:vim/models/user/user.dart';
 
 class Ingredient extends Document {
   String? icon;
@@ -58,10 +60,12 @@ class Ingredient extends Document {
   }
 
   IngredientConsumption consumption({
+    required User user,
     required Timestamp timestamp,
     required Amount amount,
   }) {
     return IngredientConsumption(
+      user: user.reference!,
       timestamp: timestamp,
       ingredient: toSnapshot(),
       amount: amount,
@@ -75,18 +79,18 @@ class Ingredient extends Document {
   Nutrition nutritionForAmount(Amount amount) {
     num weightForNutrition = nutritionPerServing ? serving! : 100;
     Nutrition nutritionPerGram = nutrition * (1 / weightForNutrition);
-    return nutritionPerGram * _weightForAmount(amount);
+    return nutritionPerGram * weightForAmount(amount).grams;
   }
 
-  num _weightForAmount(Amount amount) {
+  Mass weightForAmount(Amount amount) {
     switch (amount.unit) {
       case Unit.grams:
-        return amount.value;
+        return Mass.grams(amount.value);
       case Unit.servings:
         if (serving == null) {
           throw Exception('Serving size for ingredient "$name" unknown.');
         }
-        return amount.value * serving!;
+        return Mass.grams(amount.value * serving!);
     }
   }
 }

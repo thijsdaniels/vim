@@ -5,6 +5,7 @@ import 'package:vim/models/date_model.dart';
 import 'package:vim/models/food/amount.dart';
 import 'package:vim/models/food/ingredient.dart';
 import 'package:vim/models/food/ingredient_consumption.dart';
+import 'package:vim/models/user/user.dart';
 import 'package:vim/services/consumptions_collection.dart';
 import 'package:vim/widgets/atoms/number_form_field.dart';
 import 'package:vim/widgets/atoms/standard_list.dart';
@@ -81,6 +82,7 @@ class _CreateIngredientConsumptionViewState
                       .update(ingredientConsumption);
                 } else {
                   ingredientConsumption = widget.ingredient?.consumption(
+                    user: User.of(context),
                     timestamp: timestamp,
                     amount: Amount(
                       value: _amount!,

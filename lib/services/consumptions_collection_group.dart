@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:vim/models/food/consumption.dart';
 import 'package:vim/models/food/ingredient.dart';
 import 'package:vim/models/food/ingredient_consumption.dart';
+import 'package:vim/models/user/user.dart';
 import 'package:vim/services/collection_group.dart';
 
 class ConsumptionsCollectionGroup extends CollectionGroup<Consumption> {
@@ -14,14 +15,14 @@ class ConsumptionsCollectionGroup extends CollectionGroup<Consumption> {
     return Consumption.fromFirestore(snapshot, options);
   }
 
-  /// TODO: This query will include ingredient consumptions from other users. It
-  /// should be limited to the current user.
   Stream<List<IngredientConsumption>> forIngredient(
     Ingredient ingredient, {
+    required User user,
     Timestamp? before,
     int? limit,
   }) {
     var query = collectionGroup
+        .where('user', isEqualTo: user.reference)
         .where('ingredient.reference', isEqualTo: ingredient.reference)
         .where('timestamp', isLessThan: before)
         .orderBy('timestamp', descending: true);

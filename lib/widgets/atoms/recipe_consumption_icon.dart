@@ -1,3 +1,4 @@
+import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:vim/models/food/recipe_consumption.dart';
 import 'package:vim/widgets/atoms/icons8_icons_stack.dart';
@@ -25,7 +26,8 @@ class RecipeConsumptionIcon extends StatelessWidget {
       builder: (context, snapshot) {
         return Icons8IconStack(
           icons: snapshot.data
-                  ?.map(
+                  ?.sorted((a, b) => b.compareTo(a))
+                  .map(
                     (ingredientConsumption) =>
                         ingredientConsumption.ingredient.snapshot.icon,
                   )

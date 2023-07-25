@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:collection/collection.dart';
 import 'package:vim/models/food/ingredient_amount.dart';
 import 'package:vim/models/food/nutrition.dart';
 
@@ -44,5 +45,9 @@ extension IngredientAmounts on List<IngredientAmount> {
 
   static List<IngredientAmount> fromMap(List<dynamic> list) {
     return list.map((map) => IngredientAmount.fromMap(map)).toList();
+  }
+
+  List<IngredientAmount> sortedByWeight() {
+    return sorted((a, b) => b.compareTo(a));
   }
 }

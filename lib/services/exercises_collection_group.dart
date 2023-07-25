@@ -10,4 +10,12 @@ class ExercisesCollectionGroup extends CollectionGroup<Exercise> {
   Exercise fromFirestore(snapshot, options) {
     return Exercise.fromFirestore(snapshot, options);
   }
+
+  @override
+  Stream<List<Exercise>> all() {
+    return collectionGroup
+        .orderBy('name')
+        .snapshots()
+        .map((snapshot) => snapshot.docs.map((doc) => doc.data()).toList());
+  }
 }

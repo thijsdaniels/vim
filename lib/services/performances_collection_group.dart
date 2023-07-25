@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:vim/models/exercise/exercise.dart';
 import 'package:vim/models/exercise/exercise_performance.dart';
 import 'package:vim/models/exercise/performance.dart';
+import 'package:vim/models/user/user.dart';
 import 'package:vim/services/collection_group.dart';
 
 class PerformancesCollectionGroup extends CollectionGroup<Performance> {
@@ -14,14 +15,14 @@ class PerformancesCollectionGroup extends CollectionGroup<Performance> {
     return Performance.fromFirestore(snapshot, options);
   }
 
-  /// TODO: This query will include exercise performances from other users. It
-  /// should be limited to the current user.
   Stream<List<ExercisePerformance>> forExercise(
     Exercise exercise, {
+    required User user,
     Timestamp? before,
     int? limit,
   }) {
     var query = collectionGroup
+        .where('user', isEqualTo: user.reference)
         .where('exercise.reference', isEqualTo: exercise.reference)
         .where('timestamp', isLessThan: before)
         .orderBy('timestamp', descending: true);

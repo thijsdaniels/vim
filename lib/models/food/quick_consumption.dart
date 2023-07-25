@@ -8,6 +8,7 @@ class QuickConsumption extends Consumption {
   Nutrition nutrition;
 
   QuickConsumption({
+    required super.user,
     required super.timestamp,
     required this.name,
     required this.nutrition,
@@ -16,7 +17,7 @@ class QuickConsumption extends Consumption {
   @override
   Map<String, dynamic> toMap() {
     return {
-      'timestamp': timestamp,
+      ...super.toMap(),
       'name': name,
       'nutrition': nutrition.toMap(),
     };
@@ -24,6 +25,7 @@ class QuickConsumption extends Consumption {
 
   static QuickConsumption fromMap(Map<String, dynamic> map) {
     return QuickConsumption(
+      user: map['user'],
       timestamp: map['timestamp'],
       name: map['name'],
       nutrition: Nutrition.fromMap(map['nutrition']),

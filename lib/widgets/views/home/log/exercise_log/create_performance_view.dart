@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:vim/models/date_model.dart';
 import 'package:vim/models/exercise/exercise.dart';
 import 'package:vim/models/exercise/exercise_performance.dart';
 import 'package:vim/models/exercise/performance.dart';
 import 'package:vim/models/exercise/routine.dart';
+import 'package:vim/models/user/user.dart';
 import 'package:vim/services/exercises_collection_group.dart';
 import 'package:vim/services/routines_collection_group.dart';
 import 'package:vim/widgets/atoms/exercise_icon.dart';
@@ -51,7 +53,7 @@ class _CreatePerformanceViewState extends State<CreatePerformanceView> {
           builder: (context, routines) => StreamBuilder(
             stream: ExercisesCollectionGroup.instance.all(),
             builder: (context, exercises) => SearchAnchor.bar(
-              viewElevation: 4,
+              viewElevation: 1,
               isFullScreen: true,
               barHintText: "Search",
               suggestionsBuilder: (context, controller) {
@@ -106,20 +108,23 @@ class RoutineSearchResult extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ListSurface(
-      elevation: 8,
-      icon: RoutineIcon(routine: routine),
-      title: routine.name,
-      subtitle: 'Routine',
-      onTap: () {
-        var navigator = Navigator.of(context);
-        navigator.pop();
-        navigator.pop(
-          routine.performance(
-            timestamp: DateModel.of(context).timestamp,
-          ),
-        );
-      },
+    return Consumer<User>(
+      builder: (context, user, _) => ListSurface(
+        elevation: 4,
+        icon: RoutineIcon(routine: routine),
+        title: routine.name,
+        subtitle: 'Routine',
+        onTap: () {
+          var navigator = Navigator.of(context);
+          navigator.pop();
+          navigator.pop(
+            routine.performance(
+              user: user,
+              timestamp: DateModel.of(context).timestamp,
+            ),
+          );
+        },
+      ),
     );
   }
 }
@@ -137,7 +142,7 @@ class ExerciseSearchResult extends StatelessWidget {
     return StreamBuilder(
       stream: exercise.equipment,
       builder: (context, equipment) => ListSurface(
-        elevation: 8,
+        elevation: 4,
         icon: ExerciseIcon(exercise, elevation: 8),
         title: exercise.name,
         subtitle: equipment.data?.name,

@@ -3,6 +3,7 @@ import 'package:vim/models/document.dart';
 import 'package:vim/models/exercise/exercise.dart';
 import 'package:vim/models/exercise/routine_performance.dart';
 import 'package:vim/models/snapshot.dart';
+import 'package:vim/models/user/user.dart';
 
 class Routine extends Document {
   List<Exercise>? _exercises;
@@ -64,9 +65,11 @@ class Routine extends Document {
   }
 
   RoutinePerformance performance({
+    required User user,
     required Timestamp timestamp,
   }) {
     return RoutinePerformance(
+      user: user.reference!,
       timestamp: timestamp,
       routine: toSnapshot(),
     );

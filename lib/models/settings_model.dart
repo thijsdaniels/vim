@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:vim/widgets/atoms/icons8_icon.dart';
 
 class SettingsModel extends ChangeNotifier {
@@ -27,5 +28,11 @@ class SettingsModel extends ChangeNotifier {
   set iconStyle(Icons8Style style) {
     _iconStyle = style;
     notifyListeners();
+  }
+
+  SettingsModel();
+
+  factory SettingsModel.of(BuildContext context) {
+    return Provider.of<SettingsModel>(context, listen: false);
   }
 }

@@ -6,6 +6,7 @@ import 'package:vim/models/exercise/exercise.dart';
 import 'package:vim/models/exercise/exercise_performance.dart';
 import 'package:vim/models/exercise/routine_performance.dart';
 import 'package:vim/models/user/user.dart';
+import 'package:vim/services/exercises_collection_group.dart';
 import 'package:vim/widgets/atoms/exercise_icon.dart';
 import 'package:vim/widgets/atoms/standard_list.dart';
 import 'package:vim/widgets/molecules/list_surface.dart';
@@ -22,8 +23,9 @@ class RoutineExercisePerformances extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Consumer<List<Exercise>>(
-      builder: (context, exercises, _) {
+    return StreamBuilder(
+      stream: ExercisesCollectionGroup.instance.all(),
+      builder: (context, exercises) {
         return StreamBuilder(
           stream: routinePerformance.performances,
           builder: (context, snapshot) {
@@ -40,7 +42,7 @@ class RoutineExercisePerformances extends StatelessWidget {
                     .routine.snapshot.exerciseReferences[index];
                 String exerciseId = exerciseReference.id;
 
-                Exercise? exercise = exercises.firstWhereOrNull(
+                Exercise? exercise = exercises.data?.firstWhereOrNull(
                   (exercise) => exercise.reference?.id == exerciseId,
                 );
 

@@ -10,6 +10,7 @@ class QuickPerformance extends Performance {
   FutureOr<num> calories;
 
   QuickPerformance({
+    required super.user,
     required super.timestamp,
     required this.name,
     required this.calories,
@@ -26,6 +27,7 @@ class QuickPerformance extends Performance {
 
   static QuickPerformance fromMap(Map<String, dynamic> map) {
     return QuickPerformance(
+      user: map['user'],
       timestamp: map['timestamp'],
       name: map['name'],
       calories: map['calories'],

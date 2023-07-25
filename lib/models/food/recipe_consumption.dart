@@ -41,6 +41,7 @@ class RecipeConsumption extends Consumption {
   }
 
   RecipeConsumption({
+    required super.user,
     required super.timestamp,
     required this.recipe,
     required this.amount,
@@ -66,6 +67,7 @@ class RecipeConsumption extends Consumption {
 
     await Future.wait(ingredientAmounts.map((ingredientAmount) async {
       return consumptionsCollection!.create(IngredientConsumption(
+        user: user,
         timestamp: timestamp,
         ingredient: IngredientSnapshot(await ingredientAmount.ingredient),
         amount: Amount.grams(ingredientAmount.amount),
@@ -95,7 +97,7 @@ class RecipeConsumption extends Consumption {
   @override
   Map<String, dynamic> toMap() {
     return {
-      'timestamp': timestamp,
+      ...super.toMap(),
       'recipe': recipe.toMap(),
       'amount': amount.toMap(),
     };
@@ -103,6 +105,7 @@ class RecipeConsumption extends Consumption {
 
   static RecipeConsumption fromMap(Map<String, dynamic> map) {
     return RecipeConsumption(
+      user: map['user'],
       timestamp: map['timestamp'],
       recipe: RecipeSnapshot.fromMap(map['recipe']),
       amount: Amount.fromMap(map['amount']),

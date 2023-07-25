@@ -27,4 +27,36 @@ class Distance extends Model {
   static Distance fromMap(Map<String, dynamic> map) {
     return Distance.meters(map['meters']);
   }
+
+  operator -(Distance other) {
+    return Distance.meters(meters - other.meters);
+  }
+
+  operator +(Distance other) {
+    return Distance.meters(meters + other.meters);
+  }
+
+  operator *(num factor) {
+    return Distance.meters(meters * factor);
+  }
+
+  operator /(num factor) {
+    return Distance.meters(meters / factor);
+  }
+
+  operator <(Distance other) {
+    return meters < other.meters;
+  }
+
+  operator <=(Distance other) {
+    return meters <= other.meters;
+  }
+
+  operator >(Distance other) {
+    return meters > other.meters;
+  }
+
+  operator >=(Distance other) {
+    return meters >= other.meters;
+  }
 }

@@ -8,12 +8,14 @@ import 'package:vim/models/food/quick_consumption.dart';
 import 'package:vim/models/food/recipe_consumption.dart';
 
 abstract class Consumption extends Document {
+  DocumentReference user;
   Timestamp timestamp;
 
   String get name;
   FutureOr<Nutrition> get nutrition;
 
   Consumption({
+    required this.user,
     required this.timestamp,
   });
 
@@ -36,5 +38,13 @@ abstract class Consumption extends Document {
     } else {
       return QuickConsumption.fromMap(map);
     }
+  }
+
+  @override
+  Map<String, dynamic> toMap() {
+    return {
+      'user': user,
+      'timestamp': timestamp,
+    };
   }
 }

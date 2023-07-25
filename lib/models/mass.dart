@@ -30,4 +30,36 @@ class Mass extends Model {
   static Mass fromMap(Map<String, dynamic> map) {
     return Mass.grams(map['grams']);
   }
+
+  Mass operator -(Mass other) {
+    return Mass.grams(grams - other.grams);
+  }
+
+  Mass operator +(Mass other) {
+    return Mass.grams(grams + other.grams);
+  }
+
+  Mass operator *(num factor) {
+    return Mass.grams(grams * factor);
+  }
+
+  Mass operator /(num factor) {
+    return Mass.grams(grams / factor);
+  }
+
+  bool operator <(Mass other) {
+    return grams < other.grams;
+  }
+
+  bool operator <=(Mass other) {
+    return grams <= other.grams;
+  }
+
+  bool operator >(Mass other) {
+    return grams > other.grams;
+  }
+
+  bool operator >=(Mass other) {
+    return grams >= other.grams;
+  }
 }

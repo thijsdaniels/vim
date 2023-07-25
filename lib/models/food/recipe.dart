@@ -6,11 +6,12 @@ import 'package:vim/models/food/ingredient_amount.dart';
 import 'package:vim/models/food/nutrition.dart';
 import 'package:vim/models/food/recipe_consumption.dart';
 import 'package:vim/models/snapshot.dart';
+import 'package:vim/models/user/user.dart';
 
 class Recipe extends Document {
   String name;
   num servings;
-  List<IngredientAmount> ingredientAmounts;
+  late List<IngredientAmount> ingredientAmounts;
 
   Future<Nutrition> get nutrition async {
     return ingredientAmounts.nutrition;
@@ -20,7 +21,7 @@ class Recipe extends Document {
     required this.name,
     this.servings = 1,
     List<IngredientAmount>? ingredientAmounts,
-  }) : ingredientAmounts = ingredientAmounts ?? [];
+  }) : ingredientAmounts = ingredientAmounts?.sortedByWeight() ?? [];
 
   factory Recipe.fromFirestore(
     DocumentSnapshot<Map<String, dynamic>> snapshot,
@@ -71,10 +72,12 @@ class Recipe extends Document {
   }
 
   Future<RecipeConsumption> consumption({
+    required User user,
     required Timestamp timestamp,
     required Amount amount,
   }) async {
     return RecipeConsumption(
+      user: user.reference!,
       timestamp: timestamp,
       recipe: toSnapshot(),
       amount: amount,

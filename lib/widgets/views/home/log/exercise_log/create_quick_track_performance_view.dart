@@ -3,6 +3,7 @@ import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 import 'package:vim/models/date_model.dart';
 import 'package:vim/models/exercise/quick_performance.dart';
+import 'package:vim/models/user/user.dart';
 import 'package:vim/widgets/molecules/simple_card.dart';
 
 class CreateQuickTrackPerformanceView extends StatefulWidget {
@@ -42,34 +43,37 @@ class _CreateQuickTrackPerformanceViewState
             ? Text(performance.name)
             : const Text('Quick Perform'),
         actions: [
-          Consumer<DateModel>(
-            builder: (context, dateModel, child) => IconButton(
-              icon: const Icon(Icons.check),
-              onPressed: () {
-                FormState formState = _formKey.currentState!;
+          Consumer<User>(
+            builder: (context, user, _) => Consumer<DateModel>(
+              builder: (context, dateModel, child) => IconButton(
+                icon: const Icon(Icons.check),
+                onPressed: () {
+                  FormState formState = _formKey.currentState!;
 
-                if (formState.validate()) {
-                  formState.save();
+                  if (formState.validate()) {
+                    formState.save();
 
-                  String name = _nameController.value.text;
-                  int calories = int.parse(_caloriesController.value.text);
+                    String name = _nameController.value.text;
+                    int calories = int.parse(_caloriesController.value.text);
 
-                  QuickPerformance? performance = widget.performance;
+                    QuickPerformance? performance = widget.performance;
 
-                  if (performance != null) {
-                    performance.name = name;
-                    performance.calories = calories;
-                  } else {
-                    performance = QuickPerformance(
-                      timestamp: dateModel.timestamp,
-                      name: name,
-                      calories: calories,
-                    );
+                    if (performance != null) {
+                      performance.name = name;
+                      performance.calories = calories;
+                    } else {
+                      performance = QuickPerformance(
+                        user: user.reference!,
+                        timestamp: dateModel.timestamp,
+                        name: name,
+                        calories: calories,
+                      );
+                    }
+
+                    Navigator.of(context).pop(performance);
                   }
-
-                  Navigator.of(context).pop(performance);
-                }
-              },
+                },
+              ),
             ),
           )
         ],

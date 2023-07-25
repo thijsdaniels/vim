@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
-import 'package:vim/models/food/consumption.dart';
 import 'package:vim/models/date_model.dart';
+import 'package:vim/models/food/consumption.dart';
 import 'package:vim/models/food/nutrition.dart';
 import 'package:vim/models/food/quick_consumption.dart';
+import 'package:vim/models/user/user.dart';
 import 'package:vim/services/consumptions_collection.dart';
 import 'package:vim/widgets/molecules/nutrition_form_fields.dart';
 import 'package:vim/widgets/molecules/simple_card.dart';
@@ -46,39 +46,38 @@ class _CreateQuickTrackConsumptionViewState
             ? Text(consumption.name)
             : const Text('Quick Consume'),
         actions: [
-          Consumer<DateModel>(
-            builder: (context, dateModel, _) => IconButton(
-              icon: const Icon(Icons.check),
-              onPressed: () {
-                FormState formState = _formKey.currentState!;
+          IconButton(
+            icon: const Icon(Icons.check),
+            onPressed: () {
+              FormState formState = _formKey.currentState!;
 
-                if (formState.validate()) {
-                  formState.save();
+              if (formState.validate()) {
+                formState.save();
 
-                  String name = _nameController.value.text;
-                  Nutrition nutrition = _nutritionController.nutrition;
+                String name = _nameController.value.text;
+                Nutrition nutrition = _nutritionController.nutrition;
 
-                  QuickConsumption? consumption = widget.consumption;
+                QuickConsumption? consumption = widget.consumption;
 
-                  if (consumption != null) {
-                    consumption.name = name;
-                    consumption.nutrition = nutrition;
+                if (consumption != null) {
+                  consumption.name = name;
+                  consumption.nutrition = nutrition;
 
-                    ConsumptionsCollection.of(context).update(consumption);
-                  } else {
-                    consumption = QuickConsumption(
-                      timestamp: dateModel.timestamp,
-                      name: name,
-                      nutrition: nutrition,
-                    );
+                  ConsumptionsCollection.of(context).update(consumption);
+                } else {
+                  consumption = QuickConsumption(
+                    user: User.of(context).reference!,
+                    timestamp: DateModel.of(context).timestamp,
+                    name: name,
+                    nutrition: nutrition,
+                  );
 
-                    ConsumptionsCollection.of(context).create(consumption);
-                  }
-
-                  Navigator.of(context).pop(consumption);
+                  ConsumptionsCollection.of(context).create(consumption);
                 }
-              },
-            ),
+
+                Navigator.of(context).pop(consumption);
+              }
+            },
           ),
         ],
       ),
