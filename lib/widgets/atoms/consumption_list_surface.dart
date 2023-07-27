@@ -6,7 +6,7 @@ import 'package:vim/models/food/recipe_consumption.dart';
 import 'package:vim/widgets/atoms/consumption_icon.dart';
 import 'package:vim/widgets/atoms/secondary_text.dart';
 import 'package:vim/widgets/molecules/list_surface.dart';
-import 'package:vim/widgets/views/home/log/food_log/consumption_view.dart';
+import 'package:vim/views/home/log/food_log/consumption_view.dart';
 
 class ConsumptionListSurface extends StatelessWidget {
   final Consumption consumption;

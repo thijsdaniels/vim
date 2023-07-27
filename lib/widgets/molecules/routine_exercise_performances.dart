@@ -10,7 +10,7 @@ import 'package:vim/services/exercises_collection_group.dart';
 import 'package:vim/widgets/atoms/exercise_icon.dart';
 import 'package:vim/widgets/atoms/standard_list.dart';
 import 'package:vim/widgets/molecules/list_surface.dart';
-import 'package:vim/widgets/views/home/log/exercise_log/create_exercise_performance_view.dart';
+import 'package:vim/views/home/log/exercise_log/create_exercise_performance_view.dart';
 
 // TODO: This widget is a mess and should be refactored and abstracted.
 class RoutineExercisePerformances extends StatelessWidget {

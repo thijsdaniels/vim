@@ -9,7 +9,7 @@ import 'package:vim/widgets/atoms/performance_icon.dart';
 import 'package:vim/widgets/atoms/secondary_text.dart';
 import 'package:vim/widgets/atoms/standard_list.dart';
 import 'package:vim/widgets/molecules/list_surface.dart';
-import 'package:vim/widgets/views/home/log/exercise_log/performance_view.dart';
+import 'package:vim/views/home/log/exercise_log/performance_view.dart';
 
 class PerformancesList extends StatelessWidget {
   const PerformancesList({
