@@ -7,7 +7,7 @@ class ListSurface extends StatelessWidget {
   final Function()? onTap;
   final String title;
   final String? subtitle;
-  final Widget? actions;
+  final Widget? trailing;
   final double? elevation;
   final bool dense;
 
@@ -17,7 +17,7 @@ class ListSurface extends StatelessWidget {
     this.onTap,
     required this.title,
     this.subtitle,
-    this.actions,
+    this.trailing,
     this.elevation,
     this.dense = false,
   });
@@ -47,7 +47,7 @@ class ListSurface extends StatelessWidget {
                   overflow: TextOverflow.ellipsis,
                 ),
                 subtitle: subtitle != null ? SecondaryText(subtitle!) : null,
-                trailing: actions,
+                trailing: trailing,
               ),
             ),
           ],

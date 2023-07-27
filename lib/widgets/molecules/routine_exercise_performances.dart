@@ -81,7 +81,7 @@ class RoutineExercisePerformances extends StatelessWidget {
                           }
                         }
                       },
-                      actions: Row(
+                      trailing: Row(
                         mainAxisSize: MainAxisSize.min,
                         children: [
                           if (exercise != null)

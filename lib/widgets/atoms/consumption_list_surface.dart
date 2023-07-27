@@ -55,7 +55,7 @@ class ConsumptionListSurface extends StatelessWidget {
             }),
           );
         },
-        actions: showTime
+        trailing: showTime
             ? SecondaryText(
                 consumption.timestamp.toDate().toTimeString(),
               )

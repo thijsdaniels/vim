@@ -44,7 +44,7 @@ class RoutineExercisesList extends StatelessWidget {
                       icon: ExerciseIcon(exercise, elevation: 8),
                       title: exercise?.name ?? '...',
                       subtitle: equipment.data?.name ?? '--',
-                      actions: Row(
+                      trailing: Row(
                         mainAxisSize: MainAxisSize.min,
                         children: [
                           WithConfirmationDialog(

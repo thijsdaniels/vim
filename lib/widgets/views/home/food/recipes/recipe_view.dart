@@ -162,7 +162,7 @@ class RecipeView extends StatelessWidget {
       },
     );
   }
-} 
+}
 
 class IngredientAmountListSurface extends StatelessWidget {
   final IngredientAmount ingredientAmount;
@@ -201,7 +201,7 @@ class IngredientAmountListSurface extends StatelessWidget {
 
             onChange(edited);
           },
-          actions: Row(
+          trailing: Row(
             mainAxisSize: MainAxisSize.min,
             children: [
               if (ingredient != null)

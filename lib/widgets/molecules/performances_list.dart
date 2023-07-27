@@ -77,7 +77,7 @@ class PerformancesList extends StatelessWidget {
                 ),
               );
             },
-            actions: SecondaryText(
+            trailing: SecondaryText(
               performance.timestamp.toDate().toTimeString(),
             ),
           ),

@@ -80,4 +80,14 @@ class User extends Document {
         ? targetConsumption + await performances.calories
         : targetConsumption;
   }
+
+  void follow(User other) {
+    following.add(other.reference!);
+    update();
+  }
+
+  void unfollow(User other) {
+    following.remove(other.reference!);
+    update();
+  }
 }
