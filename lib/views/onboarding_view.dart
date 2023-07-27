@@ -68,7 +68,7 @@ class _OnboardingViewState extends State<OnboardingView> {
       ),
       body: StandardList(
         children: [
-          const ProfileSettings(),
+          ProfileSettings(user: _user, onChanged: onUserChanged),
           BodySettings(user: _user, onChanged: onUserChanged),
           PerformanceSettings(user: _user, onChanged: onUserChanged),
           ConsumptionSettings(user: _user, onChanged: onUserChanged),

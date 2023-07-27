@@ -2,7 +2,6 @@ import 'package:firebase_auth/firebase_auth.dart' show FirebaseAuth;
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:vim/models/user/user.dart';
-import 'package:vim/services/users_collection.dart';
 import 'package:vim/widgets/atoms/standard_list.dart';
 import 'package:vim/widgets/organisms/appearance_settings.dart';
 import 'package:vim/widgets/organisms/body_settings.dart';
@@ -33,7 +32,7 @@ class SettingsView extends StatelessWidget {
       body: Consumer<User>(
         builder: (context, user, _) => StandardList(
           children: [
-            const ProfileSettings(),
+            ProfileSettings(user: user, onChanged: onChanged),
             BodySettings(user: user, onChanged: onChanged),
             PerformanceSettings(user: user, onChanged: onChanged),
             ConsumptionSettings(user: user, onChanged: onChanged),
@@ -46,6 +45,6 @@ class SettingsView extends StatelessWidget {
 
   /// TODO: Don't update the user on every change, but rather on save.
   void onChanged(User user) {
-    UsersCollection.instance.update(user);
+    user.update();
   }
 }

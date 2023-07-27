@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:vim/models/user/user.dart';
 import 'package:vim/widgets/atoms/number_form_field.dart';
+import 'package:vim/widgets/atoms/standard_list.dart';
 import 'package:vim/widgets/atoms/switch_form_field.dart';
 import 'package:vim/widgets/molecules/simple_card.dart';
 
@@ -18,7 +19,9 @@ class PerformanceSettings extends StatelessWidget {
   Widget build(BuildContext context) {
     return SimpleCard(
       title: 'Performance Target',
-      child: Column(
+      child: StandardList(
+        physics: const NeverScrollableScrollPhysics(),
+        padding: EdgeInsets.zero,
         children: [
           NumberFormField(
             decoration: const InputDecoration(
@@ -33,7 +36,6 @@ class PerformanceSettings extends StatelessWidget {
               }
             },
           ),
-          const SizedBox(height: 16),
           NumberFormField(
             decoration: const InputDecoration(
               label: Text('Target Exercise'),
@@ -47,7 +49,6 @@ class PerformanceSettings extends StatelessWidget {
               }
             },
           ),
-          const SizedBox(height: 16),
           SwitchFormField(
             label: const Text('Auto-Adjust Consumption Target'),
             value: user.target.performance.adjustTargetConsumption,

@@ -7,20 +7,22 @@ import 'package:vim/views/home/debug_view.dart';
 import 'package:vim/views/home/log/log_consumptions_view.dart';
 import 'package:vim/views/home/log/log_performances_view.dart';
 import 'package:vim/views/home/log/log_progress_view.dart';
-import 'package:vim/views/home/settings_view.dart';
+import 'package:vim/views/settings_view.dart';
 
 class LogView extends StatelessWidget {
   const LogView({super.key});
 
   @override
   Widget build(BuildContext context) {
+    var user = User.of(context);
+
     return DefaultTabController(
       length: 3,
       child: Scaffold(
         appBar: AppBar(
           title: const Text('Log'),
           actions: [
-            if (User.of(context).isAdmin)
+            if (user.isAdmin)
               IconButton(
                 onPressed: () {
                   Navigator.of(context).push(
@@ -32,6 +34,7 @@ class LogView extends StatelessWidget {
                 icon: const Icon(Icons.bug_report),
               ),
             UserAvatar(
+              user: user,
               onTap: () {
                 Navigator.of(context).push(
                   MaterialPageRoute(

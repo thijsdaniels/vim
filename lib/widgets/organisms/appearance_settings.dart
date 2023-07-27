@@ -17,8 +17,8 @@ class AppearanceSettings extends StatelessWidget {
       builder: (context, settings, _) => SimpleCard(
         title: 'Appearance',
         child: StandardList(
-          padding: EdgeInsets.zero,
           physics: const NeverScrollableScrollPhysics(),
+          padding: EdgeInsets.zero,
           children: [
             DropdownButtonFormField<ThemeMode>(
               decoration: const InputDecoration(

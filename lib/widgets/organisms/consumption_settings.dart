@@ -3,6 +3,7 @@ import 'package:vim/extensions/num.dart';
 import 'package:vim/models/food/nutrition.dart';
 import 'package:vim/models/user/user.dart';
 import 'package:vim/widgets/atoms/slider_form_field.dart';
+import 'package:vim/widgets/atoms/standard_list.dart';
 import 'package:vim/widgets/molecules/simple_card.dart';
 
 class ConsumptionSettings extends StatelessWidget {
@@ -28,9 +29,10 @@ class ConsumptionSettings extends StatelessWidget {
 
     return SimpleCard(
       title: 'Consumption Target',
-      child: Column(
+      child: StandardList(
+        physics: const NeverScrollableScrollPhysics(),
+        padding: EdgeInsets.zero,
         children: [
-          const SizedBox(height: 16),
           SliderFormField(
             label: const Text('Surplus'),
             valueLabel: '${(user.target.consumption.surplus * 100).round()}%',
@@ -43,14 +45,12 @@ class ConsumptionSettings extends StatelessWidget {
               onChanged(user);
             },
           ),
-          const SizedBox(height: 16),
           SliderFormField(
             label: const Text('Carbs'),
             valueLabel:
                 '${(user.targetCarbohydrateConsumption * 100).round()}%',
             value: user.targetCarbohydrateConsumption,
           ),
-          const SizedBox(height: 16),
           SliderFormField(
             label: const Text('Proteins'),
             valueLabel: '${(user.target.consumption.proteins).decimals(1)}g',
@@ -66,7 +66,6 @@ class ConsumptionSettings extends StatelessWidget {
               }
             },
           ),
-          const SizedBox(height: 16),
           SliderFormField(
             label: const Text('Fats'),
             valueLabel: '${(user.target.consumption.fats * 100).round()}%',

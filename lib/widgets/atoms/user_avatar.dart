@@ -1,32 +1,21 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:vim/models/user/user.dart';
 
 class UserAvatar extends StatelessWidget {
   const UserAvatar({
     super.key,
+    required this.user,
     this.radius = 16,
     this.onTap,
   });
 
+  final User user;
   final double radius;
   final VoidCallback? onTap;
 
   @override
   Widget build(BuildContext context) {
-    var photo = FirebaseAuth.instance.currentUser!.photoURL != null
-        ? NetworkImage(
-            FirebaseAuth.instance.currentUser!.photoURL!,
-          )
-        : null;
-
-    var initials = FirebaseAuth.instance.currentUser!.photoURL == null
-        ? Text(
-            FirebaseAuth.instance.currentUser!.email!
-                .substring(0, 2)
-                .toUpperCase(),
-            style: TextStyle(fontSize: radius * 0.8),
-          )
-        : null;
+    var initials = user.initials;
 
     return Hero(
       tag: 'user-avatar',
@@ -36,8 +25,18 @@ class UserAvatar extends StatelessWidget {
           radius: radius,
           backgroundColor: Theme.of(context).colorScheme.primaryContainer,
           foregroundColor: Theme.of(context).colorScheme.onPrimaryContainer,
-          backgroundImage: photo,
-          child: initials,
+          backgroundImage: user.portrait,
+          child: user.portrait == null
+              ? initials != null
+                  ? Text(
+                      initials,
+                      style: TextStyle(
+                        fontSize: radius * 0.8,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    )
+                  : const Icon(Icons.person)
+              : null,
         ),
       ),
     );

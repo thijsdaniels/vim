@@ -15,6 +15,8 @@ class UsersList extends StatelessWidget {
       itemCount: users.length,
       itemBuilder: (context, index) => UserListSurface(
         user: users[index],
+
+        /// TODO: Implement user detail view.
         // onTap: () {
         //   Navigator.of(context).push(
         //     MaterialPageRoute(

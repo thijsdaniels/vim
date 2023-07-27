@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:vim/models/user/user.dart';
+import 'package:vim/widgets/atoms/user_icon.dart';
 import 'package:vim/widgets/molecules/list_surface.dart';
 
 class UserListSurface extends StatelessWidget {
@@ -21,18 +22,16 @@ class UserListSurface extends StatelessWidget {
 
     return ListSurface(
       elevation: elevation,
-      icon: null,
-      title: user.reference!.id,
+      icon: UserIcon(user),
+      title: user.name ?? 'Anonymous',
       onTap: onTap,
-      trailing: IconButton(
-        icon: myUser.following.contains(user.reference)
-            ? const Icon(Icons.check_box_outlined)
-            : const Icon(Icons.check_box_outline_blank),
-        onPressed: () {
-          if (myUser.following.contains(user.reference)) {
-            myUser.unfollow(user);
-          } else {
+      trailing: Checkbox(
+        value: myUser.following.contains(user.reference),
+        onChanged: (value) {
+          if (value == true) {
             myUser.follow(user);
+          } else {
+            myUser.unfollow(user);
           }
         },
       ),

@@ -12,9 +12,10 @@ import 'package:vim/models/user/target.dart';
 /// TODO: Add the various user-scoped subcollections to this class.
 class User extends Document {
   final bool isAdmin;
+  String? name;
   Body body;
   Target target;
-  double neat;
+  num neat;
   List<DocumentReference> following;
 
   double get targetConsumption =>
@@ -30,8 +31,26 @@ class User extends Document {
 
   double get targetFatConsumption => target.consumption.fats;
 
+  String? get initials {
+    if (name == null) {
+      return null;
+    }
+
+    var names = name!.trim().split(' ');
+
+    if (names.length == 1) {
+      return names[0][0].toUpperCase();
+    } else {
+      return names.first[0].toUpperCase() + names.last[0].toUpperCase();
+    }
+  }
+
+  // TODO: Implement user portraits.
+  NetworkImage? get portrait => null;
+
   User({
     this.isAdmin = false,
+    this.name,
     required this.body,
     required this.target,
     required this.neat,
@@ -56,6 +75,7 @@ class User extends Document {
   factory User.fromMap(Map<String, dynamic> map) {
     return User(
       isAdmin: map['isAdmin'],
+      name: map['name'],
       body: Body.fromMap(map['body']),
       target: Target.fromMap(map['target']),
       neat: map['neat'],
@@ -67,6 +87,7 @@ class User extends Document {
   Map<String, dynamic> toMap() {
     return {
       'isAdmin': isAdmin,
+      'name': name,
       'body': body.toMap(),
       'target': target.toMap(),
       'neat': neat,

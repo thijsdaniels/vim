@@ -6,6 +6,7 @@ import 'package:vim/models/mass.dart';
 import 'package:vim/models/user/body.dart';
 import 'package:vim/models/user/user.dart';
 import 'package:vim/widgets/atoms/number_form_field.dart';
+import 'package:vim/widgets/atoms/standard_list.dart';
 import 'package:vim/widgets/molecules/simple_card.dart';
 
 class BodySettings extends StatelessWidget {
@@ -22,7 +23,9 @@ class BodySettings extends StatelessWidget {
   Widget build(BuildContext context) {
     return SimpleCard(
       title: 'Body',
-      child: Column(
+      child: StandardList(
+        physics: const NeverScrollableScrollPhysics(),
+        padding: EdgeInsets.zero,
         children: [
           DropdownButtonFormField(
             decoration: const InputDecoration(
@@ -44,7 +47,6 @@ class BodySettings extends StatelessWidget {
               }
             },
           ),
-          const SizedBox(height: 16),
           NumberFormField(
             decoration: const InputDecoration(
               label: Text('Age'),
@@ -57,7 +59,6 @@ class BodySettings extends StatelessWidget {
               }
             },
           ),
-          const SizedBox(height: 16),
           NumberFormField(
             decoration: const InputDecoration(
               label: Text('Length'),
@@ -71,7 +72,6 @@ class BodySettings extends StatelessWidget {
               }
             },
           ),
-          const SizedBox(height: 16),
           NumberFormField(
             decoration: const InputDecoration(
               label: Text('Weight'),
@@ -85,7 +85,6 @@ class BodySettings extends StatelessWidget {
               }
             },
           ),
-          const SizedBox(height: 16),
           NumberFormField(
             decoration: const InputDecoration(
               label: Text('Lean Mass'),
@@ -101,7 +100,6 @@ class BodySettings extends StatelessWidget {
               }
             },
           ),
-          const SizedBox(height: 16),
           NumberFormField(
             decoration: const InputDecoration(
               label: Text('Fat Mass'),
@@ -117,7 +115,6 @@ class BodySettings extends StatelessWidget {
               }
             },
           ),
-          const SizedBox(height: 16),
           NumberFormField(
             decoration: const InputDecoration(
               label: Text('Bone Mass'),

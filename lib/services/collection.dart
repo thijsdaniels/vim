@@ -30,16 +30,15 @@ abstract class Collection<D extends Document> {
         );
   }
 
-  /// TODO: This is a really handy method when I need to migrate data. It might
-  /// also be useful for other cases, so maybe I should make it official.
-  // Future<List<D>> getAll() async {
-  //   return (await collection.get()).docs.map((doc) => doc.data()).toList();
-  // }
-
   Stream<List<D>> all() {
-    return collection
-        .snapshots()
-        .map((snapshot) => snapshot.docs.map((doc) => doc.data()).toList());
+    var snapshots = collection.snapshots();
+    var documents = snapshots.map((snapshot) {
+      return snapshot.docs.map((doc) {
+        return doc.data();
+      }).toList();
+    });
+    print(documents.toList());
+    return documents;
   }
 
   Stream<D?> get(String id) {
