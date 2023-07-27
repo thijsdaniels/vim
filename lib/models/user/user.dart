@@ -11,9 +11,11 @@ import 'package:vim/models/user/target.dart';
 /// TODO: Rename to `UserProfile` or even just `Profile`?
 /// TODO: Add the various user-scoped subcollections to this class.
 class User extends Document {
+  final bool isAdmin;
   Body body;
   Target target;
   double neat;
+  List<DocumentReference> following;
 
   double get targetConsumption =>
       (body.bmr + neat) * (1 + target.consumption.surplus);
@@ -29,9 +31,11 @@ class User extends Document {
   double get targetFatConsumption => target.consumption.fats;
 
   User({
+    this.isAdmin = false,
     required this.body,
     required this.target,
     required this.neat,
+    this.following = const [],
   });
 
   factory User.of(BuildContext context) {
@@ -51,18 +55,22 @@ class User extends Document {
 
   factory User.fromMap(Map<String, dynamic> map) {
     return User(
+      isAdmin: map['isAdmin'],
       body: Body.fromMap(map['body']),
       target: Target.fromMap(map['target']),
       neat: map['neat'],
+      following: List.castFrom<dynamic, DocumentReference>(map['following']),
     );
   }
 
   @override
   Map<String, dynamic> toMap() {
     return {
+      'isAdmin': isAdmin,
       'body': body.toMap(),
       'target': target.toMap(),
       'neat': neat,
+      'following': following,
     };
   }
 

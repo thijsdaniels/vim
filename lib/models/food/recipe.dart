@@ -8,7 +8,7 @@ import 'package:vim/models/food/recipe_consumption.dart';
 import 'package:vim/models/snapshot.dart';
 import 'package:vim/models/user/user.dart';
 
-class Recipe extends Document {
+class Recipe extends OwnedDocument {
   String name;
   num servings;
   late List<IngredientAmount> ingredientAmounts;
@@ -18,6 +18,7 @@ class Recipe extends Document {
   }
 
   Recipe({
+    required super.user,
     required this.name,
     this.servings = 1,
     List<IngredientAmount>? ingredientAmounts,
@@ -36,6 +37,7 @@ class Recipe extends Document {
 
   factory Recipe.fromMap(Map<String, dynamic> map) {
     return Recipe(
+      user: map['user'],
       name: map['name'],
       servings: map['servings'],
       ingredientAmounts: IngredientAmounts.fromMap(map['ingredientAmounts']),
@@ -45,6 +47,7 @@ class Recipe extends Document {
   @override
   Map<String, dynamic> toMap() {
     return {
+      'user': user,
       'name': name,
       'servings': servings,
       'ingredientAmounts': ingredientAmounts.toMap(),

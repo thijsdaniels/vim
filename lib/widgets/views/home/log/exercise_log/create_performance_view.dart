@@ -24,6 +24,8 @@ class CreatePerformanceView extends StatefulWidget {
 class _CreatePerformanceViewState extends State<CreatePerformanceView> {
   @override
   Widget build(BuildContext context) {
+    var user = User.of(context);
+
     return Scaffold(
       appBar: AppBar(
         title: const Text("Create Performance"),
@@ -49,9 +51,13 @@ class _CreatePerformanceViewState extends State<CreatePerformanceView> {
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: StreamBuilder(
-          stream: RoutinesCollectionGroup.instance.all(),
+          stream: RoutinesCollectionGroup.instance.all(
+            users: [user.reference!, ...user.following],
+          ),
           builder: (context, routines) => StreamBuilder(
-            stream: ExercisesCollectionGroup.instance.all(),
+            stream: ExercisesCollectionGroup.instance.all(
+              users: [user.reference!, ...user.following],
+            ),
             builder: (context, exercises) => SearchAnchor.bar(
               viewElevation: 1,
               isFullScreen: true,

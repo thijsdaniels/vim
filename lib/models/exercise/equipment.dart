@@ -4,13 +4,14 @@ import 'package:vim/models/mass.dart';
 
 /// TODO: Add an option to use the user's bodyweight isntead of the base weight
 /// and weight increment.
-class Equipment extends Document {
+class Equipment extends OwnedDocument {
   String name;
   // Mass baseWeight;
   Mass weightIncrement;
   // num loadFactor;
 
   Equipment({
+    required super.user,
     required this.name,
     // this.baseWeight = const Mass.kilograms(0),
     // this.loadFactor = 1,
@@ -30,6 +31,7 @@ class Equipment extends Document {
 
   factory Equipment.fromMap(Map<String, dynamic> map) {
     return Equipment(
+      user: map['user'],
       name: map['name'],
       // baseWeight: Mass.fromMap(map['baseWeight']),
       weightIncrement: Mass.fromMap(map['weightIncrement']),
@@ -40,6 +42,7 @@ class Equipment extends Document {
   @override
   Map<String, dynamic> toMap() {
     return {
+      'user': user,
       'name': name,
       // 'baseWeight': baseWeight.toMap(),
       'weightIncrement': weightIncrement.toMap(),

@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:vim/models/exercise/exercise.dart';
 import 'package:vim/services/collection_group.dart';
 
@@ -12,8 +13,11 @@ class ExercisesCollectionGroup extends CollectionGroup<Exercise> {
   }
 
   @override
-  Stream<List<Exercise>> all() {
+  Stream<List<Exercise>> all({
+    List<DocumentReference>? users,
+  }) {
     return collectionGroup
+        .where('user', whereIn: users)
         .orderBy('name')
         .snapshots()
         .map((snapshot) => snapshot.docs.map((doc) => doc.data()).toList());

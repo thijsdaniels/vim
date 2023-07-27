@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 import 'package:vim/extensions/string.dart';
 import 'package:vim/models/exercise/exercise.dart';
 import 'package:vim/models/user/user.dart';
@@ -130,20 +129,18 @@ class ExerciseView extends StatelessWidget {
                 ),
               ),
               ExerciseMuscleGroups(exercise: exercise),
-              Consumer<User>(
-                builder: (context, user, _) => StreamBuilder(
-                  stream: PerformancesCollectionGroup.instance.forExercise(
-                    exercise,
-                    user: user,
-                  ),
-                  builder: (context, snapshot) => SimpleCard(
-                    title: "History",
-                    child: PerformancesList(
-                      performances: snapshot.data ?? [],
-                      padding: EdgeInsets.zero,
-                      physics: const NeverScrollableScrollPhysics(),
-                      elevation: 4,
-                    ),
+              StreamBuilder(
+                stream: PerformancesCollectionGroup.instance.forExercise(
+                  exercise,
+                  user: User.of(context),
+                ),
+                builder: (context, snapshot) => SimpleCard(
+                  title: "History",
+                  child: PerformancesList(
+                    performances: snapshot.data ?? [],
+                    padding: EdgeInsets.zero,
+                    physics: const NeverScrollableScrollPhysics(),
+                    elevation: 4,
                   ),
                 ),
               ),

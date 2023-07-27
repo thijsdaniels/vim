@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:vim/models/exercise/routine.dart';
+import 'package:vim/models/user/user.dart';
 import 'package:vim/services/routines_collection.dart';
 import 'package:vim/widgets/atoms/standard_list.dart';
 import 'package:vim/widgets/molecules/simple_card.dart';
@@ -54,6 +55,7 @@ class _CreateRoutineViewState extends State<CreateRoutineView> {
                   RoutinesCollection.of(context).update(routine);
                 } else {
                   routine = Routine(
+                    user: User.of(context).reference!,
                     name: _name,
                     exerciseReferences: [],
                   );

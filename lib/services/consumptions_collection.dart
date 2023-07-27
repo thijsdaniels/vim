@@ -2,8 +2,6 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:vim/models/food/consumption.dart';
-import 'package:vim/models/food/recipe.dart';
-import 'package:vim/models/food/recipe_consumption.dart';
 import 'package:vim/services/collection.dart';
 
 class ConsumptionsCollection<T extends Consumption> extends Collection<T> {
@@ -31,23 +29,5 @@ class ConsumptionsCollection<T extends Consumption> extends Collection<T> {
         .orderBy('timestamp')
         .snapshots()
         .map((snapshot) => snapshot.docs.map((doc) => doc.data()).toList());
-  }
-
-  Stream<List<RecipeConsumption>> forRecipe(
-    Recipe recipe, {
-    Timestamp? before,
-    int? limit,
-  }) {
-    var query = collection
-        .where('recipe.reference', isEqualTo: recipe.reference)
-        .where('timestamp', isLessThan: before)
-        .orderBy('timestamp', descending: true);
-
-    if (limit != null) {
-      query = query.limit(limit);
-    }
-
-    return query.snapshots().map((snapshot) =>
-        snapshot.docs.map((doc) => doc.data() as RecipeConsumption).toList());
   }
 }

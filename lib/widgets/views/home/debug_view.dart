@@ -1,8 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:vim/models/document.dart';
-import 'package:vim/services/consumptions_collection_group.dart';
-import 'package:vim/services/performances_collection_group.dart';
 import 'package:vim/widgets/molecules/with_confirmation_dialog.dart';
 
 class DebugView extends StatelessWidget {
@@ -31,45 +29,72 @@ class MigrateButton extends StatelessWidget {
             return;
           }
 
-          await traverseDocuments(
-              PerformancesCollectionGroup.instance.collectionGroup,
-              (performance, index, length) async {
-            print(
-              'Visiting performance "${performance.reference!.path}" (${index + 1} of $length)...',
-            );
+          // await assignOwners(
+          //   IngredientsCollectionGroup.instance.collectionGroup,
+          // );
 
-            if (performance.reference!.parent.parent!.id == 'performances') {
-              performance.user =
-                  performance.reference!.parent.parent!.parent.parent!;
-            } else {
-              performance.user = performance.reference!.parent.parent!;
-            }
+          // await assignOwners(
+          //   RecipesCollectionGroup.instance.collectionGroup,
+          // );
 
-            print('  Updating performance...');
-            await performance.reference!.set(performance);
-          });
+          // await assignOwners(
+          //   EquipmentsCollectionGroup.instance.collectionGroup,
+          // );
 
-          await traverseDocuments(
-            ConsumptionsCollectionGroup.instance.collectionGroup,
-            (consumption, index, length) async {
-              print(
-                'Visiting consumption "${consumption.reference!.path}" (${index + 1} of $length)...',
-              );
+          // await assignOwners(
+          //   ExercisesCollectionGroup.instance.collectionGroup,
+          // );
 
-              if (consumption.reference!.parent.parent!.id == 'consumptions') {
-                consumption.user =
-                    consumption.reference!.parent.parent!.parent.parent!;
-              } else {
-                consumption.user = consumption.reference!.parent.parent!;
-              }
+          // await assignOwners(
+          //   RoutinesCollectionGroup.instance.collectionGroup,
+          // );
 
-              print('  Updating consumption...');
-              await consumption.reference!.set(consumption);
-            },
-          );
+          // await assignOwners(
+          //   ConsumptionsCollectionGroup.instance.collectionGroup,
+          // );
+
+          // await assignOwners(
+          //   PerformancesCollectionGroup.instance.collectionGroup,
+          // );
         },
         child: const Text('Migrate'),
       ),
+    );
+  }
+
+  DocumentReference? findOwner(DocumentReference reference) {
+    var parentDocument = reference.parent.parent;
+
+    if (parentDocument == null) {
+      return null;
+    } else if (parentDocument.parent.id == 'users') {
+      return parentDocument;
+    } else {
+      return findOwner(parentDocument);
+    }
+  }
+
+  Future<void> assignOwners<D extends OwnedDocument>(Query<D> query) async {
+    await traverseDocuments(
+      query,
+      (document, index, length) async {
+        print(
+          'Visiting document "${document.reference!.path}" (${index + 1} of $length)...',
+        );
+
+        var owner = findOwner(document.reference!);
+
+        if (owner == null) {
+          throw Exception(
+            'Could not find owner for document "${document.reference!.path}"',
+          );
+        }
+
+        document.user = owner;
+
+        print('  Updating document...');
+        await document.reference!.set(document);
+      },
     );
   }
 

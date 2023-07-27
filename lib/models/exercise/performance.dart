@@ -6,15 +6,14 @@ import 'package:vim/models/exercise/exercise_performance.dart';
 import 'package:vim/models/exercise/quick_performance.dart';
 import 'package:vim/models/exercise/routine_performance.dart';
 
-abstract class Performance extends Document {
-  DocumentReference user;
+abstract class Performance extends OwnedDocument {
   Timestamp timestamp;
 
   String get name;
   FutureOr<num> get calories;
 
   Performance({
-    required this.user,
+    required super.user,
     required this.timestamp,
   });
 

@@ -7,7 +7,7 @@ import 'package:vim/models/mass.dart';
 import 'package:vim/models/snapshot.dart';
 import 'package:vim/models/user/user.dart';
 
-class Ingredient extends Document {
+class Ingredient extends OwnedDocument {
   String? icon;
   String name;
   String? brand;
@@ -16,6 +16,7 @@ class Ingredient extends Document {
   bool nutritionPerServing;
 
   Ingredient({
+    required super.user,
     this.icon,
     required this.name,
     this.brand,
@@ -38,6 +39,7 @@ class Ingredient extends Document {
 
   factory Ingredient.fromMap(Map<String, dynamic> map) {
     return Ingredient(
+      user: map['user'],
       icon: map['icon'],
       name: map['name'],
       brand: map['brand'],
@@ -50,6 +52,7 @@ class Ingredient extends Document {
   @override
   Map<String, dynamic> toMap() {
     return {
+      'user': user,
       'icon': icon,
       'name': name,
       'brand': brand,

@@ -11,7 +11,7 @@ class ResistanceExercisePerformance extends ExercisePerformance {
   List<Set> sets = [];
 
   /// TODO: Remove the legacy fallback of 65 kilograms for bodyweight and make
-  /// the bodyweight after migrating old performances.
+  /// the bodyweight non-nullable after migrating old performances.
   /// TODO: If there is no equipment, I'm falling back to a loadFactor of 1, but
   /// It should actually be 0. I need to migrate old performances (those before
   /// 2023-07-21) to relate them to equipment.

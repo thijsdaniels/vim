@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:vim/extensions/string.dart';
 import 'package:vim/models/exercise/equipment.dart';
 import 'package:vim/models/exercise/exercise.dart';
+import 'package:vim/models/user/user.dart';
 import 'package:vim/services/equipments_collection_group.dart';
 import 'package:vim/services/exercises_collection.dart';
 import 'package:vim/widgets/atoms/multiselect_dropdown.dart';
@@ -52,6 +53,7 @@ class _CreateExerciseViewState extends State<CreateExerciseView> {
   @override
   Widget build(BuildContext context) {
     Exercise? exercise = widget.exercise;
+    var user = User.of(context);
 
     return Scaffold(
       appBar: AppBar(
@@ -83,6 +85,7 @@ class _CreateExerciseViewState extends State<CreateExerciseView> {
                   ExercisesCollection.of(context).update(exercise);
                 } else {
                   ExercisesCollection.of(context).create(Exercise(
+                    user: User.of(context).reference!,
                     name: _name!,
                     type: _type!,
                     equipmentReference: _equipmentReference,
@@ -146,7 +149,9 @@ class _CreateExerciseViewState extends State<CreateExerciseView> {
                   physics: const NeverScrollableScrollPhysics(),
                   children: [
                     StreamBuilder(
-                      stream: EquipmentsCollectionGroup.instance.all(),
+                      stream: EquipmentsCollectionGroup.instance.all(
+                        users: [user.reference!, ...user.following],
+                      ),
                       builder: (context, equipments) {
                         return DropdownButtonFormField<Equipment>(
                           decoration: const InputDecoration(

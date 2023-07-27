@@ -20,7 +20,7 @@ enum ExerciseType {
   weights, // resistance,
 }
 
-class Exercise extends Document {
+class Exercise extends OwnedDocument {
   ExerciseType type;
   String name;
   DocumentReference? equipmentReference;
@@ -38,6 +38,7 @@ class Exercise extends Document {
   }
 
   Exercise({
+    required super.user,
     required this.type,
     required this.name,
     this.equipmentReference,
@@ -62,6 +63,7 @@ class Exercise extends Document {
 
   factory Exercise.fromMap(Map<String, dynamic> map) {
     return Exercise(
+      user: map['user'],
       type: ExerciseType.values.byName(map['type']),
       name: map['name'],
       equipmentReference: map['equipment'],
@@ -83,6 +85,7 @@ class Exercise extends Document {
   @override
   Map<String, dynamic> toMap() {
     return {
+      'user': user,
       'type': type.name,
       'name': name,
       'equipment': equipmentReference,

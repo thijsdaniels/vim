@@ -4,6 +4,7 @@ import 'package:vim/models/food/ingredient.dart';
 import 'package:vim/models/food/ingredient_consumption.dart';
 import 'package:vim/models/food/recipe.dart';
 import 'package:vim/models/food/recipe_consumption.dart';
+import 'package:vim/models/user/user.dart';
 import 'package:vim/services/ingredients_collection_group.dart';
 import 'package:vim/services/recipes_collection_group.dart';
 import 'package:vim/widgets/molecules/ingredient_list_surface.dart';
@@ -17,6 +18,8 @@ class CreateConsumptionView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    var user = User.of(context);
+
     return Scaffold(
       appBar: AppBar(
         title: const Text("Create Consumption"),
@@ -44,9 +47,13 @@ class CreateConsumptionView extends StatelessWidget {
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: StreamBuilder(
-          stream: RecipesCollectionGroup.instance.all(),
+          stream: RecipesCollectionGroup.instance.all(
+            users: [user.reference!, ...user.following],
+          ),
           builder: (context, recipes) => StreamBuilder(
-            stream: IngredientsCollectionGroup.instance.all(),
+            stream: IngredientsCollectionGroup.instance.all(
+              users: [user.reference!, ...user.following],
+            ),
             builder: (context, ingredients) => SearchAnchor.bar(
               viewElevation: 1,
               isFullScreen: true,

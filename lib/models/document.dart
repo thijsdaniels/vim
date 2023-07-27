@@ -2,13 +2,15 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:vim/models/model.dart';
 
 abstract class Document extends Model {
-  /// TODO: Make the reference final and non-nullable, by adding it as a
+  /// TODO: Make the `reference` final and non-nullable, by adding it as a
   /// required parameter of the constructor.
   /// TODO: Use generics to make sure that subclasses of `Document` have a
   /// `DocumentReference` of the subclass type.
   DocumentReference? reference;
 
-  Document();
+  Document({
+    this.reference,
+  });
 
   Document.fromFirestore(
     DocumentSnapshot<Map<String, dynamic>> snapshot,
@@ -34,4 +36,18 @@ abstract class Document extends Model {
   }
 
   Future<void> onDelete() async {}
+}
+
+mixin Owner on Document {
+  DocumentReference? get user;
+}
+
+abstract class OwnedDocument extends Document with Owner {
+  @override
+  DocumentReference? user;
+
+  OwnedDocument({
+    super.reference,
+    required this.user,
+  });
 }

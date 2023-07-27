@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:vim/models/exercise/equipment.dart';
 import 'package:vim/models/mass.dart';
+import 'package:vim/models/user/user.dart';
 import 'package:vim/services/equipments_collection.dart';
 import 'package:vim/widgets/atoms/number_form_field.dart';
 import 'package:vim/widgets/atoms/standard_list.dart';
@@ -66,6 +67,7 @@ class _CreateEquipmentViewState extends State<CreateEquipmentView> {
                   EquipmentsCollection.of(context).update(equipment);
                 } else {
                   EquipmentsCollection.of(context).create(Equipment(
+                    user: User.of(context).reference!,
                     name: _name!,
                     // baseWeight: Mass.kilograms(_baseWeight!),
                     weightIncrement: Mass.kilograms(_weightIncrement!),

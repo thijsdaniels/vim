@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:vim/models/date_model.dart';
 import 'package:vim/models/exercise/exercise.dart';
+import 'package:vim/models/user/user.dart';
 import 'package:vim/services/exercises_collection_group.dart';
 import 'package:vim/widgets/atoms/exercise_form_field.dart';
 import 'package:vim/widgets/molecules/simple_card.dart';
@@ -26,6 +27,7 @@ class _SelectExerciseViewState extends State<SelectExerciseView> {
   @override
   Widget build(BuildContext context) {
     Exercise? exercise = widget.exercise;
+    var user = User.of(context);
 
     return Scaffold(
       appBar: AppBar(
@@ -71,7 +73,9 @@ class _SelectExerciseViewState extends State<SelectExerciseView> {
                       mainAxisSize: MainAxisSize.min,
                       children: [
                         StreamBuilder(
-                          stream: ExercisesCollectionGroup.instance.all(),
+                          stream: ExercisesCollectionGroup.instance.all(
+                            users: [user.reference!, ...user.following],
+                          ),
 
                           /// TODO: Figure out a way to get rid of the
                           /// `CircularProgressIndicator`. Doing so currently causes

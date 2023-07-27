@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:vim/models/food/ingredient.dart';
 import 'package:vim/models/food/nutrition.dart';
+import 'package:vim/models/user/user.dart';
 import 'package:vim/services/ingredients_collection.dart';
 import 'package:vim/widgets/atoms/icons8_icon_form_field.dart';
 import 'package:vim/widgets/atoms/standard_list.dart';
@@ -87,6 +88,7 @@ class _CreateIngredientViewState extends State<CreateIngredientView> {
                   IngredientsCollection.of(context).update(ingredient);
                 } else {
                   ingredient = Ingredient(
+                    user: User.of(context).reference!,
                     icon: _icon,
                     name: name,
                     brand: brand,

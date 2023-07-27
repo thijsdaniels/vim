@@ -1,5 +1,5 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:vim/models/user/user.dart';
 import 'package:vim/widgets/atoms/surface.dart';
 import 'package:vim/widgets/atoms/user_avatar.dart';
 import 'package:vim/widgets/molecules/date_stepper.dart';
@@ -20,8 +20,7 @@ class LogView extends StatelessWidget {
         appBar: AppBar(
           title: const Text('Log'),
           actions: [
-            if (FirebaseAuth.instance.currentUser!.email ==
-                'thijsdaniels89@gmail.com')
+            if (User.of(context).isAdmin)
               IconButton(
                 onPressed: () {
                   Navigator.of(context).push(

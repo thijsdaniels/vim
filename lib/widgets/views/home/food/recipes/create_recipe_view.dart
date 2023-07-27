@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:vim/models/food/recipe.dart';
+import 'package:vim/models/user/user.dart';
 import 'package:vim/services/recipes_collection.dart';
 import 'package:vim/widgets/atoms/number_form_field.dart';
 import 'package:vim/widgets/atoms/standard_list.dart';
@@ -56,6 +57,7 @@ class _CreateRecipeViewState extends State<CreateRecipeView> {
                   RecipesCollection.of(context).update(recipe);
                 } else {
                   recipe = Recipe(
+                    user: User.of(context).reference!,
                     name: _name,
                     servings: _servings!,
                   );

@@ -2,6 +2,8 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:vim/models/food/consumption.dart';
 import 'package:vim/models/food/ingredient.dart';
 import 'package:vim/models/food/ingredient_consumption.dart';
+import 'package:vim/models/food/recipe.dart';
+import 'package:vim/models/food/recipe_consumption.dart';
 import 'package:vim/models/user/user.dart';
 import 'package:vim/services/collection_group.dart';
 
@@ -34,5 +36,25 @@ class ConsumptionsCollectionGroup extends CollectionGroup<Consumption> {
     return query.snapshots().map((snapshot) => snapshot.docs
         .map((doc) => doc.data() as IngredientConsumption)
         .toList());
+  }
+
+  Stream<List<RecipeConsumption>> forRecipe(
+    Recipe recipe, {
+    required User user,
+    Timestamp? before,
+    int? limit,
+  }) {
+    var query = collectionGroup
+        .where('user', isEqualTo: user.reference)
+        .where('recipe.reference', isEqualTo: recipe.reference)
+        .where('timestamp', isLessThan: before)
+        .orderBy('timestamp', descending: true);
+
+    if (limit != null) {
+      query = query.limit(limit);
+    }
+
+    return query.snapshots().map((snapshot) =>
+        snapshot.docs.map((doc) => doc.data() as RecipeConsumption).toList());
   }
 }

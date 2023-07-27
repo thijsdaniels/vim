@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:vim/models/food/ingredient_amount.dart';
+import 'package:vim/models/user/user.dart';
 import 'package:vim/services/ingredients_collection_group.dart';
 import 'package:vim/widgets/atoms/ingredient_form_field.dart';
 import 'package:vim/widgets/atoms/number_form_field.dart';
@@ -43,6 +44,8 @@ class _CreateIngredientAmountViewState
 
   @override
   Widget build(BuildContext context) {
+    var user = User.of(context);
+
     return Scaffold(
       appBar: AppBar(
         title: const Text('Add Ingredient'),
@@ -76,7 +79,9 @@ class _CreateIngredientAmountViewState
                 mainAxisSize: MainAxisSize.min,
                 children: [
                   StreamBuilder(
-                    stream: IngredientsCollectionGroup.instance.all(),
+                    stream: IngredientsCollectionGroup.instance.all(
+                      users: [user.reference!, ...user.following],
+                    ),
 
                     /// TODO: Figure out a way to get rid of the
                     /// `CircularProgressIndicator`. Doing so currently causes

@@ -5,7 +5,7 @@ import 'package:vim/models/exercise/routine_performance.dart';
 import 'package:vim/models/snapshot.dart';
 import 'package:vim/models/user/user.dart';
 
-class Routine extends Document {
+class Routine extends OwnedDocument {
   List<Exercise>? _exercises;
 
   String name;
@@ -33,6 +33,7 @@ class Routine extends Document {
   }
 
   Routine({
+    required super.user,
     required this.name,
     required this.exerciseReferences,
   });
@@ -50,6 +51,7 @@ class Routine extends Document {
 
   factory Routine.fromMap(Map<String, dynamic> map) {
     return Routine(
+      user: map['user'],
       name: map['name'],
       exerciseReferences:
           List.castFrom<dynamic, DocumentReference>(map['exercises']),
@@ -59,6 +61,7 @@ class Routine extends Document {
   @override
   Map<String, dynamic> toMap() {
     return {
+      'user': user,
       'name': name,
       'exercises': exerciseReferences,
     };

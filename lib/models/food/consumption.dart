@@ -7,15 +7,14 @@ import 'package:vim/models/food/nutrition.dart';
 import 'package:vim/models/food/quick_consumption.dart';
 import 'package:vim/models/food/recipe_consumption.dart';
 
-abstract class Consumption extends Document {
-  DocumentReference user;
+abstract class Consumption extends OwnedDocument {
   Timestamp timestamp;
 
   String get name;
   FutureOr<Nutrition> get nutrition;
 
   Consumption({
-    required this.user,
+    required super.user,
     required this.timestamp,
   });
 
