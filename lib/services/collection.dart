@@ -31,14 +31,11 @@ abstract class Collection<D extends Document> {
   }
 
   Stream<List<D>> all() {
-    var snapshots = collection.snapshots();
-    var documents = snapshots.map((snapshot) {
+    return collection.snapshots().map((snapshot) {
       return snapshot.docs.map((doc) {
         return doc.data();
       }).toList();
     });
-    print(documents.toList());
-    return documents;
   }
 
   Stream<D?> get(String id) {

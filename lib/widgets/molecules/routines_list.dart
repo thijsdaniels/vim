@@ -6,19 +6,31 @@ import 'package:vim/widgets/molecules/list_surface.dart';
 import 'package:vim/views/home/exercise/routines/routine_view.dart';
 
 class RoutinesList extends StatelessWidget {
-  const RoutinesList(this.routines, {super.key});
+  const RoutinesList(
+    this.routines, {
+    super.key,
+    this.elevation,
+    this.physics,
+    this.padding = const EdgeInsets.all(16),
+  });
 
   final List<Routine> routines;
+  final double? elevation;
+  final ScrollPhysics? physics;
+  final EdgeInsets padding;
 
   @override
   Widget build(BuildContext context) {
     return StandardList(
       spacing: 12,
+      physics: physics,
+      padding: padding,
       itemCount: routines.length,
       itemBuilder: (context, index) {
         Routine routine = routines.elementAt(index);
 
         return ListSurface(
+          elevation: elevation,
           icon: RoutineIcon(routine: routine),
           title: routine.name,
           subtitle: [
@@ -27,7 +39,9 @@ class RoutinesList extends StatelessWidget {
           onTap: () {
             Navigator.of(context).push(
               MaterialPageRoute(
-                builder: (context) => RoutineView(id: routine.reference!.id),
+                builder: (context) => RoutineView(
+                  path: routine.reference!.path,
+                ),
               ),
             );
           },

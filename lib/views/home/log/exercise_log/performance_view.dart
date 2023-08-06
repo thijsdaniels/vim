@@ -8,19 +8,20 @@ import 'package:vim/models/exercise/resistance_exercise_performance.dart';
 import 'package:vim/models/exercise/routine_performance.dart';
 import 'package:vim/services/performances_collection.dart';
 import 'package:vim/services/performances_collection_group.dart';
-import 'package:vim/widgets/atoms/exercise_performance_muscle_groups.dart';
-import 'package:vim/widgets/atoms/routine_performance_muscle_groups.dart';
-import 'package:vim/widgets/atoms/standard_list.dart';
-import 'package:vim/widgets/atoms/stats_table.dart';
-import 'package:vim/widgets/molecules/list_surface.dart';
-import 'package:vim/widgets/molecules/routine_exercise_performances.dart';
-import 'package:vim/widgets/molecules/simple_card.dart';
-import 'package:vim/widgets/molecules/with_confirmation_dialog.dart';
 import 'package:vim/views/home/log/exercise_log/create_exercise_performance_view.dart';
 import 'package:vim/views/home/log/exercise_log/create_quick_track_performance_view.dart';
 import 'package:vim/views/home/log/exercise_log/create_routine_performance_view.dart';
 import 'package:vim/views/loading_view.dart';
 import 'package:vim/views/not_found_view.dart';
+import 'package:vim/widgets/atoms/routine_performance_muscle_groups.dart';
+import 'package:vim/widgets/atoms/standard_list.dart';
+import 'package:vim/widgets/atoms/stats_table.dart';
+import 'package:vim/widgets/molecules/exercises_list.dart';
+import 'package:vim/widgets/molecules/list_surface.dart';
+import 'package:vim/widgets/molecules/routine_exercise_performances.dart';
+import 'package:vim/widgets/molecules/routines_list.dart';
+import 'package:vim/widgets/molecules/simple_card.dart';
+import 'package:vim/widgets/molecules/with_confirmation_dialog.dart';
 
 class PerformanceView extends StatefulWidget {
   final String path;
@@ -115,55 +116,68 @@ class _PerformanceViewState extends State<PerformanceView> {
                 title: 'Details',
                 child: FutureBuilder(
                   future: Future.value(performance.calories),
-                  builder: (context, calories) => StreamBuilder(
-                    stream: performance is ExercisePerformance
-                        ? performance.exercise.snapshot.equipment
-                        : null,
-                    builder: (context, equipment) {
-                      return StatsTable(
-                        children: [
-                          if (performance is QuickPerformance)
-                            StatsRow(
-                              'Name',
-                              performance.name,
-                            ),
-                          if (performance is ExercisePerformance) ...[
-                            StatsRow(
-                              'Exercise',
-                              performance.exercise.snapshot.name,
-                            ),
-                            StatsRow(
-                              'Equipment',
-                              equipment.data?.name,
-                            )
-                          ],
-                          if (performance is RoutinePerformance)
-                            StatsRow(
-                              'Routine',
-                              performance.routine.snapshot.name,
-                            ),
-                          StatsRow(
-                            'Calories',
-                            '${calories.data?.round()} cal',
-                          ),
-                          StatsRow(
-                            'Performed At',
-                            performance.timestamp.toDate().toDateTimeString(),
-                          ),
-                        ],
-                      );
-                    },
-                  ),
+                  builder: (context, calories) {
+                    return StatsTable(
+                      children: [
+                        StatsRow(
+                          'Name',
+                          performance.name,
+                        ),
+                        StatsRow(
+                          'Calories',
+                          '${calories.data?.round()} cal',
+                        ),
+                        StatsRow(
+                          'Performed At',
+                          performance.timestamp.toDate().toDateTimeString(),
+                        ),
+                      ],
+                    );
+                  },
                 ),
               ),
+              if (performance is ExercisePerformance)
+                SimpleCard(
+                  title: 'Exercise',
+                  child: ExercisesList(
+                    [
+                      performance.exercise.snapshot
+
+                        /// TODO: Setting the reference here is an absolutely
+                        /// terrible idea. I really need to switch to versioning
+                        /// instead of using snapshots.
+                        ..reference = performance.exercise.reference
+                    ],
+                    elevation: 4,
+                    physics: const NeverScrollableScrollPhysics(),
+                    padding: EdgeInsets.zero,
+                  ),
+                ),
+              if (performance is RoutinePerformance)
+                SimpleCard(
+                  title: 'Routine',
+                  child: RoutinesList(
+                    [
+                      performance.routine.snapshot
+
+                        /// TODO: Setting the reference here is an absolutely
+                        /// terrible idea. I really need to switch to versioning
+                        /// instead of using snapshots.
+                        ..reference = performance.routine.reference
+                    ],
+                    elevation: 4,
+                    physics: const NeverScrollableScrollPhysics(),
+                    padding: EdgeInsets.zero,
+                  ),
+                ),
               if (performance is RoutinePerformance)
                 RoutinePerformanceMuscleGroups(
                   performance: performance,
                 ),
-              if (performance is ExercisePerformance)
-                ExercisePerformanceMuscleGroups(
-                  performance: performance,
-                ),
+              // if (performance is ExercisePerformance)
+              //   ExercisePerformanceMuscleGroups(
+              //     performance: performance,
+              //   ),
               if (performance is EnduranceExercisePerformance)
                 SimpleCard(
                   title: 'Performance',
@@ -171,12 +185,12 @@ class _PerformanceViewState extends State<PerformanceView> {
                     children: [
                       StatsRow(
                         'Duration',
-                        '${performance.duration.inMinutes}',
+                        performance.duration.inMinutes,
                         unit: 'm',
                       ),
                       StatsRow(
                         'Power',
-                        '${performance.watts}',
+                        performance.watts,
                         unit: 'watts',
                       ),
                     ],

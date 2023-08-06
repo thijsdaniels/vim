@@ -1,5 +1,3 @@
-import 'dart:async';
-
 import 'package:vim/models/exercise/energy.dart';
 import 'package:vim/models/exercise/exercise.dart';
 import 'package:vim/models/exercise/exercise_performance.dart';
@@ -21,7 +19,7 @@ class EnduranceExercisePerformance extends ExercisePerformance {
   Energy get energy => Energy.watts(watts, duration);
 
   @override
-  FutureOr<num> get calories =>
+  num get calories =>
       energy.kiloCalories / EnduranceExercisePerformance.efficiency;
 
   EnduranceExercisePerformance({

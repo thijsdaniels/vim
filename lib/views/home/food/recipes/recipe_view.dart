@@ -6,6 +6,7 @@ import 'package:vim/models/food/recipe.dart';
 import 'package:vim/models/user/user.dart';
 import 'package:vim/services/consumptions_collection_group.dart';
 import 'package:vim/services/recipes_collection.dart';
+import 'package:vim/services/recipes_collection_group.dart';
 import 'package:vim/widgets/atoms/icons8_icon.dart';
 import 'package:vim/widgets/atoms/standard_list.dart';
 import 'package:vim/widgets/atoms/stats_table.dart';
@@ -20,17 +21,21 @@ import 'package:vim/views/loading_view.dart';
 import 'package:vim/views/not_found_view.dart';
 
 class RecipeView extends StatelessWidget {
-  final String id;
+  final String path;
 
   const RecipeView({
     super.key,
-    required this.id,
+    required this.path,
   });
+
+  bool isOwner(Recipe recipe, User user) {
+    return recipe.reference!.parent.parent!.id == user.reference!.id;
+  }
 
   @override
   Widget build(BuildContext context) {
     return StreamBuilder<Recipe?>(
-      stream: RecipesCollection.of(context).get(id),
+      stream: RecipesCollectionGroup.instance.get(path),
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
           return const LoadingView();
@@ -46,32 +51,34 @@ class RecipeView extends StatelessWidget {
           appBar: AppBar(
             title: Text(recipe.name),
             actions: [
-              IconButton(
-                icon: const Icon(Icons.edit),
-                onPressed: () async {
-                  Navigator.of(context).push(
-                    MaterialPageRoute(
-                      builder: (context) => CreateRecipeView(
-                        recipe: recipe,
-                      ),
-                    ),
-                  );
-                },
-              ),
-              WithConfirmationDialog(
-                title: recipe.name,
-                description: 'Are you sure you want to delete this recipe?',
-                builder: (context, confirm) => IconButton(
-                  icon: const Icon(Icons.delete_rounded),
+              if (isOwner(recipe, User.of(context))) ...[
+                IconButton(
+                  icon: const Icon(Icons.edit),
                   onPressed: () async {
-                    var navigator = Navigator.of(context);
-                    if (await confirm()) {
-                      RecipesCollection.of(context).delete(recipe);
-                      navigator.pop();
-                    }
+                    Navigator.of(context).push(
+                      MaterialPageRoute(
+                        builder: (context) => CreateRecipeView(
+                          recipe: recipe,
+                        ),
+                      ),
+                    );
                   },
                 ),
-              ),
+                WithConfirmationDialog(
+                  title: recipe.name,
+                  description: 'Are you sure you want to delete this recipe?',
+                  builder: (context, confirm) => IconButton(
+                    icon: const Icon(Icons.delete_rounded),
+                    onPressed: () async {
+                      var navigator = Navigator.of(context);
+                      if (await confirm()) {
+                        RecipesCollection.of(context).delete(recipe);
+                        navigator.pop();
+                      }
+                    },
+                  ),
+                ),
+              ],
             ],
           ),
           body: StandardList(
@@ -99,23 +106,24 @@ class RecipeView extends StatelessWidget {
               SimpleCard(
                 title: 'Ingredients',
                 actions: [
-                  IconButton(
-                    icon: const Icon(Icons.add),
-                    onPressed: () async {
-                      IngredientAmount? ingredientAmount =
-                          await Navigator.of(context).push(
-                        MaterialPageRoute(
-                          builder: (context) =>
-                              const CreateIngredientAmountView(),
-                        ),
-                      );
+                  if (isOwner(recipe, User.of(context)))
+                    IconButton(
+                      icon: const Icon(Icons.add),
+                      onPressed: () async {
+                        IngredientAmount? ingredientAmount =
+                            await Navigator.of(context).push(
+                          MaterialPageRoute(
+                            builder: (context) =>
+                                const CreateIngredientAmountView(),
+                          ),
+                        );
 
-                      if (ingredientAmount != null) {
-                        recipe.ingredientAmounts.add(ingredientAmount);
-                        RecipesCollection.of(context).update(recipe);
-                      }
-                    },
-                  ),
+                        if (ingredientAmount != null) {
+                          recipe.ingredientAmounts.add(ingredientAmount);
+                          RecipesCollection.of(context).update(recipe);
+                        }
+                      },
+                    ),
                 ],
                 child: StandardList(
                   physics: const NeverScrollableScrollPhysics(),
@@ -127,14 +135,18 @@ class RecipeView extends StatelessWidget {
 
                     return IngredientAmountListSurface(
                       ingredientAmount,
-                      onChange: (value) {
-                        recipe.ingredientAmounts[index] = value;
-                        RecipesCollection.of(context).update(recipe);
-                      },
-                      onDelete: () {
-                        recipe.ingredientAmounts.removeAt(index);
-                        RecipesCollection.of(context).update(recipe);
-                      },
+                      onChange: isOwner(recipe, User.of(context))
+                          ? (value) {
+                              recipe.ingredientAmounts[index] = value;
+                              RecipesCollection.of(context).update(recipe);
+                            }
+                          : null,
+                      onDelete: isOwner(recipe, User.of(context))
+                          ? () {
+                              recipe.ingredientAmounts.removeAt(index);
+                              RecipesCollection.of(context).update(recipe);
+                            }
+                          : null,
                     );
                   },
                 ),
@@ -166,14 +178,14 @@ class RecipeView extends StatelessWidget {
 
 class IngredientAmountListSurface extends StatelessWidget {
   final IngredientAmount ingredientAmount;
-  final void Function(IngredientAmount value) onChange;
-  final void Function() onDelete;
+  final void Function(IngredientAmount value)? onChange;
+  final void Function()? onDelete;
 
   const IngredientAmountListSurface(
     this.ingredientAmount, {
     super.key,
-    required this.onChange,
-    required this.onDelete,
+    this.onChange,
+    this.onDelete,
   });
 
   @override
@@ -190,36 +202,42 @@ class IngredientAmountListSurface extends StatelessWidget {
               : const CircularProgressIndicator(),
           title: ingredient?.name ?? '...',
           subtitle: '${ingredientAmount.amount.decimals(2).toString()} grams',
-          onTap: () async {
-            IngredientAmount edited = await Navigator.of(context).push(
-              MaterialPageRoute(
-                builder: (context) => CreateIngredientAmountView(
-                  ingredientAmount: ingredientAmount,
-                ),
-              ),
-            );
+          onTap: onChange != null
+              ? () async {
+                  IngredientAmount? edited = await Navigator.of(context).push(
+                    MaterialPageRoute(
+                      builder: (context) => CreateIngredientAmountView(
+                        ingredientAmount: ingredientAmount,
+                      ),
+                    ),
+                  );
 
-            onChange(edited);
-          },
-          trailing: Row(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              if (ingredient != null)
-                WithConfirmationDialog(
-                  title: ingredient.name,
-                  description:
-                      'Are you sure you want to remove this ingredient?',
-                  builder: (context, confirm) => IconButton(
-                    icon: const Icon(Icons.remove),
-                    onPressed: () async {
-                      if (await confirm()) {
-                        onDelete();
-                      }
-                    },
-                  ),
-                ),
-            ],
-          ),
+                  if (edited != null) {
+                    onChange!(edited);
+                  }
+                }
+              : null,
+          trailing: onDelete != null
+              ? Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    if (ingredient != null)
+                      WithConfirmationDialog(
+                        title: ingredient.name,
+                        description:
+                            'Are you sure you want to remove this ingredient?',
+                        builder: (context, confirm) => IconButton(
+                          icon: const Icon(Icons.remove),
+                          onPressed: () async {
+                            if (await confirm()) {
+                              onDelete!();
+                            }
+                          },
+                        ),
+                      ),
+                  ],
+                )
+              : null,
         );
       },
     );

@@ -30,9 +30,9 @@ class RoutinePerformance extends Performance {
           (performances) => [
             /// TODO: I prepend a 0, because .reduce() throws an error when
             /// there are no entries. Find a prettier solution to this.
-            Future.value(0),
+            0,
             ...performances.map((performance) => performance.calories)
-          ].reduce((total, calories) async => await total + await calories),
+          ].reduce((total, calories) => total + calories),
         )
         .first;
   }

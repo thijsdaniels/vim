@@ -20,7 +20,7 @@ class StatsTable extends StatelessWidget {
 
 class StatsRow extends TableRow {
   final String label;
-  final String? value;
+  final dynamic value;
   final String? unit;
 
   const StatsRow(
@@ -38,7 +38,9 @@ class StatsRow extends TableRow {
       Row(
         children: [
           value != null
-              ? Text(value!, overflow: TextOverflow.ellipsis)
+              ? value is Widget
+                  ? value!
+                  : Text(value.toString(), overflow: TextOverflow.ellipsis)
               : const SecondaryText('--'),
           if (value != null && unit != null) ...[
             const SizedBox(width: 4),

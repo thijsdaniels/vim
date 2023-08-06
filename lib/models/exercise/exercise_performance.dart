@@ -10,6 +10,9 @@ abstract class ExercisePerformance extends Performance {
   @override
   String get name => exercise.snapshot.name;
 
+  @override
+  num get calories;
+
   ExercisePerformance({
     required super.user,
     required super.timestamp,

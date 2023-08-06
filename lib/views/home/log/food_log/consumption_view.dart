@@ -12,7 +12,9 @@ import 'package:vim/services/consumptions_collection.dart';
 import 'package:vim/widgets/atoms/standard_list.dart';
 import 'package:vim/widgets/atoms/stats_table.dart';
 import 'package:vim/widgets/molecules/consumptions_list.dart';
+import 'package:vim/widgets/molecules/ingredients_list.dart';
 import 'package:vim/widgets/molecules/nutrition_table.dart';
+import 'package:vim/widgets/molecules/recipes_list.dart';
 import 'package:vim/widgets/molecules/simple_card.dart';
 import 'package:vim/widgets/molecules/with_confirmation_dialog.dart';
 import 'package:vim/views/home/log/food_log/create_ingredient_consumption_view.dart';
@@ -122,13 +124,8 @@ class _ConsumptionViewState extends State<ConsumptionView> {
                 title: 'Details',
                 child: StatsTable(
                   children: [
-                    if (consumption is! IngredientConsumption &&
-                        consumption is! RecipeConsumption)
-                      StatsRow('Name', consumption.name),
+                    StatsRow('Name', consumption.name),
                     if (consumption is IngredientConsumption) ...[
-                      StatsRow(
-                          'Ingredient', consumption.ingredient.snapshot.name),
-                      StatsRow('Brand', consumption.ingredient.snapshot.brand),
                       StatsRow(
                         'Amount',
                         consumption.amount.value.toString(),
@@ -144,7 +141,6 @@ class _ConsumptionViewState extends State<ConsumptionView> {
                         ),
                     ],
                     if (consumption is RecipeConsumption) ...[
-                      StatsRow('Recipe', consumption.recipe.snapshot.name),
                       StatsRow(
                         'Amount',
                         consumption.amount.value.toString(),
@@ -168,6 +164,40 @@ class _ConsumptionViewState extends State<ConsumptionView> {
                   ],
                 ),
               ),
+              if (consumption is IngredientConsumption)
+                SimpleCard(
+                  title: 'Ingredient',
+                  child: IngredientsList(
+                    [
+                      consumption.ingredient.snapshot
+
+                        /// TODO: Setting the reference here is an absolutely
+                        /// terrible idea. I really need to switch to versioning
+                        /// instead of using snapshots.
+                        ..reference = consumption.ingredient.reference
+                    ],
+                    elevation: 4,
+                    physics: const NeverScrollableScrollPhysics(),
+                    padding: EdgeInsets.zero,
+                  ),
+                ),
+              if (consumption is RecipeConsumption)
+                SimpleCard(
+                  title: 'Recipe',
+                  child: RecipesList(
+                    [
+                      consumption.recipe.snapshot
+
+                        /// TODO: Setting the reference here is an absolutely
+                        /// terrible idea. I really need to switch to versioning
+                        /// instead of using snapshots.
+                        ..reference = consumption.recipe.reference
+                    ],
+                    elevation: 4,
+                    physics: const NeverScrollableScrollPhysics(),
+                    padding: EdgeInsets.zero,
+                  ),
+                ),
               SimpleCard(
                 title: 'Nutrition',
                 child: Center(

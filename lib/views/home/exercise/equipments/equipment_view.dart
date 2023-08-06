@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:vim/models/exercise/equipment.dart';
+import 'package:vim/models/user/user.dart';
 import 'package:vim/services/equipments_collection.dart';
+import 'package:vim/services/equipments_collection_group.dart';
 import 'package:vim/widgets/atoms/standard_list.dart';
 import 'package:vim/widgets/atoms/stats_table.dart';
 import 'package:vim/widgets/molecules/simple_card.dart';
@@ -10,17 +12,17 @@ import 'package:vim/views/loading_view.dart';
 import 'package:vim/views/not_found_view.dart';
 
 class EquipmentView extends StatelessWidget {
-  final String id;
+  final String path;
 
   const EquipmentView({
     super.key,
-    required this.id,
+    required this.path,
   });
 
   @override
   Widget build(BuildContext context) {
     return StreamBuilder<Equipment?>(
-      stream: EquipmentsCollection.of(context).get(id),
+      stream: EquipmentsCollectionGroup.instance.get(path),
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
           return const LoadingView();
@@ -36,32 +38,36 @@ class EquipmentView extends StatelessWidget {
           appBar: AppBar(
             title: Text(equipment.name),
             actions: [
-              IconButton(
-                icon: const Icon(Icons.edit_rounded),
-                onPressed: () async {
-                  Navigator.of(context).push(
-                    MaterialPageRoute(
-                      builder: (context) => CreateEquipmentView(
-                        equipment: equipment,
-                      ),
-                    ),
-                  );
-                },
-              ),
-              WithConfirmationDialog(
-                title: equipment.name,
-                description: 'Are you sure you want to delete this equipment?',
-                builder: (context, confirm) => IconButton(
-                  icon: const Icon(Icons.delete_rounded),
+              if (equipment.reference!.parent.parent!.id ==
+                  User.of(context).reference!.id) ...[
+                IconButton(
+                  icon: const Icon(Icons.edit_rounded),
                   onPressed: () async {
-                    var navigator = Navigator.of(context);
-                    if (await confirm()) {
-                      EquipmentsCollection.of(context).delete(equipment);
-                      navigator.pop();
-                    }
+                    Navigator.of(context).push(
+                      MaterialPageRoute(
+                        builder: (context) => CreateEquipmentView(
+                          equipment: equipment,
+                        ),
+                      ),
+                    );
                   },
                 ),
-              ),
+                WithConfirmationDialog(
+                  title: equipment.name,
+                  description:
+                      'Are you sure you want to delete this equipment?',
+                  builder: (context, confirm) => IconButton(
+                    icon: const Icon(Icons.delete_rounded),
+                    onPressed: () async {
+                      var navigator = Navigator.of(context);
+                      if (await confirm()) {
+                        EquipmentsCollection.of(context).delete(equipment);
+                        navigator.pop();
+                      }
+                    },
+                  ),
+                ),
+              ],
             ],
           ),
           body: StandardList(

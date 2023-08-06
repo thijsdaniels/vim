@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:vim/models/food/recipe.dart';
+import 'package:vim/views/home/food/recipes/recipe_view.dart';
 import 'package:vim/widgets/atoms/standard_list.dart';
 import 'package:vim/widgets/molecules/recipe_list_surface.dart';
 
@@ -11,7 +12,6 @@ class RecipesList extends StatelessWidget {
   final bool showCalories;
   final bool showMacros;
   final bool showTime;
-  final void Function(Recipe)? onTap;
 
   const RecipesList(
     this.recipes, {
@@ -22,7 +22,6 @@ class RecipesList extends StatelessWidget {
     this.showCalories = true,
     this.showMacros = true,
     this.showTime = true,
-    this.onTap,
   });
 
   @override
@@ -47,7 +46,15 @@ class RecipesList extends StatelessWidget {
         return RecipeListSurface(
           recipe: recipe,
           elevation: elevation,
-          onTap: onTap != null ? () => onTap!(recipe) : null,
+          onTap: () {
+            Navigator.of(context).push(
+              MaterialPageRoute(
+                builder: (context) => RecipeView(
+                  path: recipe.reference!.path,
+                ),
+              ),
+            );
+          },
         );
       },
     );

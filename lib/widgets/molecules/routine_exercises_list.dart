@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:vim/models/exercise/exercise.dart';
 import 'package:vim/services/exercises_collection_group.dart';
+import 'package:vim/views/home/exercise/exercises/exercise_view.dart';
 import 'package:vim/widgets/atoms/exercise_icon.dart';
 import 'package:vim/widgets/molecules/list_surface.dart';
 import 'package:vim/widgets/molecules/with_confirmation_dialog.dart';
@@ -37,38 +38,51 @@ class RoutineExercisesList extends StatelessWidget {
             return Padding(
               padding: const EdgeInsets.symmetric(vertical: 6),
               child: FutureBuilder(
-                  future: exercise?.equipment?.first,
-                  builder: (context, equipment) {
-                    return ListSurface(
-                      elevation: 4,
-                      icon: ExerciseIcon(exercise, elevation: 8),
-                      title: exercise?.name ?? '...',
-                      subtitle: equipment.data?.name ?? '--',
-                      trailing: Row(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          WithConfirmationDialog(
-                            title: exercise?.name,
-                            description:
-                                'Are you sure you want to remove this exercise?',
-                            builder: (context, confirm) => IconButton(
-                              icon: const Icon(Icons.remove),
-                              onPressed: () async {
-                                if (await confirm()) {
-                                  exerciseReferences.remove(exerciseReference);
-                                  onChanged!(exerciseReferences);
-                                }
-                              },
-                            ),
+                future: exercise?.equipment?.first,
+                builder: (context, equipment) {
+                  return ListSurface(
+                    elevation: 4,
+                    icon: ExerciseIcon(exercise, elevation: 8),
+                    title: exercise?.name ?? '...',
+                    subtitle: equipment.data?.name ?? '--',
+                    trailing: onChanged != null
+                        ? Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              WithConfirmationDialog(
+                                title: exercise?.name,
+                                description:
+                                    'Are you sure you want to remove this exercise?',
+                                builder: (context, confirm) => IconButton(
+                                  icon: const Icon(Icons.remove),
+                                  onPressed: () async {
+                                    if (await confirm()) {
+                                      exerciseReferences
+                                          .remove(exerciseReference);
+                                      onChanged!(exerciseReferences);
+                                    }
+                                  },
+                                ),
+                              ),
+                              ReorderableDragStartListener(
+                                index: index,
+                                child: const Icon(Icons.drag_handle),
+                              ),
+                            ],
+                          )
+                        : null,
+                    onTap: () {
+                      Navigator.of(context).push(
+                        MaterialPageRoute(
+                          builder: (context) => ExerciseView(
+                            path: exerciseReference.path,
                           ),
-                          ReorderableDragStartListener(
-                            index: index,
-                            child: const Icon(Icons.drag_handle),
-                          ),
-                        ],
-                      ),
-                    );
-                  }),
+                        ),
+                      );
+                    },
+                  );
+                },
+              ),
             );
           },
         );

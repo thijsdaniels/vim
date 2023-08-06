@@ -4,6 +4,11 @@ import 'package:vim/models/exercise/routine.dart';
 import 'package:vim/models/user/user.dart';
 import 'package:vim/services/performances_collection_group.dart';
 import 'package:vim/services/routines_collection.dart';
+import 'package:vim/services/routines_collection_group.dart';
+import 'package:vim/views/home/exercise/routines/create_routine_view.dart';
+import 'package:vim/views/home/log/exercise_log/select_exercise_view.dart';
+import 'package:vim/views/loading_view.dart';
+import 'package:vim/views/not_found_view.dart';
 import 'package:vim/widgets/atoms/routine_muscle_groups.dart';
 import 'package:vim/widgets/atoms/standard_list.dart';
 import 'package:vim/widgets/atoms/stats_table.dart';
@@ -11,23 +16,23 @@ import 'package:vim/widgets/molecules/performances_list.dart';
 import 'package:vim/widgets/molecules/routine_exercises_list.dart';
 import 'package:vim/widgets/molecules/simple_card.dart';
 import 'package:vim/widgets/molecules/with_confirmation_dialog.dart';
-import 'package:vim/views/home/exercise/routines/create_routine_view.dart';
-import 'package:vim/views/home/log/exercise_log/select_exercise_view.dart';
-import 'package:vim/views/loading_view.dart';
-import 'package:vim/views/not_found_view.dart';
 
 class RoutineView extends StatelessWidget {
-  final String id;
+  final String path;
 
   const RoutineView({
     super.key,
-    required this.id,
+    required this.path,
   });
+
+  bool isOwner(Routine routine, User user) {
+    return routine.reference!.parent.parent!.id == user.reference!.id;
+  }
 
   @override
   Widget build(BuildContext context) {
     return StreamBuilder<Routine?>(
-      stream: RoutinesCollection.of(context).get(id),
+      stream: RoutinesCollectionGroup.instance.get(path),
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
           return const LoadingView();
@@ -43,32 +48,34 @@ class RoutineView extends StatelessWidget {
           appBar: AppBar(
             title: Text(routine.name),
             actions: [
-              IconButton(
-                icon: const Icon(Icons.edit),
-                onPressed: () async {
-                  Navigator.of(context).push(
-                    MaterialPageRoute(
-                      builder: (context) => CreateRoutineView(
-                        routine: routine,
-                      ),
-                    ),
-                  );
-                },
-              ),
-              WithConfirmationDialog(
-                title: routine.name,
-                description: 'Are you sure you want to delete this routine?',
-                builder: (context, confirm) => IconButton(
-                  icon: const Icon(Icons.delete_rounded),
+              if (isOwner(routine, User.of(context))) ...[
+                IconButton(
+                  icon: const Icon(Icons.edit),
                   onPressed: () async {
-                    var navigator = Navigator.of(context);
-                    if (await confirm()) {
-                      RoutinesCollection.of(context).delete(routine);
-                      navigator.pop();
-                    }
+                    Navigator.of(context).push(
+                      MaterialPageRoute(
+                        builder: (context) => CreateRoutineView(
+                          routine: routine,
+                        ),
+                      ),
+                    );
                   },
                 ),
-              ),
+                WithConfirmationDialog(
+                  title: routine.name,
+                  description: 'Are you sure you want to delete this routine?',
+                  builder: (context, confirm) => IconButton(
+                    icon: const Icon(Icons.delete_rounded),
+                    onPressed: () async {
+                      var navigator = Navigator.of(context);
+                      if (await confirm()) {
+                        RoutinesCollection.of(context).delete(routine);
+                        navigator.pop();
+                      }
+                    },
+                  ),
+                ),
+              ],
             ],
           ),
           body: StandardList(
@@ -91,33 +98,36 @@ class RoutineView extends StatelessWidget {
               SimpleCard(
                 title: 'Exercises',
                 actions: [
-                  IconButton(
-                    icon: const Icon(Icons.add),
+                  if (isOwner(routine, User.of(context)))
+                    IconButton(
+                      icon: const Icon(Icons.add),
 
-                    /// TODO: Instead of going to a new view to render a
-                    /// `SearchAnchor` widget, which again renders its own view
-                    /// to show search results, I should just open the
-                    /// `SearchAnchor` directly from here.
-                    onPressed: () async {
-                      Exercise? exercise = await Navigator.of(context).push(
-                        MaterialPageRoute(
-                          builder: (context) => const SelectExerciseView(),
-                        ),
-                      );
+                      /// TODO: Instead of going to a new view to render a
+                      /// `SearchAnchor` widget, which again renders its own view
+                      /// to show search results, I should just open the
+                      /// `SearchAnchor` directly from here.
+                      onPressed: () async {
+                        Exercise? exercise = await Navigator.of(context).push(
+                          MaterialPageRoute(
+                            builder: (context) => const SelectExerciseView(),
+                          ),
+                        );
 
-                      if (exercise != null) {
-                        routine.exerciseReferences.add(exercise.reference!);
-                        await RoutinesCollection.of(context).update(routine);
-                      }
-                    },
-                  )
+                        if (exercise != null) {
+                          routine.exerciseReferences.add(exercise.reference!);
+                          await RoutinesCollection.of(context).update(routine);
+                        }
+                      },
+                    )
                 ],
                 child: RoutineExercisesList(
                   exerciseReferences: routine.exerciseReferences,
-                  onChanged: (exerciseReferences) {
-                    routine.exerciseReferences = exerciseReferences;
-                    RoutinesCollection.of(context).update(routine);
-                  },
+                  onChanged: isOwner(routine, User.of(context))
+                      ? (exerciseReferences) {
+                          routine.exerciseReferences = exerciseReferences;
+                          RoutinesCollection.of(context).update(routine);
+                        }
+                      : null,
                 ),
               ),
               StreamBuilder(

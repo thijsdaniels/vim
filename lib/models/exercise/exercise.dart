@@ -16,8 +16,8 @@ import 'package:vim/widgets/atoms/muscle_map/muscle_map.dart';
 /// calories.
 enum ExerciseType {
   manual,
-  resistance, // endurance,
-  weights, // resistance,
+  resistance, // TODO: Rename to `endurance`.
+  weights, // TODO: Rename to `resistance`.
 }
 
 class Exercise extends OwnedDocument {

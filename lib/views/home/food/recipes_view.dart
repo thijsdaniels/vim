@@ -1,10 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:vim/models/food/recipe.dart';
+import 'package:vim/views/home/food/recipes/create_recipe_view.dart';
 import 'package:vim/widgets/atoms/floating_action_surface.dart';
 import 'package:vim/widgets/molecules/recipes_list.dart';
-import 'package:vim/views/home/food/recipes/create_recipe_view.dart';
-import 'package:vim/views/home/food/recipes/recipe_view.dart';
 
 class RecipesView extends StatelessWidget {
   const RecipesView({super.key});
@@ -24,16 +23,7 @@ class RecipesView extends StatelessWidget {
       ),
       body: SafeArea(
         child: Consumer<List<Recipe>>(
-          builder: (context, recipes, child) => RecipesList(
-            recipes,
-            onTap: (recipe) {
-              Navigator.of(context).push(
-                MaterialPageRoute(
-                  builder: (context) => RecipeView(id: recipe.reference!.id),
-                ),
-              );
-            },
-          ),
+          builder: (context, recipes, child) => RecipesList(recipes),
         ),
       ),
     );

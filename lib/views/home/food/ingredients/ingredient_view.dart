@@ -4,6 +4,7 @@ import 'package:vim/models/food/ingredient.dart';
 import 'package:vim/models/user/user.dart';
 import 'package:vim/services/consumptions_collection_group.dart';
 import 'package:vim/services/ingredients_collection.dart';
+import 'package:vim/services/ingredients_collection_group.dart';
 import 'package:vim/widgets/atoms/standard_list.dart';
 import 'package:vim/widgets/atoms/stats_table.dart';
 import 'package:vim/widgets/molecules/consumptions_list.dart';
@@ -15,17 +16,17 @@ import 'package:vim/views/loading_view.dart';
 import 'package:vim/views/not_found_view.dart';
 
 class IngredientView extends StatelessWidget {
-  final String id;
+  final String path;
 
   const IngredientView({
     super.key,
-    required this.id,
+    required this.path,
   });
 
   @override
   Widget build(BuildContext context) {
     return StreamBuilder<Ingredient?>(
-      stream: IngredientsCollection.of(context).get(id),
+      stream: IngredientsCollectionGroup.instance.get(path),
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
           return const LoadingView();
@@ -41,32 +42,36 @@ class IngredientView extends StatelessWidget {
           appBar: AppBar(
             title: Text(ingredient.name),
             actions: [
-              IconButton(
-                icon: const Icon(Icons.edit_rounded),
-                onPressed: () async {
-                  Navigator.of(context).push(
-                    MaterialPageRoute(
-                      builder: (context) => CreateIngredientView(
-                        ingredient: ingredient,
-                      ),
-                    ),
-                  );
-                },
-              ),
-              WithConfirmationDialog(
-                title: ingredient.name,
-                description: 'Are you sure you want to delete this ingredient?',
-                builder: (context, confirm) => IconButton(
-                  icon: const Icon(Icons.delete_rounded),
+              if (ingredient.reference!.parent.parent!.id ==
+                  User.of(context).reference!.id) ...[
+                IconButton(
+                  icon: const Icon(Icons.edit_rounded),
                   onPressed: () async {
-                    var navigator = Navigator.of(context);
-                    if (await confirm()) {
-                      IngredientsCollection.of(context).delete(ingredient);
-                      navigator.pop();
-                    }
+                    Navigator.of(context).push(
+                      MaterialPageRoute(
+                        builder: (context) => CreateIngredientView(
+                          ingredient: ingredient,
+                        ),
+                      ),
+                    );
                   },
                 ),
-              ),
+                WithConfirmationDialog(
+                  title: ingredient.name,
+                  description:
+                      'Are you sure you want to delete this ingredient?',
+                  builder: (context, confirm) => IconButton(
+                    icon: const Icon(Icons.delete_rounded),
+                    onPressed: () async {
+                      var navigator = Navigator.of(context);
+                      if (await confirm()) {
+                        IngredientsCollection.of(context).delete(ingredient);
+                        navigator.pop();
+                      }
+                    },
+                  ),
+                ),
+              ],
             ],
           ),
           body: StandardList(

@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:vim/models/user/user.dart';
+import 'package:vim/views/test_view.dart';
 import 'package:vim/widgets/atoms/surface.dart';
 import 'package:vim/widgets/atoms/user_avatar.dart';
 import 'package:vim/widgets/molecules/date_stepper.dart';
-import 'package:vim/views/home/debug_view.dart';
+import 'package:vim/views/debug_view.dart';
 import 'package:vim/views/home/log/log_consumptions_view.dart';
 import 'package:vim/views/home/log/log_performances_view.dart';
 import 'package:vim/views/home/log/log_progress_view.dart';
@@ -22,7 +23,17 @@ class LogView extends StatelessWidget {
         appBar: AppBar(
           title: const Text('Log'),
           actions: [
-            if (user.isAdmin)
+            if (user.isAdmin) ...[
+              IconButton(
+                onPressed: () {
+                  Navigator.of(context).push(
+                    MaterialPageRoute(
+                      builder: (context) => const TestView(),
+                    ),
+                  );
+                },
+                icon: const Icon(Icons.science),
+              ),
               IconButton(
                 onPressed: () {
                   Navigator.of(context).push(
@@ -33,6 +44,7 @@ class LogView extends StatelessWidget {
                 },
                 icon: const Icon(Icons.bug_report),
               ),
+            ],
             UserAvatar(
               user: user,
               onTap: () {
