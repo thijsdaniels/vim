@@ -4,6 +4,7 @@ import 'package:provider/provider.dart';
 import 'package:vim/models/date_model.dart';
 import 'package:vim/models/exercise/quick_performance.dart';
 import 'package:vim/models/user/user.dart';
+import 'package:vim/services/performances_collection.dart';
 import 'package:vim/widgets/molecules/simple_card.dart';
 
 class CreateQuickTrackPerformanceView extends StatefulWidget {
@@ -61,6 +62,8 @@ class _CreateQuickTrackPerformanceViewState
                     if (performance != null) {
                       performance.name = name;
                       performance.calories = calories;
+
+                      PerformancesCollection.of(context).update(performance);
                     } else {
                       performance = QuickPerformance(
                         user: user.reference!,
@@ -68,6 +71,8 @@ class _CreateQuickTrackPerformanceViewState
                         name: name,
                         calories: calories,
                       );
+
+                      PerformancesCollection.of(context).create(performance);
                     }
 
                     Navigator.of(context).pop(performance);

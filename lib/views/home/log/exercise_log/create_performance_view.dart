@@ -3,16 +3,15 @@ import 'package:provider/provider.dart';
 import 'package:vim/models/date_model.dart';
 import 'package:vim/models/exercise/exercise.dart';
 import 'package:vim/models/exercise/exercise_performance.dart';
-import 'package:vim/models/exercise/performance.dart';
 import 'package:vim/models/exercise/routine.dart';
 import 'package:vim/models/user/user.dart';
 import 'package:vim/services/exercises_collection_group.dart';
 import 'package:vim/services/routines_collection_group.dart';
+import 'package:vim/views/home/log/exercise_log/create_exercise_performance_view.dart';
+import 'package:vim/views/home/log/exercise_log/create_quick_track_performance_view.dart';
 import 'package:vim/widgets/atoms/exercise_icon.dart';
 import 'package:vim/widgets/atoms/routine_icon.dart';
 import 'package:vim/widgets/molecules/list_surface.dart';
-import 'package:vim/views/home/log/exercise_log/create_exercise_performance_view.dart';
-import 'package:vim/views/home/log/exercise_log/create_quick_track_performance_view.dart';
 
 class CreatePerformanceView extends StatefulWidget {
   const CreatePerformanceView({super.key});
@@ -34,15 +33,11 @@ class _CreatePerformanceViewState extends State<CreatePerformanceView> {
             onPressed: () async {
               var navigator = Navigator.of(context);
 
-              Performance? performance = await navigator.pushReplacement(
+              await navigator.pushReplacement(
                 MaterialPageRoute(
                   builder: (context) => const CreateQuickTrackPerformanceView(),
                 ),
               );
-
-              if (performance != null) {
-                navigator.pop(performance);
-              }
             },
             icon: const Icon(Icons.flash_on_rounded),
           )

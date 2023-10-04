@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:vim/models/food/consumption.dart';
 import 'package:vim/models/food/ingredient.dart';
 import 'package:vim/models/food/ingredient_consumption.dart';
 import 'package:vim/models/food/recipe.dart';
@@ -7,11 +6,11 @@ import 'package:vim/models/food/recipe_consumption.dart';
 import 'package:vim/models/user/user.dart';
 import 'package:vim/services/ingredients_collection_group.dart';
 import 'package:vim/services/recipes_collection_group.dart';
-import 'package:vim/widgets/molecules/ingredient_list_surface.dart';
-import 'package:vim/widgets/molecules/recipe_list_surface.dart';
 import 'package:vim/views/home/log/food_log/create_ingredient_consumption_view.dart';
 import 'package:vim/views/home/log/food_log/create_quick_track_consumption_view.dart';
 import 'package:vim/views/home/log/food_log/create_recipe_consumption_view.dart';
+import 'package:vim/widgets/molecules/ingredient_list_surface.dart';
+import 'package:vim/widgets/molecules/recipe_list_surface.dart';
 
 class CreateConsumptionView extends StatelessWidget {
   const CreateConsumptionView({super.key});
@@ -30,15 +29,11 @@ class CreateConsumptionView extends StatelessWidget {
 
               navigator.pop();
 
-              Consumption? consumption = await navigator.push(
+              await navigator.push(
                 MaterialPageRoute(
                   builder: (context) => const CreateQuickTrackConsumptionView(),
                 ),
               );
-
-              if (consumption != null) {
-                navigator.pop(consumption);
-              }
             },
             icon: const Icon(Icons.flash_on_rounded),
           )
