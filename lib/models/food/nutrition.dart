@@ -27,7 +27,7 @@ class Nutrition extends NutrientGroup<Nutrition> {
   final Vitamins vitamins;
   final num? water;
   final num? alcohol;
-  final num? caffeine;
+  final Stimulants stimulants;
 
   const Nutrition({
     this.calories,
@@ -38,7 +38,7 @@ class Nutrition extends NutrientGroup<Nutrition> {
     this.vitamins = const Vitamins(),
     this.water,
     this.alcohol,
-    this.caffeine,
+    this.stimulants = const Stimulants(),
   });
 
   @override
@@ -52,7 +52,7 @@ class Nutrition extends NutrientGroup<Nutrition> {
       'vitamins': vitamins.toMap(),
       'water': water,
       'alcohol': alcohol,
-      'caffeine': caffeine,
+      'stimulants': stimulants.toMap(),
     }.where((entry) => entry.value != null);
   }
 
@@ -68,7 +68,9 @@ class Nutrition extends NutrientGroup<Nutrition> {
           : const Vitamins(),
       water: map['water'],
       alcohol: map['alcohol'],
-      caffeine: map['caffeine'],
+      stimulants: map['stimulants'] != null
+          ? Stimulants.fromMap(map['stimulants'])
+          : const Stimulants(),
     );
   }
 
@@ -81,7 +83,7 @@ class Nutrition extends NutrientGroup<Nutrition> {
     vitamins: Vitamins.empty,
     water: null,
     alcohol: null,
-    caffeine: null,
+    stimulants: Stimulants.empty,
   );
 
   @override
@@ -95,7 +97,7 @@ class Nutrition extends NutrientGroup<Nutrition> {
       vitamins: vitamins + other.vitamins,
       water: _addNutrient(water, other.water),
       alcohol: _addNutrient(alcohol, other.alcohol),
-      caffeine: _addNutrient(caffeine, other.caffeine),
+      stimulants: stimulants + other.stimulants,
     );
   }
 
@@ -110,7 +112,7 @@ class Nutrition extends NutrientGroup<Nutrition> {
       vitamins: vitamins * factor,
       water: _multiplyNutrient(water, factor),
       alcohol: _multiplyNutrient(alcohol, factor),
-      caffeine: _multiplyNutrient(caffeine, factor),
+      stimulants: stimulants * factor,
     );
   }
 
@@ -123,7 +125,7 @@ class Nutrition extends NutrientGroup<Nutrition> {
         vitamins.isComplete() &&
         water != null &&
         alcohol != null &&
-        caffeine != null;
+        stimulants.isComplete();
   }
 }
 
@@ -636,5 +638,56 @@ class Vitamins extends NutrientGroup<Vitamins> {
         d != null &&
         e != null &&
         k != null;
+  }
+}
+
+class Stimulants extends NutrientGroup<Stimulants> {
+  final num? caffeine;
+  final num? creatine;
+
+  const Stimulants({
+    this.caffeine,
+    this.creatine,
+  });
+
+  @override
+  Map<String, dynamic> toMap() {
+    return {
+      'caffeine': caffeine,
+      'creatine': creatine,
+    }.where((entry) => entry.value != null);
+  }
+
+  static Stimulants fromMap(Map<String, dynamic> map) {
+    return Stimulants(
+      caffeine: map['caffeine'],
+      creatine: map['creatine'],
+    );
+  }
+
+  static const Stimulants empty = Stimulants(
+    caffeine: null,
+    creatine: null,
+  );
+
+  @override
+  Stimulants operator +(Stimulants other) {
+    return Stimulants(
+      caffeine: _addNutrient(caffeine, other.caffeine),
+      creatine: _addNutrient(creatine, other.creatine),
+    );
+  }
+
+  @override
+  Stimulants operator *(num factor) {
+    return Stimulants(
+      caffeine: _multiplyNutrient(caffeine, factor),
+      creatine: _multiplyNutrient(creatine, factor),
+    );
+  }
+
+  @override
+  bool isComplete() {
+    return caffeine != null && creatine != null;
   }
 }
