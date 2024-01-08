@@ -7,9 +7,8 @@ import 'package:vim/models/mass.dart';
 import 'package:vim/models/snapshot.dart';
 import 'package:vim/models/user/user.dart';
 
-class Ingredient extends OwnedDocument {
+class Ingredient extends NamedDocument {
   String? icon;
-  String name;
   String? brand;
   num? serving;
   Nutrition nutrition;
@@ -18,7 +17,7 @@ class Ingredient extends OwnedDocument {
   Ingredient({
     required super.user,
     this.icon,
-    required this.name,
+    required super.name,
     this.brand,
     this.serving,
     required this.nutrition,

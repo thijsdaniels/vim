@@ -51,3 +51,18 @@ abstract class OwnedDocument extends Document with Owner {
     required this.user,
   });
 }
+
+mixin Name on Document {
+  String? get name;
+}
+
+abstract class NamedDocument extends OwnedDocument with Name {
+  @override
+  String name;
+
+  NamedDocument({
+    super.reference,
+    required super.user,
+    required this.name,
+  });
+}

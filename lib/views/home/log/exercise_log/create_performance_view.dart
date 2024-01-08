@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:vim/extensions/string_similarity.dart';
 import 'package:vim/models/date_model.dart';
 import 'package:vim/models/exercise/exercise.dart';
 import 'package:vim/models/exercise/exercise_performance.dart';
@@ -60,30 +61,35 @@ class _CreatePerformanceViewState extends State<CreatePerformanceView> {
               suggestionsBuilder: (context, controller) {
                 return [
                   const SizedBox(height: 6),
-                  ...(routines.data ?? [])
-                      .where((recipe) => isMatch(recipe.name, controller))
-                      .map(
-                        (recipe) => Padding(
-                          padding: const EdgeInsets.symmetric(
-                            horizontal: 12,
-                            vertical: 6,
-                          ),
-                          child: RoutineSearchResult(recipe),
-                        ),
+                  if (controller.value.text.isEmpty)
+                    const Padding(
+                      padding: EdgeInsets.symmetric(
+                        horizontal: 12,
+                        vertical: 6,
                       ),
-                  ...(exercises.data ?? [])
-                      .where(
-                        (ingredient) => isMatch(ingredient.name, controller),
-                      )
-                      .map(
-                        (ingredient) => Padding(
-                          padding: const EdgeInsets.symmetric(
-                            horizontal: 12,
-                            vertical: 6,
-                          ),
-                          child: ExerciseSearchResult(ingredient),
-                        ),
+                      child: ListSurface(
+                        elevation: 4,
+                        title: "Recents coming soon!",
                       ),
+                    ),
+                  if (controller.value.text.isNotEmpty)
+                    ...[
+                      ...(routines.data ?? []),
+                      ...(exercises.data ?? []),
+                    ]
+                        .sortedBySimilarity(
+                          (entry) => entry.name.toLowerCase(),
+                          controller.value.text.toLowerCase(),
+                        )
+                        .map(
+                          (entry) => Padding(
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: 12,
+                              vertical: 6,
+                            ),
+                            child: SearchResult(entry),
+                          ),
+                        ),
                   const SizedBox(height: 6),
                 ];
               },
@@ -93,9 +99,25 @@ class _CreatePerformanceViewState extends State<CreatePerformanceView> {
       ),
     );
   }
+}
 
-  bool isMatch(String text, SearchController controller) {
-    return text.toLowerCase().contains(controller.value.text.toLowerCase());
+class SearchResult extends StatelessWidget {
+  final dynamic entry;
+
+  const SearchResult(
+    this.entry, {
+    super.key,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    if (entry is Routine) {
+      return RoutineSearchResult(entry);
+    } else if (entry is Exercise) {
+      return ExerciseSearchResult(entry);
+    } else {
+      throw ArgumentError("Invalid entry type.");
+    }
   }
 }
 

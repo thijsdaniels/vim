@@ -5,10 +5,9 @@ import 'package:vim/models/exercise/routine_performance.dart';
 import 'package:vim/models/snapshot.dart';
 import 'package:vim/models/user/user.dart';
 
-class Routine extends OwnedDocument {
+class Routine extends NamedDocument {
   List<Exercise>? _exercises;
 
-  String name;
   // TODO: Turn this into a `List<DocumentReference<Exercise>>`.
   List<DocumentReference> exerciseReferences;
 
@@ -34,7 +33,7 @@ class Routine extends OwnedDocument {
 
   Routine({
     required super.user,
-    required this.name,
+    required super.name,
     required this.exerciseReferences,
   });
 

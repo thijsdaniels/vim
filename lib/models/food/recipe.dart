@@ -8,8 +8,7 @@ import 'package:vim/models/food/recipe_consumption.dart';
 import 'package:vim/models/snapshot.dart';
 import 'package:vim/models/user/user.dart';
 
-class Recipe extends OwnedDocument {
-  String name;
+class Recipe extends NamedDocument {
   num servings;
   late List<IngredientAmount> ingredientAmounts;
 
@@ -19,7 +18,7 @@ class Recipe extends OwnedDocument {
 
   Recipe({
     required super.user,
-    required this.name,
+    required super.name,
     this.servings = 1,
     List<IngredientAmount>? ingredientAmounts,
   }) : ingredientAmounts = ingredientAmounts?.sortedByWeight() ?? [];

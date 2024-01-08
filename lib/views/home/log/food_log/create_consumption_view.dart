@@ -1,4 +1,6 @@
+import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
+import 'package:vim/extensions/string_similarity.dart';
 import 'package:vim/models/food/ingredient.dart';
 import 'package:vim/models/food/ingredient_consumption.dart';
 import 'package:vim/models/food/recipe.dart';
@@ -10,6 +12,7 @@ import 'package:vim/views/home/log/food_log/create_ingredient_consumption_view.d
 import 'package:vim/views/home/log/food_log/create_quick_track_consumption_view.dart';
 import 'package:vim/views/home/log/food_log/create_recipe_consumption_view.dart';
 import 'package:vim/widgets/molecules/ingredient_list_surface.dart';
+import 'package:vim/widgets/molecules/list_surface.dart';
 import 'package:vim/widgets/molecules/recipe_list_surface.dart';
 
 class CreateConsumptionView extends StatelessWidget {
@@ -41,57 +44,93 @@ class CreateConsumptionView extends StatelessWidget {
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
-        child: StreamBuilder(
-          stream: RecipesCollectionGroup.instance.all(
-            users: [user.reference!, ...user.following],
-          ),
-          builder: (context, recipes) => StreamBuilder(
-            stream: IngredientsCollectionGroup.instance.all(
-              users: [user.reference!, ...user.following],
-            ),
-            builder: (context, ingredients) => SearchAnchor.bar(
-              viewElevation: 1,
-              isFullScreen: true,
-              barHintText: "Search",
-              suggestionsBuilder: (context, controller) {
-                return [
-                  const SizedBox(height: 6),
-                  ...(recipes.data ?? [])
-                      .where((recipe) => isMatch(recipe.name, controller))
-                      .map(
-                        (recipe) => Padding(
-                          padding: const EdgeInsets.symmetric(
+        child: Column(
+          children: [
+            StreamBuilder(
+              stream: RecipesCollectionGroup.instance.all(
+                users: [user.reference!, ...user.following],
+              ),
+              builder: (context, recipes) => StreamBuilder(
+                stream: IngredientsCollectionGroup.instance.all(
+                  users: [user.reference!, ...user.following],
+                ),
+                builder: (context, ingredients) => SearchAnchor.bar(
+                  viewElevation: 1,
+                  isFullScreen: true,
+                  barHintText: "Search",
+                  suggestionsBuilder: (context, controller) {
+                    return [
+                      const SizedBox(height: 6),
+                      if (controller.value.text.isEmpty)
+                        const Padding(
+                          padding: EdgeInsets.symmetric(
                             horizontal: 12,
                             vertical: 6,
                           ),
-                          child: RecipeSearchResult(recipe),
-                        ),
-                      ),
-                  ...(ingredients.data ?? [])
-                      .where(
-                        (ingredient) => isMatch(ingredient.name, controller),
-                      )
-                      .map(
-                        (ingredient) => Padding(
-                          padding: const EdgeInsets.symmetric(
-                            horizontal: 12,
-                            vertical: 6,
+                          child: ListSurface(
+                            elevation: 4,
+                            title: "Recents coming soon!",
                           ),
-                          child: IngredientSearchResult(ingredient),
                         ),
-                      ),
-                  const SizedBox(height: 6),
-                ];
-              },
+                      if (controller.value.text.isNotEmpty)
+                        ...[
+                          ...(recipes.data ?? []),
+                          ...(ingredients.data ?? []),
+                        ].sortedBySimilarity(
+                          (entry) {
+                            if (entry is Ingredient) {
+                              return [
+                                entry.name.toLowerCase(),
+                                entry.brand?.toLowerCase()
+                              ].whereNotNull().join(' ');
+                            }
+
+                            return entry.name.toLowerCase();
+                          },
+                          controller.value.text.toLowerCase(),
+                        ).map(
+                          (entry) => Padding(
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: 12,
+                              vertical: 6,
+                            ),
+                            child: SearchResult(entry),
+                          ),
+                        ),
+                      const SizedBox(height: 6),
+                    ];
+                  },
+                ),
+              ),
             ),
-          ),
+            const SizedBox(height: 16),
+            const ListSurface(
+              title: "Favorites coming soon!",
+            ),
+          ],
         ),
       ),
     );
   }
+}
 
-  bool isMatch(String text, SearchController controller) {
-    return text.toLowerCase().contains(controller.value.text.toLowerCase());
+class SearchResult extends StatelessWidget {
+  final dynamic entry;
+
+  const SearchResult(
+    this.entry, {
+    super.key,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    if (entry is Recipe) {
+      return RecipeSearchResult(entry);
+    } else if (entry is Ingredient) {
+      return IngredientSearchResult(entry);
+    } else {
+      throw ArgumentError("Invalid entry type.");
+    }
   }
 }
 

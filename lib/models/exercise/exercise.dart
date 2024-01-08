@@ -20,9 +20,8 @@ enum ExerciseType {
   weights, // TODO: Rename to `resistance`.
 }
 
-class Exercise extends OwnedDocument {
+class Exercise extends NamedDocument {
   ExerciseType type;
-  String name;
   DocumentReference? equipmentReference;
   num bodyweightFactor;
   bool isUnilateral;
@@ -40,7 +39,7 @@ class Exercise extends OwnedDocument {
   Exercise({
     required super.user,
     required this.type,
-    required this.name,
+    required super.name,
     this.equipmentReference,
     this.bodyweightFactor = 0,
     this.isUnilateral = false,
