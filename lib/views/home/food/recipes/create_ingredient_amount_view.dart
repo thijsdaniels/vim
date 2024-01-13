@@ -4,8 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:vim/models/food/ingredient_amount.dart';
 import 'package:vim/models/user/user.dart';
 import 'package:vim/services/ingredients_collection_group.dart';
+import 'package:vim/widgets/atoms/incremental_number_form_field.dart';
 import 'package:vim/widgets/atoms/ingredient_form_field.dart';
-import 'package:vim/widgets/atoms/number_form_field.dart';
 import 'package:vim/widgets/atoms/standard_list.dart';
 import 'package:vim/widgets/molecules/simple_card.dart';
 
@@ -103,14 +103,15 @@ class _CreateIngredientAmountViewState
                         : const CircularProgressIndicator(),
                   ),
                   const SizedBox(height: 16),
-                  NumberFormField(
+                  IncrementalNumberFormField(
+                    decoration: const InputDecoration(
+                      labelText: 'Amount',
+                      hintText: 'Grams',
+                    ),
                     initialValue: _amount,
                     onChanged: (amount) => setState(() {
                       _amount = amount;
                     }),
-                    decoration: const InputDecoration(
-                      labelText: 'Amount',
-                    ),
                     textInputAction: TextInputAction.done,
                     validator: (value) {
                       if (value == null) {

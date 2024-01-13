@@ -1,6 +1,7 @@
 import 'dart:math';
 
 import 'package:flutter/material.dart';
+import 'package:vim/widgets/atoms/incremental_number_form_field.dart';
 import 'package:vim/widgets/molecules/line_chart.dart';
 import 'package:vim/widgets/atoms/standard_list.dart';
 
@@ -8,10 +9,44 @@ class TestView extends StatefulWidget {
   const TestView({super.key});
 
   @override
-  State<TestView> createState() => _TestViewState();
+  State<TestView> createState() => _IncrementalNumberFormFieldTestViewState();
 }
 
-class _TestViewState extends State<TestView> {
+class _IncrementalNumberFormFieldTestViewState extends State<TestView> {
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text('Test'),
+      ),
+      body: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            IncrementalNumberFormField(
+              decoration: const InputDecoration(
+                labelText: 'Uncontrolled',
+              ),
+              initialValue: 5,
+              stepSize: 2.5,
+            ),
+            const SizedBox(height: 16),
+            IncrementalNumberFormField(
+              decoration: const InputDecoration(
+                labelText: 'Controlled',
+              ),
+              controller: TextEditingController(text: 5.toString()),
+              stepSize: 2.5,
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class _LineChartTestViewState extends State<TestView> {
   late List<Map<DateTime, int>> series;
   final Random generator = Random();
   final int days = 14;

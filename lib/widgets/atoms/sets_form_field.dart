@@ -1,8 +1,9 @@
-import 'dart:math';
-
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:vim/models/exercise/exercise.dart';
 import 'package:vim/models/exercise/set.dart';
+import 'package:vim/models/user/user.dart';
+import 'package:vim/widgets/atoms/incremental_number_form_field.dart';
 import 'package:vim/widgets/atoms/number_form_field.dart';
 import 'package:vim/widgets/atoms/standard_list.dart';
 import 'package:vim/widgets/molecules/simple_card.dart';
@@ -114,20 +115,20 @@ class _SetFormFieldsState extends State<SetFormFields> {
       physics: const NeverScrollableScrollPhysics(),
       padding: EdgeInsets.zero,
       children: [
-        // if (widget.exercise.bodyweightFactor != 0)
-        //   Consumer<User>(
-        //     builder: (context, user, child) {
-        //       return NumberFormField(
-        //         enabled: false,
-        //         initialValue: user.body.weight.kilograms,
-        //         decoration: InputDecoration(
-        //           labelText: 'Bodyweight',
-        //           hintText: 'Kilograms',
-        //           suffix: Text('×${widget.exercise.bodyweightFactor}'),
-        //         ),
-        //       );
-        //     },
-        //   ),
+        if (widget.exercise.bodyweightFactor != 0)
+          Consumer<User>(
+            builder: (context, user, child) {
+              return NumberFormField(
+                enabled: false,
+                initialValue: user.body.weight.kilograms,
+                decoration: InputDecoration(
+                  labelText: 'Bodyweight',
+                  hintText: 'Kilograms',
+                  suffix: Text('×${widget.exercise.bodyweightFactor}'),
+                ),
+              );
+            },
+          ),
         Row(
           children: [
             if (widget.exercise.equipmentReference != null) ...[
@@ -135,8 +136,13 @@ class _SetFormFieldsState extends State<SetFormFields> {
                 stream: widget.exercise.equipment,
                 builder: (context, equipment) {
                   return Expanded(
-                    child: NumberFormField(
+                    child: IncrementalNumberFormField(
                       controller: _weightController,
+                      decoration: InputDecoration(
+                        labelText: equipment.data?.name ?? 'Weight',
+                        hintText: 'Kilograms',
+                      ),
+                      stepSize: equipment.data?.weightIncrement.kilograms,
                       onChanged: (weight) {
                         widget.onChanged((
                           key: widget.set.key,
@@ -144,54 +150,13 @@ class _SetFormFieldsState extends State<SetFormFields> {
                           repetitions: widget.set.repetitions,
                         ));
                       },
-                      decoration: InputDecoration(
-                        labelText: equipment.data?.name ?? 'Weight',
-                        hintText: 'Kilograms',
-                        prefixIcon: IconButton(
-                          icon: const Icon(Icons.remove),
-                          onPressed: equipment.hasData
-                              ? () {
-                                  var newWeight = (widget.set.weight ?? 0) -
-                                      equipment.data!.weightIncrement.kilograms;
-
-                                  _weightController.text = newWeight.toString();
-
-                                  widget.onChanged(((
-                                    key: widget.set.key,
-                                    weight: newWeight,
-                                    repetitions: widget.set.repetitions,
-                                  )));
-                                }
-                              : null,
-                        ),
-                        // suffix: equipment.hasData && equipment.data!.loadFactor != 1
-                        //     ? Text('×${equipment.data!.loadFactor}')
-                        //     : null,
-                        suffixIcon: IconButton(
-                          icon: const Icon(Icons.add),
-                          onPressed: equipment.hasData
-                              ? () {
-                                  var newWeight = (widget.set.weight ?? 0) +
-                                      equipment.data!.weightIncrement.kilograms;
-
-                                  _weightController.text = newWeight.toString();
-
-                                  widget.onChanged((
-                                    key: widget.set.key,
-                                    weight: newWeight,
-                                    repetitions: widget.set.repetitions,
-                                  ));
-                                }
-                              : null,
-                        ),
-                      ),
-                      textInputAction: TextInputAction.next,
                       validator: (value) {
                         if (value == null) {
                           return 'Please enter an amount.';
                         }
                         return null;
                       },
+                      textInputAction: TextInputAction.next,
                     ),
                   );
                 },
@@ -199,8 +164,13 @@ class _SetFormFieldsState extends State<SetFormFields> {
               const SizedBox(width: 16),
             ],
             Expanded(
-              child: NumberFormField(
+              child: IncrementalNumberFormField(
                 controller: _repetitionsController,
+                decoration: InputDecoration(
+                  labelText: 'Repetitions',
+                  suffix:
+                      widget.exercise.isUnilateral ? const Text('×2') : null,
+                ),
                 onChanged: (repetitions) {
                   widget.onChanged((
                     key: widget.set.key,
@@ -208,47 +178,13 @@ class _SetFormFieldsState extends State<SetFormFields> {
                     repetitions: repetitions,
                   ));
                 },
-                decoration: InputDecoration(
-                  labelText: 'Repetitions',
-                  prefixIcon: IconButton(
-                    icon: const Icon(Icons.remove),
-                    onPressed: () {
-                      var newRepetitions =
-                          max(0, (widget.set.repetitions ?? 0) - 1);
-
-                      _repetitionsController.text = newRepetitions.toString();
-
-                      widget.onChanged((
-                        key: widget.set.key,
-                        weight: widget.set.weight,
-                        repetitions: newRepetitions,
-                      ));
-                    },
-                  ),
-                  suffix:
-                      widget.exercise.isUnilateral ? const Text('×2') : null,
-                  suffixIcon: IconButton(
-                    icon: const Icon(Icons.add),
-                    onPressed: () {
-                      var newRepetitions = (widget.set.repetitions ?? 0) + 1;
-
-                      _repetitionsController.text = newRepetitions.toString();
-
-                      widget.onChanged((
-                        key: widget.set.key,
-                        weight: widget.set.weight,
-                        repetitions: newRepetitions,
-                      ));
-                    },
-                  ),
-                ),
-                textInputAction: TextInputAction.next,
                 validator: (value) {
                   if (value == null) {
                     return 'Please enter an amount.';
                   }
                   return null;
                 },
+                textInputAction: TextInputAction.next,
               ),
             ),
           ],

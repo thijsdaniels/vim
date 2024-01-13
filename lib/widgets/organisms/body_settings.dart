@@ -5,7 +5,7 @@ import 'package:vim/models/distance.dart';
 import 'package:vim/models/mass.dart';
 import 'package:vim/models/user/body.dart';
 import 'package:vim/models/user/user.dart';
-import 'package:vim/widgets/atoms/number_form_field.dart';
+import 'package:vim/widgets/atoms/incremental_number_form_field.dart';
 import 'package:vim/widgets/atoms/standard_list.dart';
 import 'package:vim/widgets/molecules/simple_card.dart';
 
@@ -47,7 +47,7 @@ class BodySettings extends StatelessWidget {
               }
             },
           ),
-          NumberFormField(
+          IncrementalNumberFormField(
             decoration: const InputDecoration(
               label: Text('Age'),
             ),
@@ -59,7 +59,7 @@ class BodySettings extends StatelessWidget {
               }
             },
           ),
-          NumberFormField(
+          IncrementalNumberFormField(
             decoration: const InputDecoration(
               label: Text('Length'),
               suffix: Text('cm'),
@@ -72,7 +72,7 @@ class BodySettings extends StatelessWidget {
               }
             },
           ),
-          NumberFormField(
+          IncrementalNumberFormField(
             decoration: const InputDecoration(
               label: Text('Weight'),
               suffix: Text('kg'),
@@ -85,7 +85,7 @@ class BodySettings extends StatelessWidget {
               }
             },
           ),
-          NumberFormField(
+          IncrementalNumberFormField(
             decoration: const InputDecoration(
               label: Text('Lean Mass'),
               suffix: Text('%'),
@@ -100,7 +100,7 @@ class BodySettings extends StatelessWidget {
               }
             },
           ),
-          NumberFormField(
+          IncrementalNumberFormField(
             decoration: const InputDecoration(
               label: Text('Fat Mass'),
               suffix: Text('%'),
@@ -115,7 +115,7 @@ class BodySettings extends StatelessWidget {
               }
             },
           ),
-          NumberFormField(
+          IncrementalNumberFormField(
             decoration: const InputDecoration(
               label: Text('Bone Mass'),
               suffix: Text('%'),

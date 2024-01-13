@@ -7,7 +7,7 @@ import 'package:vim/models/food/recipe.dart';
 import 'package:vim/models/food/recipe_consumption.dart';
 import 'package:vim/models/user/user.dart';
 import 'package:vim/services/consumptions_collection.dart';
-import 'package:vim/widgets/atoms/number_form_field.dart';
+import 'package:vim/widgets/atoms/incremental_number_form_field.dart';
 import 'package:vim/widgets/atoms/standard_list.dart';
 import 'package:vim/widgets/atoms/unit_dropdown_menu.dart';
 import 'package:vim/widgets/molecules/simple_card.dart';
@@ -189,16 +189,17 @@ class _CreateRecipeConsumptionViewState
                       ),
                       const SizedBox(width: 16),
                       Expanded(
-                        child: NumberFormField(
+                        child: IncrementalNumberFormField(
+                          decoration: const InputDecoration(
+                            labelText: 'Amount',
+                            hintText: 'Servings',
+                          ),
                           initialValue: _amount,
                           onChanged: (amount) {
                             setState(() {
                               _amount = amount;
                             });
                           },
-                          decoration: const InputDecoration(
-                            labelText: 'Amount',
-                          ),
                           textInputAction: TextInputAction.done,
                           validator: (value) {
                             if (value == null) {

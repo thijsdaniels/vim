@@ -10,7 +10,7 @@ import 'package:vim/models/exercise/resistance_exercise_performance.dart';
 import 'package:vim/models/exercise/set.dart';
 import 'package:vim/models/user/user.dart';
 import 'package:vim/services/performances_collection_group.dart';
-import 'package:vim/widgets/atoms/number_form_field.dart';
+import 'package:vim/widgets/atoms/incremental_number_form_field.dart';
 import 'package:vim/widgets/atoms/sets_form_field.dart';
 import 'package:vim/widgets/atoms/standard_list.dart';
 import 'package:vim/widgets/molecules/simple_card.dart';
@@ -188,14 +188,14 @@ class _CreateExercisePerformanceViewState
                           child: Column(
                             mainAxisSize: MainAxisSize.min,
                             children: [
-                              NumberFormField(
+                              IncrementalNumberFormField(
+                                decoration: const InputDecoration(
+                                  labelText: 'Calories',
+                                ),
                                 initialValue: calories,
                                 onChanged: (calories) => setState(() {
                                   _calories = calories;
                                 }),
-                                decoration: const InputDecoration(
-                                  labelText: 'Calories',
-                                ),
                                 textInputAction: TextInputAction.done,
                                 validator: (value) {
                                   if (value == null) {
@@ -213,15 +213,15 @@ class _CreateExercisePerformanceViewState
                           child: Column(
                             mainAxisSize: MainAxisSize.min,
                             children: [
-                              NumberFormField(
-                                initialValue: minutes,
-                                onChanged: (minutes) => setState(() {
-                                  _minutes = minutes?.toInt();
-                                }),
+                              IncrementalNumberFormField(
                                 decoration: const InputDecoration(
                                   labelText: 'Duration',
                                   hintText: 'Minutes',
                                 ),
+                                initialValue: minutes,
+                                onChanged: (minutes) => setState(() {
+                                  _minutes = minutes?.toInt();
+                                }),
                                 textInputAction: TextInputAction.next,
                                 validator: (value) {
                                   if (value == null) {
@@ -231,15 +231,15 @@ class _CreateExercisePerformanceViewState
                                 },
                               ),
                               const SizedBox(height: 16),
-                              NumberFormField(
-                                initialValue: watts,
-                                onChanged: (watts) => setState(() {
-                                  _watts = watts?.toInt();
-                                }),
+                              IncrementalNumberFormField(
                                 decoration: const InputDecoration(
                                   labelText: 'Power',
                                   hintText: 'Watts',
                                 ),
+                                initialValue: watts,
+                                onChanged: (watts) => setState(() {
+                                  _watts = watts?.toInt();
+                                }),
                                 textInputAction: TextInputAction.done,
                                 validator: (value) {
                                   if (value == null) {

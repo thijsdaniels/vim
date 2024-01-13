@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:vim/models/food/recipe.dart';
 import 'package:vim/models/user/user.dart';
 import 'package:vim/services/recipes_collection.dart';
-import 'package:vim/widgets/atoms/number_form_field.dart';
+import 'package:vim/widgets/atoms/incremental_number_form_field.dart';
 import 'package:vim/widgets/atoms/standard_list.dart';
 import 'package:vim/widgets/molecules/simple_card.dart';
 
@@ -100,12 +100,12 @@ class _CreateRecipeViewState extends State<CreateRecipeView> {
                     },
                   ),
                   const SizedBox(height: 16),
-                  NumberFormField(
-                    initialValue: _servings,
-                    autofocus: true,
+                  IncrementalNumberFormField(
                     decoration: const InputDecoration(
                       labelText: 'Servings',
                     ),
+                    initialValue: _servings,
+                    autofocus: true,
                     textInputAction: TextInputAction.next,
                     validator: (value) {
                       if (value == null) {

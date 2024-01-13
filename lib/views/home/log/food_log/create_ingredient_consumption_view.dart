@@ -7,7 +7,7 @@ import 'package:vim/models/food/ingredient.dart';
 import 'package:vim/models/food/ingredient_consumption.dart';
 import 'package:vim/models/user/user.dart';
 import 'package:vim/services/consumptions_collection.dart';
-import 'package:vim/widgets/atoms/number_form_field.dart';
+import 'package:vim/widgets/atoms/incremental_number_form_field.dart';
 import 'package:vim/widgets/atoms/standard_list.dart';
 import 'package:vim/widgets/atoms/unit_dropdown_menu.dart';
 import 'package:vim/widgets/molecules/simple_card.dart';
@@ -198,14 +198,16 @@ class _CreateIngredientConsumptionViewState
                       ),
                       const SizedBox(width: 16),
                       Expanded(
-                        child: NumberFormField(
+                        child: IncrementalNumberFormField(
+                          decoration: InputDecoration(
+                            labelText: 'Amount',
+                            hintText:
+                                _unit == Unit.servings ? 'Servings' : 'Grams',
+                          ),
                           initialValue: _amount,
                           onChanged: (amount) => setState(() {
                             _amount = amount;
                           }),
-                          decoration: const InputDecoration(
-                            labelText: 'Amount',
-                          ),
                           textInputAction: TextInputAction.done,
                           validator: (value) {
                             if (value == null) {

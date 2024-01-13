@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:vim/models/user/user.dart';
-import 'package:vim/widgets/atoms/number_form_field.dart';
+import 'package:vim/widgets/atoms/incremental_number_form_field.dart';
 import 'package:vim/widgets/atoms/standard_list.dart';
 import 'package:vim/widgets/atoms/switch_form_field.dart';
 import 'package:vim/widgets/molecules/simple_card.dart';
@@ -23,7 +23,7 @@ class PerformanceSettings extends StatelessWidget {
         physics: const NeverScrollableScrollPhysics(),
         padding: EdgeInsets.zero,
         children: [
-          NumberFormField(
+          IncrementalNumberFormField(
             decoration: const InputDecoration(
               label: Text('NEAT'),
               suffix: Text('kcal / day'),
@@ -36,7 +36,7 @@ class PerformanceSettings extends StatelessWidget {
               }
             },
           ),
-          NumberFormField(
+          IncrementalNumberFormField(
             decoration: const InputDecoration(
               label: Text('Target Exercise'),
               suffix: Text('kcal / day'),
