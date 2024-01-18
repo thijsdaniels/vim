@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:collection/collection.dart';
 import 'package:vim/models/document.dart';
 import 'package:vim/models/food/amount.dart';
 import 'package:vim/models/food/ingredient_consumption.dart';
@@ -13,6 +14,12 @@ class Ingredient extends NamedDocument {
   num? serving;
   Nutrition nutrition;
   bool nutritionPerServing;
+
+  @override
+  String get searchableText => [
+        name,
+        brand,
+      ].whereNotNull().join(' ').toLowerCase();
 
   Ingredient({
     required super.user,

@@ -18,9 +18,7 @@ class Icons8Icon extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return _resolver(
-      style ?? Provider.of<SettingsModel>(context).iconStyle,
-    )();
+    return _resolver(style ?? Provider.of<SettingsModel>(context).iconStyle)();
   }
 
   Image Function() _resolver(Icons8Style style) {

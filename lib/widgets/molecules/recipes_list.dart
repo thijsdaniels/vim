@@ -3,15 +3,14 @@ import 'package:vim/models/food/recipe.dart';
 import 'package:vim/views/home/food/recipes/recipe_view.dart';
 import 'package:vim/widgets/atoms/standard_list.dart';
 import 'package:vim/widgets/molecules/recipe_list_surface.dart';
+import 'package:vim/widgets/molecules/searchable_list.dart';
 
 class RecipesList extends StatelessWidget {
   final List<Recipe> recipes;
   final ScrollPhysics? physics;
   final EdgeInsets padding;
   final double? elevation;
-  final bool showCalories;
-  final bool showMacros;
-  final bool showTime;
+  final bool searchable;
 
   const RecipesList(
     this.recipes, {
@@ -19,9 +18,7 @@ class RecipesList extends StatelessWidget {
     this.physics,
     this.padding = const EdgeInsets.all(16.0),
     this.elevation,
-    this.showCalories = true,
-    this.showMacros = true,
-    this.showTime = true,
+    this.searchable = false,
   });
 
   @override
@@ -35,28 +32,47 @@ class RecipesList extends StatelessWidget {
       );
     }
 
-    return StandardList(
-      physics: physics,
-      padding: padding,
-      spacing: 12,
-      itemCount: recipes.length,
-      itemBuilder: (context, index) {
-        Recipe recipe = recipes[index];
-
-        return RecipeListSurface(
-          recipe: recipe,
+    if (!searchable) {
+      return StandardList(
+        spacing: 12,
+        physics: physics,
+        padding: padding,
+        itemCount: recipes.length,
+        itemBuilder: (context, index) => RecipeListSurface(
           elevation: elevation,
+          recipe: recipes[index],
           onTap: () {
             Navigator.of(context).push(
               MaterialPageRoute(
                 builder: (context) => RecipeView(
-                  path: recipe.reference!.path,
+                  path: recipes[index].reference!.path,
                 ),
               ),
             );
           },
-        );
-      },
+        ),
+      );
+    }
+
+    return SearchableList<Recipe>(
+      spacing: 12,
+      physics: physics,
+      padding: padding,
+      items: recipes,
+      itemToText: (recipe) => recipe.searchableText,
+      itemBuilder: (context, recipe, similarity) => RecipeListSurface(
+        elevation: elevation,
+        recipe: recipe,
+        onTap: () {
+          Navigator.of(context).push(
+            MaterialPageRoute(
+              builder: (context) => RecipeView(
+                path: recipe.reference!.path,
+              ),
+            ),
+          );
+        },
+      ),
     );
   }
 }

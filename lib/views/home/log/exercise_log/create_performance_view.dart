@@ -77,8 +77,8 @@ class _CreatePerformanceViewState extends State<CreatePerformanceView> {
                       ...(routines.data ?? []),
                       ...(exercises.data ?? []),
                     ]
-                        .sortedBySimilarity(
-                          (entry) => entry.name.toLowerCase(),
+                        .withSimilarity(
+                          (entry) => entry.searchableText,
                           controller.value.text.toLowerCase(),
                         )
                         .map(

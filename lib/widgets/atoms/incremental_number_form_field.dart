@@ -2,7 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:vim/widgets/atoms/number_form_field.dart';
 
 class IncrementalNumberFormField extends StatelessWidget {
-  late final TextEditingController controller;
+  late final TextEditingController controller = TextEditingController(
+    text: initialValue?.toString(),
+  );
   final num? stepSize;
   final InputDecoration? decoration;
   final num? initialValue;
@@ -81,47 +83,23 @@ class IncrementalNumberFormField extends StatelessWidget {
     // super.mouseCursor,
   }) : assert(
           controller == null || initialValue == null,
-        ) {
-    this.controller = controller ??
-        TextEditingController(
-          text: initialValue?.toString(),
         );
-  }
 
   @override
   Widget build(BuildContext context) {
     return NumberFormField(
       controller: controller,
-      onChanged: onChanged,
       validator: validator,
       autofocus: autofocus,
       textInputAction: textInputAction,
       decoration: decoration?.copyWith(
         prefixIcon: IconButton(
           icon: const Icon(Icons.remove),
-          onPressed: stepSize != null
-              ? () {
-                  num newValue = (controller.text.isNotEmpty
-                          ? num.parse(controller.text)
-                          : 0) -
-                      stepSize!;
-                  controller.text = newValue.toString();
-                  if (onChanged != null) onChanged!(newValue);
-                }
-              : null,
+          onPressed: stepSize != null ? onDecrementPressed : null,
         ),
         suffixIcon: IconButton(
           icon: const Icon(Icons.add),
-          onPressed: stepSize != null
-              ? () {
-                  num newValue = (controller.text.isNotEmpty
-                          ? num.parse(controller.text)
-                          : 0) +
-                      stepSize!;
-                  controller.text = newValue.toString();
-                  if (onChanged != null) onChanged!(newValue);
-                }
-              : null,
+          onPressed: stepSize != null ? onIncrementPressed : null,
         ),
       ),
     );

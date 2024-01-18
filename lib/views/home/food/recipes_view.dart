@@ -23,7 +23,10 @@ class RecipesView extends StatelessWidget {
       ),
       body: SafeArea(
         child: Consumer<List<Recipe>>(
-          builder: (context, recipes, child) => RecipesList(recipes),
+          builder: (context, recipes, child) => RecipesList(
+            recipes,
+            searchable: true,
+          ),
         ),
       ),
     );

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 class StandardList extends StatelessWidget {
+  final ScrollController? controller;
   final int? itemCount;
   final Widget Function(BuildContext context, int index)? itemBuilder;
   final List<Widget>? children;
@@ -10,6 +11,7 @@ class StandardList extends StatelessWidget {
 
   const StandardList({
     super.key,
+    this.controller,
     this.children,
     this.itemCount,
     this.itemBuilder,
@@ -21,6 +23,7 @@ class StandardList extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ListView.separated(
+      controller: controller,
       padding: padding,
       shrinkWrap: true,
       physics: physics,
