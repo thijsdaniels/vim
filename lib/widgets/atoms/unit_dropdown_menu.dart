@@ -35,7 +35,7 @@ class UnitDropdownMenu extends StatelessWidget {
             ),
           )
           .toList(),
-      onChanged: onChanged,
+      onChanged: items.length > 1 ? onChanged : null,
       validator: validator,
     );
   }

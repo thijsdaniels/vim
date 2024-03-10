@@ -195,6 +195,7 @@ class _CreateRecipeConsumptionViewState
                             hintText: 'Servings',
                           ),
                           initialValue: _amount,
+                          autofocus: true,
                           onChanged: (amount) {
                             setState(() {
                               _amount = amount;

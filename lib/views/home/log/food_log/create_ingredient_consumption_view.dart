@@ -16,6 +16,9 @@ class CreateIngredientConsumptionView extends StatefulWidget {
   final IngredientConsumption? ingredientConsumption;
   final Ingredient? ingredient;
 
+  Ingredient get _ingredient =>
+      ingredientConsumption?.ingredient.snapshot ?? ingredient!;
+
   const CreateIngredientConsumptionView({
     super.key,
     this.ingredientConsumption,
@@ -46,6 +49,11 @@ class _CreateIngredientConsumptionViewState
       _timestamp = ingredientConsumption.timestamp;
       _amount = ingredientConsumption.amount.value;
       _unit = ingredientConsumption.amount.unit;
+    } else {
+      if (widget.ingredient!.serving != null) {
+        _unit = Unit.servings;
+        _amount = 1;
+      }
     }
   }
 
@@ -181,15 +189,17 @@ class _CreateIngredientConsumptionViewState
                       Expanded(
                         child: UnitDropdownMenu(
                           value: _unit,
+                          items: [
+                            Unit.grams,
+                            if (widget._ingredient.serving != null)
+                              Unit.servings,
+                          ],
                           onChanged: (unit) {
                             _unit = unit;
                           },
                           validator: (unit) {
                             if (unit == Unit.servings &&
-                                widget.ingredientConsumption?.ingredient
-                                        .snapshot.serving ==
-                                    null &&
-                                widget.ingredient?.serving == null) {
+                                widget._ingredient.serving == null) {
                               return "Serving size not defined.";
                             }
                             return null;
@@ -208,6 +218,7 @@ class _CreateIngredientConsumptionViewState
                           onChanged: (amount) => setState(() {
                             _amount = amount;
                           }),
+                          autofocus: true,
                           textInputAction: TextInputAction.done,
                           validator: (value) {
                             if (value == null) {
