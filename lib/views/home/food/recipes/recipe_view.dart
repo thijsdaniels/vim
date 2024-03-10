@@ -7,7 +7,11 @@ import 'package:vim/models/user/user.dart';
 import 'package:vim/services/consumptions_collection_group.dart';
 import 'package:vim/services/recipes_collection.dart';
 import 'package:vim/services/recipes_collection_group.dart';
-import 'package:vim/widgets/atoms/icons8_icon.dart';
+import 'package:vim/views/home/food/recipes/create_ingredient_amount_view.dart';
+import 'package:vim/views/home/food/recipes/create_recipe_view.dart';
+import 'package:vim/views/loading_view.dart';
+import 'package:vim/views/not_found_view.dart';
+import 'package:vim/widgets/atoms/food_icon.dart';
 import 'package:vim/widgets/atoms/standard_list.dart';
 import 'package:vim/widgets/atoms/stats_table.dart';
 import 'package:vim/widgets/molecules/consumptions_list.dart';
@@ -15,10 +19,6 @@ import 'package:vim/widgets/molecules/list_surface.dart';
 import 'package:vim/widgets/molecules/nutrition_table.dart';
 import 'package:vim/widgets/molecules/simple_card.dart';
 import 'package:vim/widgets/molecules/with_confirmation_dialog.dart';
-import 'package:vim/views/home/food/recipes/create_ingredient_amount_view.dart';
-import 'package:vim/views/home/food/recipes/create_recipe_view.dart';
-import 'package:vim/views/loading_view.dart';
-import 'package:vim/views/not_found_view.dart';
 
 class RecipeView extends StatelessWidget {
   final String path;
@@ -198,7 +198,7 @@ class IngredientAmountListSurface extends StatelessWidget {
         return ListSurface(
           elevation: 4,
           icon: (ingredient?.icon != null)
-              ? Icons8Icon(ingredient!.icon!)
+              ? FoodIcon(ingredient!.icon!)
               : const CircularProgressIndicator(),
           title: ingredient?.name ?? '...',
           subtitle: '${ingredientAmount.amount.decimals(2).toString()} grams',

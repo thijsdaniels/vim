@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:storybook_flutter/storybook_flutter.dart';
-import 'package:vim/widgets/atoms/icons8_icon.dart';
+import 'package:vim/widgets/atoms/food_icon.dart';
 import 'package:vim/widgets/molecules/list_surface.dart';
 
 class ListSurfaceStory extends Story {
@@ -10,10 +10,7 @@ class ListSurfaceStory extends Story {
           builder: (context) => ConstrainedBox(
             constraints: const BoxConstraints(maxWidth: 320),
             child: ListSurface(
-              icon: const Icons8Icon(
-                'basil',
-                style: Icons8Style.stickers,
-              ),
+              icon: const FoodIcon('basil'),
               title: context.knobs.text(
                 label: 'title',
                 initial: 'Title',

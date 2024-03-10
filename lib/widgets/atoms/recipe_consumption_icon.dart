@@ -1,7 +1,7 @@
 import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:vim/models/food/recipe_consumption.dart';
-import 'package:vim/widgets/atoms/icons8_icons_stack.dart';
+import 'package:vim/widgets/atoms/icon_stack.dart';
 
 class RecipeConsumptionIcon extends StatelessWidget {
   final double elevation;
@@ -24,7 +24,7 @@ class RecipeConsumptionIcon extends StatelessWidget {
     return StreamBuilder(
       stream: consumption.consumptions,
       builder: (context, snapshot) {
-        return Icons8IconStack(
+        return IconStack(
           icons: snapshot.data
                   ?.sorted((a, b) => b.compareTo(a))
                   .map(

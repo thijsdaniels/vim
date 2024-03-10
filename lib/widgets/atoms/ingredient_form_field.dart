@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:vim/models/food/ingredient.dart';
-import 'package:vim/widgets/atoms/icons8_icon.dart';
+import 'package:vim/widgets/atoms/food_icon.dart';
 import 'package:vim/widgets/atoms/search_form_field.dart';
 
 class IngredientFormField extends StatelessWidget {
@@ -25,7 +25,7 @@ class IngredientFormField extends StatelessWidget {
       titleBuilder: (ingredient) => ingredient.name,
       subtitleBuilder: (ingredient) => ingredient.brand,
       iconBuilder: (ingredient) =>
-          ingredient.icon != null ? Icons8Icon(ingredient.icon!) : null,
+          ingredient.icon != null ? FoodIcon(ingredient.icon!) : null,
       selection: selection,
       onSelected: onSelected,
     );

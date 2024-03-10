@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:vim/models/food/recipe.dart';
-import 'package:vim/widgets/atoms/icons8_icons_stack.dart';
+import 'package:vim/widgets/atoms/icon_stack.dart';
 
 class RecipeIcon extends StatelessWidget {
   final double elevation;
@@ -24,7 +24,7 @@ class RecipeIcon extends StatelessWidget {
           return const CircularProgressIndicator();
         }
 
-        return Icons8IconStack(
+        return IconStack(
           icons: snapshot.data!.map((ingredient) => ingredient.icon).toList(),
         );
       },

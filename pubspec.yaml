@@ -37,8 +37,8 @@ flutter:
       fonts:
         - asset: assets/fonts/google-sans/regular.ttf
   assets:
-    - assets/images/icons8/arcade/
-    - assets/images/icons8/stickers/
+    - assets/images/food/
+    - assets/images/exercise/
   shaders:
     - assets/shaders/surface_shader.frag
 

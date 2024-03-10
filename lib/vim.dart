@@ -35,23 +35,24 @@ class Vim extends StatelessWidget {
   Widget build(BuildContext context) {
     return StateProviders(
       child: WithAuthentication(
-        builder: (context, isAuthenticated, isOnboarded, completeOnboarding) =>
-            ServiceProviders(
-          child: Consumer<SettingsModel>(
-            builder: (context, settingsModel, _) => MaterialApp(
-              debugShowCheckedModeBanner: false,
-              title: 'Vim',
-              theme: lightTheme(settingsModel.color),
-              darkTheme: darkTheme(settingsModel.color),
-              themeMode: settingsModel.themeMode,
-              home: !isAuthenticated
-                  ? const LoginView()
-                  : !isOnboarded
-                      ? OnboardingView(onComplete: completeOnboarding)
-                      : const HomeView(),
+        builder: (context, isAuthenticated, isOnboarded, completeOnboarding) {
+          return ServiceProviders(
+            child: Consumer<SettingsModel>(
+              builder: (context, settingsModel, _) => MaterialApp(
+                debugShowCheckedModeBanner: false,
+                title: 'Vim',
+                theme: lightTheme(settingsModel.color),
+                darkTheme: darkTheme(settingsModel.color),
+                themeMode: settingsModel.themeMode,
+                home: !isAuthenticated
+                    ? const LoginView()
+                    : !isOnboarded
+                        ? OnboardingView(onComplete: completeOnboarding)
+                        : const HomeView(),
+              ),
             ),
-          ),
-        ),
+          );
+        },
       ),
     );
   }

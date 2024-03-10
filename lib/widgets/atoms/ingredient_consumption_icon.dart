@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:vim/models/food/ingredient_consumption.dart';
-import 'package:vim/widgets/atoms/icons8_icon.dart';
+import 'package:vim/widgets/atoms/food_icon.dart';
 
 class IngredientConsumptionIcon extends StatelessWidget {
   final double elevation;
@@ -15,7 +15,7 @@ class IngredientConsumptionIcon extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return consumption.ingredient.snapshot.icon != null
-        ? Icons8Icon(consumption.ingredient.snapshot.icon!)
+        ? FoodIcon(consumption.ingredient.snapshot.icon!)
         : Container();
   }
 }

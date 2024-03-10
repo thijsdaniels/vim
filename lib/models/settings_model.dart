@@ -1,13 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:vim/widgets/atoms/icons8_icon.dart';
 
 class SettingsModel extends ChangeNotifier {
   ThemeMode _themeMode = ThemeMode.system;
 
   Color _color = Colors.deepPurple;
-
-  Icons8Style _iconStyle = Icons8Style.stickers;
 
   ThemeMode get themeMode => _themeMode;
 
@@ -20,13 +17,6 @@ class SettingsModel extends ChangeNotifier {
 
   set color(Color color) {
     _color = color;
-    notifyListeners();
-  }
-
-  Icons8Style get iconStyle => _iconStyle;
-
-  set iconStyle(Icons8Style style) {
-    _iconStyle = style;
     notifyListeners();
   }
 
