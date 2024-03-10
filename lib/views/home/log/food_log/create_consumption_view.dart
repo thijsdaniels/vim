@@ -62,13 +62,13 @@ class CreateConsumptionView extends StatelessWidget {
             noQueryBuilder: (context, entries) => const StandardList(
               children: [
                 ListSurface(
-                  title: "Dummy Favorite #1",
+                  title: "Dummy Suggestion #1",
                 ),
                 ListSurface(
-                  title: "Dummy Favorite #2",
+                  title: "Dummy Suggestion #2",
                 ),
                 ListSurface(
-                  title: "Dummy Favorite #3",
+                  title: "Dummy Suggestion #3",
                 ),
               ],
             ),
@@ -156,7 +156,6 @@ class IngredientSearchResult extends StatelessWidget {
         );
 
         if (consumption != null) {
-          navigator.pop();
           navigator.pop(consumption);
         }
       },

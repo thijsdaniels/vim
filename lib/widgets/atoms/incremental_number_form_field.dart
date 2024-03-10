@@ -26,7 +26,7 @@ class IncrementalNumberFormField extends StatelessWidget {
 
   IncrementalNumberFormField({
     super.key,
-    TextEditingController? controller,
+    // TextEditingController? controller,
     this.stepSize = 1,
     this.decoration,
     this.initialValue,
@@ -81,14 +81,16 @@ class IncrementalNumberFormField extends StatelessWidget {
     // super.restorationId,
     // super.enableIMEPersonalizedLearning,
     // super.mouseCursor,
-  }) : assert(
-          controller == null || initialValue == null,
-        );
+  });
+  //  : assert(
+  //         controller == null || initialValue == null,
+  //       );
 
   @override
   Widget build(BuildContext context) {
     return NumberFormField(
       controller: controller,
+      onChanged: onChanged,
       validator: validator,
       autofocus: autofocus,
       textInputAction: textInputAction,

@@ -93,22 +93,6 @@ class SetFormFields extends StatefulWidget {
 }
 
 class _SetFormFieldsState extends State<SetFormFields> {
-  late TextEditingController _weightController;
-  late TextEditingController _repetitionsController;
-
-  @override
-  void initState() {
-    super.initState();
-
-    _weightController = TextEditingController(
-      text: widget.set.weight?.toString(),
-    );
-
-    _repetitionsController = TextEditingController(
-      text: widget.set.repetitions?.toString(),
-    );
-  }
-
   @override
   Widget build(BuildContext context) {
     return StandardList(
@@ -137,7 +121,7 @@ class _SetFormFieldsState extends State<SetFormFields> {
                 builder: (context, equipment) {
                   return Expanded(
                     child: IncrementalNumberFormField(
-                      controller: _weightController,
+                      initialValue: widget.set.weight,
                       decoration: InputDecoration(
                         labelText: equipment.data?.name ?? 'Weight',
                         hintText: 'Kilograms',
@@ -165,7 +149,7 @@ class _SetFormFieldsState extends State<SetFormFields> {
             ],
             Expanded(
               child: IncrementalNumberFormField(
-                controller: _repetitionsController,
+                initialValue: widget.set.repetitions,
                 decoration: InputDecoration(
                   labelText: 'Repetitions',
                   suffix:

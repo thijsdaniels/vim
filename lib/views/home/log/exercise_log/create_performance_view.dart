@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:vim/extensions/string_similarity.dart';
 import 'package:vim/models/date_model.dart';
+import 'package:vim/models/document.dart';
 import 'package:vim/models/exercise/exercise.dart';
 import 'package:vim/models/exercise/exercise_performance.dart';
 import 'package:vim/models/exercise/routine.dart';
@@ -12,7 +12,9 @@ import 'package:vim/views/home/log/exercise_log/create_exercise_performance_view
 import 'package:vim/views/home/log/exercise_log/create_quick_track_performance_view.dart';
 import 'package:vim/widgets/atoms/exercise_icon.dart';
 import 'package:vim/widgets/atoms/routine_icon.dart';
+import 'package:vim/widgets/atoms/standard_list.dart';
 import 'package:vim/widgets/molecules/list_surface.dart';
+import 'package:vim/widgets/molecules/searchable_list.dart';
 
 class CreatePerformanceView extends StatefulWidget {
   const CreatePerformanceView({super.key});
@@ -44,55 +46,34 @@ class _CreatePerformanceViewState extends State<CreatePerformanceView> {
           )
         ],
       ),
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: StreamBuilder(
-          stream: RoutinesCollectionGroup.instance.all(
+      body: StreamBuilder(
+        stream: RoutinesCollectionGroup.instance.all(
+          users: [user.reference!, ...user.following],
+        ),
+        builder: (context, routines) => StreamBuilder(
+          stream: ExercisesCollectionGroup.instance.all(
             users: [user.reference!, ...user.following],
           ),
-          builder: (context, routines) => StreamBuilder(
-            stream: ExercisesCollectionGroup.instance.all(
-              users: [user.reference!, ...user.following],
-            ),
-            builder: (context, exercises) => SearchAnchor.bar(
-              viewElevation: 1,
-              isFullScreen: true,
-              barHintText: "Search",
-              suggestionsBuilder: (context, controller) {
-                return [
-                  const SizedBox(height: 6),
-                  if (controller.value.text.isEmpty)
-                    const Padding(
-                      padding: EdgeInsets.symmetric(
-                        horizontal: 12,
-                        vertical: 6,
-                      ),
-                      child: ListSurface(
-                        elevation: 4,
-                        title: "Recents coming soon!",
-                      ),
-                    ),
-                  if (controller.value.text.isNotEmpty)
-                    ...[
-                      ...(routines.data ?? []),
-                      ...(exercises.data ?? []),
-                    ]
-                        .withSimilarity(
-                          (entry) => entry.searchableText,
-                          controller.value.text.toLowerCase(),
-                        )
-                        .map(
-                          (entry) => Padding(
-                            padding: const EdgeInsets.symmetric(
-                              horizontal: 12,
-                              vertical: 6,
-                            ),
-                            child: SearchResult(entry),
-                          ),
-                        ),
-                  const SizedBox(height: 6),
-                ];
-              },
+          builder: (context, exercises) => SearchableList<NamedDocument>(
+            barHintText: "Search",
+            items: [
+              ...(routines.data ?? []),
+              ...(exercises.data ?? []),
+            ],
+            itemToText: (entry) => entry.searchableText,
+            itemBuilder: (context, entry, similarity) => SearchResult(entry),
+            noQueryBuilder: (context, entries) => const StandardList(
+              children: [
+                ListSurface(
+                  title: "Dummy Suggestion #1",
+                ),
+                ListSurface(
+                  title: "Dummy Suggestion #2",
+                ),
+                ListSurface(
+                  title: "Dummy Suggestion #3",
+                ),
+              ],
             ),
           ),
         ),
@@ -116,7 +97,7 @@ class SearchResult extends StatelessWidget {
     } else if (entry is Exercise) {
       return ExerciseSearchResult(entry);
     } else {
-      throw ArgumentError("Invalid entry type.");
+      throw ArgumentError("Invalid entry type.", entry);
     }
   }
 }
@@ -139,7 +120,6 @@ class RoutineSearchResult extends StatelessWidget {
         subtitle: 'Routine',
         onTap: () {
           var navigator = Navigator.of(context);
-          navigator.pop();
           navigator.pop(
             routine.performance(
               user: user,
@@ -181,7 +161,6 @@ class ExerciseSearchResult extends StatelessWidget {
           );
 
           if (performance != null) {
-            navigator.pop();
             navigator.pop(performance);
           }
         },
