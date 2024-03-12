@@ -34,7 +34,7 @@ class _CreateRecipeConsumptionViewState
 
   Timestamp? _timestamp;
   Unit? _unit = Unit.servings;
-  num? _amount = 1;
+  final TextEditingController _amount = TextEditingController(text: "1");
 
   @override
   void initState() {
@@ -45,7 +45,7 @@ class _CreateRecipeConsumptionViewState
     if (recipeConsumption != null) {
       _timestamp = recipeConsumption.timestamp;
       _unit = recipeConsumption.amount.unit;
-      _amount = recipeConsumption.amount.value;
+      _amount.text = recipeConsumption.amount.value.toString();
     }
   }
 
@@ -76,7 +76,7 @@ class _CreateRecipeConsumptionViewState
                   recipeConsumption.timestamp = timestamp;
                   recipeConsumption.amount = Amount(
                     unit: _unit!,
-                    value: _amount!,
+                    value: num.parse(_amount.text),
                   );
 
                   ConsumptionsCollection.of(context).update(recipeConsumption);
@@ -86,7 +86,7 @@ class _CreateRecipeConsumptionViewState
                     timestamp: timestamp,
                     amount: Amount(
                       unit: _unit!,
-                      value: _amount!,
+                      value: num.parse(_amount.text),
                     ),
                   );
 
@@ -194,13 +194,8 @@ class _CreateRecipeConsumptionViewState
                             labelText: 'Amount',
                             hintText: 'Servings',
                           ),
-                          initialValue: _amount,
+                          controller: _amount,
                           autofocus: true,
-                          onChanged: (amount) {
-                            setState(() {
-                              _amount = amount;
-                            });
-                          },
                           textInputAction: TextInputAction.done,
                           validator: (value) {
                             if (value == null) {

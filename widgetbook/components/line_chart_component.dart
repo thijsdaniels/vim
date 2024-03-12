@@ -1,18 +1,15 @@
 import 'dart:math';
 
 import 'package:flutter/material.dart';
-import 'package:storybook_flutter/storybook_flutter.dart';
 import 'package:vim/widgets/molecules/line_chart.dart';
 
-class LineChartStory extends Story {
-  LineChartStory()
-      : super(
-          name: 'Widgets/LineChart',
-          builder: (context) => ConstrainedBox(
-            constraints: const BoxConstraints(maxWidth: 640),
-            child: LineChart(series: _generateSeries()),
-          ),
-        );
+class LineChartComponent {
+  static Widget defaultUseCase(BuildContext context) {
+    return ConstrainedBox(
+      constraints: const BoxConstraints(maxWidth: 640),
+      child: LineChart(series: _generateSeries()),
+    );
+  }
 }
 
 final Random _generator = Random();

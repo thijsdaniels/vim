@@ -18,7 +18,7 @@ class CreateRecipeView extends StatefulWidget {
 class _CreateRecipeViewState extends State<CreateRecipeView> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   String _name = "";
-  num? _servings = 1;
+  TextEditingController _servings = TextEditingController();
 
   @override
   void initState() {
@@ -28,7 +28,7 @@ class _CreateRecipeViewState extends State<CreateRecipeView> {
 
     if (recipe != null) {
       _name = recipe.name;
-      _servings = recipe.servings;
+      _servings.text = recipe.servings.toString();
     }
   }
 
@@ -52,14 +52,14 @@ class _CreateRecipeViewState extends State<CreateRecipeView> {
 
                 if (recipe != null) {
                   recipe.name = _name;
-                  recipe.servings = _servings!;
+                  recipe.servings = num.parse(_servings.text);
 
                   RecipesCollection.of(context).update(recipe);
                 } else {
                   recipe = Recipe(
                     user: User.of(context).reference!,
                     name: _name,
-                    servings: _servings!,
+                    servings: num.parse(_servings.text),
                   );
 
                   RecipesCollection.of(context).create(recipe);
@@ -104,7 +104,7 @@ class _CreateRecipeViewState extends State<CreateRecipeView> {
                     decoration: const InputDecoration(
                       labelText: 'Servings',
                     ),
-                    initialValue: _servings,
+                    controller: _servings,
                     autofocus: true,
                     textInputAction: TextInputAction.next,
                     validator: (value) {
@@ -112,11 +112,6 @@ class _CreateRecipeViewState extends State<CreateRecipeView> {
                         return 'Please enter a number.';
                       }
                       return null;
-                    },
-                    onChanged: (servings) {
-                      setState(() {
-                        _servings = servings;
-                      });
                     },
                   ),
                 ],

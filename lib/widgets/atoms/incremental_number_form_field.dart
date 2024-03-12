@@ -2,9 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:vim/widgets/atoms/number_form_field.dart';
 
 class IncrementalNumberFormField extends StatelessWidget {
-  late final TextEditingController controller = TextEditingController(
-    text: initialValue?.toString(),
-  );
+  late final TextEditingController controller;
   final num? stepSize;
   final InputDecoration? decoration;
   final num? initialValue;
@@ -26,7 +24,7 @@ class IncrementalNumberFormField extends StatelessWidget {
 
   IncrementalNumberFormField({
     super.key,
-    // TextEditingController? controller,
+    TextEditingController? controller,
     this.stepSize = 1,
     this.decoration,
     this.initialValue,
@@ -81,10 +79,14 @@ class IncrementalNumberFormField extends StatelessWidget {
     // super.restorationId,
     // super.enableIMEPersonalizedLearning,
     // super.mouseCursor,
-  });
-  //  : assert(
-  //         controller == null || initialValue == null,
-  //       );
+  }) : assert(
+          controller == null || initialValue == null,
+        ) {
+    this.controller = controller ??
+        TextEditingController(
+          text: initialValue?.toString(),
+        );
+  }
 
   @override
   Widget build(BuildContext context) {

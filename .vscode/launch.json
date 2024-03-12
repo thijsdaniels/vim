@@ -6,22 +6,29 @@
 	"configurations": [
 		{
 			"name": "Vim",
-			"request": "launch",
 			"type": "dart",
+			"request": "launch",
 			"args": ["--web-renderer", "canvaskit"]
 		},
 		{
 			"name": "Vim (Profile)",
-			"request": "launch",
 			"type": "dart",
+			"request": "launch",
 			"flutterMode": "profile",
 			"args": ["--web-renderer", "canvaskit"]
 		},
 		{
 			"name": "Vim (Release)",
-			"request": "launch",
 			"type": "dart",
+			"request": "launch",
 			"flutterMode": "release",
+			"args": ["--web-renderer", "canvaskit"]
+		},
+		{
+			"name": "Widgetbook",
+			"type": "dart",
+			"request": "launch",
+			"program": "widgetbook/widgetbook.dart",
 			"args": ["--web-renderer", "canvaskit"]
 		}
 	]

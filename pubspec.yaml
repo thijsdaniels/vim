@@ -23,7 +23,8 @@ dependencies:
   provider: ^6.0.5
   flutter_shaders: ^0.1.1
   string_similarity: ^2.0.0
-  storybook_flutter: ^0.14.0
+  widgetbook: ^3.7.1
+  widgetbook_annotation: ^3.1.0
 
 dev_dependencies:
   flutter_test:

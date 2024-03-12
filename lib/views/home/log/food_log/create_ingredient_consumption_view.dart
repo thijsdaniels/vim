@@ -36,7 +36,7 @@ class _CreateIngredientConsumptionViewState
   final TextEditingController _timeController = TextEditingController();
 
   Timestamp? _timestamp;
-  num? _amount;
+  TextEditingController _amount = TextEditingController();
   Unit? _unit = Unit.grams;
 
   @override
@@ -47,12 +47,12 @@ class _CreateIngredientConsumptionViewState
 
     if (ingredientConsumption != null) {
       _timestamp = ingredientConsumption.timestamp;
-      _amount = ingredientConsumption.amount.value;
+      _amount.text = ingredientConsumption.amount.value.toString();
       _unit = ingredientConsumption.amount.unit;
     } else {
       if (widget.ingredient!.serving != null) {
         _unit = Unit.servings;
-        _amount = 1;
+        _amount.text = "1";
       }
     }
   }
@@ -82,7 +82,7 @@ class _CreateIngredientConsumptionViewState
                 if (ingredientConsumption != null) {
                   ingredientConsumption.timestamp = timestamp;
                   ingredientConsumption.amount = Amount(
-                    value: _amount!,
+                    value: num.parse(_amount.text),
                     unit: _unit!,
                   );
 
@@ -93,7 +93,7 @@ class _CreateIngredientConsumptionViewState
                     user: User.of(context),
                     timestamp: timestamp,
                     amount: Amount(
-                      value: _amount!,
+                      value: num.parse(_amount.text),
                       unit: _unit!,
                     ),
                   );
@@ -214,10 +214,7 @@ class _CreateIngredientConsumptionViewState
                             hintText:
                                 _unit == Unit.servings ? 'Servings' : 'Grams',
                           ),
-                          initialValue: _amount,
-                          onChanged: (amount) => setState(() {
-                            _amount = amount;
-                          }),
+                          controller: _amount,
                           autofocus: true,
                           textInputAction: TextInputAction.done,
                           validator: (value) {

@@ -28,7 +28,7 @@ class _CreateIngredientAmountViewState
 
   // TODO: Turn this into a `DocumentReference<Ingredient>`.
   DocumentReference? _ingredient;
-  num? _amount;
+  final TextEditingController _amount = TextEditingController();
 
   @override
   void initState() {
@@ -38,7 +38,7 @@ class _CreateIngredientAmountViewState
 
     if (ingredientAmount != null) {
       _ingredient = ingredientAmount.ingredientReference;
-      _amount = ingredientAmount.amount;
+      _amount.text = ingredientAmount.amount.toString();
     }
   }
 
@@ -61,7 +61,7 @@ class _CreateIngredientAmountViewState
                 Navigator.of(context).pop(
                   IngredientAmount(
                     ingredientReference: _ingredient!,
-                    amount: _amount!,
+                    amount: num.parse(_amount.text),
                   ),
                 );
               }
@@ -108,10 +108,7 @@ class _CreateIngredientAmountViewState
                       labelText: 'Amount',
                       hintText: 'Grams',
                     ),
-                    initialValue: _amount,
-                    onChanged: (amount) => setState(() {
-                      _amount = amount;
-                    }),
+                    controller: _amount,
                     textInputAction: TextInputAction.done,
                     validator: (value) {
                       if (value == null) {
