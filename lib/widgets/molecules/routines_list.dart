@@ -3,7 +3,7 @@ import 'package:vim/models/exercise/routine.dart';
 import 'package:vim/widgets/atoms/routine_icon.dart';
 import 'package:vim/widgets/atoms/standard_list.dart';
 import 'package:vim/widgets/molecules/list_surface.dart';
-import 'package:vim/views/home/exercise/routines/routine_view.dart';
+import 'package:vim/views/routines/routine_view.dart';
 
 class RoutinesList extends StatelessWidget {
   const RoutinesList(

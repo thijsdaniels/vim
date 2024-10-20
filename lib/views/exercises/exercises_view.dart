@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:vim/models/exercise/exercise.dart';
+import 'package:vim/views/exercises/create_exercise_view.dart';
 import 'package:vim/widgets/atoms/floating_action_surface.dart';
+import 'package:vim/widgets/molecules/app_drawer.dart';
 import 'package:vim/widgets/molecules/exercises_list.dart';
-import 'package:vim/views/home/exercise/exercises/create_exercise_view.dart';
 
 class ExercisesView extends StatelessWidget {
   const ExercisesView({super.key});
@@ -11,6 +12,10 @@ class ExercisesView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        title: const Text('Exercises'),
+      ),
+      drawer: AppDrawer(),
       floatingActionButton: FloatingActionSurface(
         onPressed: () {
           Navigator.of(context).push(

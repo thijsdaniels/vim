@@ -7,7 +7,7 @@ import 'package:vim/widgets/atoms/standard_list.dart';
 import 'package:vim/widgets/atoms/stats_table.dart';
 import 'package:vim/widgets/molecules/simple_card.dart';
 import 'package:vim/widgets/molecules/with_confirmation_dialog.dart';
-import 'package:vim/views/home/exercise/equipments/create_equipment_view.dart';
+import 'package:vim/views/equipments/create_equipment_view.dart';
 import 'package:vim/views/loading_view.dart';
 import 'package:vim/views/not_found_view.dart';
 

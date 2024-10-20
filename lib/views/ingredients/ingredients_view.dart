@@ -2,8 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:vim/models/food/ingredient.dart';
 import 'package:vim/widgets/atoms/floating_action_surface.dart';
+import 'package:vim/widgets/molecules/app_drawer.dart';
 import 'package:vim/widgets/molecules/ingredients_list.dart';
-import 'package:vim/views/home/food/ingredients/create_ingredient_view.dart';
+import 'package:vim/views/ingredients/create_ingredient_view.dart';
 
 class IngredientsView extends StatelessWidget {
   const IngredientsView({super.key});
@@ -11,6 +12,10 @@ class IngredientsView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        title: const Text('Ingredients'),
+      ),
+      drawer: AppDrawer(),
       floatingActionButton: FloatingActionSurface(
         onPressed: () {
           Navigator.of(context).push(

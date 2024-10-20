@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:vim/models/food/recipe.dart';
-import 'package:vim/views/home/food/recipes/recipe_view.dart';
+import 'package:vim/views/recipes/recipe_view.dart';
 import 'package:vim/widgets/atoms/standard_list.dart';
 import 'package:vim/widgets/molecules/recipe_list_surface.dart';
 import 'package:vim/widgets/molecules/searchable_list.dart';

@@ -4,6 +4,7 @@ import 'package:firebase_auth/firebase_auth.dart' as firebase_auth;
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:vim/models/date_model.dart';
+import 'package:vim/models/exercise/equipment.dart';
 import 'package:vim/models/exercise/exercise.dart';
 import 'package:vim/models/exercise/performance.dart';
 import 'package:vim/models/exercise/routine.dart';
@@ -20,11 +21,9 @@ import 'package:vim/services/performances_collection.dart';
 import 'package:vim/services/recipes_collection.dart';
 import 'package:vim/services/routines_collection.dart';
 import 'package:vim/services/users_collection.dart';
-import 'package:vim/views/home_view.dart';
+import 'package:vim/views/log/log_view.dart';
 import 'package:vim/views/login_view.dart';
 import 'package:vim/views/onboarding_view.dart';
-
-import 'models/exercise/equipment.dart';
 
 class Vim extends StatelessWidget {
   const Vim({
@@ -48,7 +47,7 @@ class Vim extends StatelessWidget {
                     ? const LoginView()
                     : !isOnboarded
                         ? OnboardingView(onComplete: completeOnboarding)
-                        : const HomeView(),
+                        : const LogView(),
               ),
             ),
           );

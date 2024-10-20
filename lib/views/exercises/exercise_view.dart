@@ -7,7 +7,7 @@ import 'package:vim/models/user/user.dart';
 import 'package:vim/services/exercises_collection.dart';
 import 'package:vim/services/exercises_collection_group.dart';
 import 'package:vim/services/performances_collection_group.dart';
-import 'package:vim/views/home/exercise/exercises/create_exercise_view.dart';
+import 'package:vim/views/exercises/create_exercise_view.dart';
 import 'package:vim/views/loading_view.dart';
 import 'package:vim/views/not_found_view.dart';
 import 'package:vim/widgets/atoms/exercise_muscle_groups.dart';

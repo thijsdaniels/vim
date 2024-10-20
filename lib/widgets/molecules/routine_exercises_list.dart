@@ -2,7 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:vim/models/exercise/exercise.dart';
 import 'package:vim/services/exercises_collection_group.dart';
-import 'package:vim/views/home/exercise/exercises/exercise_view.dart';
+import 'package:vim/views/exercises/exercise_view.dart';
 import 'package:vim/widgets/atoms/exercise_icon.dart';
 import 'package:vim/widgets/molecules/list_surface.dart';
 import 'package:vim/widgets/molecules/with_confirmation_dialog.dart';

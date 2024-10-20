@@ -4,7 +4,7 @@ import 'package:vim/models/exercise/performance.dart';
 import 'package:vim/services/performances_collection.dart';
 import 'package:vim/widgets/atoms/floating_action_surface.dart';
 import 'package:vim/widgets/molecules/performances_list.dart';
-import 'package:vim/views/home/log/exercise_log/create_performance_view.dart';
+import 'package:vim/views/log/exercise_log/create_performance_view.dart';
 
 class LogPerformancesView extends StatelessWidget {
   const LogPerformancesView({super.key});

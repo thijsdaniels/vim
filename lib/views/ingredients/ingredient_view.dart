@@ -11,7 +11,7 @@ import 'package:vim/widgets/molecules/consumptions_list.dart';
 import 'package:vim/widgets/molecules/nutrition_table.dart';
 import 'package:vim/widgets/molecules/simple_card.dart';
 import 'package:vim/widgets/molecules/with_confirmation_dialog.dart';
-import 'package:vim/views/home/food/ingredients/create_ingredient_view.dart';
+import 'package:vim/views/ingredients/create_ingredient_view.dart';
 import 'package:vim/views/loading_view.dart';
 import 'package:vim/views/not_found_view.dart';
 
