@@ -1,5 +1,4 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:flutter/foundation.dart';
 import 'package:vim/models/document.dart';
 import 'package:vim/models/exercise/equipment.dart';
 import 'package:vim/models/snapshot.dart';
@@ -91,11 +90,9 @@ class Exercise extends NamedDocument {
       'bodyweightFactor': bodyweightFactor,
       'isUnilateral': isUnilateral,
       'muscleGroups': {
-        'primary': muscleGroups.primary != null
-            ? describeEnum(muscleGroups.primary!)
-            : null,
-        'secondary': muscleGroups.secondary
-            .map((muscleGroup) => describeEnum(muscleGroup)),
+        'primary': muscleGroups.primary?.name,
+        'secondary':
+            muscleGroups.secondary.map((muscleGroup) => muscleGroup.name),
       },
     };
   }

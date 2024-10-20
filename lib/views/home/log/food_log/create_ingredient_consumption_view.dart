@@ -36,7 +36,7 @@ class _CreateIngredientConsumptionViewState
   final TextEditingController _timeController = TextEditingController();
 
   Timestamp? _timestamp;
-  TextEditingController _amount = TextEditingController();
+  final TextEditingController _amount = TextEditingController();
   Unit? _unit = Unit.grams;
 
   @override

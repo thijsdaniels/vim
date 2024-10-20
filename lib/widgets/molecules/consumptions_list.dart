@@ -40,10 +40,8 @@ class ConsumptionsList extends StatelessWidget {
       spacing: 12,
       itemCount: consumptions.length,
       itemBuilder: (context, index) {
-        Consumption consumption = consumptions[index];
-
         return ConsumptionListSurface(
-          consumption,
+          consumptions[index],
           elevation: elevation,
           showCalories: showCalories,
           showMacros: showMacros,

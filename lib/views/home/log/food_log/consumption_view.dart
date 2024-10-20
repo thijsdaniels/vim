@@ -1,4 +1,3 @@
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:vim/extensions/date_time.dart';
 import 'package:vim/extensions/ingredient_amounts.dart';
@@ -7,8 +6,13 @@ import 'package:vim/models/food/consumption.dart';
 import 'package:vim/models/food/ingredient_consumption.dart';
 import 'package:vim/models/food/quick_consumption.dart';
 import 'package:vim/models/food/recipe_consumption.dart';
-import 'package:vim/services/consumptions_collection_group.dart';
 import 'package:vim/services/consumptions_collection.dart';
+import 'package:vim/services/consumptions_collection_group.dart';
+import 'package:vim/views/home/log/food_log/create_ingredient_consumption_view.dart';
+import 'package:vim/views/home/log/food_log/create_quick_track_consumption_view.dart';
+import 'package:vim/views/home/log/food_log/create_recipe_consumption_view.dart';
+import 'package:vim/views/loading_view.dart';
+import 'package:vim/views/not_found_view.dart';
 import 'package:vim/widgets/atoms/standard_list.dart';
 import 'package:vim/widgets/atoms/stats_table.dart';
 import 'package:vim/widgets/molecules/consumptions_list.dart';
@@ -17,11 +21,6 @@ import 'package:vim/widgets/molecules/nutrition_table.dart';
 import 'package:vim/widgets/molecules/recipes_list.dart';
 import 'package:vim/widgets/molecules/simple_card.dart';
 import 'package:vim/widgets/molecules/with_confirmation_dialog.dart';
-import 'package:vim/views/home/log/food_log/create_ingredient_consumption_view.dart';
-import 'package:vim/views/home/log/food_log/create_quick_track_consumption_view.dart';
-import 'package:vim/views/home/log/food_log/create_recipe_consumption_view.dart';
-import 'package:vim/views/loading_view.dart';
-import 'package:vim/views/not_found_view.dart';
 
 class ConsumptionView extends StatefulWidget {
   final String path;
@@ -129,7 +128,7 @@ class _ConsumptionViewState extends State<ConsumptionView> {
                       StatsRow(
                         'Amount',
                         consumption.amount.value.toString(),
-                        unit: describeEnum(consumption.amount.unit),
+                        unit: consumption.amount.unit.name,
                       ),
                       if (consumption.amount.unit == Unit.servings)
                         StatsRow(
@@ -144,7 +143,7 @@ class _ConsumptionViewState extends State<ConsumptionView> {
                       StatsRow(
                         'Amount',
                         consumption.amount.value.toString(),
-                        unit: describeEnum(consumption.amount.unit),
+                        unit: consumption.amount.unit.name,
                       ),
                       if (consumption.amount.unit == Unit.servings)
                         StatsRow(

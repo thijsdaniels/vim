@@ -1,5 +1,3 @@
-import 'package:flutter/foundation.dart';
-
 enum Unit {
   grams,
   servings,
@@ -16,12 +14,12 @@ class Amount {
 
   @override
   String toString() {
-    return '$value ${describeEnum(unit)}';
+    return '$value ${unit.name}';
   }
 
   Map<String, dynamic> toMap() {
     return {
-      'unit': describeEnum(unit),
+      'unit': unit.name,
       'value': value,
     };
   }
@@ -29,7 +27,7 @@ class Amount {
   static Amount fromMap(Map<String, dynamic> map) {
     return Amount(
       unit: Unit.values.firstWhere(
-        (unit) => describeEnum(unit) == map['unit'],
+        (unit) => unit.name == map['unit'],
       ),
       value: map['value'],
     );

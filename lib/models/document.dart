@@ -60,7 +60,7 @@ abstract class NamedDocument extends OwnedDocument with Name {
   @override
   String name;
 
-  String get searchableText => name.toLowerCase();
+  String get searchableText => name;
 
   NamedDocument({
     super.reference,

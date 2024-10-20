@@ -1,5 +1,8 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
-import 'package:vim/extensions/string_similarity.dart';
+import 'package:fuzzywuzzy/fuzzywuzzy.dart';
+import 'package:fuzzywuzzy/model/extracted_result.dart';
 import 'package:vim/widgets/atoms/standard_list.dart';
 import 'package:vim/widgets/molecules/list_surface.dart';
 
@@ -7,9 +10,7 @@ class SearchableList<T> extends StatefulWidget {
   final String barHintText;
   final List<T> items;
   final String Function(T) itemToText;
-  final num? minSimilarity;
-  final bool? normalizeSimilarity;
-  final int? maxResults;
+  final num minSimilarity;
   final Widget Function(BuildContext, T, num?) itemBuilder;
   final Widget Function(BuildContext, List<T>)? noQueryBuilder;
   final Widget Function(BuildContext)? noResultsBuilder;
@@ -22,9 +23,7 @@ class SearchableList<T> extends StatefulWidget {
     this.barHintText = "Search",
     required this.items,
     required this.itemToText,
-    this.minSimilarity = 0.1,
-    this.normalizeSimilarity,
-    this.maxResults,
+    this.minSimilarity = 0.5,
     required this.itemBuilder,
     this.noQueryBuilder,
     this.noResultsBuilder,
@@ -41,17 +40,23 @@ class _SearchableListState<T> extends State<SearchableList<T>> {
   final ScrollController scrollController = ScrollController();
   final TextEditingController queryController = TextEditingController();
 
-  String query = "";
+  String _query = "";
+  Timer? _debounce;
+
+  @override
+  void dispose() {
+    _debounce?.cancel();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
-    var ranked = query.isNotEmpty
-        ? [...widget.items].withSimilarity(
-            (item) => widget.itemToText(item).toLowerCase(),
-            query,
-            minSimilarity: widget.minSimilarity,
-            normalizeSimilarity: widget.normalizeSimilarity,
-            maxResults: widget.maxResults,
+    var ranked = _query.isNotEmpty
+        ? extractAllSorted(
+            query: _query,
+            choices: widget.items,
+            getter: (item) => widget.itemToText(item),
+            cutoff: (widget.minSimilarity * 100).toInt(),
           )
         : null;
 
@@ -70,19 +75,26 @@ class _SearchableListState<T> extends State<SearchableList<T>> {
             leading: const Icon(Icons.search),
             hintText: widget.barHintText,
             trailing: [
-              if (query.isNotEmpty)
+              if (_query.isNotEmpty)
                 IconButton(
                   onPressed: () {
                     scrollController.jumpTo(0);
                     queryController.text = "";
-                    setState(() => query = queryController.text);
+                    setState(() => _query = queryController.text);
                   },
                   icon: const Icon(Icons.clear),
                 ),
             ],
             onChanged: (query) {
               scrollController.jumpTo(0);
-              setState(() => this.query = query.toLowerCase());
+
+              if (_debounce?.isActive ?? false) {
+                _debounce?.cancel();
+              }
+
+              _debounce = Timer(const Duration(milliseconds: 300), () {
+                setState(() => this._query = query);
+              });
             },
           ),
         ),
@@ -117,7 +129,7 @@ class _SearchableListState<T> extends State<SearchableList<T>> {
     );
   }
 
-  Widget buildResults(List<({T item, num? similarity})> ranked) {
+  Widget buildResults(List<ExtractedResult<T>> ranked) {
     if (ranked.isEmpty) {
       return buildNoResults(context);
     }
@@ -129,8 +141,8 @@ class _SearchableListState<T> extends State<SearchableList<T>> {
       itemCount: ranked.length,
       itemBuilder: (context, index) => widget.itemBuilder(
         context,
-        ranked[index].item,
-        ranked[index].similarity,
+        ranked[index].choice,
+        ranked[index].score,
       ),
     );
   }

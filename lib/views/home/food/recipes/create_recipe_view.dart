@@ -18,7 +18,7 @@ class CreateRecipeView extends StatefulWidget {
 class _CreateRecipeViewState extends State<CreateRecipeView> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   String _name = "";
-  TextEditingController _servings = TextEditingController();
+  final TextEditingController _servings = TextEditingController();
 
   @override
   void initState() {

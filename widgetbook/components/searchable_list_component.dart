@@ -17,14 +17,6 @@ class SearchableListComponent {
         label: 'minSimilarity',
         initialValue: 0.1,
       ),
-      normalizeSimilarity: context.knobs.boolean(
-        label: 'normalizeSimilarity',
-        initialValue: false,
-      ),
-      maxResults: context.knobs.intOrNull.input(
-        label: 'maxResults',
-        initialValue: null,
-      ),
     );
   }
 }

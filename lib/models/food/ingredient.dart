@@ -19,7 +19,7 @@ class Ingredient extends NamedDocument {
   String get searchableText => [
         name,
         brand,
-      ].whereNotNull().join(' ').toLowerCase();
+      ].whereNotNull().join(' ');
 
   Ingredient({
     required super.user,
