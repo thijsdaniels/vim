@@ -19,8 +19,8 @@ class ConsumptionListSurface extends StatelessWidget {
     this.consumption, {
     super.key,
     this.elevation,
-    this.showCalories = true,
-    this.showMacros = true,
+    this.showCalories = false,
+    this.showMacros = false,
     this.showTime = true,
   });
 

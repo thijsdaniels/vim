@@ -81,7 +81,7 @@ class LinearProgressIndicator extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Surface(
-      elevation: 8,
+      emphasis: Emphasis.high,
       child: Padding(
         padding: const EdgeInsets.all(3),
         child: SizedBox(

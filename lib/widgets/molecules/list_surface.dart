@@ -32,6 +32,7 @@ class ListSurface extends StatelessWidget {
           mainAxisSize: MainAxisSize.min,
           children: [
             Surface(
+              emphasis: Emphasis.medium,
               elevation: (elevation ?? 0) + 4,
               child: SizedBox(
                 width: dense ? 56 : 72,

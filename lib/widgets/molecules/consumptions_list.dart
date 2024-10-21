@@ -18,8 +18,8 @@ class ConsumptionsList extends StatelessWidget {
     this.physics,
     this.padding = const EdgeInsets.all(16.0),
     this.elevation,
-    this.showCalories = true,
-    this.showMacros = true,
+    this.showCalories = false,
+    this.showMacros = false,
     this.showTime = true,
   });
 

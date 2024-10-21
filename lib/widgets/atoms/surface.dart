@@ -4,6 +4,7 @@ class Surface extends Card {
   final double? width;
   final double? height;
   final bool isPrimary;
+  final Emphasis emphasis;
 
   const Surface({
     super.key,
@@ -13,6 +14,7 @@ class Surface extends Card {
     this.width,
     this.height,
     this.isPrimary = false,
+    this.emphasis = Emphasis.low,
   });
 
   @override
@@ -30,19 +32,40 @@ class Surface extends Card {
         ],
       ),
       child: Card(
-        shape: shape,
-        shadowColor: Colors.transparent,
-        margin: EdgeInsets.zero,
-        elevation: isPrimary ? 0 : elevation,
-        clipBehavior: Clip.antiAlias,
-        child: isPrimary
-            // ? PrimarySurfacePaint(child: child) // TODO: Improve performance.
-            ? Container(
-                color: Theme.of(context).colorScheme.primaryContainer,
-                child: child,
-              )
-            : child,
-      ),
+          shape: shape,
+          shadowColor: Colors.transparent,
+          margin: EdgeInsets.zero,
+          elevation: isPrimary ? 0 : elevation,
+          color: isPrimary
+              ? Theme.of(context).colorScheme.primaryContainer
+              : getColor(emphasis, context),
+          clipBehavior: Clip.antiAlias,
+          child:
+              child // isPrimary ? PrimarySurfacePaint(child: child) // TODO: Improve performance.
+          ),
     );
   }
+
+  Color getColor(Emphasis emphasis, BuildContext context) {
+    switch (emphasis) {
+      case Emphasis.highest:
+        return Theme.of(context).colorScheme.surfaceContainerHighest;
+      case Emphasis.high:
+        return Theme.of(context).colorScheme.surfaceContainerHigh;
+      case Emphasis.medium:
+        return Theme.of(context).colorScheme.surfaceContainer;
+      case Emphasis.low:
+        return Theme.of(context).colorScheme.surfaceContainerLow;
+      case Emphasis.lowest:
+        return Theme.of(context).colorScheme.surfaceContainerLowest;
+    }
+  }
+}
+
+enum Emphasis {
+  highest,
+  high,
+  medium,
+  low,
+  lowest,
 }

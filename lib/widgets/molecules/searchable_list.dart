@@ -66,10 +66,10 @@ class _SearchableListState<T> extends State<SearchableList<T>> {
           flex: 0,
           child: SearchBar(
             controller: queryController,
-            shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+            shape: WidgetStateProperty.all<RoundedRectangleBorder>(
               const RoundedRectangleBorder(),
             ),
-            padding: MaterialStateProperty.all<EdgeInsets>(
+            padding: WidgetStateProperty.all<EdgeInsets>(
               const EdgeInsets.symmetric(horizontal: 16),
             ),
             leading: const Icon(Icons.search),

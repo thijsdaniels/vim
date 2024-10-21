@@ -1,15 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:vim/extensions/date_time.dart';
-import 'package:vim/extensions/num.dart';
-import 'package:vim/extensions/sets.dart';
+import 'package:vim/models/exercise/exercise_performance.dart';
 import 'package:vim/models/exercise/performance.dart';
-import 'package:vim/models/exercise/endurance_exercise_performance.dart';
-import 'package:vim/models/exercise/resistance_exercise_performance.dart';
+import 'package:vim/views/log/exercise_log/performance_view.dart';
 import 'package:vim/widgets/atoms/performance_icon.dart';
 import 'package:vim/widgets/atoms/secondary_text.dart';
 import 'package:vim/widgets/atoms/standard_list.dart';
 import 'package:vim/widgets/molecules/list_surface.dart';
-import 'package:vim/views/log/exercise_log/performance_view.dart';
 
 class PerformancesList extends StatelessWidget {
   const PerformancesList({
@@ -44,45 +41,75 @@ class PerformancesList extends StatelessWidget {
       itemBuilder: (context, index) {
         Performance performance = performances[index];
 
-        return FutureBuilder(
-          future: Future.value(performance.calories),
-          builder: (context, caloriesSnapshot) => ListSurface(
+        if (performance is ExercisePerformance) {
+          return ExercisePerformanceListSurface(
+            performance,
             elevation: elevation,
-            icon: PerformanceIcon(performance),
-            title: performance.name,
-            // TODO: Try to change this into Chip widgets.
-            subtitle: [
-              '${caloriesSnapshot.data?.round()} cal',
+          );
+        }
 
-              /// TODO: Display the `Equipment` name instead of the sets.
-              if (performance is ResistanceExercisePerformance) ...[
-                '${(performance.sets.weight / performance.sets.length).decimals(2)} kg',
-                performance.sets
-                    .map(
-                      (set) => '${set.repetitions}',
-                    )
-                    .join("/"),
-              ],
-              if (performance is EnduranceExercisePerformance) ...[
-                '${performance.watts} watts',
-                '${performance.duration.inMinutes} m',
-              ],
-            ].join(" • "),
-            onTap: () {
-              Navigator.of(context).push(
-                MaterialPageRoute(
-                  builder: (context) => PerformanceView(
-                    path: performance.reference!.path,
-                  ),
-                ),
-              );
-            },
-            trailing: SecondaryText(
-              performance.timestamp.toDate().toTimeString(),
+        return PerformanceListSurface(
+          performance,
+          elevation: elevation,
+        );
+      },
+    );
+  }
+}
+
+class PerformanceListSurface extends StatelessWidget {
+  const PerformanceListSurface(
+    this.performance, {
+    super.key,
+    this.elevation,
+    this.subtitle,
+  });
+
+  final Performance performance;
+  final double? elevation;
+  final String? subtitle;
+
+  @override
+  Widget build(BuildContext context) {
+    return ListSurface(
+      elevation: elevation,
+      icon: PerformanceIcon(performance),
+      title: performance.name,
+      subtitle: subtitle,
+      onTap: () {
+        Navigator.of(context).push(
+          MaterialPageRoute(
+            builder: (context) => PerformanceView(
+              path: performance.reference!.path,
             ),
           ),
         );
       },
+      trailing: SecondaryText(
+        performance.timestamp.toDate().toTimeString(),
+      ),
+    );
+  }
+}
+
+class ExercisePerformanceListSurface extends StatelessWidget {
+  const ExercisePerformanceListSurface(
+    this.performance, {
+    super.key,
+    this.elevation,
+  });
+
+  final ExercisePerformance performance;
+  final double? elevation;
+
+  @override
+  Widget build(BuildContext context) {
+    return StreamBuilder(
+      stream: performance.exercise.snapshot.equipment,
+      builder: (context, equipment) => PerformanceListSurface(
+        performance,
+        subtitle: equipment.data?.name,
+      ),
     );
   }
 }

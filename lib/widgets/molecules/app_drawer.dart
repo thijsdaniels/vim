@@ -63,8 +63,7 @@ class AppDrawer extends StatelessWidget {
                           child: Column(
                             children: [
                               ListTile(
-                                dense: true,
-                                leading: Icon(Icons.egg, size: 20),
+                                leading: Icon(Icons.egg),
                                 title: const Text('Products'),
                                 onTap: () {
                                   Navigator.of(context).pop();
@@ -77,8 +76,7 @@ class AppDrawer extends StatelessWidget {
                                 },
                               ),
                               ListTile(
-                                dense: true,
-                                leading: Icon(Icons.article, size: 20),
+                                leading: Icon(Icons.article),
                                 title: const Text('Recipes'),
                                 onTap: () {
                                   Navigator.of(context).pop();
@@ -90,9 +88,8 @@ class AppDrawer extends StatelessWidget {
                                 },
                               ),
                               ListTile(
-                                dense: true,
                                 enabled: false,
-                                leading: const Icon(Icons.fastfood, size: 20),
+                                leading: const Icon(Icons.fastfood),
                                 title: const Text('Meals'),
                               ),
                             ],
@@ -107,8 +104,7 @@ class AppDrawer extends StatelessWidget {
                           child: Column(
                             children: [
                               ListTile(
-                                dense: true,
-                                leading: Icon(Icons.fitness_center, size: 20),
+                                leading: Icon(Icons.fitness_center),
                                 title: const Text('Equipment'),
                                 onTap: () {
                                   Navigator.of(context).pop();
@@ -121,9 +117,7 @@ class AppDrawer extends StatelessWidget {
                                 },
                               ),
                               ListTile(
-                                dense: true,
-                                leading:
-                                    Icon(Icons.sports_gymnastics, size: 20),
+                                leading: Icon(Icons.sports_gymnastics),
                                 title: const Text('Exercises'),
                                 onTap: () {
                                   Navigator.of(context).pop();
@@ -136,8 +130,7 @@ class AppDrawer extends StatelessWidget {
                                 },
                               ),
                               ListTile(
-                                dense: true,
-                                leading: Icon(Icons.checklist, size: 20),
+                                leading: Icon(Icons.checklist),
                                 title: const Text('Routines'),
                                 onTap: () {
                                   Navigator.of(context).pop();
@@ -150,8 +143,7 @@ class AppDrawer extends StatelessWidget {
                                 },
                               ),
                               ListTile(
-                                dense: true,
-                                leading: Icon(Icons.schedule, size: 20),
+                                leading: Icon(Icons.schedule),
                                 title: const Text('Plans'),
                                 enabled: false,
                               ),
@@ -176,8 +168,7 @@ class AppDrawer extends StatelessWidget {
                       children: [
                         if (user.isAdmin)
                           ListTile(
-                            dense: true,
-                            leading: Icon(Icons.bug_report, size: 20),
+                            leading: Icon(Icons.bug_report),
                             title: const Text('Debug'),
                             onTap: () {
                               Navigator.of(context).pop();
@@ -189,8 +180,7 @@ class AppDrawer extends StatelessWidget {
                             },
                           ),
                         ListTile(
-                          dense: true,
-                          leading: Icon(Icons.settings, size: 20),
+                          leading: Icon(Icons.settings),
                           title: const Text('Settings'),
                           onTap: () {
                             Navigator.of(context).pop();
@@ -202,8 +192,7 @@ class AppDrawer extends StatelessWidget {
                           },
                         ),
                         ListTile(
-                          dense: true,
-                          leading: Icon(Icons.exit_to_app, size: 20),
+                          leading: Icon(Icons.exit_to_app),
                           title: const Text('Sign Out'),
                           onTap: FirebaseAuth.instance.signOut,
                         ),
