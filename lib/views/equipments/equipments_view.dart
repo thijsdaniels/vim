@@ -3,7 +3,6 @@ import 'package:provider/provider.dart';
 import 'package:vim/models/exercise/equipment.dart';
 import 'package:vim/views/equipments/create_equipment_view.dart';
 import 'package:vim/widgets/atoms/floating_action_surface.dart';
-import 'package:vim/widgets/molecules/app_drawer.dart';
 import 'package:vim/widgets/molecules/equipments_list.dart';
 
 class EquipmentsView extends StatelessWidget {
@@ -15,7 +14,6 @@ class EquipmentsView extends StatelessWidget {
       appBar: AppBar(
         title: const Text('Equipment'),
       ),
-      drawer: AppDrawer(),
       floatingActionButton: FloatingActionSurface(
         onPressed: () {
           Navigator.of(context).push(
