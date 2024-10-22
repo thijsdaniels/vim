@@ -274,8 +274,8 @@ class NutritionTable extends StatelessWidget {
       if (nutrition?.vitamins.b9 != null)
         NutritionRow(
           'Vitamin B9',
-          nutrition!.vitamins.b9! * 1000,
-          unit: "mg",
+          nutrition!.vitamins.b9! * 1000000,
+          unit: "µg",
           indented: true,
         ),
       if (nutrition?.vitamins.b12 != null)
