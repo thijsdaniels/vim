@@ -59,12 +59,12 @@ class AppDrawer extends StatelessWidget {
                         color:
                             Theme.of(context).colorScheme.surfaceContainerHigh,
                         child: Padding(
-                          padding: const EdgeInsets.symmetric(vertical: 8.0),
+                          padding: const EdgeInsets.symmetric(vertical: 12.0),
                           child: Column(
                             children: [
-                              ListTile(
-                                leading: Icon(Icons.egg),
-                                title: const Text('Products'),
+                              NavigationListTile(
+                                icon: Icons.egg,
+                                label: 'Products',
                                 onTap: () {
                                   Navigator.of(context).pop();
                                   Navigator.of(context).push(
@@ -75,9 +75,9 @@ class AppDrawer extends StatelessWidget {
                                   );
                                 },
                               ),
-                              ListTile(
-                                leading: Icon(Icons.article),
-                                title: const Text('Recipes'),
+                              NavigationListTile(
+                                icon: Icons.article,
+                                label: 'Recipes',
                                 onTap: () {
                                   Navigator.of(context).pop();
                                   Navigator.of(context).push(
@@ -87,10 +87,9 @@ class AppDrawer extends StatelessWidget {
                                   );
                                 },
                               ),
-                              ListTile(
-                                enabled: false,
-                                leading: const Icon(Icons.fastfood),
-                                title: const Text('Meals'),
+                              NavigationListTile(
+                                icon: Icons.fastfood,
+                                label: 'Meals',
                               ),
                             ],
                           ),
@@ -100,12 +99,12 @@ class AppDrawer extends StatelessWidget {
                         color:
                             Theme.of(context).colorScheme.surfaceContainerHigh,
                         child: Padding(
-                          padding: const EdgeInsets.symmetric(vertical: 8.0),
+                          padding: const EdgeInsets.symmetric(vertical: 12.0),
                           child: Column(
                             children: [
-                              ListTile(
-                                leading: Icon(Icons.fitness_center),
-                                title: const Text('Equipment'),
+                              NavigationListTile(
+                                icon: Icons.fitness_center,
+                                label: 'Equipment',
                                 onTap: () {
                                   Navigator.of(context).pop();
                                   Navigator.of(context).push(
@@ -116,9 +115,9 @@ class AppDrawer extends StatelessWidget {
                                   );
                                 },
                               ),
-                              ListTile(
-                                leading: Icon(Icons.sports_gymnastics),
-                                title: const Text('Exercises'),
+                              NavigationListTile(
+                                icon: Icons.sports_gymnastics,
+                                label: 'Exercises',
                                 onTap: () {
                                   Navigator.of(context).pop();
                                   Navigator.of(context).push(
@@ -129,9 +128,9 @@ class AppDrawer extends StatelessWidget {
                                   );
                                 },
                               ),
-                              ListTile(
-                                leading: Icon(Icons.checklist),
-                                title: const Text('Routines'),
+                              NavigationListTile(
+                                icon: Icons.checklist,
+                                label: 'Routines',
                                 onTap: () {
                                   Navigator.of(context).pop();
                                   Navigator.of(context).push(
@@ -142,10 +141,9 @@ class AppDrawer extends StatelessWidget {
                                   );
                                 },
                               ),
-                              ListTile(
-                                leading: Icon(Icons.schedule),
-                                title: const Text('Plans'),
-                                enabled: false,
+                              NavigationListTile(
+                                icon: Icons.schedule,
+                                label: 'Plans',
                               ),
                             ],
                           ),
@@ -158,53 +156,75 @@ class AppDrawer extends StatelessWidget {
             ),
           ),
           Padding(
-            padding: const EdgeInsets.all(8.0),
+            padding: const EdgeInsets.only(bottom: 16.0),
             child: Column(
               children: [
-                Card(
-                  child: Padding(
-                    padding: const EdgeInsets.symmetric(vertical: 8.0),
-                    child: Column(
-                      children: [
-                        if (user.isAdmin)
-                          ListTile(
-                            leading: Icon(Icons.bug_report),
-                            title: const Text('Debug'),
-                            onTap: () {
-                              Navigator.of(context).pop();
-                              Navigator.of(context).push(
-                                MaterialPageRoute(
-                                  builder: (context) => const DebugView(),
-                                ),
-                              );
-                            },
-                          ),
-                        ListTile(
-                          leading: Icon(Icons.settings),
-                          title: const Text('Settings'),
-                          onTap: () {
-                            Navigator.of(context).pop();
-                            Navigator.of(context).push(
-                              MaterialPageRoute(
-                                builder: (context) => const SettingsView(),
-                              ),
-                            );
-                          },
+                if (user.isAdmin)
+                  NavigationListTile(
+                    contentPadding: EdgeInsets.symmetric(horizontal: 24),
+                    icon: Icons.bug_report,
+                    label: 'Debug',
+                    onTap: () {
+                      Navigator.of(context).pop();
+                      Navigator.of(context).push(
+                        MaterialPageRoute(
+                          builder: (context) => const DebugView(),
                         ),
-                        ListTile(
-                          leading: Icon(Icons.exit_to_app),
-                          title: const Text('Sign Out'),
-                          onTap: FirebaseAuth.instance.signOut,
-                        ),
-                      ],
-                    ),
+                      );
+                    },
                   ),
+                NavigationListTile(
+                  contentPadding: EdgeInsets.symmetric(horizontal: 24),
+                  icon: Icons.settings,
+                  label: 'Settings',
+                  onTap: () {
+                    Navigator.of(context).pop();
+                    Navigator.of(context).push(
+                      MaterialPageRoute(
+                        builder: (context) => const SettingsView(),
+                      ),
+                    );
+                  },
+                ),
+                NavigationListTile(
+                  contentPadding: EdgeInsets.symmetric(horizontal: 24),
+                  icon: Icons.exit_to_app,
+                  label: 'Sign Out',
+                  onTap: FirebaseAuth.instance.signOut,
                 ),
               ],
             ),
           ),
         ],
       ),
+    );
+  }
+}
+
+class NavigationListTile extends StatelessWidget {
+  const NavigationListTile({
+    super.key,
+    required this.icon,
+    required this.label,
+    this.onTap,
+    this.contentPadding,
+  });
+
+  final IconData icon;
+  final String label;
+  final VoidCallback? onTap;
+  final EdgeInsets? contentPadding;
+
+  @override
+  Widget build(BuildContext context) {
+    return ListTile(
+      horizontalTitleGap: 20,
+      minTileHeight: 36,
+      leading: Icon(icon),
+      title: Text(label),
+      onTap: onTap,
+      enabled: onTap != null,
+      contentPadding: contentPadding,
     );
   }
 }
