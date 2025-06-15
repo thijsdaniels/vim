@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:fuzzy/fuzzy.dart';
 import 'package:vim/models/document.dart';
 import 'package:vim/models/food/ingredient.dart';
 import 'package:vim/models/food/ingredient_consumption.dart';
@@ -53,11 +54,33 @@ class CreateConsumptionView extends StatelessWidget {
           ),
           builder: (context, ingredients) => SearchableList<NamedDocument>(
             barHintText: "Search",
-            items: [
-              ...(recipes.data ?? []),
-              ...(ingredients.data ?? []),
-            ],
-            itemToText: (entry) => entry.searchableText,
+            /**
+             * @todo It could be nice to create a Consumable superclass so that
+             * I can create an extension on List<Consumable> to create a Fuzzy
+             * collection.
+             */
+            items: Fuzzy(
+              [
+                ...(recipes.data ?? []),
+                ...(ingredients.data ?? []),
+              ],
+              options: FuzzyOptions(
+                keys: [
+                  WeightedKey(
+                    name: "name",
+                    getter: (entry) => entry.name,
+                    weight: 2,
+                  ),
+                  WeightedKey(
+                    name: "brand",
+                    getter: (entry) =>
+                        entry is Ingredient ? entry.brand ?? "" : "",
+                    weight: 1,
+                  ),
+                ],
+                shouldNormalize: true,
+              ),
+            ),
             itemBuilder: (context, entry, similarity) => SearchResult(entry),
             noQueryBuilder: (context, entries) => const StandardList(
               children: [

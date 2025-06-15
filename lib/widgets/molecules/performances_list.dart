@@ -28,7 +28,7 @@ class PerformancesList extends StatelessWidget {
       return Center(
         child: Icon(
           Icons.more_horiz,
-          color: Theme.of(context).colorScheme.onBackground.withOpacity(0.25),
+          color: Theme.of(context).colorScheme.onSurface.withOpacity(0.25),
         ),
       );
     }

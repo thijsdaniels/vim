@@ -30,7 +30,7 @@ class SearchFormField<T> extends StatelessWidget {
     _titleBuilder = titleBuilder ?? _defaultTitleBuilder;
 
     if (selection != null) {
-      _controller.text = _titleBuilder(selection!);
+      _controller.text = _titleBuilder(selection as T);
     }
   }
 

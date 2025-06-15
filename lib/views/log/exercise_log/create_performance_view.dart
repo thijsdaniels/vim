@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:fuzzy/fuzzy.dart';
 import 'package:provider/provider.dart';
 import 'package:vim/models/date_model.dart';
 import 'package:vim/models/document.dart';
@@ -56,11 +57,22 @@ class _CreatePerformanceViewState extends State<CreatePerformanceView> {
           ),
           builder: (context, exercises) => SearchableList<NamedDocument>(
             barHintText: "Search",
-            items: [
-              ...(routines.data ?? []),
-              ...(exercises.data ?? []),
-            ],
-            itemToText: (entry) => entry.searchableText,
+            items: Fuzzy(
+              [
+                ...(routines.data ?? []),
+                ...(exercises.data ?? []),
+              ],
+              options: FuzzyOptions(
+                keys: [
+                  WeightedKey(
+                    name: "name",
+                    getter: (entry) => entry.name,
+                    weight: 1,
+                  ),
+                ],
+                shouldNormalize: true,
+              ),
+            ),
             itemBuilder: (context, entry, similarity) => SearchResult(entry),
             noQueryBuilder: (context, entries) => const StandardList(
               children: [

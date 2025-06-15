@@ -1,3 +1,5 @@
+import 'package:vim/extensions/num.dart';
+
 enum Unit {
   grams,
   servings,
@@ -14,7 +16,7 @@ class Amount {
 
   @override
   String toString() {
-    return '$value ${unit.name}';
+    return '${value.decimals(2)} ${unit.name}';
   }
 
   Map<String, dynamic> toMap() {

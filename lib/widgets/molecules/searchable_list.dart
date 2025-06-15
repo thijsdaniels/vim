@@ -1,17 +1,15 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
-import 'package:fuzzywuzzy/fuzzywuzzy.dart';
-import 'package:fuzzywuzzy/model/extracted_result.dart';
+import 'package:fuzzy/data/result.dart';
+import 'package:fuzzy/fuzzy.dart';
 import 'package:vim/widgets/atoms/standard_list.dart';
 import 'package:vim/widgets/molecules/list_surface.dart';
 
 class SearchableList<T> extends StatefulWidget {
   final String barHintText;
-  final List<T> items;
-  final String Function(T) itemToText;
-  final num minSimilarity;
-  final Widget Function(BuildContext, T, num?) itemBuilder;
+  final Fuzzy<T> items;
+  final Widget Function(BuildContext, T, double?) itemBuilder;
   final Widget Function(BuildContext, List<T>)? noQueryBuilder;
   final Widget Function(BuildContext)? noResultsBuilder;
   final ScrollPhysics? physics;
@@ -22,8 +20,6 @@ class SearchableList<T> extends StatefulWidget {
     super.key,
     this.barHintText = "Search",
     required this.items,
-    required this.itemToText,
-    this.minSimilarity = 0.5,
     required this.itemBuilder,
     this.noQueryBuilder,
     this.noResultsBuilder,
@@ -51,15 +47,6 @@ class _SearchableListState<T> extends State<SearchableList<T>> {
 
   @override
   Widget build(BuildContext context) {
-    var ranked = _query.isNotEmpty
-        ? extractAllSorted(
-            query: _query,
-            choices: widget.items,
-            getter: (item) => widget.itemToText(item),
-            cutoff: (widget.minSimilarity * 100).toInt(),
-          )
-        : null;
-
     return Column(
       children: [
         Flexible(
@@ -101,11 +88,12 @@ class _SearchableListState<T> extends State<SearchableList<T>> {
         Flexible(
           flex: 1,
           child: SingleChildScrollView(
-              controller: scrollController,
-              physics: widget.physics,
-              child: ranked == null
-                  ? buildNoQuery(context)
-                  : buildResults(ranked)),
+            controller: scrollController,
+            physics: widget.physics,
+            child: _query.isEmpty
+                ? buildNoQuery(context)
+                : buildResults(widget.items.search(_query)),
+          ),
         ),
       ],
     );
@@ -113,24 +101,24 @@ class _SearchableListState<T> extends State<SearchableList<T>> {
 
   Widget buildNoQuery(BuildContext context) {
     if (widget.noQueryBuilder != null) {
-      return widget.noQueryBuilder!(context, widget.items);
+      return widget.noQueryBuilder!(context, widget.items.list);
     }
 
     return StandardList(
       physics: const NeverScrollableScrollPhysics(),
       padding: widget.padding,
       spacing: widget.spacing,
-      itemCount: widget.items.length,
+      itemCount: widget.items.list.length,
       itemBuilder: (context, index) => widget.itemBuilder(
         context,
-        widget.items[index],
+        widget.items.list[index],
         null,
       ),
     );
   }
 
-  Widget buildResults(List<ExtractedResult<T>> ranked) {
-    if (ranked.isEmpty) {
+  Widget buildResults(List<Result<T>> results) {
+    if (results.isEmpty) {
       return buildNoResults(context);
     }
 
@@ -138,11 +126,11 @@ class _SearchableListState<T> extends State<SearchableList<T>> {
       physics: const NeverScrollableScrollPhysics(),
       padding: widget.padding,
       spacing: widget.spacing,
-      itemCount: ranked.length,
+      itemCount: results.length,
       itemBuilder: (context, index) => widget.itemBuilder(
         context,
-        ranked[index].choice,
-        ranked[index].score,
+        results[index].item,
+        results[index].score,
       ),
     );
   }

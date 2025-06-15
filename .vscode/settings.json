@@ -1,16 +1,4 @@
 {
-	"conventionalCommits.scopes": [
-		"theme",
-		"auth",
-		"dashboard",
-		"consumptions",
-		"ingredients",
-		"recipes",
-		"performances",
-		"exercises",
-		"routines",
-		"settings",
-		"friends",
-		"user"
-	]
+	"IDX.aI.enableInlineCompletion": true,
+	"IDX.aI.enableCodebaseIndexing": true
 }

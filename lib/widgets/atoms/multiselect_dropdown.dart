@@ -8,13 +8,13 @@ class MultiselectDropdown<T> extends StatelessWidget {
   final Widget? icon;
 
   const MultiselectDropdown({
-    Key? key,
+    super.key,
     required this.items,
     required this.selected,
     required this.onChanged,
     this.decoration,
     this.icon,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {

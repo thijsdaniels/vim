@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:vim/extensions/ingredients.dart';
 import 'package:vim/models/food/ingredient.dart';
 import 'package:vim/views/ingredients/ingredient_view.dart';
 import 'package:vim/widgets/atoms/standard_list.dart';
@@ -27,7 +28,8 @@ class IngredientsList extends StatelessWidget {
       return Center(
         child: Icon(
           Icons.more_horiz,
-          color: Theme.of(context).colorScheme.onBackground.withOpacity(0.25),
+          color:
+              Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.25),
         ),
       );
     }
@@ -58,8 +60,7 @@ class IngredientsList extends StatelessWidget {
       spacing: 12,
       physics: physics,
       padding: padding,
-      items: ingredients,
-      itemToText: (ingredient) => ingredient.searchableText,
+      items: ingredients.toFuzzy(),
       itemBuilder: (context, ingredient, similarity) => IngredientListSurface(
         elevation: elevation,
         ingredient: ingredient,

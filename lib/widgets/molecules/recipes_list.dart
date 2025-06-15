@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:vim/extensions/recipes.dart';
 import 'package:vim/models/food/recipe.dart';
 import 'package:vim/views/recipes/recipe_view.dart';
 import 'package:vim/widgets/atoms/standard_list.dart';
@@ -27,7 +28,7 @@ class RecipesList extends StatelessWidget {
       return Center(
         child: Icon(
           Icons.more_horiz,
-          color: Theme.of(context).colorScheme.onBackground.withOpacity(0.25),
+          color: Theme.of(context).colorScheme.onSurface.withOpacity(0.25),
         ),
       );
     }
@@ -58,8 +59,7 @@ class RecipesList extends StatelessWidget {
       spacing: 12,
       physics: physics,
       padding: padding,
-      items: recipes,
-      itemToText: (recipe) => recipe.searchableText,
+      items: recipes.toFuzzy(),
       itemBuilder: (context, recipe, similarity) => RecipeListSurface(
         elevation: elevation,
         recipe: recipe,

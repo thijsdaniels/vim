@@ -14,7 +14,7 @@ class SecondaryText extends StatelessWidget {
       textAlign: textAlign,
       overflow: TextOverflow.ellipsis,
       style: TextStyle(
-        color: Theme.of(context).colorScheme.onBackground.withOpacity(0.5),
+        color: Theme.of(context).colorScheme.onSurface.withOpacity(0.5),
         fontSize: 14,
       ),
     );
