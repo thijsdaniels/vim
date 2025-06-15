@@ -1,9 +1,11 @@
+import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:vim/models/food/ingredient.dart';
 import 'package:vim/models/food/nutrition.dart';
 import 'package:vim/models/user/user.dart';
 import 'package:vim/services/ingredients_collection.dart';
+import 'package:vim/views/ingredients/analyze_ingredient_view.dart';
 import 'package:vim/widgets/atoms/food_icon_form_field.dart';
 import 'package:vim/widgets/atoms/standard_list.dart';
 import 'package:vim/widgets/atoms/switch_form_field.dart';
@@ -55,6 +57,25 @@ class _CreateIngredientViewState extends State<CreateIngredientView> {
             ? Text(ingredient.name)
             : const Text('Create Ingredient'),
         actions: [
+          FutureBuilder(
+            future: availableCameras(),
+            builder: (context, snapshot) {
+              return IconButton(
+                icon: const Icon(Icons.camera_alt),
+                onPressed: snapshot.hasData
+                    ? () async {
+                        Navigator.of(context).push(
+                          MaterialPageRoute(
+                            builder: (context) => AnalyzeIngredientView(
+                              camera: snapshot.data!.first,
+                            ),
+                          ),
+                        );
+                      }
+                    : null,
+              );
+            },
+          ),
           IconButton(
             icon: const Icon(Icons.check),
             onPressed: () {
