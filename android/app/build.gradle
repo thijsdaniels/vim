@@ -28,6 +28,7 @@ if (flutterMinSdkVersion == null) {
 }
 
 android {
+    namespace "com.thijsdaniels.vim"
     compileSdkVersion flutter.compileSdkVersion
     ndkVersion flutter.ndkVersion
 
