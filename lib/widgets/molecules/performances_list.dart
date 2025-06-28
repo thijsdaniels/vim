@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:vim/extensions/date_time.dart';
 import 'package:vim/models/exercise/exercise_performance.dart';
 import 'package:vim/models/exercise/performance.dart';
-import 'package:vim/views/log/exercise_log/performance_view.dart';
 import 'package:vim/widgets/atoms/performance_icon.dart';
 import 'package:vim/widgets/atoms/secondary_text.dart';
 import 'package:vim/widgets/atoms/standard_list.dart';
@@ -76,15 +76,7 @@ class PerformanceListSurface extends StatelessWidget {
       icon: PerformanceIcon(performance),
       title: performance.name,
       subtitle: subtitle,
-      onTap: () {
-        Navigator.of(context).push(
-          MaterialPageRoute(
-            builder: (context) => PerformanceView(
-              path: performance.reference!.path,
-            ),
-          ),
-        );
-      },
+      onTap: () => context.push('/${performance.reference!.path}'),
       trailing: SecondaryText(
         performance.timestamp.toDate().toTimeString(),
       ),

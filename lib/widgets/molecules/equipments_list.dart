@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:vim/models/exercise/equipment.dart';
 import 'package:vim/widgets/atoms/standard_list.dart';
 import 'package:vim/widgets/molecules/list_surface.dart';
-import 'package:vim/views/equipments/equipment_view.dart';
 
 class EquipmentsList extends StatelessWidget {
   const EquipmentsList(
@@ -26,22 +26,13 @@ class EquipmentsList extends StatelessWidget {
       padding: padding,
       itemCount: equipments.length,
       itemBuilder: (context, index) {
-        Equipment equipment = equipments[index];
-
+        final equipment = equipments[index];
         return ListSurface(
           elevation: elevation,
           // icon: EquipmentIcon(equipment),
           title: equipment.name,
           // subtitle: equipment.type.name.toTitleCase(),
-          onTap: () {
-            Navigator.of(context).push(
-              MaterialPageRoute(
-                builder: (context) => EquipmentView(
-                  path: equipment.reference!.path,
-                ),
-              ),
-            );
-          },
+          onTap: () => context.push('/${equipment.reference!.path}'),
         );
       },
     );

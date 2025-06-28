@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 import 'package:vim/models/food/recipe.dart';
-import 'package:vim/views/recipes/create_recipe_view.dart';
+import 'package:vim/models/user/user.dart';
 import 'package:vim/widgets/atoms/floating_action_surface.dart';
+import 'package:vim/widgets/molecules/app_drawer.dart';
 import 'package:vim/widgets/molecules/recipes_list.dart';
 
 class RecipesView extends StatelessWidget {
@@ -14,16 +16,7 @@ class RecipesView extends StatelessWidget {
       appBar: AppBar(
         title: const Text('Recipes'),
       ),
-      floatingActionButton: FloatingActionSurface(
-        onPressed: () async {
-          Navigator.of(context).push(
-            MaterialPageRoute(
-              builder: (context) => const CreateRecipeView(),
-            ),
-          );
-        },
-        child: const Icon(Icons.add),
-      ),
+      drawer: const AppDrawer(),
       body: SafeArea(
         child: Consumer<List<Recipe>>(
           builder: (context, recipes, child) => RecipesList(
@@ -31,6 +24,13 @@ class RecipesView extends StatelessWidget {
             searchable: true,
           ),
         ),
+      ),
+      floatingActionButton: FloatingActionSurface(
+        onPressed: () {
+          final user = User.of(context);
+          context.push('/users/${user.reference!.id}/recipes/create');
+        },
+        child: const Icon(Icons.add),
       ),
     );
   }

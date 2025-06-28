@@ -18,14 +18,16 @@ class LogPerformancesView extends StatelessWidget {
         /// should just open the `SearchAnchor` directly from here. This does
         /// mean I need to find a new location for the "Quick Track" button.
         onPressed: () async {
-          Performance? performance = await Navigator.of(context).push(
+          final performances = PerformancesCollection.of(context);
+
+          final newPerformance = await Navigator.of(context).push<Performance>(
             MaterialPageRoute(
               builder: (context) => const CreatePerformanceView(),
             ),
           );
 
-          if (performance != null) {
-            PerformancesCollection.of(context).create(performance);
+          if (newPerformance != null) {
+            performances.create(newPerformance);
           }
         },
         child: const Icon(Icons.add),

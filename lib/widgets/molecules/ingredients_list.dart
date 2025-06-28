@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:vim/extensions/ingredients.dart';
 import 'package:vim/models/food/ingredient.dart';
-import 'package:vim/views/ingredients/ingredient_view.dart';
 import 'package:vim/widgets/atoms/standard_list.dart';
 import 'package:vim/widgets/molecules/ingredient_list_surface.dart';
 import 'package:vim/widgets/molecules/searchable_list.dart';
@@ -43,15 +43,7 @@ class IngredientsList extends StatelessWidget {
         itemBuilder: (context, index) => IngredientListSurface(
           elevation: elevation,
           ingredient: ingredients[index],
-          onTap: () {
-            Navigator.of(context).push(
-              MaterialPageRoute(
-                builder: (context) => IngredientView(
-                  path: ingredients[index].reference!.path,
-                ),
-              ),
-            );
-          },
+          onTap: () => context.push('/${ingredients[index].reference!.path}'),
         ),
       );
     }
@@ -64,15 +56,7 @@ class IngredientsList extends StatelessWidget {
       itemBuilder: (context, ingredient, similarity) => IngredientListSurface(
         elevation: elevation,
         ingredient: ingredient,
-        onTap: () {
-          Navigator.of(context).push(
-            MaterialPageRoute(
-              builder: (context) => IngredientView(
-                path: ingredient.reference!.path,
-              ),
-            ),
-          );
-        },
+        onTap: () => context.push('/${ingredient.reference!.path}'),
       ),
     );
   }

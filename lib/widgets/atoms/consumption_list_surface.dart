@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:vim/extensions/date_time.dart';
 import 'package:vim/models/food/consumption.dart';
 import 'package:vim/models/food/ingredient_consumption.dart';
@@ -6,7 +7,6 @@ import 'package:vim/models/food/recipe_consumption.dart';
 import 'package:vim/widgets/atoms/consumption_icon.dart';
 import 'package:vim/widgets/atoms/secondary_text.dart';
 import 'package:vim/widgets/molecules/list_surface.dart';
-import 'package:vim/views/log/food_log/consumption_view.dart';
 
 class ConsumptionListSurface extends StatelessWidget {
   final Consumption consumption;
@@ -48,13 +48,7 @@ class ConsumptionListSurface extends StatelessWidget {
               '${nutritionSnapshot.data?.fats.total?.round() ?? 0}',
             ].join("/")
         ].join(" • "),
-        onTap: () {
-          Navigator.of(context).push(
-            MaterialPageRoute(builder: (context) {
-              return ConsumptionView(path: consumption.reference!.path);
-            }),
-          );
-        },
+        onTap: () => context.push('/${consumption.reference!.path}'),
         trailing: showTime
             ? SecondaryText(
                 consumption.timestamp.toDate().toTimeString(),

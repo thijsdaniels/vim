@@ -1,13 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart' show FirebaseAuth;
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:vim/models/user/user.dart';
-import 'package:vim/views/debug_view.dart';
-import 'package:vim/views/equipments/equipments_view.dart';
-import 'package:vim/views/exercises/exercises_view.dart';
-import 'package:vim/views/ingredients/ingredients_view.dart';
-import 'package:vim/views/recipes/recipes_view.dart';
-import 'package:vim/views/routines/routines_view.dart';
-import 'package:vim/views/settings_view.dart';
 import 'package:vim/widgets/atoms/user_avatar.dart';
 
 class AppDrawer extends StatelessWidget {
@@ -16,6 +10,7 @@ class AppDrawer extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     var user = User.of(context);
+    var router = GoRouter.of(context);
 
     return Drawer(
       child: Column(
@@ -63,31 +58,32 @@ class AppDrawer extends StatelessWidget {
                           child: Column(
                             children: [
                               NavigationListTile(
+                                icon: Icons.list,
+                                label: 'Log',
+                                onTap: () => router.go('/log'),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                      Card(
+                        color:
+                            Theme.of(context).colorScheme.surfaceContainerHigh,
+                        child: Padding(
+                          padding: const EdgeInsets.symmetric(vertical: 12.0),
+                          child: Column(
+                            children: [
+                              NavigationListTile(
                                 icon: Icons.egg,
                                 label: 'Products',
-                                onTap: () {
-                                  Navigator.of(context).pop();
-                                  Navigator.of(context).push(
-                                    MaterialPageRoute(
-                                      builder: (context) =>
-                                          const IngredientsView(),
-                                    ),
-                                  );
-                                },
+                                onTap: () => router.go('/ingredients'),
                               ),
                               NavigationListTile(
                                 icon: Icons.article,
                                 label: 'Recipes',
-                                onTap: () {
-                                  Navigator.of(context).pop();
-                                  Navigator.of(context).push(
-                                    MaterialPageRoute(
-                                      builder: (context) => const RecipesView(),
-                                    ),
-                                  );
-                                },
+                                onTap: () => router.go('/recipes'),
                               ),
-                              NavigationListTile(
+                              const NavigationListTile(
                                 icon: Icons.fastfood,
                                 label: 'Meals',
                               ),
@@ -105,43 +101,19 @@ class AppDrawer extends StatelessWidget {
                               NavigationListTile(
                                 icon: Icons.fitness_center,
                                 label: 'Equipment',
-                                onTap: () {
-                                  Navigator.of(context).pop();
-                                  Navigator.of(context).push(
-                                    MaterialPageRoute(
-                                      builder: (context) =>
-                                          const EquipmentsView(),
-                                    ),
-                                  );
-                                },
+                                onTap: () => router.go('/equipments'),
                               ),
                               NavigationListTile(
                                 icon: Icons.sports_gymnastics,
                                 label: 'Exercises',
-                                onTap: () {
-                                  Navigator.of(context).pop();
-                                  Navigator.of(context).push(
-                                    MaterialPageRoute(
-                                      builder: (context) =>
-                                          const ExercisesView(),
-                                    ),
-                                  );
-                                },
+                                onTap: () => router.go('/exercises'),
                               ),
                               NavigationListTile(
                                 icon: Icons.checklist,
                                 label: 'Routines',
-                                onTap: () {
-                                  Navigator.of(context).pop();
-                                  Navigator.of(context).push(
-                                    MaterialPageRoute(
-                                      builder: (context) =>
-                                          const RoutinesView(),
-                                    ),
-                                  );
-                                },
+                                onTap: () => router.go('/routines'),
                               ),
-                              NavigationListTile(
+                              const NavigationListTile(
                                 icon: Icons.schedule,
                                 label: 'Plans',
                               ),
@@ -161,33 +133,19 @@ class AppDrawer extends StatelessWidget {
               children: [
                 if (user.isAdmin)
                   NavigationListTile(
-                    contentPadding: EdgeInsets.symmetric(horizontal: 24),
+                    contentPadding: const EdgeInsets.symmetric(horizontal: 24),
                     icon: Icons.bug_report,
                     label: 'Debug',
-                    onTap: () {
-                      Navigator.of(context).pop();
-                      Navigator.of(context).push(
-                        MaterialPageRoute(
-                          builder: (context) => const DebugView(),
-                        ),
-                      );
-                    },
+                    onTap: () => router.go('/debug'),
                   ),
                 NavigationListTile(
-                  contentPadding: EdgeInsets.symmetric(horizontal: 24),
+                  contentPadding: const EdgeInsets.symmetric(horizontal: 24),
                   icon: Icons.settings,
                   label: 'Settings',
-                  onTap: () {
-                    Navigator.of(context).pop();
-                    Navigator.of(context).push(
-                      MaterialPageRoute(
-                        builder: (context) => const SettingsView(),
-                      ),
-                    );
-                  },
+                  onTap: () => router.push('/settings'),
                 ),
                 NavigationListTile(
-                  contentPadding: EdgeInsets.symmetric(horizontal: 24),
+                  contentPadding: const EdgeInsets.symmetric(horizontal: 24),
                   icon: Icons.exit_to_app,
                   label: 'Sign Out',
                   onTap: FirebaseAuth.instance.signOut,
