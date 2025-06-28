@@ -26,73 +26,46 @@ class NutritionFormFields extends StatelessWidget {
           autofocus: autofocus,
           decoration: const InputDecoration(
             labelText: 'Energy',
-            hintText: 'kcal',
+            suffixText: 'kcal',
           ),
           textInputAction: TextInputAction.next,
           keyboardType: TextInputType.number,
           inputFormatters: <TextInputFormatter>[
             FilteringTextInputFormatter.allow(RegExp(r'[0-9\.]'))
           ],
-          validator: (value) {
-            if (value == null || value.isEmpty) {
-              return 'Please enter a number.';
-            }
-            return null;
-          },
         ),
         TextFormField(
           controller: controller.fats,
           decoration: const InputDecoration(
             labelText: 'Fats',
-            hintText: 'g',
+            suffixText: 'g',
           ),
           textInputAction: TextInputAction.next,
           keyboardType: TextInputType.number,
           inputFormatters: <TextInputFormatter>[
             FilteringTextInputFormatter.allow(RegExp(r'[0-9\.]'))
           ],
-          validator: (value) {
-            if (value == null || value.isEmpty) {
-              return 'Please enter a number.';
-            }
-            return null;
-          },
         ),
-        TextFormField(
-          controller: controller.saturates,
-          decoration: const InputDecoration(
-            labelText: 'Saturated Fats',
-            hintText: 'g',
+        Padding(
+          padding: const EdgeInsets.only(left: 32.0),
+          child: TextFormField(
+            controller: controller.saturates,
+            decoration: const InputDecoration(
+              labelText: 'Saturated Fats',
+              suffixText: 'g',
+            ),
+            textInputAction: TextInputAction.next,
+            keyboardType: TextInputType.number,
+            inputFormatters: <TextInputFormatter>[
+              FilteringTextInputFormatter.allow(RegExp(r'[0-9\.]'))
+            ],
           ),
-          textInputAction: TextInputAction.next,
-          keyboardType: TextInputType.number,
-          inputFormatters: <TextInputFormatter>[
-            FilteringTextInputFormatter.allow(RegExp(r'[0-9\.]'))
-          ],
         ),
         TextFormField(
           controller: controller.carbohydrates,
           decoration: const InputDecoration(
             labelText: 'Carbohydrates',
-            hintText: 'g',
-          ),
-          textInputAction: TextInputAction.next,
-          keyboardType: TextInputType.number,
-          inputFormatters: <TextInputFormatter>[
-            FilteringTextInputFormatter.allow(RegExp(r'[0-9\.]'))
-          ],
-          validator: (value) {
-            if (value == null || value.isEmpty) {
-              return 'Please enter a number.';
-            }
-            return null;
-          },
-        ),
-        TextFormField(
-          controller: controller.sugars,
-          decoration: const InputDecoration(
-            labelText: 'Sugars',
-            hintText: 'g',
+            suffixText: 'g',
           ),
           textInputAction: TextInputAction.next,
           keyboardType: TextInputType.number,
@@ -100,41 +73,53 @@ class NutritionFormFields extends StatelessWidget {
             FilteringTextInputFormatter.allow(RegExp(r'[0-9\.]'))
           ],
         ),
-        TextFormField(
-          controller: controller.fibers,
-          decoration: const InputDecoration(
-            labelText: 'Fibers',
-            hintText: 'g',
+        Padding(
+          padding: const EdgeInsets.only(left: 32.0),
+          child: TextFormField(
+            controller: controller.sugars,
+            decoration: const InputDecoration(
+              labelText: 'Sugars',
+              suffixText: 'g',
+            ),
+            textInputAction: TextInputAction.next,
+            keyboardType: TextInputType.number,
+            inputFormatters: <TextInputFormatter>[
+              FilteringTextInputFormatter.allow(RegExp(r'[0-9\.]'))
+            ],
           ),
-          textInputAction: TextInputAction.next,
-          keyboardType: TextInputType.number,
-          inputFormatters: <TextInputFormatter>[
-            FilteringTextInputFormatter.allow(RegExp(r'[0-9\.]'))
-          ],
+        ),
+        Padding(
+          padding: const EdgeInsets.only(left: 32.0),
+          child: TextFormField(
+            controller: controller.fibers,
+            decoration: const InputDecoration(
+              labelText: 'Dietary Fibers',
+              suffixText: 'g',
+            ),
+            textInputAction: TextInputAction.next,
+            keyboardType: TextInputType.number,
+            inputFormatters: <TextInputFormatter>[
+              FilteringTextInputFormatter.allow(RegExp(r'[0-9\.]'))
+            ],
+          ),
         ),
         TextFormField(
           controller: controller.proteins,
           decoration: const InputDecoration(
             labelText: 'Proteins',
-            hintText: 'g',
+            suffixText: 'g',
           ),
           textInputAction: TextInputAction.next,
           keyboardType: TextInputType.number,
           inputFormatters: <TextInputFormatter>[
             FilteringTextInputFormatter.allow(RegExp(r'[0-9\.]'))
           ],
-          validator: (value) {
-            if (value == null || value.isEmpty) {
-              return 'Please enter a number.';
-            }
-            return null;
-          },
         ),
         TextFormField(
           controller: controller.salt,
           decoration: const InputDecoration(
             labelText: 'Salt',
-            hintText: 'g',
+            suffixText: 'g',
           ),
           textInputAction: TextInputAction.done,
           keyboardType: TextInputType.number,
@@ -142,436 +127,488 @@ class NutritionFormFields extends StatelessWidget {
             FilteringTextInputFormatter.allow(RegExp(r'[0-9\.]'))
           ],
         ),
-        TextFormField(
-          controller: controller.water,
-          decoration: const InputDecoration(
-            labelText: 'Water',
-            hintText: 'g',
-          ),
-          textInputAction: TextInputAction.done,
-          keyboardType: TextInputType.number,
-          inputFormatters: <TextInputFormatter>[
-            FilteringTextInputFormatter.allow(RegExp(r'[0-9\.]'))
+        ExpansionTile(
+          title: const Text("Liquids"),
+          children: [
+            TextFormField(
+              controller: controller.water,
+              decoration: const InputDecoration(
+                labelText: 'Water',
+                suffixText: 'g',
+              ),
+              textInputAction: TextInputAction.done,
+              keyboardType: TextInputType.number,
+              inputFormatters: <TextInputFormatter>[
+                FilteringTextInputFormatter.allow(RegExp(r'[0-9\.]'))
+              ],
+            ),
+            SizedBox(height: spacing),
+            TextFormField(
+              controller: controller.alcohol,
+              decoration: const InputDecoration(
+                labelText: 'Alcohol',
+                suffixText: '% vol.',
+              ),
+              textInputAction: TextInputAction.done,
+              keyboardType: TextInputType.number,
+              inputFormatters: <TextInputFormatter>[
+                FilteringTextInputFormatter.allow(RegExp(r'[0-9\.]'))
+              ],
+            ),
           ],
         ),
-        TextFormField(
-          controller: controller.alcohol,
-          decoration: const InputDecoration(
-            labelText: 'Alcohol',
-            hintText: '% vol.',
-          ),
-          textInputAction: TextInputAction.done,
-          keyboardType: TextInputType.number,
-          inputFormatters: <TextInputFormatter>[
-            FilteringTextInputFormatter.allow(RegExp(r'[0-9\.]'))
+        ExpansionTile(
+          title: const Text("Stimulants"),
+          children: [
+            TextFormField(
+              controller: controller.caffeine,
+              decoration: const InputDecoration(
+                labelText: 'Caffeine',
+                suffixText: 'mg',
+              ),
+              textInputAction: TextInputAction.done,
+              keyboardType: TextInputType.number,
+              inputFormatters: <TextInputFormatter>[
+                FilteringTextInputFormatter.allow(RegExp(r'[0-9\.]'))
+              ],
+            ),
+            SizedBox(height: spacing),
+            TextFormField(
+              controller: controller.creatine,
+              decoration: const InputDecoration(
+                labelText: 'Creatine',
+                suffixText: 'mg',
+              ),
+              textInputAction: TextInputAction.done,
+              keyboardType: TextInputType.number,
+              inputFormatters: <TextInputFormatter>[
+                FilteringTextInputFormatter.allow(RegExp(r'[0-9\.]'))
+              ],
+            ),
           ],
         ),
-        TextFormField(
-          controller: controller.caffeine,
-          decoration: const InputDecoration(
-            labelText: 'Caffeine',
-            hintText: 'mg',
-          ),
-          textInputAction: TextInputAction.done,
-          keyboardType: TextInputType.number,
-          inputFormatters: <TextInputFormatter>[
-            FilteringTextInputFormatter.allow(RegExp(r'[0-9\.]'))
+        ExpansionTile(
+          title: const Text("Minerals"),
+          children: [
+            TextFormField(
+              controller: controller.boron,
+              decoration: const InputDecoration(
+                labelText: 'Boron',
+                suffixText: 'µg',
+              ),
+              textInputAction: TextInputAction.next,
+              keyboardType: TextInputType.number,
+              inputFormatters: <TextInputFormatter>[
+                FilteringTextInputFormatter.allow(RegExp(r'[0-9\.]'))
+              ],
+            ),
+            SizedBox(height: spacing),
+            TextFormField(
+              controller: controller.calcium,
+              decoration: const InputDecoration(
+                labelText: 'Calcium',
+                suffixText: 'mg',
+              ),
+              textInputAction: TextInputAction.next,
+              keyboardType: TextInputType.number,
+              inputFormatters: <TextInputFormatter>[
+                FilteringTextInputFormatter.allow(RegExp(r'[0-9\.]'))
+              ],
+            ),
+            SizedBox(height: spacing),
+            TextFormField(
+              controller: controller.chromium,
+              decoration: const InputDecoration(
+                labelText: 'Chromium',
+                suffixText: 'µg',
+              ),
+              textInputAction: TextInputAction.next,
+              keyboardType: TextInputType.number,
+              inputFormatters: <TextInputFormatter>[
+                FilteringTextInputFormatter.allow(RegExp(r'[0-9\.]'))
+              ],
+            ),
+            SizedBox(height: spacing),
+            TextFormField(
+              controller: controller.cobalt,
+              decoration: const InputDecoration(
+                labelText: 'Cobalt',
+                suffixText: 'µg',
+              ),
+              textInputAction: TextInputAction.next,
+              keyboardType: TextInputType.number,
+              inputFormatters: <TextInputFormatter>[
+                FilteringTextInputFormatter.allow(RegExp(r'[0-9\.]'))
+              ],
+            ),
+            SizedBox(height: spacing),
+            TextFormField(
+              controller: controller.copper,
+              decoration: const InputDecoration(
+                labelText: 'Copper',
+                suffixText: 'µg',
+              ),
+              textInputAction: TextInputAction.next,
+              keyboardType: TextInputType.number,
+              inputFormatters: <TextInputFormatter>[
+                FilteringTextInputFormatter.allow(RegExp(r'[0-9\.]'))
+              ],
+            ),
+            SizedBox(height: spacing),
+            TextFormField(
+              controller: controller.fluoride,
+              decoration: const InputDecoration(
+                labelText: 'Fluoride',
+                suffixText: 'µg',
+              ),
+              textInputAction: TextInputAction.next,
+              keyboardType: TextInputType.number,
+              inputFormatters: <TextInputFormatter>[
+                FilteringTextInputFormatter.allow(RegExp(r'[0-9\.]'))
+              ],
+            ),
+            SizedBox(height: spacing),
+            TextFormField(
+              controller: controller.iodine,
+              decoration: const InputDecoration(
+                labelText: 'Iodine',
+                suffixText: 'µg',
+              ),
+              textInputAction: TextInputAction.next,
+              keyboardType: TextInputType.number,
+              inputFormatters: <TextInputFormatter>[
+                FilteringTextInputFormatter.allow(RegExp(r'[0-9\.]'))
+              ],
+            ),
+            SizedBox(height: spacing),
+            TextFormField(
+              controller: controller.iron,
+              decoration: const InputDecoration(
+                labelText: 'Iron',
+                suffixText: 'mg',
+              ),
+              textInputAction: TextInputAction.next,
+              keyboardType: TextInputType.number,
+              inputFormatters: <TextInputFormatter>[
+                FilteringTextInputFormatter.allow(RegExp(r'[0-9\.]'))
+              ],
+            ),
+            SizedBox(height: spacing),
+            TextFormField(
+              controller: controller.magnesium,
+              decoration: const InputDecoration(
+                labelText: 'Magnesium',
+                suffixText: 'mg',
+              ),
+              textInputAction: TextInputAction.next,
+              keyboardType: TextInputType.number,
+              inputFormatters: <TextInputFormatter>[
+                FilteringTextInputFormatter.allow(RegExp(r'[0-9\.]'))
+              ],
+            ),
+            SizedBox(height: spacing),
+            TextFormField(
+              controller: controller.manganese,
+              decoration: const InputDecoration(
+                labelText: 'Manganese',
+                suffixText: 'µg',
+              ),
+              textInputAction: TextInputAction.next,
+              keyboardType: TextInputType.number,
+              inputFormatters: <TextInputFormatter>[
+                FilteringTextInputFormatter.allow(RegExp(r'[0-9\.]'))
+              ],
+            ),
+            SizedBox(height: spacing),
+            TextFormField(
+              controller: controller.molybdenum,
+              decoration: const InputDecoration(
+                labelText: 'Molybdenum',
+                suffixText: 'µg',
+              ),
+              textInputAction: TextInputAction.next,
+              keyboardType: TextInputType.number,
+              inputFormatters: <TextInputFormatter>[
+                FilteringTextInputFormatter.allow(RegExp(r'[0-9\.]'))
+              ],
+            ),
+            SizedBox(height: spacing),
+            TextFormField(
+              controller: controller.nickel,
+              decoration: const InputDecoration(
+                labelText: 'Nickel',
+                suffixText: 'µg',
+              ),
+              textInputAction: TextInputAction.next,
+              keyboardType: TextInputType.number,
+              inputFormatters: <TextInputFormatter>[
+                FilteringTextInputFormatter.allow(RegExp(r'[0-9\.]'))
+              ],
+            ),
+            SizedBox(height: spacing),
+            TextFormField(
+              controller: controller.phosphorus,
+              decoration: const InputDecoration(
+                labelText: 'Phosphorus',
+                suffixText: 'mg',
+              ),
+              textInputAction: TextInputAction.next,
+              keyboardType: TextInputType.number,
+              inputFormatters: <TextInputFormatter>[
+                FilteringTextInputFormatter.allow(RegExp(r'[0-9\.]'))
+              ],
+            ),
+            SizedBox(height: spacing),
+            TextFormField(
+              controller: controller.potassium,
+              decoration: const InputDecoration(
+                labelText: 'Potassium',
+                suffixText: 'mg',
+              ),
+              textInputAction: TextInputAction.next,
+              keyboardType: TextInputType.number,
+              inputFormatters: <TextInputFormatter>[
+                FilteringTextInputFormatter.allow(RegExp(r'[0-9\.]'))
+              ],
+            ),
+            SizedBox(height: spacing),
+            TextFormField(
+              controller: controller.selenium,
+              decoration: const InputDecoration(
+                labelText: 'Selenium',
+                suffixText: 'µg',
+              ),
+              textInputAction: TextInputAction.done,
+              keyboardType: TextInputType.number,
+              inputFormatters: <TextInputFormatter>[
+                FilteringTextInputFormatter.allow(RegExp(r'[0-9\.]'))
+              ],
+            ),
+            SizedBox(height: spacing),
+            TextFormField(
+              controller: controller.silicon,
+              decoration: const InputDecoration(
+                labelText: 'Silicon',
+                suffixText: 'µg',
+              ),
+              textInputAction: TextInputAction.done,
+              keyboardType: TextInputType.number,
+              inputFormatters: <TextInputFormatter>[
+                FilteringTextInputFormatter.allow(RegExp(r'[0-9\.]'))
+              ],
+            ),
+            SizedBox(height: spacing),
+            TextFormField(
+              enabled: false,
+              decoration: const InputDecoration(
+                labelText: 'Sodium',
+                suffixText: 'mg',
+              ),
+              textInputAction: TextInputAction.done,
+              keyboardType: TextInputType.number,
+              inputFormatters: <TextInputFormatter>[
+                FilteringTextInputFormatter.allow(RegExp(r'[0-9\.]'))
+              ],
+            ),
+            SizedBox(height: spacing),
+            TextFormField(
+              controller: controller.vanadium,
+              decoration: const InputDecoration(
+                labelText: 'Vanadium',
+                suffixText: 'µg',
+              ),
+              textInputAction: TextInputAction.done,
+              keyboardType: TextInputType.number,
+              inputFormatters: <TextInputFormatter>[
+                FilteringTextInputFormatter.allow(RegExp(r'[0-9\.]'))
+              ],
+            ),
+            SizedBox(height: spacing),
+            TextFormField(
+              controller: controller.zinc,
+              decoration: const InputDecoration(
+                labelText: 'Zinc',
+                suffixText: 'mg',
+              ),
+              textInputAction: TextInputAction.done,
+              keyboardType: TextInputType.number,
+              inputFormatters: <TextInputFormatter>[
+                FilteringTextInputFormatter.allow(RegExp(r'[0-9\.]'))
+              ],
+            ),
           ],
         ),
-        TextFormField(
-          controller: controller.creatine,
-          decoration: const InputDecoration(
-            labelText: 'Creatine',
-            hintText: 'mg',
-          ),
-          textInputAction: TextInputAction.done,
-          keyboardType: TextInputType.number,
-          inputFormatters: <TextInputFormatter>[
-            FilteringTextInputFormatter.allow(RegExp(r'[0-9\.]'))
-          ],
-        ),
-        TextFormField(
-          controller: controller.boron,
-          decoration: const InputDecoration(
-            labelText: 'Boron',
-            hintText: 'µg',
-          ),
-          textInputAction: TextInputAction.next,
-          keyboardType: TextInputType.number,
-          inputFormatters: <TextInputFormatter>[
-            FilteringTextInputFormatter.allow(RegExp(r'[0-9\.]'))
-          ],
-        ),
-        TextFormField(
-          controller: controller.calcium,
-          decoration: const InputDecoration(
-            labelText: 'Calcium',
-            hintText: 'mg',
-          ),
-          textInputAction: TextInputAction.next,
-          keyboardType: TextInputType.number,
-          inputFormatters: <TextInputFormatter>[
-            FilteringTextInputFormatter.allow(RegExp(r'[0-9\.]'))
-          ],
-        ),
-        TextFormField(
-          controller: controller.chromium,
-          decoration: const InputDecoration(
-            labelText: 'Chromium',
-            hintText: 'µg',
-          ),
-          textInputAction: TextInputAction.next,
-          keyboardType: TextInputType.number,
-          inputFormatters: <TextInputFormatter>[
-            FilteringTextInputFormatter.allow(RegExp(r'[0-9\.]'))
-          ],
-        ),
-        TextFormField(
-          controller: controller.cobalt,
-          decoration: const InputDecoration(
-            labelText: 'Cobalt',
-            hintText: 'µg',
-          ),
-          textInputAction: TextInputAction.next,
-          keyboardType: TextInputType.number,
-          inputFormatters: <TextInputFormatter>[
-            FilteringTextInputFormatter.allow(RegExp(r'[0-9\.]'))
-          ],
-        ),
-        TextFormField(
-          controller: controller.copper,
-          decoration: const InputDecoration(
-            labelText: 'Copper',
-            hintText: 'µg',
-          ),
-          textInputAction: TextInputAction.next,
-          keyboardType: TextInputType.number,
-          inputFormatters: <TextInputFormatter>[
-            FilteringTextInputFormatter.allow(RegExp(r'[0-9\.]'))
-          ],
-        ),
-        TextFormField(
-          controller: controller.fluoride,
-          decoration: const InputDecoration(
-            labelText: 'Fluoride',
-            hintText: 'µg',
-          ),
-          textInputAction: TextInputAction.next,
-          keyboardType: TextInputType.number,
-          inputFormatters: <TextInputFormatter>[
-            FilteringTextInputFormatter.allow(RegExp(r'[0-9\.]'))
-          ],
-        ),
-        TextFormField(
-          controller: controller.iodine,
-          decoration: const InputDecoration(
-            labelText: 'Iodine',
-            hintText: 'µg',
-          ),
-          textInputAction: TextInputAction.next,
-          keyboardType: TextInputType.number,
-          inputFormatters: <TextInputFormatter>[
-            FilteringTextInputFormatter.allow(RegExp(r'[0-9\.]'))
-          ],
-        ),
-        TextFormField(
-          controller: controller.iron,
-          decoration: const InputDecoration(
-            labelText: 'Iron',
-            hintText: 'mg',
-          ),
-          textInputAction: TextInputAction.next,
-          keyboardType: TextInputType.number,
-          inputFormatters: <TextInputFormatter>[
-            FilteringTextInputFormatter.allow(RegExp(r'[0-9\.]'))
-          ],
-        ),
-        TextFormField(
-          controller: controller.magnesium,
-          decoration: const InputDecoration(
-            labelText: 'Magnesium',
-            hintText: 'mg',
-          ),
-          textInputAction: TextInputAction.next,
-          keyboardType: TextInputType.number,
-          inputFormatters: <TextInputFormatter>[
-            FilteringTextInputFormatter.allow(RegExp(r'[0-9\.]'))
-          ],
-        ),
-        TextFormField(
-          controller: controller.manganese,
-          decoration: const InputDecoration(
-            labelText: 'Manganese',
-            hintText: 'µg',
-          ),
-          textInputAction: TextInputAction.next,
-          keyboardType: TextInputType.number,
-          inputFormatters: <TextInputFormatter>[
-            FilteringTextInputFormatter.allow(RegExp(r'[0-9\.]'))
-          ],
-        ),
-        TextFormField(
-          controller: controller.molybdenum,
-          decoration: const InputDecoration(
-            labelText: 'Molybdenum',
-            hintText: 'µg',
-          ),
-          textInputAction: TextInputAction.next,
-          keyboardType: TextInputType.number,
-          inputFormatters: <TextInputFormatter>[
-            FilteringTextInputFormatter.allow(RegExp(r'[0-9\.]'))
-          ],
-        ),
-        TextFormField(
-          controller: controller.nickel,
-          decoration: const InputDecoration(
-            labelText: 'Nickel',
-            hintText: 'µg',
-          ),
-          textInputAction: TextInputAction.next,
-          keyboardType: TextInputType.number,
-          inputFormatters: <TextInputFormatter>[
-            FilteringTextInputFormatter.allow(RegExp(r'[0-9\.]'))
-          ],
-        ),
-        TextFormField(
-          controller: controller.phosphorus,
-          decoration: const InputDecoration(
-            labelText: 'Phosphorus',
-            hintText: 'mg',
-          ),
-          textInputAction: TextInputAction.next,
-          keyboardType: TextInputType.number,
-          inputFormatters: <TextInputFormatter>[
-            FilteringTextInputFormatter.allow(RegExp(r'[0-9\.]'))
-          ],
-        ),
-        TextFormField(
-          controller: controller.potassium,
-          decoration: const InputDecoration(
-            labelText: 'Potassium',
-            hintText: 'mg',
-          ),
-          textInputAction: TextInputAction.next,
-          keyboardType: TextInputType.number,
-          inputFormatters: <TextInputFormatter>[
-            FilteringTextInputFormatter.allow(RegExp(r'[0-9\.]'))
-          ],
-        ),
-        TextFormField(
-          controller: controller.selenium,
-          decoration: const InputDecoration(
-            labelText: 'Selenium',
-            hintText: 'µg',
-          ),
-          textInputAction: TextInputAction.done,
-          keyboardType: TextInputType.number,
-          inputFormatters: <TextInputFormatter>[
-            FilteringTextInputFormatter.allow(RegExp(r'[0-9\.]'))
-          ],
-        ),
-        TextFormField(
-          controller: controller.silicon,
-          decoration: const InputDecoration(
-            labelText: 'Silicon',
-            hintText: 'µg',
-          ),
-          textInputAction: TextInputAction.done,
-          keyboardType: TextInputType.number,
-          inputFormatters: <TextInputFormatter>[
-            FilteringTextInputFormatter.allow(RegExp(r'[0-9\.]'))
-          ],
-        ),
-        TextFormField(
-          enabled: false,
-          decoration: const InputDecoration(
-            labelText: 'Sodium',
-            hintText: 'mg',
-          ),
-          textInputAction: TextInputAction.done,
-          keyboardType: TextInputType.number,
-          inputFormatters: <TextInputFormatter>[
-            FilteringTextInputFormatter.allow(RegExp(r'[0-9\.]'))
-          ],
-        ),
-        TextFormField(
-          controller: controller.vanadium,
-          decoration: const InputDecoration(
-            labelText: 'Vanadium',
-            hintText: 'µg',
-          ),
-          textInputAction: TextInputAction.done,
-          keyboardType: TextInputType.number,
-          inputFormatters: <TextInputFormatter>[
-            FilteringTextInputFormatter.allow(RegExp(r'[0-9\.]'))
-          ],
-        ),
-        TextFormField(
-          controller: controller.zinc,
-          decoration: const InputDecoration(
-            labelText: 'Zinc',
-            hintText: 'mg',
-          ),
-          textInputAction: TextInputAction.done,
-          keyboardType: TextInputType.number,
-          inputFormatters: <TextInputFormatter>[
-            FilteringTextInputFormatter.allow(RegExp(r'[0-9\.]'))
-          ],
-        ),
-        TextFormField(
-          controller: controller.a,
-          decoration: const InputDecoration(
-            labelText: 'Vitamin A',
-            hintText: 'µg',
-          ),
-          textInputAction: TextInputAction.next,
-          keyboardType: TextInputType.number,
-          inputFormatters: <TextInputFormatter>[
-            FilteringTextInputFormatter.allow(RegExp(r'[0-9\.]'))
-          ],
-        ),
-        TextFormField(
-          controller: controller.b1,
-          decoration: const InputDecoration(
-            labelText: 'Vitamin B1',
-            hintText: 'mg',
-          ),
-          textInputAction: TextInputAction.next,
-          keyboardType: TextInputType.number,
-          inputFormatters: <TextInputFormatter>[
-            FilteringTextInputFormatter.allow(RegExp(r'[0-9\.]'))
-          ],
-        ),
-        TextFormField(
-          controller: controller.b2,
-          decoration: const InputDecoration(
-            labelText: 'Vitamin B2',
-            hintText: 'mg',
-          ),
-          textInputAction: TextInputAction.next,
-          keyboardType: TextInputType.number,
-          inputFormatters: <TextInputFormatter>[
-            FilteringTextInputFormatter.allow(RegExp(r'[0-9\.]'))
-          ],
-        ),
-        TextFormField(
-          controller: controller.b3,
-          decoration: const InputDecoration(
-            labelText: 'Vitamin B3',
-            hintText: 'mg',
-          ),
-          textInputAction: TextInputAction.next,
-          keyboardType: TextInputType.number,
-          inputFormatters: <TextInputFormatter>[
-            FilteringTextInputFormatter.allow(RegExp(r'[0-9\.]'))
-          ],
-        ),
-        TextFormField(
-          controller: controller.b5,
-          decoration: const InputDecoration(
-            labelText: 'Vitamin B5',
-            hintText: 'mg',
-          ),
-          textInputAction: TextInputAction.next,
-          keyboardType: TextInputType.number,
-          inputFormatters: <TextInputFormatter>[
-            FilteringTextInputFormatter.allow(RegExp(r'[0-9\.]'))
-          ],
-        ),
-        TextFormField(
-          controller: controller.b6,
-          decoration: const InputDecoration(
-            labelText: 'Vitamin B6',
-            hintText: 'mg',
-          ),
-          textInputAction: TextInputAction.next,
-          keyboardType: TextInputType.number,
-          inputFormatters: <TextInputFormatter>[
-            FilteringTextInputFormatter.allow(RegExp(r'[0-9\.]'))
-          ],
-        ),
-        TextFormField(
-          controller: controller.b7,
-          decoration: const InputDecoration(
-            labelText: 'Vitamin B7',
-            hintText: 'µg',
-          ),
-          textInputAction: TextInputAction.next,
-          keyboardType: TextInputType.number,
-          inputFormatters: <TextInputFormatter>[
-            FilteringTextInputFormatter.allow(RegExp(r'[0-9\.]'))
-          ],
-        ),
-        TextFormField(
-          controller: controller.b9,
-          decoration: const InputDecoration(
-            labelText: 'Vitamin B9',
-            hintText: 'µg',
-          ),
-          textInputAction: TextInputAction.next,
-          keyboardType: TextInputType.number,
-          inputFormatters: <TextInputFormatter>[
-            FilteringTextInputFormatter.allow(RegExp(r'[0-9\.]'))
-          ],
-        ),
-        TextFormField(
-          controller: controller.b12,
-          decoration: const InputDecoration(
-            labelText: 'Vitamin B12',
-            hintText: 'µg',
-          ),
-          textInputAction: TextInputAction.next,
-          keyboardType: TextInputType.number,
-          inputFormatters: <TextInputFormatter>[
-            FilteringTextInputFormatter.allow(RegExp(r'[0-9\.]'))
-          ],
-        ),
-        TextFormField(
-          controller: controller.c,
-          decoration: const InputDecoration(
-            labelText: 'Vitamin C',
-            hintText: 'mg',
-          ),
-          textInputAction: TextInputAction.next,
-          keyboardType: TextInputType.number,
-          inputFormatters: <TextInputFormatter>[
-            FilteringTextInputFormatter.allow(RegExp(r'[0-9\.]'))
-          ],
-        ),
-        TextFormField(
-          controller: controller.d,
-          decoration: const InputDecoration(
-            labelText: 'Vitamin D',
-            hintText: 'µg',
-          ),
-          textInputAction: TextInputAction.next,
-          keyboardType: TextInputType.number,
-          inputFormatters: <TextInputFormatter>[
-            FilteringTextInputFormatter.allow(RegExp(r'[0-9\.]'))
-          ],
-        ),
-        TextFormField(
-          controller: controller.e,
-          decoration: const InputDecoration(
-            labelText: 'Vitamin E',
-            hintText: 'mg',
-          ),
-          textInputAction: TextInputAction.next,
-          keyboardType: TextInputType.number,
-          inputFormatters: <TextInputFormatter>[
-            FilteringTextInputFormatter.allow(RegExp(r'[0-9\.]'))
-          ],
-        ),
-        TextFormField(
-          controller: controller.k,
-          decoration: const InputDecoration(
-            labelText: 'Vitamin K',
-            hintText: 'µg',
-          ),
-          textInputAction: TextInputAction.next,
-          keyboardType: TextInputType.number,
-          inputFormatters: <TextInputFormatter>[
-            FilteringTextInputFormatter.allow(RegExp(r'[0-9\.]'))
+        ExpansionTile(
+          title: const Text("Vitamins"),
+          children: [
+            TextFormField(
+              controller: controller.a,
+              decoration: const InputDecoration(
+                labelText: 'Vitamin A',
+                suffixText: 'µg',
+              ),
+              textInputAction: TextInputAction.next,
+              keyboardType: TextInputType.number,
+              inputFormatters: <TextInputFormatter>[
+                FilteringTextInputFormatter.allow(RegExp(r'[0-9\.]'))
+              ],
+            ),
+            SizedBox(height: spacing),
+            TextFormField(
+              controller: controller.b1,
+              decoration: const InputDecoration(
+                labelText: 'Vitamin B1 (Thiamin)',
+                suffixText: 'mg',
+              ),
+              textInputAction: TextInputAction.next,
+              keyboardType: TextInputType.number,
+              inputFormatters: <TextInputFormatter>[
+                FilteringTextInputFormatter.allow(RegExp(r'[0-9\.]'))
+              ],
+            ),
+            SizedBox(height: spacing),
+            TextFormField(
+              controller: controller.b2,
+              decoration: const InputDecoration(
+                labelText: 'Vitamin B2 (Riboflavin)',
+                suffixText: 'mg',
+              ),
+              textInputAction: TextInputAction.next,
+              keyboardType: TextInputType.number,
+              inputFormatters: <TextInputFormatter>[
+                FilteringTextInputFormatter.allow(RegExp(r'[0-9\.]'))
+              ],
+            ),
+            SizedBox(height: spacing),
+            TextFormField(
+              controller: controller.b3,
+              decoration: const InputDecoration(
+                labelText: 'Vitamin B3 (Niacin)',
+                suffixText: 'mg',
+              ),
+              textInputAction: TextInputAction.next,
+              keyboardType: TextInputType.number,
+              inputFormatters: <TextInputFormatter>[
+                FilteringTextInputFormatter.allow(RegExp(r'[0-9\.]'))
+              ],
+            ),
+            SizedBox(height: spacing),
+            TextFormField(
+              controller: controller.b5,
+              decoration: const InputDecoration(
+                labelText: 'Vitamin B5 (Pantothenic Acid)',
+                suffixText: 'mg',
+              ),
+              textInputAction: TextInputAction.next,
+              keyboardType: TextInputType.number,
+              inputFormatters: <TextInputFormatter>[
+                FilteringTextInputFormatter.allow(RegExp(r'[0-9\.]'))
+              ],
+            ),
+            SizedBox(height: spacing),
+            TextFormField(
+              controller: controller.b6,
+              decoration: const InputDecoration(
+                labelText: 'Vitamin B6 (Pyridoxine)',
+                suffixText: 'mg',
+              ),
+              textInputAction: TextInputAction.next,
+              keyboardType: TextInputType.number,
+              inputFormatters: <TextInputFormatter>[
+                FilteringTextInputFormatter.allow(RegExp(r'[0-9\.]'))
+              ],
+            ),
+            SizedBox(height: spacing),
+            TextFormField(
+              controller: controller.b7,
+              decoration: const InputDecoration(
+                labelText: 'Vitamin B7 (Biotin)',
+                suffixText: 'µg',
+              ),
+              textInputAction: TextInputAction.next,
+              keyboardType: TextInputType.number,
+              inputFormatters: <TextInputFormatter>[
+                FilteringTextInputFormatter.allow(RegExp(r'[0-9\.]'))
+              ],
+            ),
+            SizedBox(height: spacing),
+            TextFormField(
+              controller: controller.b9,
+              decoration: const InputDecoration(
+                labelText: 'Vitamin B9 (Folic Acid)',
+                suffixText: 'µg',
+              ),
+              textInputAction: TextInputAction.next,
+              keyboardType: TextInputType.number,
+              inputFormatters: <TextInputFormatter>[
+                FilteringTextInputFormatter.allow(RegExp(r'[0-9\.]'))
+              ],
+            ),
+            SizedBox(height: spacing),
+            TextFormField(
+              controller: controller.b12,
+              decoration: const InputDecoration(
+                labelText: 'Vitamin B12 (Cobalamin)',
+                suffixText: 'µg',
+              ),
+              textInputAction: TextInputAction.next,
+              keyboardType: TextInputType.number,
+              inputFormatters: <TextInputFormatter>[
+                FilteringTextInputFormatter.allow(RegExp(r'[0-9\.]'))
+              ],
+            ),
+            SizedBox(height: spacing),
+            TextFormField(
+              controller: controller.c,
+              decoration: const InputDecoration(
+                labelText: 'Vitamin C',
+                suffixText: 'mg',
+              ),
+              textInputAction: TextInputAction.next,
+              keyboardType: TextInputType.number,
+              inputFormatters: <TextInputFormatter>[
+                FilteringTextInputFormatter.allow(RegExp(r'[0-9\.]'))
+              ],
+            ),
+            SizedBox(height: spacing),
+            TextFormField(
+              controller: controller.d,
+              decoration: const InputDecoration(
+                labelText: 'Vitamin D',
+                suffixText: 'µg',
+              ),
+              textInputAction: TextInputAction.next,
+              keyboardType: TextInputType.number,
+              inputFormatters: <TextInputFormatter>[
+                FilteringTextInputFormatter.allow(RegExp(r'[0-9\.]'))
+              ],
+            ),
+            SizedBox(height: spacing),
+            TextFormField(
+              controller: controller.e,
+              decoration: const InputDecoration(
+                labelText: 'Vitamin E',
+                suffixText: 'mg',
+              ),
+              textInputAction: TextInputAction.next,
+              keyboardType: TextInputType.number,
+              inputFormatters: <TextInputFormatter>[
+                FilteringTextInputFormatter.allow(RegExp(r'[0-9\.]'))
+              ],
+            ),
+            SizedBox(height: spacing),
+            TextFormField(
+              controller: controller.k,
+              decoration: const InputDecoration(
+                labelText: 'Vitamin K',
+                suffixText: 'µg',
+              ),
+              textInputAction: TextInputAction.next,
+              keyboardType: TextInputType.number,
+              inputFormatters: <TextInputFormatter>[
+                FilteringTextInputFormatter.allow(RegExp(r'[0-9\.]'))
+              ],
+            ),
           ],
         ),
       ],

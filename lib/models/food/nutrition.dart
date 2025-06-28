@@ -142,11 +142,11 @@ class Carbohydrates extends NutrientGroup<Carbohydrates> {
     this.fibers,
   }) : assert((sugars ?? 0) <= (total ?? 0));
 
-  static calories(num grams) {
+  static num calories(num grams) {
     return grams * caloriesPerGram;
   }
 
-  static grams(num calories) {
+  static double grams(num calories) {
     return calories / caloriesPerGram;
   }
 
@@ -208,11 +208,11 @@ class Fats extends NutrientGroup<Fats> {
     this.saturates,
   }) : assert((saturates ?? 0) <= (total ?? 0));
 
-  static calories(num grams) {
+  static num calories(num grams) {
     return grams * Fats.caloriesPerGram;
   }
 
-  static grams(num calories) {
+  static double grams(num calories) {
     return calories / Fats.caloriesPerGram;
   }
 
@@ -265,11 +265,11 @@ class Proteins extends NutrientGroup<Proteins> {
 
   const Proteins(this.total);
 
-  static calories(num grams) {
+  static num calories(num grams) {
     return grams * Proteins.caloriesPerGram;
   }
 
-  static grams(num calories) {
+  static double grams(num calories) {
     return calories / Proteins.caloriesPerGram;
   }
 

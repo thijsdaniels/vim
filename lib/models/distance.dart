@@ -28,35 +28,35 @@ class Distance extends Model {
     return Distance.meters(map['meters']);
   }
 
-  operator -(Distance other) {
+  Distance operator -(Distance other) {
     return Distance.meters(meters - other.meters);
   }
 
-  operator +(Distance other) {
+  Distance operator +(Distance other) {
     return Distance.meters(meters + other.meters);
   }
 
-  operator *(num factor) {
+  Distance operator *(num factor) {
     return Distance.meters(meters * factor);
   }
 
-  operator /(num factor) {
+  Distance operator /(num factor) {
     return Distance.meters(meters / factor);
   }
 
-  operator <(Distance other) {
+  bool operator <(Distance other) {
     return meters < other.meters;
   }
 
-  operator <=(Distance other) {
+  bool operator <=(Distance other) {
     return meters <= other.meters;
   }
 
-  operator >(Distance other) {
+  bool operator >(Distance other) {
     return meters > other.meters;
   }
 
-  operator >=(Distance other) {
+  bool operator >=(Distance other) {
     return meters >= other.meters;
   }
 }
