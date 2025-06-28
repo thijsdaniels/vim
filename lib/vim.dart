@@ -116,14 +116,10 @@ var theme = ({
       ),
     );
 
-/// TODO: I'm currently setting an onboardingCompleted state just to make the
-/// widget rebuild and check if there is a `User` instance now. I don't like
-/// this solution, I think the creation of a `User` should automatically trigger
-/// a rebuild, which means I should use a `StreamBuilder` instead of a
-/// `FutureBuilder`. However, I haven't found a good way to check using a
-/// `StreamBuilder` whether there actually _is_ an instance to stream at all,
-/// hence my use of the `FutureBuilder` on the `stream.first`...
-class WithAuthentication extends StatefulWidget {
+/// This widget handles the authentication flow and determines whether to show the
+/// login, onboarding, or main application screen. It is now a stateless widget
+/// that reactively listens to authentication and user profile changes.
+class WithAuthentication extends StatelessWidget {
   const WithAuthentication({
     super.key,
     required this.builder,
@@ -137,51 +133,49 @@ class WithAuthentication extends StatefulWidget {
   ) builder;
 
   @override
-  State<WithAuthentication> createState() => _WithAuthenticationState();
-}
-
-class _WithAuthenticationState extends State<WithAuthentication> {
-  bool onboardingCompleted = false;
-
-  @override
   Widget build(BuildContext context) {
     return StreamBuilder<firebase_auth.User?>(
       stream: firebase_auth.FirebaseAuth.instance.authStateChanges(),
-      builder: (context, firebaseUserSnapshot) {
-        if (!firebaseUserSnapshot.hasData) {
-          return widget.builder(context, false, false, (user) => {});
+      builder: (context, authSnapshot) {
+        if (authSnapshot.connectionState == ConnectionState.waiting) {
+          return const Center(child: CircularProgressIndicator());
         }
 
-        return FutureBuilder(
-          future: UsersCollection.instance
-              .get(firebaseUserSnapshot.data!.uid)
-              .first,
+        final firebaseUser = authSnapshot.data;
+
+        if (firebaseUser == null) {
+          // User is not logged in.
+          return builder(context, false, false, (_) {});
+        }
+
+        // User is logged in, now check for the user profile in Firestore.
+        return StreamBuilder<User?>(
+          stream: UsersCollection.instance.get(firebaseUser.uid),
           builder: (context, userSnapshot) {
             if (userSnapshot.connectionState == ConnectionState.waiting) {
               return const Center(child: CircularProgressIndicator());
             }
 
-            if (userSnapshot.data == null) {
-              return widget.builder(
+            final user = userSnapshot.data;
+
+            if (user == null) {
+              // User is authenticated but has no profile, needs to onboard.
+              return builder(
                 context,
                 true,
                 false,
-                (user) async {
-                  await UsersCollection.instance.create(
-                    user,
-                    id: firebaseUserSnapshot.data!.uid,
-                  );
-
-                  setState(() => onboardingCompleted = true);
-                },
+                (newUser) => UsersCollection.instance.create(
+                  newUser,
+                  id: firebaseUser.uid,
+                ),
               );
             }
 
+            // User is authenticated and onboarded.
             return StreamProvider<User?>.value(
-              initialData: userSnapshot.data,
-              value: UsersCollection.instance
-                  .get(userSnapshot.data!.reference!.id),
-              child: widget.builder(context, true, true, (user) => {}),
+              initialData: user,
+              value: UsersCollection.instance.get(firebaseUser.uid),
+              child: builder(context, true, true, (_) {}),
             );
           },
         );
